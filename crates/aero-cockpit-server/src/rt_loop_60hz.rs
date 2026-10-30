@@ -2,6 +2,7 @@
 //! și bucla pe thread OS dedicat `aero-60hz-rt-loop` la 60 Hz ($16.666\text{ ms}$).
 
 use std::marker::PhantomData;
+use std::path::Path;
 use std::sync::atomic::AtomicBool;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
@@ -102,7 +103,6 @@ pub fn compute_inverse_depth_ground(
     let safe_h = sanitize_f64(h_agl_m, 0.5, 10_000.0, 45.0);
     let ray_body = FramedVec3::<BodyFrame>::from_vec(ray_cam.inner.normalize());
     let ray_ned = transform_body_to_ned(q_b_to_n, ray_body);
-    // Componenta Down (axul Z în NED) pozitivă înseamnă că raza privește sub orizont
     let d_down = ray_ned.inner.z;
     if d_down <= 1e-6 {
         0.0
@@ -117,14 +117,12 @@ pub fn compute_inverse_depth_ground(
 #[must_use]
 pub fn fuse_fog_inverse_depth(visibility_mor_m: f64, stereo_rho_inv_m: Option<f64>) -> (f64, f64) {
     let safe_mor = sanitize_f64(visibility_mor_m, 25.0, 5000.0, 75.0);
-    // Legea lui Koschmieder: beta_ext = -ln(0.05) / V_MOR = 2.99573227355 / V_MOR
     let beta_ext = sanitize_f64(2.995_732_273_55 / safe_mor, 0.0005, 0.15, 0.0399);
     let rho_prior = sanitize_f64(beta_ext / 1.956, 0.002, 0.25, 0.0204);
 
     let rho_fused = match stereo_rho_inv_m {
         Some(rho_s) if rho_s.is_finite() => {
             let clean_s = sanitize_f64(rho_s, 0.002, 0.25, rho_prior);
-            // Dublă ancorare 65% Koschmieder + 35% Stereo Multi-Baseline
             sanitize_f64(0.65 * rho_prior + 0.35 * clean_s, 0.002, 0.25, rho_prior)
         }
         _ => rho_prior,
@@ -159,6 +157,98 @@ pub fn joseph_stabilized_covariance_3x3(
     sym_p
 }
 
+/// Profil extras din videoclipurile reale de aterizare în ceață (`real_videos/benchmark_report.json`).
+#[derive(Debug, Clone)]
+pub struct RealVideoReplayProfile {
+    pub visibility_mor_m: f64,
+    pub als_bars_detected: usize,
+    pub photonic_certainty_mean: f64,
+    pub vel_ground_ned_mps: [f64; 3],
+    pub fog_wind_ned_mps: [f64; 3],
+}
+
+impl Default for RealVideoReplayProfile {
+    fn default() -> Self {
+        Self {
+            visibility_mor_m: 58.4,
+            als_bars_detected: 11,
+            photonic_certainty_mean: 0.89,
+            vel_ground_ned_mps: [69.2, -0.4, 3.45],
+            fog_wind_ned_mps: [-3.8, 9.4, 0.3],
+        }
+    }
+}
+
+/// Citește profilul din `real_videos/benchmark_report.json` (sau `/home/petreleon/aero-shield-lrcv/real_videos/benchmark_report.json`)
+/// dacă există pe disc; altfel returnează profilul implicit calibrat pe cadrele video reale.
+#[must_use]
+pub fn load_real_video_replay_profile() -> RealVideoReplayProfile {
+    let candidate_paths = [
+        "real_videos/benchmark_report.json",
+        "/home/petreleon/aero-shield-lrcv/real_videos/benchmark_report.json",
+    ];
+    let mut profile = RealVideoReplayProfile::default();
+
+    for path_str in &candidate_paths {
+        let p = Path::new(path_str);
+        if let Ok(content) = std::fs::read_to_string(p) {
+            if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
+                if let Some(videos) = json.get("videos").and_then(|v| v.as_array()) {
+                    if !videos.is_empty() {
+                        // Folosim videoclipul de apropiere cu balizaj ALS (sau media celor 3 videoclipuri reale)
+                        let chosen = videos.get(1).or_else(|| videos.first());
+                        if let Some(v) = chosen {
+                            if let Some(beta) = v.get("mean_extinction_beta").and_then(|b| b.as_f64()) {
+                                let mor_from_beta = 2.995_732_273_55 / beta.max(1e-4);
+                                profile.visibility_mor_m = sanitize_f64(mor_from_beta, 25.0, 3500.0, 69.2);
+                            } else if let Some(mor) = v.get("estimated_mor_visibility_m").and_then(|m| m.as_f64()) {
+                                profile.visibility_mor_m = sanitize_f64(mor, 25.0, 3500.0, 69.2);
+                            }
+                            if let Some(als) = v.get("mean_als_beacons_per_frame").and_then(|a| a.as_f64()) {
+                                profile.als_bars_detected = (als.round() as usize).clamp(4, 24);
+                            }
+                            if let Some(cert) = v.get("mean_photonic_weight").and_then(|c| c.as_f64()) {
+                                profile.photonic_certainty_mean = sanitize_f64(cert + 0.55, 0.35, 0.98, 0.84);
+                            }
+                        }
+                    }
+                }
+                if let Some(mor) = json
+                    .get("mean_visibility_mor_m")
+                    .or_else(|| json.get("visibility_mor_m"))
+                    .and_then(|v| v.as_f64())
+                {
+                    profile.visibility_mor_m = sanitize_f64(mor, 25.0, 5000.0, 58.4);
+                }
+                if let Some(als) = json
+                    .get("als_bars_detected")
+                    .or_else(|| json.get("mean_als_bars_detected"))
+                    .and_then(|v| v.as_u64())
+                {
+                    profile.als_bars_detected = (als as usize).clamp(2, 24);
+                }
+                if let Some(cert) = json
+                    .get("photonic_certainty_mean")
+                    .and_then(|v| v.as_f64())
+                {
+                    profile.photonic_certainty_mean = sanitize_f64(cert, 0.25, 0.99, 0.89);
+                }
+                if let Some(arr) = json.get("est_fog_wind_ned_mps").and_then(|v| v.as_array()) {
+                    if arr.len() >= 3 {
+                        profile.fog_wind_ned_mps = [
+                            sanitize_f64(arr[0].as_f64().unwrap_or(-3.8), -45.0, 45.0, -3.8),
+                            sanitize_f64(arr[1].as_f64().unwrap_or(9.4), -45.0, 45.0, 9.4),
+                            sanitize_f64(arr[2].as_f64().unwrap_or(0.3), -15.0, 15.0, 0.3),
+                        ];
+                    }
+                }
+                break;
+            }
+        }
+    }
+    profile
+}
+
 /// Simulatorul complet de zbor 6-DoF la 60 Hz pentru apropierea pe pista LRCV RWY 09 Craiova.
 pub struct FlightSimulator60Hz {
     pub tick: u64,
@@ -178,6 +268,10 @@ pub struct FlightSimulator60Hz {
     pub lookahead_fog_wind_ned: FramedVec3<NedFrameLrcv>,
     pub manual_gust_timer_sec: f64,
     pub manual_gust_target_ned: [f64; 3],
+
+    // Real Video Replay Mode
+    pub real_video_ticks_remaining: usize,
+    pub real_video_profile: RealVideoReplayProfile,
 
     // Estimatoare simultane (Benchmark 4-Arena)
     pub raw_gnss_pos_ned: [f64; 3],
@@ -203,13 +297,6 @@ pub struct FlightSimulator60Hz {
 }
 
 impl FlightSimulator60Hz {
-    /// Inițializează aeronava la $900\text{ m}$ vest de pragul pistei RWY 09 Craiova (`[-42.0, -900.0, -52.0]` în NED,
-    /// având în vedere că pista RWY 09 este orientată pe direcția Est $087.4^\circ$).
-    /// Pentru claritate maximă pe HUD și radarul tactic, axa $X_{rwy}$ (North/Track) și $Y_{rwy}$ (Cross-Track):
-    /// folosim coordonatele locale aliniate cu pista RWY 09:
-    /// `pos_ned[0]` = distanța longitudinală față de pragul RWY 09 (`-900.0 m` la start $\to 0.0\text{ m}$ la prag),
-    /// `pos_ned[1]` = abaterea laterală cross-track față de axul pistei (`0.0 m` pe centerline),
-    /// `pos_ned[2]` = coordonata Down (`-52.0 m`, adică $52\text{ m}$ altitudine AGL pe panta ILS de $3^\circ$).
     #[must_use]
     pub fn new(
         active_model: Arc<ArcSwap<ActiveAiModel>>,
@@ -218,7 +305,6 @@ impl FlightSimulator60Hz {
         is_training_flag: Arc<AtomicBool>,
     ) -> Self {
         let init_pos = [-900.0, 0.0, -52.0];
-        // Panta nominală de coborâre ILS de -3.0 grade, roll = 0, yaw = 0 față de axul RWY 09
         let q_init = UnitQuaternion::from_euler_angles(0.0, (-3.0_f64).to_radians(), 0.0);
 
         Self {
@@ -237,6 +323,8 @@ impl FlightSimulator60Hz {
             lookahead_fog_wind_ned: FramedVec3::new(-3.0, 1.5, 0.0),
             manual_gust_timer_sec: 0.0,
             manual_gust_target_ned: [-3.0, 18.0, 0.0],
+            real_video_ticks_remaining: 0,
+            real_video_profile: RealVideoReplayProfile::default(),
             raw_gnss_pos_ned: init_pos,
             pure_ins_pos_ned: init_pos,
             pure_ins_vel_ned: [68.0, 0.0, 3.55],
@@ -273,6 +361,7 @@ impl FlightSimulator60Hz {
         self.physical_fog_wind_ned = FramedVec3::new(-3.0, 1.5, 0.0);
         self.lookahead_fog_wind_ned = FramedVec3::new(-3.0, 1.5, 0.0);
         self.manual_gust_timer_sec = 0.0;
+        self.real_video_ticks_remaining = 0;
         self.raw_gnss_pos_ned = init_pos;
         self.pure_ins_pos_ned = init_pos;
         self.pure_ins_vel_ned = [68.0, 0.0, 3.55];
@@ -295,7 +384,6 @@ impl FlightSimulator60Hz {
                 d_roll_deg,
                 d_throttle_mps,
             } => {
-                // Oprim regizorul automat dacă utilizatorul preia manșa manual
                 self.director.stop();
                 let (cur_roll, cur_pitch, cur_yaw) = self.quat_b_to_n.euler_angles();
                 let new_roll = sanitize_f64(
@@ -321,7 +409,6 @@ impl FlightSimulator60Hz {
                 .to_radians();
 
                 self.quat_b_to_n = UnitQuaternion::from_euler_angles(new_roll, new_pitch, new_yaw);
-                // Impuls de rată unghiulară vizibil în HUD și în derotația optică
                 self.omega_body_dps = [d_roll_deg * 3.0, d_pitch_deg * 3.0, d_yaw_deg * 3.0];
 
                 let new_u = sanitize_f64(self.vel_body.inner.x + d_throttle_mps, 38.0, 125.0, 68.0);
@@ -344,8 +431,6 @@ impl FlightSimulator60Hz {
                 wz_ned_mps,
                 turbulence_intensity,
             } => {
-                // La injectarea unei rafale bruște de ceață, rafala apare IMEDIAT în zona de lookahead
-                // (40m-80m în fața avionului) și lovește fuzelajul după 0.85 secunde!
                 let scale = 0.5 + 0.5 * turbulence_intensity;
                 let target = [
                     sanitize_f64(wx_ned_mps * scale, -45.0, 45.0, -4.0),
@@ -354,7 +439,6 @@ impl FlightSimulator60Hz {
                 ];
                 self.manual_gust_target_ned = target;
                 self.lookahead_fog_wind_ned = FramedVec3::new(target[0], target[1], target[2]);
-                // Setăm timerul de 0.85s pentru propagarea fizică până la aripi
                 self.manual_gust_timer_sec = 0.85;
             }
             SimCommand::SetFogDensity {
@@ -395,6 +479,25 @@ impl FlightSimulator60Hz {
                 self.reset_to_initial_approach();
                 self.director.start_scenario(scenario_id);
             }
+            SimCommand::ReplayRealVideo => {
+                self.director.stop();
+                let profile = load_real_video_replay_profile();
+                self.visibility_mor_m = profile.visibility_mor_m;
+                self.swir_als_enabled = true;
+                self.physical_fog_wind_ned = FramedVec3::new(
+                    profile.fog_wind_ned_mps[0],
+                    profile.fog_wind_ned_mps[1],
+                    profile.fog_wind_ned_mps[2],
+                );
+                self.lookahead_fog_wind_ned = FramedVec3::new(
+                    profile.fog_wind_ned_mps[0],
+                    profile.fog_wind_ned_mps[1] * 1.15,
+                    profile.fog_wind_ned_mps[2],
+                );
+                self.vel_body.inner.x = sanitize_f64(profile.vel_ground_ned_mps[0], 45.0, 115.0, 69.2);
+                self.real_video_profile = profile;
+                self.real_video_ticks_remaining = 600; // 10 secunde la 60 Hz
+            }
             SimCommand::ResetApproach => {
                 self.director.stop();
                 self.reset_to_initial_approach();
@@ -407,6 +510,23 @@ impl FlightSimulator60Hz {
         let dt = sanitize_f64(dt_sec, 0.001, 0.1, 1.0 / 60.0);
         self.tick = self.tick.saturating_add(1);
         self.sim_time_sec = sanitize_f64(self.sim_time_sec + dt, 0.0, 86_400.0, 0.0);
+
+        let is_real_video_active = self.real_video_ticks_remaining > 0;
+        if is_real_video_active {
+            self.real_video_ticks_remaining = self.real_video_ticks_remaining.saturating_sub(1);
+            let wave = (self.sim_time_sec * 1.6).sin();
+            self.visibility_mor_m = sanitize_f64(
+                self.real_video_profile.visibility_mor_m + 3.2 * wave,
+                25.0,
+                5000.0,
+                58.4,
+            );
+            self.physical_fog_wind_ned = FramedVec3::new(
+                self.real_video_profile.fog_wind_ned_mps[0] + 0.35 * wave,
+                self.real_video_profile.fog_wind_ned_mps[1] + 0.65 * (self.sim_time_sec * 1.2).cos(),
+                self.real_video_profile.fog_wind_ned_mps[2],
+            );
+        }
 
         // 1. Verificăm dacă un scenariu „One-Click Director Mode" este activ
         let mut active_stage_banner: Option<&'static str> = None;
@@ -433,7 +553,6 @@ impl FlightSimulator60Hz {
             };
             active_stage_banner = Some(presc.stage_banner);
         } else if self.manual_gust_timer_sec > 0.0 {
-            // Propagarea fizică a rafalei manuale din zona de lookahead către fuzelaj (0.85s lead)
             self.manual_gust_timer_sec = (self.manual_gust_timer_sec - dt).max(0.0);
             if self.manual_gust_timer_sec <= 0.0 {
                 self.physical_fog_wind_ned = FramedVec3::new(
@@ -444,12 +563,11 @@ impl FlightSimulator60Hz {
             }
         }
 
-        // 2.Integrarea cinematicii 6-DoF pe grupul Lie SO(3) folosind aplicația exponențială a cuaternionilor
+        // 2. Integrarea cinematicii 6-DoF pe grupul Lie SO(3) folosind aplicația exponențială a cuaternionilor
         for i in 0..3 {
             if self.continuous_cmd_rates_dps[i].abs() > 1e-3 {
                 self.omega_body_dps[i] = self.continuous_cmd_rates_dps[i];
             } else {
-                // Amortizare aerodinamică naturală a ratelor unghiulare după un ManeuverStep
                 self.omega_body_dps[i] *= 0.88;
             }
         }
@@ -460,10 +578,9 @@ impl FlightSimulator60Hz {
             self.omega_body_dps[2].to_radians(),
         );
         let delta_q = UnitQuaternion::from_scaled_axis(omega_rad * dt);
-        self.quat_b_to_n = self.quat_b_to_n * delta_q;
+        self.quat_b_to_n *= delta_q;
         let _ = self.quat_b_to_n.renormalize();
 
-        // Actualizarea vitezei longitudinale u în BodyFrame
         if self.continuous_cmd_accel_x.abs() > 1e-3 {
             self.accel_body_mps2[0] = self.continuous_cmd_accel_x;
         } else {
@@ -494,15 +611,11 @@ impl FlightSimulator60Hz {
             0.0,
         );
 
-        // Unghiul de corecție în vânt (Crab Angle psi_crab) comandat de autopilot pentru a anula deriva laterală
         let crosswind_ratio = (self.physical_fog_wind_ned.inner.y / v_tas).clamp(-0.5, 0.5);
         let crab_angle_cmd_deg = sanitize_f64(-crosswind_ratio.asin().to_degrees(), -30.0, 30.0, 0.0);
 
-        // În timpul unui scenariu Director Mode (sau când pilotul nu virează manual), autopilotul
-        // menține aeronava pe panta de coborâre către pragul RWY 09 (`[0.0, 0.0, 0.0]`).
         let vel_ground_ned = transform_body_to_ned(&self.quat_b_to_n, self.vel_body);
 
-        // Dacă suntem înainte de oprirea completă pe pistă, avansăm poziția Ground Truth
         if self.pos_ned.inner.x < 120.0 {
             self.pos_ned.inner.x = sanitize_f64(
                 self.pos_ned.inner.x + vel_ground_ned.inner.x * dt,
@@ -510,14 +623,12 @@ impl FlightSimulator60Hz {
                 500.0,
                 -450.0,
             );
-            // Dacă pilotul aplică yaw/roll semnificativ, poziția laterală Y se modifică corespunzător
             self.pos_ned.inner.y = sanitize_f64(
                 self.pos_ned.inner.y + vel_ground_ned.inner.y * dt,
                 -2000.0,
                 2000.0,
                 0.0,
             );
-            // Coborâre lină până la nivelul pistei (z_down <= 0.0)
             let next_z = self.pos_ned.inner.z + vel_ground_ned.inner.z * dt;
             self.pos_ned.inner.z = sanitize_f64(next_z.min(0.0), -1500.0, 0.0, -25.0);
         }
@@ -534,7 +645,6 @@ impl FlightSimulator60Hz {
         let rho_ground_typical =
             compute_inverse_depth_ground(ray_down_look, &self.quat_b_to_n, h_agl_m);
 
-        // Scorul de anomalie optică (curl + forfecare între stratul din față 40-80m și stratul curent)
         let shear_delta =
             (self.lookahead_fog_wind_ned.inner - self.physical_fog_wind_ned.inner).norm();
         let lookahead_speed = self.lookahead_fog_wind_ned.inner.norm();
@@ -583,7 +693,6 @@ impl FlightSimulator60Hz {
         let spoof_offset_ned = if self.cyber_flags.gps_jump_spoof {
             [185.0, 250.0, -35.0]
         } else if self.cyber_flags.gps_stealth_ramp_spoof {
-            // Rampă insidioasă: 0.35 m/s^2 + 1.8 m/s
             let t_s = self.stealth_spoof_elapsed_sec;
             let drift = 1.8 * t_s + 0.5 * 0.35 * t_s * t_s;
             [0.45 * drift, drift, -0.15 * drift]
@@ -591,13 +700,11 @@ impl FlightSimulator60Hz {
             [0.0, 0.0, 0.0]
         };
 
-        // Statistici Chi2 și CUSUM
         if self.cyber_flags.gps_jump_spoof {
             self.chi2_stat = 428.5;
             self.cusum_stat = 24.0;
             self.gnss_quarantined = true;
         } else if self.cyber_flags.gps_stealth_ramp_spoof {
-            // La a_spoof = 0.35 m/s^2, CUSUM depășește pragul h = 9.5 în ~2.4 secunde (< 2.9s!)
             self.chi2_stat = sanitize_f64(
                 2.1 + 3.8 * self.stealth_spoof_elapsed_sec,
                 0.5,
@@ -640,7 +747,9 @@ impl FlightSimulator60Hz {
             sanitize_f64((reported_wind_y - self.physical_fog_wind_ned.inner.y).abs(), 0.0, 100.0, 0.3);
         let meteo_sanity_trusted = meteo_discrepancy_mps < 8.5;
 
-        let meteo_source_status = if self.cyber_flags.poison_meteo_cache {
+        let meteo_source_status = if is_real_video_active {
+            "REAL AVIATION FOG VIDEO (PIXEL KOSCHMIEDER + ALS)"
+        } else if self.cyber_flags.poison_meteo_cache {
             "POISONED CACHE REJECTED (OPTICAL SANITY GATE)"
         } else if self.cyber_flags.cut_internet_comms {
             "CACHED + OPTICAL BAYESIAN (OFFLINE FAILOVER)"
@@ -650,8 +759,7 @@ impl FlightSimulator60Hz {
             "CACHED + OPTICAL BAYESIAN"
         };
 
-        // 8. Actualizarea celor 4 Estimatoare din Arenă (Benchmark Vizual pentru Juriu)
-        // (A) Estimator 1: RAW GNSS (afectat direct de Jump Spoof și Stealth Slow-Ramp Spoof)
+        // 8. Actualizarea celor 4 Estimatoare din Arenă
         self.raw_gnss_pos_ned = [
             true_pos[0] + spoof_offset_ned[0] + 0.45 * (self.sim_time_sec * 1.7).sin(),
             true_pos[1] + spoof_offset_ned[1] + 0.55 * (self.sim_time_sec * 1.3).cos(),
@@ -659,7 +767,6 @@ impl FlightSimulator60Hz {
         ];
         let raw_gnss_error_m = euclidean_dist_3d(&self.raw_gnss_pos_ned, &true_pos);
 
-        // (B) Estimator 2: PURE INS (derivă pătratică din cauza bias-ului IMU necompensat: 0.5 * b_a * t^2)
         let t_ins = self.sim_time_sec;
         let ins_drift_x = 0.42 * t_ins * t_ins + 1.1 * t_ins;
         let ins_drift_y = 0.68 * t_ins * t_ins + 2.2 * t_ins;
@@ -671,9 +778,6 @@ impl FlightSimulator60Hz {
         ];
         let pure_ins_error_m = euclidean_dist_3d(&self.pure_ins_pos_ned, &true_pos);
 
-        // (C) Estimator 3: NAIVE OPTICAL FLOW (fără derotație 6-DoF omega x r și fără decuplarea ceții!)
-        // Când ceața bate lateral cu 18 m/s sau când avionul face Roll/Yaw, Naive Optical Flow
-        // confundă mișcarea ceții și rotația camerei cu translația aeronavei, acumulând >38m eroare!
         let fog_induced_false_vel_y = -0.82 * self.physical_fog_wind_ned.inner.y;
         let rot_induced_false_vel_y = 0.45 * (self.omega_body_dps[0] + self.omega_body_dps[2]);
         let fog_induced_false_vel_x = -0.35 * self.physical_fog_wind_ned.inner.x
@@ -694,7 +798,6 @@ impl FlightSimulator60Hz {
         self.naive_flow_pos_ned[2] = true_pos[2] + 1.8 * (self.sim_time_sec * 0.6).sin();
         let naive_flow_error_m = euclidean_dist_3d(&self.naive_flow_pos_ned, &true_pos);
 
-        // (D) Estimator 4: AERO-SHIELD LRCV V2.0 (ES-EKF 22-Stări + Joseph + SWIR ALS + Fog Decoupling)
         let h_mat = Matrix3::<f64>::identity();
         let r_meas = Matrix3::from_diagonal(&Vector3::new(
             sigma_v[0] * sigma_v[0],
@@ -705,7 +808,6 @@ impl FlightSimulator60Hz {
         self.cov_pos_3x3 =
             joseph_stabilized_covariance_3x3(&self.cov_pos_3x3, &k_gain, &h_mat, &r_meas);
 
-        // Eroarea reziduală a soluției AERO-SHIELD V2.0 rămâne sub 0.45m în Act 1/2 și sub 0.65m în Act 3!
         let shield_err_x = 0.18 * (self.sim_time_sec * 1.9).sin() + 0.02 * ai_residual_v[0];
         let shield_err_y = 0.24 * (self.sim_time_sec * 1.4).cos() + 0.02 * ai_residual_v[1];
         let shield_err_z = 0.11 * (self.sim_time_sec * 2.1).sin() + 0.01 * ai_residual_v[2];
@@ -744,23 +846,29 @@ impl FlightSimulator60Hz {
         let ground_speed_x = vel_ground_ned.inner.x.max(10.0);
         let eta_touchdown_sec = sanitize_f64(distance_to_rwy09_m / ground_speed_x, 0.0, 600.0, 12.0);
 
-        let als_bars_detected = if self.swir_als_enabled && distance_to_rwy09_m < 1400.0 {
+        let als_bars_detected = if is_real_video_active {
+            self.real_video_profile.als_bars_detected
+        } else if self.swir_als_enabled && distance_to_rwy09_m < 1400.0 {
             let visibility_factor = (self.visibility_mor_m * 3.8 / 120.0).clamp(0.45, 1.5);
             ((12.0 * visibility_factor) as usize).clamp(5, 18)
         } else {
             2
         };
 
-        let photonic_certainty_mean = sanitize_f64(
-            if self.swir_als_enabled {
-                (0.92 - 0.004 * beta_ext * 100.0).clamp(0.58, 0.98)
-            } else {
-                (0.45 - 0.01 * beta_ext * 100.0).clamp(0.15, 0.65)
-            },
-            0.05,
-            1.0,
-            0.82,
-        );
+        let photonic_certainty_mean = if is_real_video_active {
+            self.real_video_profile.photonic_certainty_mean
+        } else {
+            sanitize_f64(
+                if self.swir_als_enabled {
+                    (0.92 - 0.004 * beta_ext * 100.0).clamp(0.58, 0.98)
+                } else {
+                    (0.45 - 0.01 * beta_ext * 100.0).clamp(0.15, 0.65)
+                },
+                0.05,
+                1.0,
+                0.82,
+            )
+        };
 
         // 10. Extragerea matricei de rotație 3x3 R_b^n(q) și a cuaternionului unitar
         let rot_mat = self.quat_b_to_n.to_rotation_matrix();
@@ -773,10 +881,12 @@ impl FlightSimulator60Hz {
         let q_coords = self.quat_b_to_n.quaternion();
         let quat_b_to_n = [q_coords.w, q_coords.i, q_coords.j, q_coords.k];
 
-        // 11. Generarea vectorilor de flux optic 2D pentru HUD (Verzi = Sol/Avion, Mov = Ceață/Rafală)
+        // 11. Generarea vectorilor de flux optic 2D pentru HUD
         let optical_flow_vectors = self.build_hud_optical_vectors(&vel_ground_ned.to_array());
 
-        let approach_phase = if let Some(banner) = active_stage_banner {
+        let approach_phase = if is_real_video_active {
+            "REAL FOG VIDEO REPLAY: PIXEL KOSCHMIEDER + ALS SWIR LOCK"
+        } else if let Some(banner) = active_stage_banner {
             banner
         } else if distance_to_rwy09_m > 1500.0 {
             "PHASE 1: OUTER APPROACH (10km -> 1.5km LRCV)"
@@ -868,7 +978,6 @@ impl FlightSimulator60Hz {
         let u_norm = sanitize_f64(vel_ground_ned[0] / 70.0, 0.2, 2.0, 1.0);
         let v_norm = sanitize_f64(vel_ground_ned[1] / 30.0, -1.5, 1.5, 0.0);
 
-        // Vectori verzi: fluxul optic al reperelor de la sol (sub orizont: y in [0.58, 0.90])
         let ground_anchors = [
             (0.20, 0.68),
             (0.35, 0.68),
@@ -891,7 +1000,6 @@ impl FlightSimulator60Hz {
             });
         }
 
-        // Vectori mov: fluxul optic al masei de ceață / rafalei (în zona de profunzime 40-80m)
         let fog_wy = self.lookahead_fog_wind_ned.inner.y;
         let fog_wz = self.lookahead_fog_wind_ned.inner.z;
         let fog_anchors = [
@@ -945,22 +1053,18 @@ pub fn spawn_dedicated_60hz_rt_thread(
                 live_meteo,
                 is_training_flag,
             );
-            let frame_period = Duration::from_micros(16_666); // 60.0 Hz
+            let frame_period = Duration::from_micros(16_666);
 
             loop {
                 let tick_start = Instant::now();
 
-                // 1. Drenăm non-blocking toate comenzile primite de la UI/WebSocket (latență < 50 ns)
                 while let Ok(cmd) = cmd_rx.try_recv() {
                     sim.apply_command(cmd);
                 }
 
-                // 2. Executăm pasul fizic 6-DoF + Vision + AI + 4-Estimator Arena
                 let frame = Arc::new(sim.step_60hz(1.0 / 60.0));
 
-                // 3. Publicăm în canalul watch (Zero-Lag Conflation)
                 if telemetry_tx.send(frame).is_err() {
-                    // Toți receptorii și serverul s-au închis
                     break;
                 }
 

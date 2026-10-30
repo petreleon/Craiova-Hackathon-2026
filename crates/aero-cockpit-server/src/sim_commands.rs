@@ -76,6 +76,9 @@ pub enum SimCommand {
     TriggerDirectorScenario {
         scenario_id: u8,
     },
+    /// Activează redarea și fuziunea metricilor extrase din videoclipuri reale de aviație (aterizare în ceață)
+    /// din `real_videos/` (`🎬 TEST REAL FOG VIDEO`).
+    ReplayRealVideo,
     /// Resetează aeronava la începutul conului de apropiere LRCV RWY 09.
     ResetApproach,
 }
@@ -144,7 +147,97 @@ impl SimCommand {
                     scenario_id: scenario_id.clamp(1, 3),
                 }
             }
+            SimCommand::ReplayRealVideo => SimCommand::ReplayRealVideo,
             SimCommand::ResetApproach => SimCommand::ResetApproach,
         }
+    }
+
+    /// Parsează atât formatul canonic `{ "type": "...", "payload": { ... } }`, cât și
+    /// variantele shorthand/snake_case folosite de scripturile de audit sau REST (`inject_sudden_fog_gust`,
+    /// `turn_right`, `turn_left`, `pitch_up`, `pitch_down`, `roll_right`, `roll_left`, `accelerate`, `decelerate`,
+    /// `replay_real_video`, `reset`).
+    #[must_use]
+    pub fn parse_flexible_json(val: &serde_json::Value) -> Option<Self> {
+        if let Ok(cmd) = serde_json::from_value::<SimCommand>(val.clone()) {
+            return Some(cmd.sanitize());
+        }
+
+        let cmd_type = val.get("type").and_then(|v| v.as_str())?;
+        let parsed = match cmd_type {
+            "inject_sudden_fog_gust" | "InjectSuddenFogGust" => {
+                let intensity = val
+                    .get("intensity_mps")
+                    .or_else(|| val.get("wy_ned_mps"))
+                    .and_then(|v| v.as_f64())
+                    .unwrap_or(14.5);
+                let wx = val
+                    .get("wx_ned_mps")
+                    .and_then(|v| v.as_f64())
+                    .unwrap_or(-4.0);
+                let wz = val
+                    .get("wz_ned_mps")
+                    .and_then(|v| v.as_f64())
+                    .unwrap_or(1.2);
+                SimCommand::InjectSuddenFogGust {
+                    wx_ned_mps: wx,
+                    wy_ned_mps: intensity,
+                    wz_ned_mps: wz,
+                    turbulence_intensity: 0.75,
+                }
+            }
+            "turn_right" => SimCommand::ManeuverStep {
+                d_yaw_deg: 6.0,
+                d_pitch_deg: 0.0,
+                d_roll_deg: 12.0,
+                d_throttle_mps: 0.0,
+            },
+            "turn_left" => SimCommand::ManeuverStep {
+                d_yaw_deg: -6.0,
+                d_pitch_deg: 0.0,
+                d_roll_deg: -12.0,
+                d_throttle_mps: 0.0,
+            },
+            "pitch_up" | "climb" => SimCommand::ManeuverStep {
+                d_yaw_deg: 0.0,
+                d_pitch_deg: 4.0,
+                d_roll_deg: 0.0,
+                d_throttle_mps: 0.0,
+            },
+            "pitch_down" | "descend" => SimCommand::ManeuverStep {
+                d_yaw_deg: 0.0,
+                d_pitch_deg: -4.0,
+                d_roll_deg: 0.0,
+                d_throttle_mps: 0.0,
+            },
+            "roll_right" => SimCommand::ManeuverStep {
+                d_yaw_deg: 0.0,
+                d_pitch_deg: 0.0,
+                d_roll_deg: 15.0,
+                d_throttle_mps: 0.0,
+            },
+            "roll_left" => SimCommand::ManeuverStep {
+                d_yaw_deg: 0.0,
+                d_pitch_deg: 0.0,
+                d_roll_deg: -15.0,
+                d_throttle_mps: 0.0,
+            },
+            "accelerate" => SimCommand::ManeuverStep {
+                d_yaw_deg: 0.0,
+                d_pitch_deg: 0.0,
+                d_roll_deg: 0.0,
+                d_throttle_mps: 5.0,
+            },
+            "decelerate" => SimCommand::ManeuverStep {
+                d_yaw_deg: 0.0,
+                d_pitch_deg: 0.0,
+                d_roll_deg: 0.0,
+                d_throttle_mps: -5.0,
+            },
+            "replay_real_video" | "ReplayRealVideo" => SimCommand::ReplayRealVideo,
+            "reset" | "reset_approach" | "ResetApproach" => SimCommand::ResetApproach,
+            _ => return None,
+        };
+
+        Some(parsed.sanitize())
     }
 }

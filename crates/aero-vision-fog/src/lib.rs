@@ -21,6 +21,7 @@
 pub mod als_halo_suppressor;
 pub mod clahe_koschmieder;
 pub mod optical_flow_derot;
+pub mod real_video_reader;
 pub mod structure_tensor_3f;
 pub mod swir_vis_fusion;
 pub mod synthetic_lrcv_camera;
@@ -40,6 +41,11 @@ pub use optical_flow_derot::{
     solve_decoupled_ground_and_fog_velocity, DecoupledMotionEstimate, ImuAngularSample,
     OpticalFlowDerotConfig, PatchOpticalFlow,
 };
+pub use real_video_reader::{
+    decode_real_video_frames_ffmpeg, is_frame_report_strictly_finite, rgb24_to_dual_band_frame,
+    run_multi_video_benchmark_and_save, run_real_video_benchmark, MultiVideoBenchmarkSummary,
+    RealVideoBenchmarkReport, RealVideoError, SyntheticDualBandFrame,
+};
 pub use structure_tensor_3f::{
     compute_anisotropic_fisher_matrix, compute_photonic_weight, compute_structure_tensors_3f_into,
     decompose_structure_tensor_2x2, PatchStructureTensor, RingBuffer3Frames,
@@ -57,6 +63,11 @@ pub use synthetic_lrcv_camera::{
 
 use nalgebra::{Vector2, Vector3};
 use serde::{Deserialize, Serialize};
+
+/// Alias for `VisionPipelineConfig`.
+pub type VisionFogConfig = VisionPipelineConfig;
+/// Alias for `VisionFogPipeline`.
+pub type FogVisionPipeline = VisionFogPipeline;
 
 /// Unified configuration for the complete `VisionFogPipeline`.
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]

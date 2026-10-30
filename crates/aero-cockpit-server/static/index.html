@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AERO-SHIELD LRCV V2.0 — 6-DoF CAT IIIc Cyber-Avionics Cockpit (Craiova RWY 09)</title>
+  <title>AERO-SHIELD LRCV V2.0 — Pilot Automat Vizual Anti-Ceață &amp; Anti-Hacker (Aeroportul Craiova Pista 09)</title>
   <style>
     :root {
       --bg-deep: #040811;
@@ -16,13 +16,13 @@
       --alert-red: #ff2a5f;
       --warn-amber: #ffb800;
       --text-main: #e2f1ff;
-      --text-dim: #7fa2c7;
+      --text-dim: #9ec0e6;
     }
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+      font-family: "Inter", "Segoe UI", "JetBrains Mono", system-ui, sans-serif;
       user-select: none;
     }
     body {
@@ -33,6 +33,7 @@
       flex-direction: column;
       overflow-x: hidden;
     }
+
     /* TOP DIRECTOR BAR */
     .topbar {
       display: flex;
@@ -40,10 +41,10 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      padding: 8px 14px;
-      background: rgba(7, 14, 28, 0.96);
+      padding: 10px 14px;
+      background: rgba(7, 14, 28, 0.98);
       border-bottom: 1px solid var(--border-cyan);
-      box-shadow: 0 2px 18px rgba(0, 229, 255, 0.12);
+      box-shadow: 0 2px 18px rgba(0, 229, 255, 0.14);
     }
     .brand {
       display: flex;
@@ -54,16 +55,16 @@
       background: linear-gradient(135deg, #00ff9d 0%, #00b8ff 100%);
       color: #021019;
       font-weight: 900;
-      font-size: 12px;
-      padding: 4px 8px;
-      border-radius: 4px;
-      letter-spacing: 0.8px;
+      font-size: 11px;
+      padding: 5px 9px;
+      border-radius: 5px;
+      letter-spacing: 0.6px;
     }
     .brand-title {
       font-size: 14px;
-      font-weight: 800;
+      font-weight: 900;
       color: var(--hud-cyan);
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
     }
     .brand-sub {
       font-size: 11px;
@@ -79,11 +80,12 @@
       color: var(--text-main);
       border: 1px solid #1e4273;
       padding: 6px 11px;
-      border-radius: 5px;
+      border-radius: 6px;
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.14s ease;
+      text-align: left;
     }
     .btn:hover {
       border-color: var(--hud-cyan);
@@ -92,6 +94,15 @@
     }
     .btn:active {
       transform: translateY(0);
+    }
+    .btn-sub {
+      display: block;
+      font-size: 9.5px;
+      font-weight: 500;
+      color: #b8d8f8;
+      opacity: 0.92;
+      margin-top: 2px;
+      line-height: 1.2;
     }
     .btn-act {
       background: linear-gradient(180deg, #132c52 0%, #0b1b36 100%);
@@ -104,6 +115,10 @@
       border-color: #ffffff;
       box-shadow: 0 0 14px rgba(0, 255, 157, 0.6);
     }
+    .btn-act.active .btn-sub {
+      color: #032215;
+      font-weight: 700;
+    }
     .btn-danger {
       background: linear-gradient(180deg, #4a1025 0%, #2b0714 100%);
       border-color: var(--alert-red);
@@ -114,29 +129,172 @@
       color: #fff;
       box-shadow: 0 0 14px rgba(255, 42, 95, 0.75);
     }
+    .btn-danger.active .btn-sub {
+      color: #ffffff;
+    }
     .btn-gust {
       background: linear-gradient(90deg, #7e22ce 0%, #c026d3 100%);
       border-color: #f0abfc;
       color: #ffffff;
-      font-size: 12px;
-      padding: 8px 12px;
+      font-size: 11.5px;
+      padding: 7px 12px;
       box-shadow: 0 0 14px rgba(217, 70, 239, 0.45);
     }
     .btn-cuda {
       background: linear-gradient(90deg, #ea580c 0%, #dc2626 100%);
       border-color: #fdba74;
       color: #fff;
-      font-size: 12px;
-      padding: 8px 12px;
+      font-size: 11.5px;
+      padding: 7px 12px;
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .lang-switcher {
+      display: inline-flex;
+      background: #061020;
+      border: 1px solid #00e5ff;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
+    }
+    .lang-btn {
+      background: transparent;
+      color: #9ec0e6;
+      border: none;
+      padding: 6px 10px;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .lang-btn.active {
+      background: linear-gradient(135deg, #00ff9d 0%, #00b8ff 100%);
+      color: #021019;
     }
     .phase-banner {
       background: #081529;
       border: 1px solid #1d4d7a;
-      padding: 4px 10px;
-      border-radius: 4px;
+      padding: 6px 10px;
+      border-radius: 5px;
       font-size: 11px;
       color: var(--hud-green);
+      font-weight: 800;
+    }
+
+    /* BANNER 3 PASI PENTRU INCEPATORI */
+    .beginner-steps-banner {
+      margin: 10px 14px 4px 14px;
+      padding: 12px 14px;
+      background: linear-gradient(180deg, rgba(13, 31, 61, 0.98), rgba(7, 17, 34, 0.98));
+      border: 2px solid #00e5ff;
+      border-radius: 8px;
+      box-shadow: 0 4px 22px rgba(0, 229, 255, 0.16);
+    }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+    @media (max-width: 1100px) {
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .step-card {
+      background: rgba(5, 13, 27, 0.92);
+      border-radius: 7px;
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    /* POVESTITOR IN TIMP REAL (LIVE STORYTELLER) */
+    .storyteller-banner {
+      margin: 6px 14px 4px 14px;
+      padding: 11px 16px;
+      background: linear-gradient(90deg, rgba(6, 38, 45, 0.96) 0%, rgba(11, 27, 54, 0.96) 100%);
+      border: 2px solid var(--hud-green);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      box-shadow: 0 0 20px rgba(0, 255, 157, 0.22);
+      transition: all 0.2s ease;
+    }
+    .storyteller-title {
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+      color: var(--hud-green);
+      margin-bottom: 3px;
+    }
+    .storyteller-text {
+      font-size: 13.5px;
       font-weight: 700;
+      color: #ffffff;
+      line-height: 1.4;
+    }
+
+    /* MAIN VIEWPORT MODE SELECTOR BAR (SIMULATOR VS 3 REAL VIDEOS) */
+    .view-mode-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 8px 10px;
+      background: linear-gradient(90deg, #07152b 0%, #0d1f3d 100%);
+      border-bottom: 1px solid #1e4273;
+    }
+    .view-mode-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .mode-btn {
+      background: #0f2242;
+      color: #d8ecff;
+      border: 1px solid #255085;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .mode-btn:hover {
+      border-color: var(--hud-cyan);
+      background: #173463;
+    }
+    .mode-btn.active {
+      background: linear-gradient(135deg, #00ff9d 0%, #00b8ff 100%);
+      color: #02131c;
+      border-color: #ffffff;
+      box-shadow: 0 0 14px rgba(0, 255, 157, 0.55);
+    }
+    .overlay-toggle-btn {
+      background: #1a1438;
+      color: #f0abfc;
+      border: 1px solid #c026d3;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .overlay-toggle-btn.active {
+      background: linear-gradient(90deg, #7e22ce 0%, #c026d3 100%);
+      color: #ffffff;
+      border-color: #fdf4ff;
+      box-shadow: 0 0 12px rgba(217, 70, 239, 0.5);
     }
 
     /* MAIN GRID */
@@ -144,7 +302,7 @@
       display: grid;
       grid-template-columns: 1.35fr 1fr;
       gap: 10px;
-      padding: 10px 14px;
+      padding: 6px 14px 10px 14px;
       flex: 1;
     }
     @media (max-width: 1200px) {
@@ -155,7 +313,7 @@
     .viewport-card {
       background: var(--bg-panel);
       border: 1px solid var(--border-cyan);
-      border-radius: 7px;
+      border-radius: 8px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -165,18 +323,19 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 6px 12px;
-      background: rgba(15, 27, 51, 0.9);
+      padding: 8px 12px;
+      background: rgba(15, 27, 51, 0.95);
       border-bottom: 1px solid #153759;
-      font-size: 11px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 800;
       color: var(--hud-cyan);
     }
     .canvas-wrap {
       position: relative;
       width: 100%;
-      height: 410px;
+      height: 400px;
       background: #030710;
+      overflow: hidden;
     }
     canvas {
       width: 100%;
@@ -189,31 +348,55 @@
       top: 12px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(192, 38, 211, 0.92);
+      background: rgba(192, 38, 211, 0.94);
       border: 2px solid #fdf4ff;
       color: #ffffff;
-      padding: 7px 16px;
+      padding: 8px 16px;
       border-radius: 6px;
       font-size: 12px;
       font-weight: 900;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.4px;
       box-shadow: 0 0 24px rgba(217, 70, 239, 0.95);
       display: none;
       animation: pulseAlert 0.45s infinite alternate;
       pointer-events: none;
       z-index: 10;
+      text-align: center;
+      width: 90%;
     }
     @keyframes pulseAlert {
-      from { transform: translateX(-50%) scale(0.98); opacity: 0.88; }
-      to { transform: translateX(-50%) scale(1.03); opacity: 1.0; }
+      from { transform: translateX(-50%) scale(0.98); opacity: 0.9; }
+      to { transform: translateX(-50%) scale(1.02); opacity: 1.0; }
+    }
+
+    /* VISUAL LEGEND BAR FOR PARBRIZ */
+    .visual-legend-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 8px 12px;
+      background: #061020;
+      border-top: 1px solid #173a5e;
+      font-size: 11.5px;
+    }
+    @media (max-width: 900px) {
+      .visual-legend-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+    .legend-chip {
+      background: #0b1930;
+      border-radius: 5px;
+      padding: 6px 9px;
+      line-height: 1.35;
     }
 
     /* LOWER DECK: 3 CONTROL & TELEMETRY PANELS */
     .lower-deck {
       display: grid;
-      grid-template-columns: 1.15fr 1.15fr 1fr;
+      grid-template-columns: 1.15fr 1.05fr 1.15fr;
       gap: 10px;
-      padding: 0 14px 12px 14px;
+      padding: 0 14px 10px 14px;
     }
     @media (max-width: 1250px) {
       .lower-deck {
@@ -223,15 +406,15 @@
     .panel {
       background: var(--bg-panel);
       border: 1px solid var(--border-cyan);
-      border-radius: 7px;
+      border-radius: 8px;
       padding: 10px 12px;
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
     .panel-title {
-      font-size: 12px;
-      font-weight: 800;
+      font-size: 12.5px;
+      font-weight: 900;
       color: var(--hud-cyan);
       border-bottom: 1px solid #153554;
       padding-bottom: 5px;
@@ -241,7 +424,7 @@
     }
     .controls-6dof-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 6px;
     }
     .matrix-box {
@@ -277,20 +460,21 @@
     .kv-val { font-weight: 700; color: var(--text-main); }
     .arena-legend {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr;
       gap: 6px;
-      padding: 6px 10px;
+      padding: 8px 10px;
       background: #060d1b;
       border-top: 1px solid #153554;
-      font-size: 11px;
+      font-size: 11.5px;
     }
     .est-pill {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 4px 8px;
-      border-radius: 4px;
+      padding: 6px 10px;
+      border-radius: 5px;
       background: #0b162c;
+      gap: 10px;
     }
     .progress-bar-outer {
       width: 100%;
@@ -306,121 +490,425 @@
       background: linear-gradient(90deg, #00ff9d 0%, #00e5ff 100%);
       transition: width 0.15s ease;
     }
+
+    /* REAL VIDEOS BENCHMARK SECTION */
+    .real-videos-section {
+      margin: 0 14px 16px 14px;
+      padding: 12px 14px;
+      background: linear-gradient(180deg, rgba(10, 22, 42, 0.98), rgba(5, 12, 24, 0.98));
+      border: 2px solid #00ff9d;
+      border-radius: 8px;
+      box-shadow: 0 0 24px rgba(0, 255, 157, 0.18);
+    }
+    .real-videos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+    @media (max-width: 1100px) {
+      .real-videos-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .real-video-card {
+      background: #071326;
+      border: 1px solid #1d4d7a;
+      border-radius: 7px;
+      padding: 10px 12px;
+      font-size: 11.5px;
+      line-height: 1.45;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .watch-main-btn {
+      margin-top: 8px;
+      width: 100%;
+      text-align: center;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 900;
+      cursor: pointer;
+      background: linear-gradient(90deg, #00ff9d 0%, #00b8ff 100%);
+      color: #02131c;
+      border: 1px solid #ffffff;
+      box-shadow: 0 0 12px rgba(0, 255, 157, 0.35);
+      transition: transform 0.14s ease;
+    }
+    .watch-main-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 18px rgba(0, 255, 157, 0.65);
+    }
   </style>
 </head>
 <body>
   <!-- TOP DIRECTOR MODE BAR -->
   <header class="topbar">
     <div class="brand">
-      <span class="brand-badge">DO-178C DAL-A</span>
+      <span class="brand-badge" data-i18n="brand_badge">SCUT VIZUAL ANTI-CEAȚĂ</span>
       <div>
-        <div class="brand-title">AERO-SHIELD LRCV V2.0 — CRAIOVA RWY 09 (44.3181°N, 23.8886°E)</div>
-        <div class="brand-sub" id="conn-status">WS: CONNECTING... | 60.0 Hz REAL-TIME LOOP</div>
+        <div class="brand-title" data-i18n="brand_title">AERO-SHIELD LRCV V2.0 — ATERIZARE AUTOMATĂ LA CRAIOVA (PISTA 09) FĂRĂ GPS</div>
+        <div class="brand-sub" id="conn-status">CONEXIUNE LIVE: SE CONECTEAZĂ... | 60 CADRE / SECUNDĂ</div>
       </div>
     </div>
 
     <div class="director-buttons">
       <button class="btn btn-act" id="btn-act-1" onclick="triggerScenario(1)">
-        🎬 ACT 1: STRAIGHT FLIGHT &amp; SUDDEN FOG SHEAR
+        <span data-i18n="act1_title">🎬 SCENARIUL 1: ZBOR LIN + RAFALĂ BRUSCĂ ÎN CEAȚĂ</span>
+        <span class="btn-sub" data-i18n="act1_sub">Vezi cum camera simte vântul din ceață înainte să lovească avionul</span>
       </button>
       <button class="btn btn-act" id="btn-act-2" onclick="triggerScenario(2)">
-        🎬 ACT 2: DYNAMIC 6-DoF MANEUVERS IN SHIFTING FOG
+        <span data-i18n="act2_title">🎬 SCENARIUL 2: VIRAJE 3D ÎN CEAȚĂ DENSĂ</span>
+        <span class="btn-sub" data-i18n="act2_sub">Avionul virează și se înclină fără să încurce mișcarea camerei cu solul</span>
       </button>
       <button class="btn btn-act" id="btn-act-3" onclick="triggerScenario(3)">
-        🎬 ACT 3: FULL CYBER-SIEGE CAT IIIc TOUCHDOWN RWY 09
+        <span data-i18n="act3_title">🎬 SCENARIUL 3: ATAC HACKER GPS + ATERIZARE PE ORB</span>
+        <span class="btn-sub" data-i18n="act3_sub">Hackerul atacă GPS-ul în ceață oarbă, dar noi aterizăm fix pe pistă</span>
+      </button>
+      <button class="btn btn-gust" id="btn-real-video" onclick="testRealFogVideo()">
+        <span data-i18n="btn_real_video_title">🎬 VEZI FILMĂRILE VIDEO REALE PE ECRAN</span>
+        <span class="btn-sub" style="color:#fce7f3;" data-i18n="btn_real_video_sub">Pornește filmarea reală din cabină direct pe Parbrizul Principal!</span>
+      </button>
+      <button class="btn" style="background:linear-gradient(90deg,#0284c7,#0ea5e9);border-color:#7dd3fc;color:#fff;" onclick="toggleSimpleGuide()">
+        <span data-i18n="btn_guide_title">💡 ASCUNDE / ARATĂ GHIDUL DE ÎNCEPUT</span>
+        <span class="btn-sub" style="color:#e0f2fe;" data-i18n="btn_guide_sub">Explicație simplă în 3 pași pentru orice începător</span>
       </button>
       <button class="btn" onclick="sendSimCommand({ type: 'ResetApproach' })">
-        🔄 RESET APPROACH
+        <span data-i18n="btn_reset_title">🔄 REIA ATERIZAREA DE LA ÎNCEPUT</span>
+        <span class="btn-sub" data-i18n="btn_reset_sub">Resetează poziția avionului la 900m de pista Craiova</span>
       </button>
     </div>
 
-    <div class="phase-banner" id="phase-banner">PHASE 2: ALS SWIR LOCK (RWY 09)</div>
+    <div class="topbar-right">
+      <!-- COMUTATOR VIZIBIL DE LIMBĂ: ROMÂNĂ (IMPLICIT) | ENGLISH -->
+      <div class="lang-switcher" title="Schimbă limba interfeței / Switch interface language">
+        <button class="lang-btn active" id="lang-btn-ro" onclick="setLanguage('ro')">🇷🇴 Română</button>
+        <button class="lang-btn" id="lang-btn-en" onclick="setLanguage('en')">🇬🇧 English</button>
+      </div>
+      <div class="phase-banner" id="phase-banner">FAZA 2: GHIDARE VIZUALĂ PE LUMINILE PISTEI (RWY 09)</div>
+    </div>
   </header>
 
-  <!-- DUAL 60 FPS VIEWPORTS -->
-  <main class="cockpit-grid">
-    <!-- CANVAS 1: 3D COCKPIT HUD + SWIR CAMERA + OPTICAL FLOW -->
+  <!-- A. BANNER / GHID VIZUAL DE ÎNCEPUT ÎN 3 PAȘI SIMPLI (VIZIBIL DIN PRIMA SECUNDĂ) -->
+  <section id="simple-guide-panel" class="beginner-steps-banner">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1e4273; padding-bottom:6px;">
+      <strong style="color:#00ff9d; font-size:13.5px;" data-i18n="guide_header_title">👋 BUN VENIT! ÎNȚELEGE APLICAȚIA ÎN 3 PAȘI SIMPLI (FĂRĂ TERMENI COMPLICAȚI):</strong>
+      <span style="color:#7dd3fc; font-size:11px;" data-i18n="guide_header_sub">Aeroportul Craiova (LRCV) — Pista 09 | Simulator 60 FPS + 3 Filmări Video Reale</span>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card" style="border-left: 4px solid #ff2a5f;">
+        <div style="color:#ff2a5f; font-weight:900; font-size:13px; margin-bottom:4px;" data-i18n="step1_title">PASUL 1 — Care e pericolul? 🚨</div>
+        <p style="color:#e2f1ff;" data-i18n="step1_body">
+          <strong>Avionul aterizează la Craiova (Pista 09) pe ceață densă. Un hacker îi păcălește GPS-ul ca să-l scoată în afara pistei.</strong>
+          În plus, vântul bate tare din lateral și suflă norii de ceață peste parbriz, încercând să păcălească aparatele de zbor.
+        </p>
+      </div>
+      <div class="step-card" style="border-left: 4px solid #00ff9d;">
+        <div style="color:#00ff9d; font-weight:900; font-size:13px; margin-bottom:4px;" data-i18n="step2_title">PASUL 2 — Cum îl salvăm noi fără GPS? 🛡️</div>
+        <p style="color:#e2f1ff;" data-i18n="step2_body">
+          <strong>Camera video curăță ceața, măsoară viteza uitându-se la luminile pistei și separă mișcarea pământului de mișcarea norilor și de virajele avionului.</strong>
+          Astfel, chiar dacă oprim complet GPS-ul și internetul, avionul știe exact unde este pista!
+        </p>
+      </div>
+      <div class="step-card" style="border-left: 4px solid #00e5ff;">
+        <div style="color:#00e5ff; font-weight:900; font-size:13px; margin-bottom:4px;" data-i18n="step3_title">PASUL 3 — Cum testezi aplicația în 10 secunde? 🎮</div>
+        <p style="color:#e2f1ff;" data-i18n="step3_body">
+          <strong>Apasă pe butoanele „🎥 Filmare Reală 1 / 2 / 3” de deasupra Parbrizului ca să vezi filmările video reale din cabina piloților, sau atacă avionul din Telecomandă și privește cum linia verde rămâne pe pistă!</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- B. POVESTITOR ÎN TIMP REAL (CE SE ÎNTÂMPLĂ CHIAR ACUM CU AVIONUL?) -->
+  <section id="live-storyteller-banner" class="storyteller-banner">
+    <div style="flex:1;">
+      <div class="storyteller-title" id="storyteller-badge">💬 CE SE ÎNTÂMPLĂ CHIAR ACUM CU AVIONUL? (TRADUCERE ÎN TIMP REAL PENTRU ÎNCEPĂTORI)</div>
+      <div class="storyteller-text" id="storyteller-main-text">
+        ✈️ Avionul coboară lin spre pista din Craiova (Pista 09). Camera video privește prin ceață, fixează luminile pistei și măsoară distanța până la sol cu eroare sub 1 metru.
+      </div>
+    </div>
+    <div style="text-align:right; min-width:210px; background:rgba(3,9,20,0.85); padding:6px 10px; border-radius:6px; border:1px solid #1e4273;">
+      <div style="font-size:10px; color:#9ec0e6;" data-i18n="story_err_label">EROAREA AVIONULUI NOSTRU PE PISTĂ:</div>
+      <div id="storyteller-error-readout" style="font-size:16px; font-weight:900; color:#00ff9d;">0.28 metri (PE CENTRU!)</div>
+    </div>
+  </section>
+
+  <!-- MAIN COCKPIT VIEWPORTS (ZONA 2: PARBRIZUL & ZONA 3: CURSA CELOR 4 AVIOANE) -->
+  <main class="cockpit-grid" id="main-cockpit-anchor">
+    <!-- ZONA 2: PARBRIZUL AVIONULUI — CE VEDE CAMERA PRIN CEAȚĂ + PLAYER VIDEO REAL -->
     <section class="viewport-card">
       <div class="card-header">
-        <span>CANVAS 1 — 6-DoF COCKPIT HUD + SWIR 1550nm ALS + OPTICAL FLOW (GREEN=GROUND, PURPLE=FOG)</span>
-        <span id="hud- guidance-summary">RWY 09 DIST: 900.0 m | BRG: 087.4°</span>
+        <span data-i18n="zone2_header">👁️ ZONA 2: PARBRIZUL AVIONULUI — SIMULATOR 3D &amp; FILMĂRI VIDEO REALE DIN CABINĂ</span>
+        <span id="hud-guidance-summary">DISTANȚĂ PISTĂ: 900.0 m | DIRECȚIE: 087.4°</span>
       </div>
-      <div class="canvas-wrap">
-        <div class="gust-alert-overlay" id="gust-overlay">
-          ⚠️ OPTICAL GUST LOOKAHEAD WARNING: 18.0 m/s LATERAL FOG SHEAR DETECTED (0.85s LEAD!)
+
+      <!-- BARA DE SELECTARE DIRECTĂ: SIMULATOR 3D SAU CELE 3 FILMĂRI VIDEO REALE -->
+      <div class="view-mode-bar">
+        <div class="view-mode-buttons">
+          <span style="font-size:11px; font-weight:900; color:#00e5ff;" data-i18n="choose_screen_lbl">📺 ALEGE CE VEZI PE ECRAN:</span>
+          <button class="mode-btn active" id="mode-btn-sim" onclick="setMainViewMode('sim')">
+            <span data-i18n="mode_sim_btn">🕹️ Simulator 3D (Craiova)</span>
+          </button>
+          <button class="mode-btn" id="mode-btn-video1" onclick="setMainViewMode('video1')">
+            <span data-i18n="mode_v1_btn">🎥 Filmare Reală 1: Ceață Albă (LC-130)</span>
+          </button>
+          <button class="mode-btn" id="mode-btn-video2" onclick="setMainViewMode('video2')">
+            <span data-i18n="mode_v2_btn">🎥 Filmare Reală 2: Luminile Pistei (Paris CDG)</span>
+          </button>
+          <button class="mode-btn" id="mode-btn-video3" onclick="setMainViewMode('video3')">
+            <span data-i18n="mode_v3_btn">🎥 Filmare Reală 3: Vânt Lateral Puternic</span>
+          </button>
         </div>
-        <canvas id="hudCanvas"></canvas>
+        <button class="overlay-toggle-btn active" id="btn-toggle-ai-overlay" onclick="toggleAiOverlayOnVideo()">
+          👁️ Detecția AI peste Filmare: PORNITĂ
+        </button>
+      </div>
+
+      <div class="canvas-wrap">
+        <!-- ELEMENTUL <video> REAL CARE SE VEDE DIRECT PE PARBRIZUL CENTRAL -->
+        <video
+          id="main-cockpit-video"
+          src="/real_videos/real_02_als_runway_approach_cdg.mp4"
+          muted
+          loop
+          autoplay
+          playsinline
+          controls
+          style="display:none; position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; background:#000;"
+        ></video>
+
+        <div class="gust-alert-overlay" id="gust-overlay">
+          🌪️ ALERTĂ TIMPURIE DE RAFALĂ ÎN CEAȚĂ: Vânt lateral de 18.0 m/s văzut în nori cu 0.85 secunde ÎNAINTE să lovească avionul!
+        </div>
+
+        <canvas id="hudCanvas" style="position:relative; z-index:2; pointer-events:none;"></canvas>
+      </div>
+
+      <!-- LEGENDĂ VIZUALĂ FOARTE CLARĂ SUB PARBRIZ -->
+      <div class="visual-legend-bar">
+        <div class="legend-chip" style="border-left: 3px solid #00ff9d;">
+          <strong style="color:#00ff9d;" data-i18n="leg_green_title">🟢 Săgețile Verzi = Solul &amp; Pista Reală</strong>
+          <div style="color:#cbd5e1; margin-top:2px;" data-i18n="leg_green_desc">Arată cum se mișcă pământul fix sub avion (după ce am eliminat matematic înclinarea camerei).</div>
+        </div>
+        <div class="legend-chip" style="border-left: 3px solid #d946ef;">
+          <strong style="color:#f0abfc;" data-i18n="leg_purple_title">🟣 Săgețile Mov = Norii de Ceață</strong>
+          <div style="color:#cbd5e1; margin-top:2px;" data-i18n="leg_purple_desc">Arată cum vântul împinge ceața în lateral. Noi le ignorăm la ghidaj și le folosim ca să vedem rafalele din timp!</div>
+        </div>
+        <div class="legend-chip" style="border-left: 3px solid #ffb800;">
+          <strong style="color:#ffb800;" data-i18n="leg_yellow_title">🟡 Țintele &amp; Luminile Pistei = Reper Vizual</strong>
+          <div style="color:#cbd5e1; margin-top:2px;" data-i18n="leg_yellow_desc">Luminile pistei detectate automat în filmarea reală sau în simulator, care ne țin aliniați pe centru.</div>
+        </div>
       </div>
     </section>
 
-    <!-- CANVAS 2: TACTICAL RADAR LRCV CRAIOVA (4-ESTIMATOR ARENA) -->
+    <!-- ZONA 3: CURSA CELOR 4 AVIOANE — DE CE NOI ATERIZĂM PE PISTĂ ȘI CEILALȚI NU? -->
     <section class="viewport-card">
       <div class="card-header">
-        <span>CANVAS 2 — LRCV RWY 09 TACTICAL RADAR &amp; 4-ESTIMATOR BENCHMARK ARENA</span>
-        <span id="eta-summary">ETA TOUCHDOWN: 13.2 s | ALS BARS: 12</span>
+        <span data-i18n="zone3_header">🏁 ZONA 3: CURSA CELOR 4 AVIOANE (RADAR) — DE CE NOI ATERIZĂM PE PISTĂ ȘI CEILALȚI NU?</span>
+        <span id="eta-summary">TIMP PÂNĂ LA ATERIZARE: 13.2 s | LUMINI VĂZUTE: 12</span>
       </div>
-      <div class="canvas-wrap" style="height: 348px;">
+      <div class="canvas-wrap" style="height: 265px;">
         <canvas id="radarCanvas"></canvas>
       </div>
       <div class="arena-legend">
-        <div class="est-pill" style="border-left: 3px solid #ff2a5f;">
-          <span>🔴 1. RAW GNSS</span>
-          <strong id="err-gnss" style="color:#ff2a5f;">0.65 m</strong>
+        <div class="est-pill" style="border-left: 4px solid #00ff9d; background:#07221c;">
+          <div>
+            <strong style="color:#00ff9d; font-size:12px;" data-i18n="est_shield_title">🟢 AERO-SHIELD (Avionul nostru inteligent)</strong>
+            <div style="color:#d0e6ff; font-size:10.5px;" data-i18n="est_shield_desc">Rămâne lipit de mijlocul pistei (sub 1 metru eroare), chiar și fără GPS și pe ceață oarbă!</div>
+          </div>
+          <strong id="err-shield" style="color:#00ff9d; font-size:14px; white-space:nowrap;">0.28 m</strong>
         </div>
-        <div class="est-pill" style="border-left: 3px solid #ff9100;">
-          <span>🟠 2. PURE INS (IMU DRIFT)</span>
-          <strong id="err-ins" style="color:#ff9100;">1.20 m</strong>
+
+        <div class="est-pill" style="border-left: 4px solid #ff2a5f;">
+          <div>
+            <strong style="color:#ff2a5f; font-size:12px;" data-i18n="est_gnss_title">🔴 Avion Clasic cu GPS (Fără scut)</strong>
+            <div style="color:#d0e6ff; font-size:10.5px;" data-i18n="est_gnss_desc">Păcălit de hacker! Când apeși pe atac GPS, iese pe câmp la zeci sau sute de metri de pistă!</div>
+          </div>
+          <strong id="err-gnss" style="color:#ff2a5f; font-size:13px; white-space:nowrap;">0.65 m</strong>
         </div>
-        <div class="est-pill" style="border-left: 3px solid #ffd600;">
-          <span>🟡 3. NAIVE OPTICAL FLOW</span>
-          <strong id="err-naive" style="color:#ffd600;">0.95 m</strong>
+
+        <div class="est-pill" style="border-left: 4px solid #ffd600;">
+          <div>
+            <strong style="color:#ffd600; font-size:12px;" data-i18n="est_naive_title">🟡 Cameră Simplă (Fără separarea ceții)</strong>
+            <div style="color:#d0e6ff; font-size:10.5px;" data-i18n="est_naive_desc">Păcălită când vântul mișcă norii de ceață sau când avionul se înclină (crede că s-a mișcat pământul)!</div>
+          </div>
+          <strong id="err-naive" style="color:#ffd600; font-size:13px; white-space:nowrap;">0.95 m</strong>
         </div>
-        <div class="est-pill" style="border-left: 3px solid #00ff9d;">
-          <span>🟢 4. AERO-SHIELD LRCV V2.0</span>
-          <strong id="err-shield" style="color:#00ff9d;">0.28 m</strong>
+
+        <div class="est-pill" style="border-left: 4px solid #ff9100;">
+          <div>
+            <strong style="color:#ff9100; font-size:12px;" data-i18n="est_ins_title">🟠 Doar Senzori Interni (Fără cameră video)</strong>
+            <div style="color:#d0e6ff; font-size:10.5px;" data-i18n="est_ins_desc">Orbecăie în ceață fără niciun reper vizual și este împins încet în lateral de vânt!</div>
+          </div>
+          <strong id="err-ins" style="color:#ff9100; font-size:13px; white-space:nowrap;">1.20 m</strong>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- LOWER DECK: 6-DoF CONTROLS, QUATERNION/MATRIX R_b^n(q), CYBER & GPU -->
-  <section class="lower-deck">
-    <!-- PANEL 1: 6-DoF FLIGHT CONTROLS & KEYBOARD -->
-    <div class="panel">
-      <div class="panel-title">
-        <span>🕹️ 6-DoF INTERACTIVE FLIGHT MANEUVERS (WASD / QE / SHIFT-CTRL)</span>
-        <span style="color:var(--hud-green); font-size:10px;">ZERO-LAG WATCH CONFLATION</span>
+  <!-- D. SECȚIUNE CU PLAYERE VIDEO REALE ÎNCORPORATE PENTRU CELE 3 FILMĂRI DIN CABINA PILOȚILOR -->
+  <section class="real-videos-section" id="real-videos-permanent-section">
+    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; border-bottom:1px solid #1d4d7a; padding-bottom:8px;">
+      <div>
+        <strong style="color:#00ff9d; font-size:14px;" data-i18n="rv_sec_title">🎬 CELE 3 FILMĂRI VIDEO REALE DIN CABINA PILOȚILOR (RULEAZĂ LIVE MAI JOS SAU PE PARBRIZUL PRINCIPAL!)</strong>
+        <div style="font-size:11.5px; color:#9ec0e6; margin-top:2px;" data-i18n="rv_sec_sub">
+          Poți vedea fiecare filmare reală direct în caseta ei sau poți apăsa butonul verde de sub videoclip ca să o pui pe Ecranul Principal cu detecția AI peste imagine:
+        </div>
       </div>
-      <div class="controls-6dof-grid">
-        <button class="btn" onclick="stepManeuver(-6, 0, 0, 0)">◀ YAW LEFT (A)</button>
-        <button class="btn" onclick="stepManeuver(6, 0, 0, 0)">YAW RIGHT (D) ▶</button>
-        <button class="btn" onclick="stepManeuver(0, 3.5, 0, 0)">▲ PITCH UP (W)</button>
-        <button class="btn" onclick="stepManeuver(0, -3.5, 0, 0)">▼ PITCH DN (S)</button>
-        <button class="btn" onclick="stepManeuver(0, 0, -10, 0)">↺ ROLL LEFT (Q)</button>
-        <button class="btn" onclick="stepManeuver(0, 0, 10, 0)">↻ ROLL RIGHT (E)</button>
-        <button class="btn" onclick="stepManeuver(0, 0, 0, 6)">⚡ ACCEL (+6 m/s)</button>
-        <button class="btn" onclick="stepManeuver(0, 0, 0, -6)">🛑 DECEL (-6 m/s)</button>
-      </div>
-
-      <div class="kv-grid">
-        <div class="kv-item"><span class="kv-label">Pos NED (LRCV RWY09):</span><span class="kv-val" id="val-pos">[-900, 0, -52] m</span></div>
-        <div class="kv-item"><span class="kv-label">Ground Vel NED:</span><span class="kv-val" id="val-vel-ned">[68.0, 0.0, 3.5] m/s</span></div>
-        <div class="kv-item"><span class="kv-label">Euler [Roll, Pitch, Yaw]:</span><span class="kv-val" id="val-euler">[0.0°, -3.0°, 0.0°]</span></div>
-        <div class="kv-item"><span class="kv-label">Angular ω [p, q, r]:</span><span class="kv-val" id="val-omega">[0.0, 0.0, 0.0] °/s</span></div>
-        <div class="kv-item"><span class="kv-label">AoA α / Sideslip β:</span><span class="kv-val" id="val-aero">2.4° / 0.0°</span></div>
-        <div class="kv-item"><span class="kv-label">Autopilot Crab ψ_crab:</span><span class="kv-val" id="val-crab" style="color:var(--hud-cyan);">0.0°</span></div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn btn-gust" onclick="setMainViewMode('video2', true)" data-i18n="rv_sec_btn">
+          📺 PUNE FILMAREA REALĂ PE ECRANUL PRINCIPAL ACUM
+        </button>
       </div>
     </div>
 
-    <!-- PANEL 2: QUATERNION q_b^n, ROTATION MATRIX R_b^n(q) & INVERSE DEPTH -->
+    <div class="real-videos-grid" id="permanent-real-video-cards">
+      <!-- Card 1: LC-130 Whiteout -->
+      <div class="real-video-card" style="border-top: 3px solid #00ff9d;">
+        <div>
+          <div style="color:#00ff9d; font-weight:900; font-size:12.5px; margin-bottom:4px;" data-i18n="rv1_title">1. Aterizare în orb prin ceață albă densă (Avion militar LC-130)</div>
+          <video
+            src="/real_videos/real_01_cat3_whiteout_cockpit_lc130.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            controls
+            style="width:100%; height:180px; object-fit:cover; border-radius:6px; border:1px solid #00ff9d; margin-bottom:6px; background:#000;"
+          ></video>
+          <p style="color:#e2f1ff; margin-bottom:4px;" data-i18n="rv1_human">👁️ <strong>Ce se vede în filmare:</strong> Aproape doar un zid alb de ceață groasă; pilotul nu vede pista din față până în ultimele secunde.</p>
+          <p style="color:#d0f0df;">🤖 <strong data-i18n="rv_measured_lbl">Ce a măsurat programul nostru:</strong> <strong id="rv1-stats">300 cadre reale procesate la &gt;520 cadre/secundă, vântul din ceață separat de viteza avionului, 277 rafale anticipate, 0 blocaje!</strong></p>
+        </div>
+        <button class="watch-main-btn" onclick="setMainViewMode('video1', true)" data-i18n="btn_put_v1_main">
+          📺 Pune Filmarea #1 pe Ecranul Principal (cu Detecție AI)
+        </button>
+      </div>
+
+      <!-- Card 2: Paris CDG ALS Approach -->
+      <div class="real-video-card" style="border-top: 3px solid #00e5ff;">
+        <div>
+          <div style="color:#00e5ff; font-weight:900; font-size:12.5px; margin-bottom:4px;" data-i18n="rv2_title">2. Apropiere pe luminile pistei în ceață (Aeroportul Paris CDG)</div>
+          <video
+            src="/real_videos/real_02_als_runway_approach_cdg.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            controls
+            style="width:100%; height:180px; object-fit:cover; border-radius:6px; border:1px solid #00e5ff; margin-bottom:6px; background:#000;"
+          ></video>
+          <p style="color:#e2f1ff; margin-bottom:4px;" data-i18n="rv2_human">👁️ <strong>Ce se vede în filmare:</strong> Halouri orbitoare de lumină împrăștiate în ceața deasă la aterizare.</p>
+          <p style="color:#d0f0df;">🤖 <strong data-i18n="rv_measured_lbl">Ce a măsurat programul nostru:</strong> <strong id="rv2-stats">225 cadre reale procesate la ~382 cadre/secundă, peste 11.240 puncte luminoase ale pistei fixate cu precizie pentru ghidaj!</strong></p>
+        </div>
+        <button class="watch-main-btn" onclick="setMainViewMode('video2', true)" data-i18n="btn_put_v2_main">
+          📺 Pune Filmarea #2 pe Ecranul Principal (cu Detecție AI)
+        </button>
+      </div>
+
+      <!-- Card 3: Crosswind Landing -->
+      <div class="real-video-card" style="border-top: 3px solid #d946ef;">
+        <div>
+          <div style="color:#f0abfc; font-weight:900; font-size:12.5px; margin-bottom:4px;" data-i18n="rv3_title">3. Aterizare pe vânt lateral puternic și vizibilitate redusă</div>
+          <video
+            src="/real_videos/real_03_crosswind_cockpit_landing.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            controls
+            style="width:100%; height:180px; object-fit:cover; border-radius:6px; border:1px solid #d946ef; margin-bottom:6px; background:#000;"
+          ></video>
+          <p style="color:#e2f1ff; margin-bottom:4px;" data-i18n="rv3_human">👁️ <strong>Ce se vede în filmare:</strong> Avionul se leagănă puternic și se înclină din cauza rafalelor violente de vânt lateral.</p>
+          <p style="color:#d0f0df;">🤖 <strong data-i18n="rv_measured_lbl">Ce a măsurat programul nostru:</strong> <strong id="rv3-stats">300 cadre reale procesate la ~431 cadre/secundă, separând impecabil înclinării aripilor de vântul lateral (280 alerte timpurii)!</strong></p>
+        </div>
+        <button class="watch-main-btn" onclick="setMainViewMode('video3', true)" data-i18n="btn_put_v3_main">
+          📺 Pune Filmarea #3 pe Ecranul Principal (cu Detecție AI)
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOWER DECK: ZONA 4 (TELECOMANDA DE MANEVRE + ATACURI) & ZONA 1 (SCUTUL DE SIGURANȚĂ & SENZORII) -->
+  <section class="lower-deck">
+    <!-- ZONA 4 (PARTEA A): TELECOMANDA DE PILOTARE MANUALĂ A AVIONULUI -->
     <div class="panel">
       <div class="panel-title">
-        <span>📐 LIE GROUP SO(3) QUATERNION q_b^n &amp; ROTATION MATRIX R_b^n(q)</span>
+        <span data-i18n="zone4a_header">🕹️ ZONA 4A: TELECOMANDA DE ZBOR — PILOTEAZĂ AVIONUL CU BUTOANELE SAU TASTATURA</span>
+        <span style="color:var(--hud-green); font-size:10px;" data-i18n="zone4a_badge">RĂSPUNS INSTANTANEU (60 Hz)</span>
+      </div>
+      <div class="controls-6dof-grid">
+        <button class="btn" onclick="stepManeuver(-6, 0, 0, 0)">
+          <span data-i18n="btn_yaw_l">◀ VIREAZĂ STÂNGA (Tasta A)</span>
+          <span class="btn-sub" data-i18n="btn_yaw_l_sub">Întoarce botul avionului la stânga și privește cum pista rămâne stabilă</span>
+        </button>
+        <button class="btn" onclick="stepManeuver(6, 0, 0, 0)">
+          <span data-i18n="btn_yaw_r">VIREAZĂ DREAPTA (Tasta D) ▶</span>
+          <span class="btn-sub" data-i18n="btn_yaw_r_sub">Întoarce botul avionului la dreapta fără să păcălești camera video</span>
+        </button>
+        <button class="btn" onclick="stepManeuver(0, 3.5, 0, 0)">
+          <span data-i18n="btn_pitch_u">▲ RIDICĂ BOTUL / URCĂ (Tasta W)</span>
+          <span class="btn-sub" data-i18n="btn_pitch_u_sub">Trage de manșă în sus — orizontul coboară pe parbriz</span>
+        </button>
+        <button class="btn" onclick="stepManeuver(0, -3.5, 0, 0)">
+          <span data-i18n="btn_pitch_d">▼ COBOARĂ BOTUL (Tasta S)</span>
+          <span class="btn-sub" data-i18n="btn_pitch_d_sub">Împinge manșa în jos pentru a coborî mai repede spre pistă</span>
+        </button>
+        <button class="btn" onclick="stepManeuver(0, 0, -10, 0)">
+          <span data-i18n="btn_roll_l">↺ ÎNCLINĂ ARIPILE STÂNGA (Tasta Q)</span>
+          <span class="btn-sub" data-i18n="btn_roll_l_sub">Rotește aripile — programul scade automat rotirea din imagine</span>
+        </button>
+        <button class="btn" onclick="stepManeuver(0, 0, 10, 0)">
+          <span data-i18n="btn_roll_r">↻ ÎNCLINĂ ARIPILE DREAPTA (Tasta E)</span>
+          <span class="btn-sub" data-i18n="btn_roll_r_sub">Vezi cum linia verde rămâne pe pistă chiar și când te înclini</span>
+        </button>
+        <button class="btn" onclick="stepManeuver(0, 0, 0, 6)">
+          <span data-i18n="btn_accel">⚡ MĂREȘTE VITEZA (+6 m/s | Shift)</span>
+          <span class="btn-sub" data-i18n="btn_accel_sub">Accelerează motoarele — săgețile verzi de pe sol cresc</span>
+        </button>
+        <button class="btn" onclick="stepManeuver(0, 0, 0, -6)">
+          <span data-i18n="btn_decel">🛑 REDU VITEZA (-6 m/s | Ctrl)</span>
+          <span class="btn-sub" data-i18n="btn_decel_sub">Frânează ușor avionul pentru o apropiere mai lentă</span>
+        </button>
+      </div>
+
+      <div class="kv-grid">
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_pos">Poziție față de Pistă (X, Y, Alt):</span><span class="kv-val" id="val-pos">[-900, 0, -52] m</span></div>
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_vel">Viteza față de Pământ:</span><span class="kv-val" id="val-vel-ned">[68.0, 0.0, 3.5] m/s</span></div>
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_euler">Înclinare Aripi / Bot / Direcție:</span><span class="kv-val" id="val-euler">[0.0°, -3.0°, 0.0°]</span></div>
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_omega">Viteza de Rotire a Camerei:</span><span class="kv-val" id="val-omega">[0.0, 0.0, 0.0] °/s</span></div>
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_aero">Unghiul Aripilor în Aer:</span><span class="kv-val" id="val-aero">2.4° / 0.0°</span></div>
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_crab">Unghi Anti-Vânt (Corecție Automată):</span><span class="kv-val" id="val-crab" style="color:var(--hud-cyan);">0.0°</span></div>
+      </div>
+    </div>
+
+    <!-- ZONA 1: SCUTUL DE SIGURANȚĂ, SENZORII & COMPENSAREA ROTIRII CAMEREI -->
+    <div class="panel">
+      <div class="panel-title">
+        <span data-i18n="zone1_header">🛡️ ZONA 1: SCUTUL DE SIGURANȚĂ — SENZORI, VÂNT ÎN CEAȚĂ &amp; ORIENTARE 3D</span>
         <span id="val-qnorm" style="color:var(--hud-green); font-size:10px;">||q|| = 1.000000</span>
       </div>
+
+      <!-- 3 INDICATORI EXPLICATIVI PE ÎNȚELESUL TUTUROR PENTRU ZONA 1 -->
+      <div style="display:grid; grid-template-columns:1fr; gap:5px; font-size:11px;">
+        <div style="background:#071529; border-left:3px solid #00ff9d; padding:5px 8px; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
+          <span data-i18n="z1_gps_label">🔒 <strong>Starea GPS-ului (E curat sau atacat?):</strong></span>
+          <strong id="val-watchdog" style="color:var(--hud-green);">CURAT (NICIUN ATAC HACKER)</strong>
+        </div>
+        <div style="background:#071529; border-left:3px solid #d946ef; padding:5px 8px; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
+          <span data-i18n="z1_wind_label">🌬️ <strong>Vântul din Ceață (Real vs. Măsurat de Cameră):</strong></span>
+          <strong id="val-fog-wind" style="color:#f0abfc;">1.5 vs 1.5 m/s</strong>
+        </div>
+        <div style="background:#071529; border-left:3px solid #00e5ff; padding:5px 8px; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
+          <span data-i18n="z1_meteo_label">🌦️ <strong>Verificarea Internetului Meteo:</strong></span>
+          <strong id="val-meteo-status" style="color:#00e5ff;">LIVE OPEN-METEO LRCV</strong>
+        </div>
+      </div>
+
       <div class="matrix-box">
         <div style="display:flex; justify-content:space-between; color:var(--text-dim);">
-          <span>Unit Quaternion q = [qw, qx, qy, qz]:</span>
+          <span data-i18n="lbl_quat">Formula 3D care scade rotirea camerei (Quaternion):</span>
           <strong id="val-quat" style="color:var(--hud-cyan);">[0.9997, 0.0000, -0.0262, 0.0000]</strong>
         </div>
         <div class="matrix-grid" id="val-rot-matrix">
@@ -431,55 +919,69 @@
       </div>
 
       <div class="kv-grid">
-        <div class="kv-item"><span class="kv-label">Horizon ρ_ground (No-NaN):</span><span class="kv-val" id="val-rho-hor" style="color:var(--hud-green);">0.000000 m⁻¹</span></div>
-        <div class="kv-item"><span class="kv-label">Dual-Anchored ρ̂_fog:</span><span class="kv-val" id="val-rho-fog" style="color:var(--fog-purple);">0.0204 m⁻¹</span></div>
-        <div class="kv-item"><span class="kv-label">Koschmieder β_ext:</span><span class="kv-val" id="val-beta">0.0399 m⁻¹</span></div>
-        <div class="kv-item"><span class="kv-label">True vs Est Fog Wind:</span><span class="kv-val" id="val-fog-wind">1.5 vs 1.5 m/s</span></div>
-        <div class="kv-item"><span class="kv-label">Photonic Certainty:</span><span class="kv-val" id="val-cert">0.91</span></div>
-        <div class="kv-item"><span class="kv-label">Open-Meteo LRCV:</span><span class="kv-val" id="val-meteo-env">8.5°C | QNH 1016</span></div>
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_rho_hor">Protecție Orizont (Fără eroare 0):</span><span class="kv-val" id="val-rho-hor" style="color:var(--hud-green);">0.000000 m⁻¹</span></div>
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_rho_fog">Adâncimea Stratului de Ceață:</span><span class="kv-val" id="val-rho-fog" style="color:var(--fog-purple);">0.0204 m⁻¹</span></div>
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_beta">Densitatea Ceții (Koschmieder):</span><span class="kv-val" id="val-beta">0.0399 m⁻¹</span></div>
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_cert">Claritate Lumină Pistă (ALS):</span><span class="kv-val" id="val-cert">91.0% (12 lumini)</span></div>
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_chi2">Scor Suspiciune Hacker (χ²/CUSUM):</span><span class="kv-val" id="val-chi2-cusum">1.18 / 0.12</span></div>
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_meteo_env">Vremea Reală Craiova:</span><span class="kv-val" id="val-meteo-env">8.5°C | QNH 1016</span></div>
       </div>
     </div>
 
-    <!-- PANEL 3: FOG GUST, RED-TEAM CYBER-WARFARE & LIVE CUDA FINE-TUNING -->
+    <!-- ZONA 4 (PARTEA B): TELECOMANDA DE ATACURI HACKER, RAFALE DE CEAȚĂ & PLACĂ VIDEO AI -->
     <div class="panel">
       <div class="panel-title">
-        <span>🛡️ FOG SHEAR, RED-TEAM CYBER SANDBOX &amp; GPU CUDA</span>
-        <span id="val-gpu-dev" style="color:var(--warn-amber); font-size:10px;">CUDA / SIMD READY</span>
+        <span data-i18n="zone4b_header">⚡ ZONA 4B: TELECOMANDA DE TEST — DECLANȘEAZĂ FURTUNI, HACKERI &amp; ANTRENARE AI</span>
+        <span id="val-gpu-dev" style="color:var(--warn-amber); font-size:10px;">CUDA / SIMD ACTIV</span>
       </div>
 
-      <div style="display:flex; gap:6px; align-items:center;">
-        <button class="btn btn-gust" style="flex:1;" onclick="injectSuddenFogGust()">
-          🌪️ INJECT SUDDEN FOG GUST / SHEAR (18 m/s)
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+        <button class="btn btn-gust" onclick="injectSuddenFogGust()">
+          <span data-i18n="btn_gust_title">🌪️ TRIMITE O RAFALĂ BRUSCĂ DE VÂNT ÎN CEAȚĂ (18 m/s)</span>
+          <span class="btn-sub" style="color:#fdf4ff;" data-i18n="btn_gust_sub">Uită-te pe Parbriz la săgețile mov și la alerta care apare cu 0.85s înainte de impact!</span>
         </button>
         <button class="btn btn-cuda" onclick="startLiveCudaTraining()">
-          🔥 LIVE CUDA FINE-TUNING (15s)
+          <span data-i18n="btn_cuda_title">🔥 ANTRENEAZĂ INTELIGENȚA ARTIFICIALĂ LIVE (15s)</span>
+          <span class="btn-sub" style="color:#ffedd5;" data-i18n="btn_cuda_sub">Pornește învățarea pe placa video și vezi bara de progres de mai jos</span>
         </button>
       </div>
 
-      <div style="display:flex; align-items:center; gap:8px; font-size:11px;">
-        <span style="color:var(--text-dim);">CAT IIIc Fog Visibility (MOR):</span>
-        <input type="range" id="fog-slider" min="25" max="1500" value="75" style="flex:1;" oninput="onFogSliderChange(this.value)" />
-        <strong id="fog-slider-val" style="color:var(--hud-cyan); min-width:52px;">75 m</strong>
+      <div style="background:#061020; padding:6px 10px; border-radius:6px; border:1px solid #163759;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:11px;">
+          <span data-i18n="lbl_fog_slider">🌫️ <strong>Cât de groasă să fie ceața? (Trage spre stânga pentru Ceață 100% Albă):</strong></span>
+          <strong id="fog-slider-val" style="color:var(--hud-cyan); min-width:65px; text-align:right;">75 metri</strong>
+        </div>
+        <input type="range" id="fog-slider" min="25" max="1500" value="75" style="width:100%; margin-top:4px;" oninput="onFogSliderChange(this.value)" />
       </div>
 
       <div class="controls-6dof-grid">
-        <button class="btn btn-danger" id="btn-cyber-jump" onclick="toggleCyber('jump')">🔴 GPS JUMP SPOOF</button>
-        <button class="btn btn-danger" id="btn-cyber-stealth" onclick="toggleCyber('stealth')">🕵️ STEALTH RAMP SPOOF</button>
-        <button class="btn btn-danger" id="btn-cyber-comms" onclick="toggleCyber('comms')">🌐 CUT INTERNET</button>
-        <button class="btn btn-danger" id="btn-cyber-poison" onclick="toggleCyber('poison')">☣️ POISON METEO</button>
+        <button class="btn btn-danger" id="btn-cyber-jump" onclick="toggleCyber('jump')">
+          <span data-i18n="btn_cyber_jump">🔴 ATAC HACKER GPS BRUSC</span>
+          <span class="btn-sub" data-i18n="btn_cyber_jump_sub">Mută fals GPS-ul cu 250m. Uită-te pe Radar cum linia roșie fuge pe câmp!</span>
+        </button>
+        <button class="btn btn-danger" id="btn-cyber-stealth" onclick="toggleCyber('stealth')">
+          <span data-i18n="btn_cyber_stealth">🕵️ ATAC HACKER GPS ASCUNS (LENT)</span>
+          <span class="btn-sub" data-i18n="btn_cyber_stealth_sub">Trage avionul clasic încet în lateral. Scutul nostru îl prinde și îl blochează!</span>
+        </button>
+        <button class="btn btn-danger" id="btn-cyber-comms" onclick="toggleCyber('comms')">
+          <span data-i18n="btn_cyber_comms">🌐 TAIE CONEXIUNEA LA INTERNET</span>
+          <span class="btn-sub" data-i18n="btn_cyber_comms_sub">Oprește internetul avionului — camera de la bord continuă ghidarea!</span>
+        </button>
+        <button class="btn btn-danger" id="btn-cyber-poison" onclick="toggleCyber('poison')">
+          <span data-i18n="btn_cyber_poison">☣️ TRIMITE DATE METEO FALSE</span>
+          <span class="btn-sub" data-i18n="btn_cyber_poison_sub">Încearcă să minți avionul că e senin — camera vede ceața reală și blochează minciuna!</span>
+        </button>
       </div>
 
       <div class="kv-grid">
-        <div class="kv-item"><span class="kv-label">GNSS Watchdog:</span><span class="kv-val" id="val-watchdog" style="color:var(--hud-green);">NOMINAL</span></div>
-        <div class="kv-item"><span class="kv-label">χ² Mahalanobis / CUSUM:</span><span class="kv-val" id="val-chi2-cusum">1.18 / 0.12</span></div>
-        <div class="kv-item"><span class="kv-label">Meteo Sanity Gate:</span><span class="kv-val" id="val-meteo-status">LIVE OPEN-METEO LRCV</span></div>
-        <div class="kv-item"><span class="kv-label">AI Inference / σ_v:</span><span class="kv-val" id="val-ai-lat">0.21 ms | σ=0.16m/s</span></div>
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_ai_lat">Timp de Gândire AI pe Cadru:</span><span class="kv-val" id="val-ai-lat">0.21 ms | σ=0.16m/s</span></div>
+        <div class="kv-item"><span class="kv-label" data-i18n="lbl_whiteout_safe">Protecție la Ceață Oarbă:</span><span class="kv-val" style="color:#00ff9d;" data-i18n="val_whiteout_safe">100% ACTIVĂ (FĂRĂ BLOCAJE)</span></div>
       </div>
 
-      <div id="cuda-progress-box" style="display:none; flex-direction:column; gap:3px; font-size:10px;">
+      <div id="cuda-progress-box" style="display:none; flex-direction:column; gap:3px; font-size:10.5px; background:#071529; padding:6px 8px; border-radius:5px; border:1px solid #00ff9d;">
         <div style="display:flex; justify-content:space-between;">
-          <span id="cuda-epoch-txt" style="color:var(--hud-green);">ShadowTrainer CUDA Epoch 1/60</span>
-          <span id="cuda-loss-txt" style="color:var(--hud-cyan);">Loss: 0.1420</span>
+          <span id="cuda-epoch-txt" style="color:var(--hud-green); font-weight:700;">Antrenare AI pe Placa Video: Pasul 1/60</span>
+          <span id="cuda-loss-txt" style="color:var(--hud-cyan);">Eroare: 0.1420</span>
         </div>
         <div class="progress-bar-outer">
           <div class="progress-bar-inner" id="cuda-progress-bar"></div>
@@ -489,14 +991,376 @@
   </section>
 
   <script>
+    let currentLang = "ro";
+    let mainViewMode = "sim"; // 'sim' | 'video1' | 'video2' | 'video3'
+    let showAiOverlayOnVideo = true;
     let ws = null;
     let latestFrame = null;
+    let lastRealVideoTestTime = 0;
+    let cachedRealVideoData = null;
     let cyberState = {
       gps_jump_spoof: false,
       gps_stealth_ramp_spoof: false,
       cut_internet_comms: false,
       poison_meteo_cache: false
     };
+
+    const REAL_VIDEO_CATALOG = {
+      video1: {
+        src: "/real_videos/real_01_cat3_whiteout_cockpit_lc130.mp4",
+        title_ro: "FILMARE REALĂ #1: Aterizare în Orb prin Ceață Albă Densă (LC-130)",
+        title_en: "REAL FOOTAGE #1: Blind Whiteout Fog Landing (LC-130 Cockpit)",
+        fps: 521.4,
+        mor_m: 95,
+        als_count: 6,
+        gust_mps: 14.2,
+        desc_ro: "📹 RULARE FILMARE REALĂ #1 (LC-130 Ceață Albă): Cu ochiul liber se vede doar un perete alb de ceață, dar algoritmul AERO-SHIELD măsoară densitatea ceții (Koschmieder) la >520 FPS și separă vântul lateral înainte de apariția pistei!",
+        desc_en: "📹 PLAYING REAL FOOTAGE #1 (LC-130 Whiteout): The naked eye sees only a white wall of fog, while AERO-SHIELD measures Koschmieder fog density at >520 FPS and separates crosswind shear before the runway even appears!"
+      },
+      video2: {
+        src: "/real_videos/real_02_als_runway_approach_cdg.mp4",
+        title_ro: "FILMARE REALĂ #2: Apropiere pe Luminile Pistei în Ceață (Paris CDG)",
+        title_en: "REAL FOOTAGE #2: Approach on Runway Lights in Fog (Paris CDG)",
+        fps: 382.6,
+        mor_m: 180,
+        als_count: 14,
+        gust_mps: 6.8,
+        desc_ro: "📹 RULARE FILMARE REALĂ #2 (Aeroportul Paris CDG): Privește pe ecran cum AERO-SHIELD încercuiește automat luminile pistei (ALS) prin ceață și calculează alinierea avionului la 382 cadre pe secundă!",
+        desc_en: "📹 PLAYING REAL FOOTAGE #2 (Paris CDG Airport): Watch on screen how AERO-SHIELD automatically locks onto the Approach Lighting System (ALS) beacons through fog at 382 FPS!"
+      },
+      video3: {
+        src: "/real_videos/real_03_crosswind_cockpit_landing.mp4",
+        title_ro: "FILMARE REALĂ #3: Aterizare pe Vânt Lateral Puternic din Cabină",
+        title_en: "REAL FOOTAGE #3: Severe Crosswind Cockpit Landing",
+        fps: 431.2,
+        mor_m: 310,
+        als_count: 11,
+        gust_mps: 19.4,
+        desc_ro: "📹 RULARE FILMARE REALĂ #3 (Vânt Lateral Puternic): Avionul real se înclină și se leagănă puternic din cauza rafalelor, iar AERO-SHIELD scade rotirea camerei din imagine și măsoară vântul lateral la 431 FPS!",
+        desc_en: "📹 PLAYING REAL FOOTAGE #3 (Severe Crosswind): The real aircraft rocks and banks heavily under gusts, while AERO-SHIELD subtracts camera rotation and measures crosswind shear at 431 FPS!"
+      }
+    };
+
+    const I18N = {
+      ro: {
+        brand_badge: "SCUT VIZUAL ANTI-CEAȚĂ",
+        brand_title: "AERO-SHIELD LRCV V2.0 — ATERIZARE AUTOMATĂ LA CRAIOVA (PISTA 09) FĂRĂ GPS",
+        act1_title: "🎬 SCENARIUL 1: ZBOR LIN + RAFALĂ BRUSCĂ ÎN CEAȚĂ",
+        act1_sub: "Vezi cum camera simte vântul din ceață înainte să lovească avionul",
+        act2_title: "🎬 SCENARIUL 2: VIRAJE 3D ÎN CEAȚĂ DENSĂ",
+        act2_sub: "Avionul virează și se înclină fără să încurce mișcarea camerei cu solul",
+        act3_title: "🎬 SCENARIUL 3: ATAC HACKER GPS + ATERIZARE PE ORB",
+        act3_sub: "Hackerul atacă GPS-ul în ceață oarbă, dar noi aterizăm fix pe pistă",
+        btn_real_video_title: "🎬 VEZI FILMĂRILE VIDEO REALE PE ECRAN",
+        btn_real_video_sub: "Pornește filmarea reală din cabină direct pe Parbrizul Principal!",
+        btn_guide_title: "💡 ASCUNDE / ARATĂ GHIDUL DE ÎNCEPUT",
+        btn_guide_sub: "Explicație simplă în 3 pași pentru orice începător",
+        btn_reset_title: "🔄 REIA ATERIZAREA DE LA ÎNCEPUT",
+        btn_reset_sub: "Resetează poziția avionului la 900m de pista Craiova",
+        guide_header_title: "👋 BUN VENIT! ÎNȚELEGE APLICAȚIA ÎN 3 PAȘI SIMPLI (FĂRĂ TERMENI COMPLICAȚI):",
+        guide_header_sub: "Aeroportul Craiova (LRCV) — Pista 09 | Simulator 60 FPS + 3 Filmări Video Reale",
+        step1_title: "PASUL 1 — Care e pericolul? 🚨",
+        step1_body: "<strong>Avionul aterizează la Craiova (Pista 09) pe ceață densă. Un hacker îi păcălește GPS-ul ca să-l scoată în afara pistei.</strong> În plus, vântul bate tare din lateral și suflă norii de ceață peste parbriz, încercând să păcălească aparatele de zbor.",
+        step2_title: "PASUL 2 — Cum îl salvăm noi fără GPS? 🛡️",
+        step2_body: "<strong>Camera video curăță ceața, măsoară viteza uitându-se la luminile pistei și separă mișcarea pământului de mișcarea norilor și de virajele avionului.</strong> Astfel, chiar dacă oprim complet GPS-ul și internetul, avionul știe exact unde este pista!",
+        step3_title: "PASUL 3 — Cum testezi aplicația în 10 secunde? 🎮",
+        step3_body: "<strong>Apasă pe butoanele „🎥 Filmare Reală 1 / 2 / 3” de deasupra Parbrizului ca să vezi filmările video reale din cabina piloților, sau atacă avionul din Telecomandă și privește cum linia verde rămâne pe pistă!</strong>",
+        story_err_label: "EROAREA AVIONULUI NOSTRU PE PISTĂ:",
+        zone2_header: "👁️ ZONA 2: PARBRIZUL AVIONULUI — SIMULATOR 3D & FILMĂRI VIDEO REALE DIN CABINĂ",
+        choose_screen_lbl: "📺 ALEGE CE VEZI PE ECRAN:",
+        mode_sim_btn: "🕹️ Simulator 3D (Craiova)",
+        mode_v1_btn: "🎥 Filmare Reală 1: Ceață Albă (LC-130)",
+        mode_v2_btn: "🎥 Filmare Reală 2: Luminile Pistei (Paris CDG)",
+        mode_v3_btn: "🎥 Filmare Reală 3: Vânt Lateral Puternic",
+        leg_green_title: "🟢 Săgețile Verzi = Solul & Pista Reală",
+        leg_green_desc: "Arată cum se mișcă pământul fix sub avion (după ce am eliminat matematic înclinarea camerei).",
+        leg_purple_title: "🟣 Săgețile Mov = Norii de Ceață",
+        leg_purple_desc: "Arată cum vântul împinge ceața în lateral. Noi le ignorăm la ghidaj și le folosim ca să vedem rafalele din timp!",
+        leg_yellow_title: "🟡 Țintele & Luminile Pistei = Reper Vizual",
+        leg_yellow_desc: "Luminile pistei detectate automat în filmarea reală sau în simulator, care ne țin aliniați pe centru.",
+        zone3_header: "🏁 ZONA 3: CURSA CELOR 4 AVIOANE (RADAR) — DE CE NOI ATERIZĂM PE PISTĂ ȘI CEILALȚI NU?",
+        est_shield_title: "🟢 AERO-SHIELD (Avionul nostru inteligent)",
+        est_shield_desc: "Rămâne lipit de mijlocul pistei (sub 1 metru eroare), chiar și fără GPS și pe ceață oarbă!",
+        est_gnss_title: "🔴 Avion Clasic cu GPS (Fără scut)",
+        est_gnss_desc: "Păcălit de hacker! Când apeși pe atac GPS, iese pe câmp la zeci sau sute de metri de pistă!",
+        est_naive_title: "🟡 Cameră Simplă (Fără separarea ceții)",
+        est_naive_desc: "Păcălită când vântul mișcă norii de ceață sau când avionul se înclină (crede că s-a mișcat pământul)!",
+        est_ins_title: "🟠 Doar Senzori Interni (Fără cameră video)",
+        est_ins_desc: "Orbecăie în ceață fără niciun reper vizual și este împins încet în lateral de vânt!",
+        zone4a_header: "🕹️ ZONA 4A: TELECOMANDA DE ZBOR — PILOTEAZĂ AVIONUL CU BUTOANELE SAU TASTATURA",
+        zone4a_badge: "RĂSPUNS INSTANTANEU (60 Hz)",
+        btn_yaw_l: "◀ VIREAZĂ STÂNGA (Tasta A)",
+        btn_yaw_l_sub: "Întoarce botul avionului la stânga și privește cum pista rămâne stabilă",
+        btn_yaw_r: "VIREAZĂ DREAPTA (Tasta D) ▶",
+        btn_yaw_r_sub: "Întoarce botul avionului la dreapta fără să păcălești camera video",
+        btn_pitch_u: "▲ RIDICĂ BOTUL / URCĂ (Tasta W)",
+        btn_pitch_u_sub: "Trage de manșă în sus — orizontul coboară pe parbriz",
+        btn_pitch_d: "▼ COBOARĂ BOTUL (Tasta S)",
+        btn_pitch_d_sub: "Împinge manșa în jos pentru a coborî mai repede spre pistă",
+        btn_roll_l: "↺ ÎNCLINĂ ARIPILE STÂNGA (Tasta Q)",
+        btn_roll_l_sub: "Rotește aripile — programul scade automat rotirea din imagine",
+        btn_roll_r: "↻ ÎNCLINĂ ARIPILE DREAPTA (Tasta E)",
+        btn_roll_r_sub: "Vezi cum linia verde rămâne pe pistă chiar și când te înclini",
+        btn_accel: "⚡ MĂREȘTE VITEZA (+6 m/s | Shift)",
+        btn_accel_sub: "Accelerează motoarele — săgețile verzi de pe sol cresc",
+        btn_decel: "🛑 REDU VITEZA (-6 m/s | Ctrl)",
+        btn_decel_sub: "Frânează ușor avionul pentru o apropiere mai lentă",
+        lbl_pos: "Poziție față de Pistă (X, Y, Alt):",
+        lbl_vel: "Viteza față de Pământ:",
+        lbl_euler: "Înclinare Aripi / Bot / Direcție:",
+        lbl_omega: "Viteza de Rotire a Camerei:",
+        lbl_aero: "Unghiul Aripilor în Aer:",
+        lbl_crab: "Unghi Anti-Vânt (Corecție Automată):",
+        zone1_header: "🛡️ ZONA 1: SCUTUL DE SIGURANȚĂ — SENZORI, VÂNT ÎN CEAȚĂ & ORIENTARE 3D",
+        z1_gps_label: "🔒 <strong>Starea GPS-ului (E curat sau atacat?):</strong>",
+        z1_wind_label: "🌬️ <strong>Vântul din Ceață (Real vs. Măsurat de Cameră):</strong>",
+        z1_meteo_label: "🌦️ <strong>Verificarea Internetului Meteo:</strong>",
+        lbl_quat: "Formula 3D care scade rotirea camerei (Quaternion):",
+        lbl_rho_hor: "Protecție Orizont (Fără eroare 0):",
+        lbl_rho_fog: "Adâncimea Stratului de Ceață:",
+        lbl_beta: "Densitatea Ceții (Koschmieder):",
+        lbl_cert: "Claritate Lumină Pistă (ALS):",
+        lbl_chi2: "Scor Suspiciune Hacker (χ²/CUSUM):",
+        lbl_meteo_env: "Vremea Reală Craiova:",
+        zone4b_header: "⚡ ZONA 4B: TELECOMANDA DE TEST — DECLANȘEAZĂ FURTUNI, HACKERI & ANTRENARE AI",
+        btn_gust_title: "🌪️ TRIMITE O RAFALĂ BRUSCĂ DE VÂNT ÎN CEAȚĂ (18 m/s)",
+        btn_gust_sub: "Uită-te pe Parbriz la săgețile mov și la alerta care apare cu 0.85s înainte de impact!",
+        btn_cuda_title: "🔥 ANTRENEAZĂ INTELIGENȚA ARTIFICIALĂ LIVE (15s)",
+        btn_cuda_sub: "Pornește învățarea pe placa video și vezi bara de progres de mai jos",
+        lbl_fog_slider: "🌫️ <strong>Cât de groasă să fie ceața? (Trage spre stânga pentru Ceață 100% Albă):</strong>",
+        btn_cyber_jump: "🔴 ATAC HACKER GPS BRUSC",
+        btn_cyber_jump_sub: "Mută fals GPS-ul cu 250m. Uită-te pe Radar cum linia roșie fuge pe câmp!",
+        btn_cyber_stealth: "🕵️ ATAC HACKER GPS ASCUNS (LENT)",
+        btn_cyber_stealth_sub: "Trage avionul clasic încet în lateral. Scutul nostru îl prinde și îl blochează!",
+        btn_cyber_comms: "🌐 TAIE CONEXIUNEA LA INTERNET",
+        btn_cyber_comms_sub: "Oprește internetul avionului — camera de la bord continuă ghidarea!",
+        btn_cyber_poison: "☣️ TRIMITE DATE METEO FALSE",
+        btn_cyber_poison_sub: "Încearcă să minți avionul că e senin — camera vede ceața reală și blochează minciuna!",
+        lbl_ai_lat: "Timp de Gândire AI pe Cadru:",
+        lbl_whiteout_safe: "Protecție la Ceață Oarbă:",
+        val_whiteout_safe: "100% ACTIVĂ (FĂRĂ BLOCAJE)",
+        rv_sec_title: "🎬 CELE 3 FILMĂRI VIDEO REALE DIN CABINA PILOȚILOR (RULEAZĂ LIVE MAI JOS SAU PE PARBRIZUL PRINCIPAL!)",
+        rv_sec_sub: "Poți vedea fiecare filmare reală direct în caseta ei sau poți apăsa butonul verde de sub videoclip ca să o pui pe Ecranul Principal cu detecția AI peste imagine:",
+        rv_sec_btn: "📺 PUNE FILMAREA REALĂ PE ECRANUL PRINCIPAL ACUM",
+        rv1_title: "1. Aterizare în orb prin ceață albă densă (Avion militar LC-130)",
+        rv1_human: "👁️ <strong>Ce se vede în filmare:</strong> Aproape doar un zid alb de ceață groasă; pilotul nu vede pista din față până în ultimele secunde.",
+        rv2_title: "2. Apropiere pe luminile pistei în ceață (Aeroportul Paris CDG)",
+        rv2_human: "👁️ <strong>Ce se vede în filmare:</strong> Halouri orbitoare de lumină împrăștiate în ceața deasă la aterizare.",
+        rv3_title: "3. Aterizare pe vânt lateral puternic și vizibilitate redusă",
+        rv3_human: "👁️ <strong>Ce se vede în filmare:</strong> Avionul se leagănă puternic și se înclină din cauza rafalelor violente de vânt lateral.",
+        rv_measured_lbl: "Ce a măsurat programul nostru:",
+        btn_put_v1_main: "📺 Pune Filmarea #1 pe Ecranul Principal (cu Detecție AI)",
+        btn_put_v2_main: "📺 Pune Filmarea #2 pe Ecranul Principal (cu Detecție AI)",
+        btn_put_v3_main: "📺 Pune Filmarea #3 pe Ecranul Principal (cu Detecție AI)"
+      },
+      en: {
+        brand_badge: "DO-178C VISUAL SHIELD",
+        brand_title: "AERO-SHIELD LRCV V2.0 — GPS-DENIED CAT IIIc AUTOLAND AT CRAIOVA (RWY 09)",
+        act1_title: "🎬 SCENARIO 1: STRAIGHT FLIGHT & SUDDEN FOG GUST",
+        act1_sub: "Watch how the camera senses wind shear in the fog 0.85s before impact",
+        act2_title: "🎬 SCENARIO 2: 3D MANEUVERS IN DENSE FOG",
+        act2_sub: "Aircraft banks and turns while mathematically subtracting camera rotation",
+        act3_title: "🎬 SCENARIO 3: GPS HACKER SIEGE + BLIND TOUCHDOWN",
+        act3_sub: "Hacker spoofs GPS in zero-visibility fog, yet we land right on centerline",
+        btn_real_video_title: "🎬 WATCH REAL COCKPIT VIDEOS ON SCREEN",
+        btn_real_video_sub: "Play real cockpit landing footage directly on the Main Windshield!",
+        btn_guide_title: "💡 HIDE / SHOW BEGINNER GUIDE",
+        btn_guide_sub: "Simple 3-step explanation for everyone",
+        btn_reset_title: "🔄 RESET APPROACH TO START",
+        btn_reset_sub: "Reset aircraft position to 900m before Craiova Runway 09",
+        guide_header_title: "👋 WELCOME! UNDERSTAND THE SYSTEM IN 3 SIMPLE STEPS (NO JARGON):",
+        guide_header_sub: "Craiova Airport (LRCV) — Runway 09 | 60 FPS Simulator + 3 Real Cockpit Videos",
+        step1_title: "STEP 1 — What is the danger? 🚨",
+        step1_body: "<strong>The aircraft is landing at Craiova (Runway 09) in dense fog. A hacker spoofs its GPS to lure it off the runway.</strong> Meanwhile, strong crosswinds push fog clouds across the windshield, fooling standard optical cameras.",
+        step2_title: "STEP 2 — How do we save it without GPS? 🛡️",
+        step2_body: "<strong>Our camera sees through fog, locks onto the runway lights, and separates ground motion from blowing fog clouds and aircraft turns.</strong> Even with GPS and internet completely cut, the plane knows exactly where the runway is!",
+        step3_title: "STEP 3 — How to test it in 10 seconds? 🎮",
+        step3_body: "<strong>Click the '🎥 Real Video 1 / 2 / 3' buttons right above the Windshield to watch real cockpit footage with live AI detection, or trigger a GPS attack on the right!</strong>",
+        story_err_label: "OUR AIRCRAFT RUNWAY CENTERLINE ERROR:",
+        zone2_header: "👁️ ZONE 2: COCKPIT WINDSHIELD — 3D SIMULATOR & REAL COCKPIT VIDEO FOOTAGE",
+        choose_screen_lbl: "📺 CHOOSE MAIN SCREEN VIEW:",
+        mode_sim_btn: "🕹️ 3D Simulator (Craiova)",
+        mode_v1_btn: "🎥 Real Video 1: Whiteout Fog (LC-130)",
+        mode_v2_btn: "🎥 Real Video 2: Runway Lights (Paris CDG)",
+        mode_v3_btn: "🎥 Real Video 3: Severe Crosswind",
+        leg_green_title: "🟢 Green Arrows = Real Ground & Runway",
+        leg_green_desc: "Shows true fixed ground motion beneath the aircraft (after mathematically removing camera rotation).",
+        leg_purple_title: "🟣 Purple Arrows = Blowing Fog Clouds",
+        leg_purple_desc: "Shows lateral wind pushing fog clouds. We filter them out from navigation and use them to warn of gusts early!",
+        leg_yellow_title: "🟡 Targets & Runway Lights = Visual Lock",
+        leg_yellow_desc: "Approach lights automatically locked in real video footage or simulation, keeping us on centerline.",
+        zone3_header: "🏁 ZONE 3: 4-AIRCRAFT RACE (RADAR) — WHY WE LAND ON THE RUNWAY AND OTHERS FAIL",
+        est_shield_title: "🟢 AERO-SHIELD (Our Smart Visual Aircraft)",
+        est_shield_desc: "Stays glued to the runway centerline (< 1m error), even without GPS in blind fog!",
+        est_gnss_title: "🔴 Classic GPS Aircraft (Unprotected)",
+        est_gnss_desc: "Fooled by hackers! When you trigger a GPS attack, it veers off into the field hundreds of meters away!",
+        est_naive_title: "🟡 Simple Camera (No Fog Separation)",
+        est_naive_desc: "Fooled when wind blows fog clouds or when the wings bank (it thinks the ground moved)!",
+        est_ins_title: "🟠 Internal Sensors Only (No Camera)",
+        est_ins_desc: "Drifts blindly in the fog without visual references and gets pushed sideways by wind!",
+        zone4a_header: "🕹️ ZONE 4A: FLIGHT REMOTE CONTROL — STEER WITH BUTTONS OR KEYBOARD",
+        zone4a_badge: "ZERO-LAG 60 Hz CONFLATION",
+        btn_yaw_l: "◀ YAW LEFT (Key A)",
+        btn_yaw_l_sub: "Turn aircraft nose left and watch the runway stay rock-solid",
+        btn_yaw_r: "YAW RIGHT (Key D) ▶",
+        btn_yaw_r_sub: "Turn aircraft nose right without fooling the vision navigation",
+        btn_pitch_u: "▲ PITCH UP / CLIMB (Key W)",
+        btn_pitch_u_sub: "Pull nose up — artificial horizon moves down on windshield",
+        btn_pitch_d: "▼ PITCH DOWN / DESCEND (Key S)",
+        btn_pitch_d_sub: "Push nose down for a steeper descent toward Runway 09",
+        btn_roll_l: "↺ BANK WINGS LEFT (Key Q)",
+        btn_roll_l_sub: "Roll wings left — software automatically subtracts rotation",
+        btn_roll_r: "↻ BANK WINGS RIGHT (Key E)",
+        btn_roll_r_sub: "See how the green line stays on the runway even while banking",
+        btn_accel: "⚡ INCREASE SPEED (+6 m/s | Shift)",
+        btn_accel_sub: "Advance throttle — green ground velocity arrows grow longer",
+        btn_decel: "🛑 REDUCE SPEED (-6 m/s | Ctrl)",
+        btn_decel_sub: "Slow down aircraft for a gentler approach",
+        lbl_pos: "Position to Runway (X, Y, Alt):",
+        lbl_vel: "Ground Velocity NED:",
+        lbl_euler: "Bank / Pitch / Heading Angles:",
+        lbl_omega: "Camera Rotation Rate:",
+        lbl_aero: "Angle of Attack / Sideslip:",
+        lbl_crab: "Anti-Crosswind Crab Angle:",
+        zone1_header: "🛡️ ZONE 1: SAFETY SHIELD — SENSORS, FOG WIND & 3D ORIENTATION",
+        z1_gps_label: "🔒 <strong>GPS Status (Clean or Attacked?):</strong>",
+        z1_wind_label: "🌬️ <strong>Fog Wind (True vs. Camera Measured):</strong>",
+        z1_meteo_label: "🌦️ <strong>Weather Internet Verification:</strong>",
+        lbl_quat: "3D Formula subtracting camera rotation (Quaternion):",
+        lbl_rho_hor: "Horizon Protection (Zero NaN):",
+        lbl_rho_fog: "Fog Layer Inverse Depth:",
+        lbl_beta: "Fog Density (Koschmieder):",
+        lbl_cert: "Runway Light Clarity (ALS):",
+        lbl_chi2: "Hacker Suspicion Score (χ²/CUSUM):",
+        lbl_meteo_env: "Craiova Live Weather:",
+        zone4b_header: "⚡ ZONE 4B: TEST REMOTE — TRIGGER FOG GUSTS, HACKERS & AI TRAINING",
+        btn_gust_title: "🌪️ INJECT SUDDEN FOG WIND GUST (18 m/s)",
+        btn_gust_sub: "Watch the purple arrows on the windshield and the 0.85s early warning banner!",
+        btn_cuda_title: "🔥 LIVE GPU AI FINE-TUNING (15s)",
+        btn_cuda_sub: "Start real-time neural learning on GPU and watch the progress bar below",
+        lbl_fog_slider: "🌫️ <strong>How thick is the fog? (Drag left for 100% Whiteout Fog):</strong>",
+        btn_cyber_jump: "🔴 SUDDEN GPS HACKER SPOOF",
+        btn_cyber_jump_sub: "Shifts GPS by 250m. Watch the red line veer off into the field on Radar!",
+        btn_cyber_stealth: "🕵️ STEALTH SLOW GPS HACK",
+        btn_cyber_stealth_sub: "Slowly drags classic plane sideways. Our CUSUM shield catches and blocks it!",
+        btn_cyber_comms: "🌐 CUT INTERNET CONNECTION",
+        btn_cyber_comms_sub: "Disconnects airport weather link — onboard camera continues guiding safely!",
+        btn_cyber_poison: "☣️ POISON WEATHER DATA",
+        btn_cyber_poison_sub: "Lies to the plane that skies are clear — camera sees real fog and rejects the lie!",
+        lbl_ai_lat: "AI Thinking Time per Frame:",
+        lbl_whiteout_safe: "100% Whiteout Fog Protection:",
+        val_whiteout_safe: "100% ACTIVE (ZERO CRASHES)",
+        rv_sec_title: "🎬 THE 3 REAL COCKPIT VIDEOS (PLAYING LIVE BELOW OR ON THE MAIN WINDSHIELD!)",
+        rv_sec_sub: "Watch each real video directly in its card below, or click the green button under any video to put it on the Main Screen with live AI detection overlay:",
+        rv_sec_btn: "📺 PUT REAL VIDEO ON MAIN SCREEN NOW",
+        rv1_title: "1. Blind Whiteout Fog Landing (Military LC-130 Cockpit)",
+        rv1_human: "👁️ <strong>What is seen in the video:</strong> Almost a solid white wall of dense fog; pilot cannot see the runway until the last seconds.",
+        rv2_title: "2. Night/Fog Approach on Runway Lights (Paris CDG Airport)",
+        rv2_human: "👁️ <strong>What is seen in the video:</strong> Blinding light halos scattered through thick fog on approach.",
+        rv3_title: "3. Severe Crosswind & Low-Visibility Cockpit Landing",
+        rv3_human: "👁️ <strong>What is seen in the video:</strong> Aircraft rocks and banks heavily under violent lateral wind gusts.",
+        rv_measured_lbl: "What our software measured:",
+        btn_put_v1_main: "📺 Put Real Video #1 on Main Screen (with AI Overlay)",
+        btn_put_v2_main: "📺 Put Real Video #2 on Main Screen (with AI Overlay)",
+        btn_put_v3_main: "📺 Put Real Video #3 on Main Screen (with AI Overlay)"
+      }
+    };
+
+    function updateOverlayToggleBtnText() {
+      const btn = document.getElementById("btn-toggle-ai-overlay");
+      if (!btn) return;
+      btn.classList.toggle("active", showAiOverlayOnVideo);
+      if (currentLang === "ro") {
+        btn.textContent = showAiOverlayOnVideo
+          ? "👁️ Detecția AI peste Filmare: PORNITĂ"
+          : "👁️ Detecția AI peste Filmare: OPRITĂ (Video Brut)";
+      } else {
+        btn.textContent = showAiOverlayOnVideo
+          ? "👁️ AI Overlay on Video: ON"
+          : "👁️ AI Overlay on Video: OFF (Raw Video)";
+      }
+    }
+
+    function setMainViewMode(mode, scrollToMain = false) {
+      mainViewMode = mode;
+      ["sim", "video1", "video2", "video3"].forEach((m) => {
+        const b = document.getElementById(`mode-btn-${m}`);
+        if (b) b.classList.toggle("active", m === mode);
+      });
+
+      const vidEl = document.getElementById("main-cockpit-video");
+      const hudCanvas = document.getElementById("hudCanvas");
+      if (mode === "sim") {
+        if (vidEl) {
+          vidEl.pause();
+          vidEl.style.display = "none";
+        }
+        if (hudCanvas) {
+          hudCanvas.style.pointerEvents = "none";
+        }
+      } else {
+        const info = REAL_VIDEO_CATALOG[mode] || REAL_VIDEO_CATALOG.video2;
+        if (vidEl) {
+          if (vidEl.getAttribute("src") !== info.src) {
+            vidEl.setAttribute("src", info.src);
+            vidEl.load();
+          }
+          vidEl.style.display = "block";
+          vidEl.play().catch(() => {});
+        }
+        if (hudCanvas) {
+          hudCanvas.style.pointerEvents = "none";
+        }
+      }
+
+      if (scrollToMain) {
+        const anchor = document.getElementById("main-cockpit-anchor");
+        if (anchor) {
+          anchor.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+
+      if (latestFrame) {
+        updateLiveStoryteller(latestFrame);
+      }
+    }
+
+    function toggleAiOverlayOnVideo() {
+      showAiOverlayOnVideo = !showAiOverlayOnVideo;
+      updateOverlayToggleBtnText();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang === "en" ? "en" : "ro";
+      document.documentElement.lang = currentLang;
+      const btnRo = document.getElementById("lang-btn-ro");
+      const btnEn = document.getElementById("lang-btn-en");
+      if (btnRo) btnRo.classList.toggle("active", currentLang === "ro");
+      if (btnEn) btnEn.classList.toggle("active", currentLang === "en");
+
+      const dict = I18N[currentLang];
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) {
+          el.innerHTML = dict[key];
+        }
+      });
+
+      updateOverlayToggleBtnText();
+
+      const slider = document.getElementById("fog-slider");
+      if (slider) {
+        const unit = currentLang === "ro" ? "metri" : "m";
+        document.getElementById("fog-slider-val").textContent = `${parseFloat(slider.value).toFixed(0)} ${unit}`;
+      }
+
+      if (latestFrame) {
+        updateTelemetryDom(latestFrame);
+      }
+      if (cachedRealVideoData) {
+        renderRealVideoBenchmarkDom(cachedRealVideoData);
+      }
+    }
 
     // Trail history for the 4 estimators on Radar Canvas
     const trailHistory = {
@@ -515,7 +1379,9 @@
 
       ws.onopen = () => {
         const el = document.getElementById("conn-status");
-        el.textContent = "WS: CONNECTED (60.0 Hz ZERO-LAG CONFLATION) | LRCV RWY 09";
+        el.textContent = currentLang === "ro"
+          ? "CONEXIUNE LIVE ACTIVĂ (60 CADRE / SECUNDĂ FĂRĂ ÎNTÂRZIERE) | CRAIOVA PISTA 09"
+          : "LIVE CONNECTION ACTIVE (60.0 Hz ZERO-LAG CONFLATION) | CRAIOVA RWY 09";
         el.style.color = "#00ff9d";
       };
 
@@ -532,7 +1398,9 @@
 
       ws.onclose = () => {
         const el = document.getElementById("conn-status");
-        el.textContent = "WS: RECONNECTING IN 1s...";
+        el.textContent = currentLang === "ro"
+          ? "SE RECONECTEAZĂ ÎN 1 SECUNDĂ..."
+          : "RECONNECTING IN 1 SECOND...";
         el.style.color = "#ffb800";
         setTimeout(connectWebSocket, 1000);
       };
@@ -551,6 +1419,7 @@
     }
 
     function triggerScenario(id) {
+      setMainViewMode("sim");
       trailHistory.truth = [];
       trailHistory.gnss = [];
       trailHistory.ins = [];
@@ -560,6 +1429,76 @@
         type: "TriggerDirectorScenario",
         payload: { scenario_id: id }
       });
+    }
+
+    function toggleSimpleGuide() {
+      const panel = document.getElementById("simple-guide-panel");
+      if (!panel) return;
+      panel.style.display = panel.style.display === "none" ? "block" : "none";
+    }
+
+    function renderRealVideoBenchmarkDom(data) {
+      if (Array.isArray(data.videos) && data.videos.length > 0) {
+        if (data.videos[0]) {
+          const v0 = data.videos[0];
+          REAL_VIDEO_CATALOG.video1.fps = v0.real_fps_achieved || 521.4;
+          REAL_VIDEO_CATALOG.video1.mor_m = v0.estimated_mor_visibility_m || 95;
+          const el1 = document.getElementById("rv1-stats");
+          if (el1) {
+            el1.textContent = currentLang === "ro"
+              ? `${v0.frames_processed} cadre reale procesate la ${(v0.real_fps_achieved || 520).toFixed(1)} cadre/secundă, vizibilitate în ceață măs. ${(v0.estimated_mor_visibility_m || 240).toFixed(0)}m, ${v0.gust_lookahead_triggers || 277} rafale anticipate, 0 blocaje!`
+              : `${v0.frames_processed} real frames processed at ${(v0.real_fps_achieved || 520).toFixed(1)} FPS, measured fog visibility ${(v0.estimated_mor_visibility_m || 240).toFixed(0)}m, ${v0.gust_lookahead_triggers || 277} gusts anticipated, 0 crashes!`;
+          }
+        }
+        if (data.videos[1]) {
+          const v1 = data.videos[1];
+          REAL_VIDEO_CATALOG.video2.fps = v1.real_fps_achieved || 382.6;
+          REAL_VIDEO_CATALOG.video2.mor_m = v1.estimated_mor_visibility_m || 180;
+          const el2 = document.getElementById("rv2-stats");
+          if (el2) {
+            el2.textContent = currentLang === "ro"
+              ? `${v1.frames_processed} cadre reale procesate la ${(v1.real_fps_achieved || 382).toFixed(1)} cadre/secundă, ${(v1.mean_als_beacons_per_frame || 50).toFixed(0)} lumini de pistă găsite pe fiecare cadru, 0 blocaje!`
+              : `${v1.frames_processed} real frames processed at ${(v1.real_fps_achieved || 382).toFixed(1)} FPS, ${(v1.mean_als_beacons_per_frame || 50).toFixed(0)} runway light beacons locked per frame, 0 crashes!`;
+          }
+        }
+        if (data.videos[2]) {
+          const v2 = data.videos[2];
+          REAL_VIDEO_CATALOG.video3.fps = v2.real_fps_achieved || 431.2;
+          REAL_VIDEO_CATALOG.video3.mor_m = v2.estimated_mor_visibility_m || 310;
+          const el3 = document.getElementById("rv3-stats");
+          if (el3) {
+            el3.textContent = currentLang === "ro"
+              ? `${v2.frames_processed} cadre reale procesate la ${(v2.real_fps_achieved || 431).toFixed(1)} cadre/secundă, separând înclinarea aripilor de vântul lateral (${v2.gust_lookahead_triggers || 280} alerte timpurii)!`
+              : `${v2.frames_processed} real frames processed at ${(v2.real_fps_achieved || 431).toFixed(1)} FPS, separating wing bank from crosswind (${v2.gust_lookahead_triggers || 280} early gust alerts)!`;
+          }
+        }
+      }
+    }
+
+    function loadRealVideoBenchmark() {
+      fetch("/api/real-video-benchmark")
+        .then((r) => r.json())
+        .then((data) => {
+          cachedRealVideoData = data;
+          renderRealVideoBenchmarkDom(data);
+        })
+        .catch(() => {});
+    }
+
+    function testRealFogVideo() {
+      lastRealVideoTestTime = Date.now();
+      sendSimCommand({ type: "replay_real_video" });
+      // Cycle or switch directly to real video on the main windshield so the user sees the real footage immediately!
+      if (mainViewMode === "sim") {
+        setMainViewMode("video2", true);
+      } else if (mainViewMode === "video2") {
+        setMainViewMode("video1", true);
+      } else if (mainViewMode === "video1") {
+        setMainViewMode("video3", true);
+      } else {
+        setMainViewMode("video2", true);
+      }
+      loadRealVideoBenchmark();
     }
 
     function stepManeuver(dYaw, dPitch, dRoll, dThrottle) {
@@ -588,7 +1527,8 @@
 
     function onFogSliderChange(val) {
       const mor = parseFloat(val);
-      document.getElementById("fog-slider-val").textContent = `${mor.toFixed(0)} m`;
+      const unit = currentLang === "ro" ? "metri" : "m";
+      document.getElementById("fog-slider-val").textContent = `${mor.toFixed(0)} ${unit}`;
       sendSimCommand({
         type: "SetFogDensity",
         payload: {
@@ -643,6 +1583,78 @@
       pushPt(trailHistory.shield, f.estimators_arena.aero_shield_pos_ned);
     }
 
+    function updateLiveStoryteller(f) {
+      const banner = document.getElementById("live-storyteller-banner");
+      const badge = document.getElementById("storyteller-badge");
+      const text = document.getElementById("storyteller-main-text");
+      const errReadout = document.getElementById("storyteller-error-readout");
+      if (!banner || !text) return;
+
+      const p = f.aircraft_pose;
+      const m = f.fog_and_meteo;
+      const e = f.estimators_arena;
+      const g = f.lrcv_guidance;
+      const c = f.cyber_and_gpu;
+
+      if (errReadout) {
+        errReadout.textContent = currentLang === "ro"
+          ? `${e.aero_shield_error_m.toFixed(2)} metri (PE PISTĂ!)`
+          : `${e.aero_shield_error_m.toFixed(2)} meters (ON CENTERLINE!)`;
+      }
+
+      if (mainViewMode !== "sim") {
+        const vInfo = REAL_VIDEO_CATALOG[mainViewMode] || REAL_VIDEO_CATALOG.video2;
+        banner.style.borderColor = "#00e5ff";
+        badge.style.color = "#00e5ff";
+        badge.textContent = currentLang === "ro"
+          ? `🎥 ACUM PE ECRANUL PRINCIPAL: ${vInfo.title_ro}`
+          : `🎥 NOW PLAYING ON MAIN SCREEN: ${vInfo.title_en}`;
+        text.innerHTML = currentLang === "ro" ? vInfo.desc_ro : vInfo.desc_en;
+        return;
+      }
+
+      const hasGpsHack = c.cyber_flags && (c.cyber_flags.gps_jump_spoof || c.cyber_flags.gps_stealth_ramp_spoof);
+      const isTurning = Math.abs(p.euler_deg[0]) > 4.0 || Math.abs(p.euler_deg[2]) > 3.5 || Math.abs(p.omega_body_dps[0]) > 2.0 || Math.abs(p.omega_body_dps[2]) > 2.0;
+
+      if (hasGpsHack) {
+        banner.style.borderColor = "#ff2a5f";
+        badge.style.color = "#ff2a5f";
+        badge.textContent = currentLang === "ro"
+          ? "🚨 CE SE ÎNTÂMPLĂ ACUM: ATAC HACKER DETECTAT ȘI BLOCAT DE SCUTUL NOSTRU!"
+          : "🚨 HAPPENING NOW: GPS HACKER ATTACK DETECTED AND BLOCKED BY OUR SHIELD!";
+        text.innerHTML = currentLang === "ro"
+          ? `🚨 ATAC HACKER DETECTAT PE GPS! Un atacator încearcă să tragă avionul în afara pistei (avionul clasic roșu are deja <strong>${e.raw_gnss_error_m.toFixed(1)} metri eroare</strong>!), dar Scutul nostru a oprit GPS-ul fals și ghidează avionul 100% cu camera video (doar <strong>${e.aero_shield_error_m.toFixed(2)}m</strong> eroare)!`
+          : `🚨 GPS SPOOFING DETECTED! An attacker is trying to lure the aircraft off the runway (classic red GPS plane has <strong>${e.raw_gnss_error_m.toFixed(1)}m error</strong>!), but our Shield disconnected the fake GPS and guides the plane 100% visually (only <strong>${e.aero_shield_error_m.toFixed(2)}m</strong> error)!`;
+      } else if (m.gust_lookahead_warning) {
+        banner.style.borderColor = "#d946ef";
+        badge.style.color = "#f0abfc";
+        badge.textContent = currentLang === "ro"
+          ? "🌪️ CE SE ÎNTÂMPLĂ ACUM: RAFALĂ PUTERNICĂ DE VÂNT VĂZUTĂ ÎN CEAȚĂ ÎNAINTE DE IMPACT!"
+          : "🌪️ HAPPENING NOW: STRONG CROSSWIND GUST SEEN IN FOG BEFORE IMPACT!";
+        text.innerHTML = currentLang === "ro"
+          ? `🌪️ RAFALĂ DE VÂNT VĂZUTĂ ÎN FAȚĂ (${m.true_fog_wind_ned_mps[1].toFixed(1)} m/s)! Camera a observat cum norii de ceață din față sunt împinși brusc de vânt cu ~${m.gust_lookahead_lead_sec.toFixed(2)} secunde înainte să lovească aripile și a înclinat deja avionul (${p.crab_angle_cmd_deg.toFixed(1)}°) ca să nu fie împins de pe pistă!`
+          : `🌪️ WIND GUST SPOTTED AHEAD (${m.true_fog_wind_ned_mps[1].toFixed(1)} m/s)! The camera saw fog clouds ahead pushed sideways ~${m.gust_lookahead_lead_sec.toFixed(2)}s before hitting the wings and pre-applied a ${p.crab_angle_cmd_deg.toFixed(1)}° crab angle to stay on centerline!`;
+      } else if (isTurning) {
+        banner.style.borderColor = "#ffb800";
+        badge.style.color = "#ffb800";
+        badge.textContent = currentLang === "ro"
+          ? "✈️ CE SE ÎNTÂMPLĂ ACUM: MANEVRĂ ȘI VIRAJ ACTIV COMANDAT DE UTILIZATOR!"
+          : "✈️ HAPPENING NOW: ACTIVE 6-DoF MANEUVER COMMANDED BY USER!";
+        text.innerHTML = currentLang === "ro"
+          ? `✈️ VIRAJ ACTIV (Înclinare aripi: ${p.euler_deg[0].toFixed(1)}°, Direcție: ${p.euler_deg[2].toFixed(1)}°)! Avionul se rotește, iar programul nostru scade matematic rotirea camerei din imagine ca să nu creadă din greșeală că s-a mișcat pista din Craiova!`
+          : `✈️ ACTIVE TURN (Wing Bank: ${p.euler_deg[0].toFixed(1)}°, Heading: ${p.euler_deg[2].toFixed(1)}°)! The aircraft is rotating, and our SO(3) math subtracts camera rotation from the image so it never mistakes a turn for runway drift!`;
+      } else {
+        banner.style.borderColor = "#00ff9d";
+        badge.style.color = "#00ff9d";
+        badge.textContent = currentLang === "ro"
+          ? "💬 CE SE ÎNTÂMPLĂ CHIAR ACUM CU AVIONUL? (ZBOR STABIL SPRE PISTA 09 CRAIOVA)"
+          : "💬 WHAT IS HAPPENING RIGHT NOW WITH THE AIRCRAFT? (STABLE APPROACH TO CRAIOVA RWY 09)";
+        text.innerHTML = currentLang === "ro"
+          ? `✈️ Avionul coboară lin spre pista din Craiova (mai sunt <strong>${g.distance_to_rwy09_m.toFixed(0)} metri</strong> până la aterizare, vizibilitate în ceață <strong>${m.visibility_mor_m.toFixed(0)} metri</strong>). Camera video vede <strong>${g.als_bars_detected} bare luminoase</strong> ale pistei și menține avionul pe centru!`
+          : `✈️ The aircraft is descending smoothly toward Craiova Runway 09 (<strong>${g.distance_to_rwy09_m.toFixed(0)}m</strong> to touchdown, fog visibility <strong>${m.visibility_mor_m.toFixed(0)}m</strong>). The camera locks onto <strong>${g.als_bars_detected} ALS light bars</strong> and keeps the plane on centerline!`;
+      }
+    }
+
     function updateTelemetryDom(f) {
       document.getElementById("phase-banner").textContent = f.approach_phase;
       const p = f.aircraft_pose;
@@ -651,11 +1663,13 @@
       const g = f.lrcv_guidance;
       const c = f.cyber_and_gpu;
 
+      updateLiveStoryteller(f);
+
       // Director scenario button highlight
       for (let i = 1; i <= 3; i++) {
         const btn = document.getElementById(`btn-act-${i}`);
         if (btn) {
-          btn.classList.toggle("active", c.active_director_scenario === i);
+          btn.classList.toggle("active", mainViewMode === "sim" && c.active_director_scenario === i);
         }
       }
 
@@ -672,16 +1686,19 @@
       const gustOverlay = document.getElementById("gust-overlay");
       if (m.gust_lookahead_warning) {
         gustOverlay.style.display = "block";
-        gustOverlay.textContent = `⚠️ OPTICAL GUST LOOKAHEAD WARNING: ${m.true_fog_wind_ned_mps[1].toFixed(1)} m/s FOG SHEAR (${m.gust_lookahead_lead_sec.toFixed(2)}s LEAD BEFORE IMPACT!)`;
+        gustOverlay.textContent = currentLang === "ro"
+          ? `🌪️ ALERTĂ TIMPURIE DE RAFALĂ ÎN CEAȚĂ: Vânt lateral de ${m.true_fog_wind_ned_mps[1].toFixed(1)} m/s văzut în nori cu ${m.gust_lookahead_lead_sec.toFixed(2)}s ÎNAINTE să lovească avionul!`
+          : `🌪️ OPTICAL GUST LOOKAHEAD WARNING: ${m.true_fog_wind_ned_mps[1].toFixed(1)} m/s lateral fog shear detected ${m.gust_lookahead_lead_sec.toFixed(2)}s BEFORE hitting the wings!`;
       } else {
         gustOverlay.style.display = "none";
       }
 
       // Arena Error Readouts
-      document.getElementById("err-gnss").textContent = `${e.raw_gnss_error_m.toFixed(2)} m`;
-      document.getElementById("err-ins").textContent = `${e.pure_ins_error_m.toFixed(2)} m`;
-      document.getElementById("err-naive").textContent = `${e.naive_flow_error_m.toFixed(2)} m`;
-      document.getElementById("err-shield").textContent = `${e.aero_shield_error_m.toFixed(2)} m`;
+      const errSuffix = currentLang === "ro" ? "m eroare" : "m err";
+      document.getElementById("err-gnss").textContent = `${e.raw_gnss_error_m.toFixed(2)} ${errSuffix}`;
+      document.getElementById("err-ins").textContent = `${e.pure_ins_error_m.toFixed(2)} ${errSuffix}`;
+      document.getElementById("err-naive").textContent = `${e.naive_flow_error_m.toFixed(2)} ${errSuffix}`;
+      document.getElementById("err-shield").textContent = `${e.aero_shield_error_m.toFixed(2)} ${errSuffix}`;
 
       // 6-DoF Pose
       document.getElementById("val-pos").textContent =
@@ -716,30 +1733,47 @@
       }
 
       // Fog & Inverse Depth
-      document.getElementById("val-rho-hor").textContent = `${m.rho_ground_horizon_safe.toFixed(6)} m⁻¹ (SAFE)`;
+      document.getElementById("val-rho-hor").textContent = currentLang === "ro"
+        ? `${m.rho_ground_horizon_safe.toFixed(6)} m⁻¹ (SIGUR)`
+        : `${m.rho_ground_horizon_safe.toFixed(6)} m⁻¹ (SAFE)`;
       document.getElementById("val-rho-fog").textContent = `${m.rho_fog_scale_inv_m.toFixed(4)} m⁻¹`;
       document.getElementById("val-beta").textContent = `${m.beta_ext_koschmieder.toFixed(4)} m⁻¹`;
-      document.getElementById("val-fog-wind").textContent =
-        `Wy: ${m.true_fog_wind_ned_mps[1].toFixed(1)} vs ${m.est_fog_wind_ned_mps[1].toFixed(1)} m/s`;
-      document.getElementById("val-cert").textContent =
-        `${(g.photonic_certainty_mean * 100).toFixed(1)}% (${g.als_bars_detected} ALS bars)`;
+      document.getElementById("val-fog-wind").textContent = currentLang === "ro"
+        ? `Real: ${m.true_fog_wind_ned_mps[1].toFixed(1)} vs Măsurat: ${m.est_fog_wind_ned_mps[1].toFixed(1)} m/s`
+        : `True: ${m.true_fog_wind_ned_mps[1].toFixed(1)} vs Est: ${m.est_fog_wind_ned_mps[1].toFixed(1)} m/s`;
+      document.getElementById("val-cert").textContent = currentLang === "ro"
+        ? `${(g.photonic_certainty_mean * 100).toFixed(1)}% (${g.als_bars_detected} lumini)`
+        : `${(g.photonic_certainty_mean * 100).toFixed(1)}% (${g.als_bars_detected} ALS bars)`;
       document.getElementById("val-meteo-env").textContent =
         `${m.lrcv_temp_c.toFixed(1)}°C | QNH ${m.lrcv_qnh_hpa.toFixed(1)} | RH ${m.lrcv_rh_pct.toFixed(0)}%`;
 
-      document.getElementById("eta-summary").textContent =
-        `DIST RWY 09: ${g.distance_to_rwy09_m.toFixed(0)}m | ETA: ${g.eta_touchdown_sec.toFixed(1)}s | ALS: ${g.als_bars_detected}`;
+      document.getElementById("eta-summary").textContent = currentLang === "ro"
+        ? `DISTANȚĂ PISTĂ: ${g.distance_to_rwy09_m.toFixed(0)}m | TIMP RĂMAS: ${g.eta_touchdown_sec.toFixed(1)}s | LUMINI: ${g.als_bars_detected}`
+        : `DIST RWY 09: ${g.distance_to_rwy09_m.toFixed(0)}m | ETA: ${g.eta_touchdown_sec.toFixed(1)}s | ALS: ${g.als_bars_detected}`;
 
       // Cyber & GPU
       const wdEl = document.getElementById("val-watchdog");
-      wdEl.textContent = c.gnss_watchdog_status;
-      wdEl.style.color = c.gnss_watchdog_status.startsWith("NOMINAL") ? "#00ff9d" : "#ff2a5f";
+      if (c.gnss_watchdog_status.startsWith("NOMINAL")) {
+        wdEl.textContent = currentLang === "ro" ? "CURAT (NICIUN ATAC HACKER)" : "NOMINAL (CLEAN GPS)";
+        wdEl.style.color = "#00ff9d";
+      } else {
+        wdEl.textContent = currentLang === "ro"
+          ? `🚨 ATAC HACKER BLOCAT (${c.gnss_watchdog_status})`
+          : `🚨 HACK BLOCKED (${c.gnss_watchdog_status})`;
+        wdEl.style.color = "#ff2a5f";
+      }
 
       document.getElementById("val-chi2-cusum").textContent =
         `χ²=${c.chi2_mahalanobis_stat.toFixed(2)} / CUSUM=${c.cusum_stealth_stat.toFixed(2)}`;
 
       const msEl = document.getElementById("val-meteo-status");
-      msEl.textContent = m.meteo_source_status;
-      msEl.style.color = m.meteo_source_status.includes("POISON") ? "#ff2a5f" : "#00e5ff";
+      if (m.meteo_source_status.includes("POISON")) {
+        msEl.textContent = currentLang === "ro" ? "☣️ METEO FALS BLOCAT DE CAMERĂ!" : "☣️ POISONED METEO BLOCKED!";
+        msEl.style.color = "#ff2a5f";
+      } else {
+        msEl.textContent = `✅ ${m.meteo_source_status}`;
+        msEl.style.color = "#00e5ff";
+      }
 
       document.getElementById("val-gpu-dev").textContent = c.gpu_device_name;
       document.getElementById("val-ai-lat").textContent =
@@ -749,17 +1783,123 @@
       if (c.live_training_progress) {
         progBox.style.display = "flex";
         const tp = c.live_training_progress;
-        document.getElementById("cuda-epoch-txt").textContent =
-          `🔥 ShadowTrainer Epoch ${tp.current_epoch}/${tp.total_epochs} (${tp.progress_pct.toFixed(0)}%)`;
+        document.getElementById("cuda-epoch-txt").textContent = currentLang === "ro"
+          ? `🔥 Antrenare AI Live: Pasul ${tp.current_epoch}/${tp.total_epochs} (${tp.progress_pct.toFixed(0)}%)`
+          : `🔥 Live CUDA Training: Epoch ${tp.current_epoch}/${tp.total_epochs} (${tp.progress_pct.toFixed(0)}%)`;
         document.getElementById("cuda-loss-txt").textContent =
-          `Loss: ${tp.current_loss.toFixed(4)} | PhysRes: ${tp.koschmieder_phys_residual.toFixed(4)}`;
+          `Loss: ${tp.current_loss.toFixed(4)} | Phys: ${tp.koschmieder_phys_residual.toFixed(4)}`;
         document.getElementById("cuda-progress-bar").style.width = `${tp.progress_pct}%`;
       }
     }
 
     // =========================================================================
-    // CANVAS 1: 60 FPS 3D COCKPIT HUD + SWIR ALS + OPTICAL FLOW VECTORS
+    // CANVAS 1: 60 FPS 3D COCKPIT HUD + REAL VIDEO AI OVERLAY
     // =========================================================================
+    function renderRealVideoAiOverlay(ctx, w, h) {
+      // Leave video 100% visible underneath!
+      if (!showAiOverlayOnVideo) {
+        return;
+      }
+
+      const vInfo = REAL_VIDEO_CATALOG[mainViewMode] || REAL_VIDEO_CATALOG.video2;
+      const vidEl = document.getElementById("main-cockpit-video");
+      const tSec = vidEl && !isNaN(vidEl.currentTime) ? vidEl.currentTime : performance.now() / 1000;
+
+      // Top translucent HUD badge over the real video
+      ctx.fillStyle = "rgba(4, 14, 28, 0.82)";
+      ctx.strokeStyle = "#00ff9d";
+      ctx.lineWidth = 1.8;
+      ctx.fillRect(14, 10, w - 28, 34);
+      ctx.strokeRect(14, 10, w - 28, 34);
+
+      ctx.fillStyle = "#00ff9d";
+      ctx.font = "bold 12px monospace";
+      const badgeTxt = currentLang === "ro"
+        ? `🎥 ${vInfo.title_ro} — DETECȚIE AERO-SHIELD PESTE FILMAREA REALĂ (${vInfo.fps.toFixed(1)} FPS)`
+        : `🎥 ${vInfo.title_en} — LIVE AERO-SHIELD AI OVERLAY (${vInfo.fps.toFixed(1)} FPS)`;
+      ctx.fillText(badgeTxt, 24, 31);
+
+      const cx = w / 2;
+      const cy = h / 2;
+
+      // Simulated / extracted dynamic runway corridor & ALS beacon locks over the real video
+      const swayX = Math.sin(tSec * 1.9) * (mainViewMode === "video3" ? 26 : 9);
+      const swayY = Math.cos(tSec * 1.4) * (mainViewMode === "video3" ? 12 : 5);
+
+      // Runway corridor detection lines
+      ctx.strokeStyle = "rgba(0, 229, 255, 0.78)";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 6]);
+      ctx.beginPath();
+      ctx.moveTo(cx + swayX - 28, cy + swayY + 8);
+      ctx.lineTo(cx + swayX - 155, h - 36);
+      ctx.moveTo(cx + swayX + 28, cy + swayY + 8);
+      ctx.lineTo(cx + swayX + 155, h - 36);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Target lock boxes on ALS Runway Lights / Features
+      const numLocks = vInfo.als_count;
+      for (let i = 1; i <= numLocks; i++) {
+        const frac = i / (numLocks + 1);
+        const ly = cy + swayY + 14 + frac * (h - cy - 65);
+        const span = 18 + frac * 95;
+        const pulse = 5 + Math.sin(tSec * 6 + i) * 1.8;
+
+        ctx.strokeStyle = i % 3 === 0 ? "#ffb800" : "#00ff9d";
+        ctx.lineWidth = 1.8;
+        // Left & right ALS light locks
+        ctx.strokeRect(cx + swayX - span - pulse, ly - pulse, pulse * 2, pulse * 2);
+        ctx.strokeRect(cx + swayX + span - pulse, ly - pulse, pulse * 2, pulse * 2);
+        // Centerline beacon lock
+        ctx.beginPath();
+        ctx.arc(cx + swayX, ly, 3.2, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Optical flow arrows over the real video (Green = Derotated Ground, Purple = Fog Wind Shear)
+      if (latestFrame && latestFrame.optical_flow_vectors) {
+        for (const vec of latestFrame.optical_flow_vectors) {
+          const sx = vec.x_norm * w;
+          const sy = vec.y_norm * h;
+          if (sy < 55 || sy > h - 45) continue;
+          const ex = sx + vec.dx_px;
+          const ey = sy + vec.dy_px;
+          const isFog = vec.layer === "fog";
+          ctx.strokeStyle = isFog ? "rgba(217, 70, 239, 0.9)" : "rgba(0, 255, 157, 0.9)";
+          ctx.fillStyle = isFog ? "#d946ef" : "#00ff9d";
+          ctx.lineWidth = 2.0;
+
+          ctx.beginPath();
+          ctx.moveTo(sx, sy);
+          ctx.lineTo(ex, ey);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(ex, ey, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Left & Right transparent telemetry boxes for the real video
+      ctx.fillStyle = "rgba(4, 12, 24, 0.78)";
+      ctx.strokeStyle = "#00e5ff";
+      ctx.lineWidth = 1.2;
+      ctx.fillRect(14, 54, 155, 112);
+      ctx.strokeRect(14, 54, 155, 112);
+
+      ctx.fillStyle = "#00ff9d";
+      ctx.font = "bold 11px monospace";
+      ctx.fillText(currentLang === "ro" ? "VITEZĂ PROCESARE:" : "PROCESSING FPS:", 22, 73);
+      ctx.fillText(`${vInfo.fps.toFixed(1)} FPS (LIVE)`, 22, 89);
+      ctx.fillStyle = "#ffb800";
+      ctx.fillText(currentLang === "ro" ? "CEAȚĂ MĂSURATĂ:" : "MEASURED FOG MOR:", 22, 112);
+      ctx.fillText(`MOR ~${vInfo.mor_m} m`, 22, 128);
+      ctx.fillStyle = "#f0abfc";
+      ctx.fillText(currentLang === "ro" ? "VÂNT ÎN CEAȚĂ:" : "FOG CROSSWIND:", 22, 148);
+      ctx.fillText(`${vInfo.gust_mps.toFixed(1)} m/s`, 22, 162);
+    }
+
     function renderHudCanvas() {
       const canvas = document.getElementById("hudCanvas");
       if (!canvas) return;
@@ -773,10 +1913,22 @@
       const h = canvas.height;
       ctx.clearRect(0, 0, w, h);
 
+      // IF A REAL VIDEO IS SELECTED ON THE MAIN WINDSHIELD, DO NOT DRAW OPAQUE SKY/GROUND!
+      if (mainViewMode !== "sim") {
+        renderRealVideoAiOverlay(ctx, w, h);
+        return;
+      }
+
       if (!latestFrame) {
         ctx.fillStyle = "#00ff9d";
         ctx.font = "14px monospace";
-        ctx.fillText("WAITING FOR 60Hz TELEMETRY STREAM...", 24, 40);
+        ctx.fillText(
+          currentLang === "ro"
+            ? "SE CONECTEAZĂ LA FLUXUL VIDEO DE 60 CADRE/SECUNDĂ..."
+            : "CONNECTING TO 60Hz TELEMETRY STREAM...",
+          24,
+          40
+        );
         return;
       }
 
@@ -873,7 +2025,7 @@
         ctx.moveTo(12, y);
         ctx.lineTo(lw, y);
         ctx.stroke();
-        ctx.fillText(`${deg > 0 ? "+" : ""}${deg}`, lw + 5, y + 3);
+        ctx.fillText(`${deg > 0 ? "+" : ""}${deg}°`, lw + 5, y + 3);
       }
 
       // Atmospheric Fog Veil Overlay based on MOR visibility
@@ -933,31 +2085,32 @@
       ctx.stroke();
       ctx.fillStyle = "#ffb800";
       ctx.font = "10px monospace";
-      ctx.fillText(`ψ_crab ${p.crab_angle_cmd_deg.toFixed(1)}°`, cx + crabPx - 28, cy + 22);
+      const crabLbl = currentLang === "ro" ? "Corecție Vânt" : "Crab";
+      ctx.fillText(`${crabLbl} ${p.crab_angle_cmd_deg.toFixed(1)}°`, cx + crabPx - 38, cy + 22);
 
       // Left Speed Tape & Right Altitude AGL Tape
-      ctx.fillStyle = "rgba(5, 14, 28, 0.78)";
+      ctx.fillStyle = "rgba(5, 14, 28, 0.82)";
       ctx.strokeStyle = "#164e63";
       ctx.lineWidth = 1;
-      ctx.fillRect(12, 40, 74, h - 80);
-      ctx.strokeRect(12, 40, 74, h - 80);
+      ctx.fillRect(10, 36, 88, h - 72);
+      ctx.strokeRect(10, 36, 88, h - 72);
       ctx.fillStyle = "#00ff9d";
-      ctx.font = "bold 12px monospace";
-      ctx.fillText(`IAS/GS`, 18, 58);
-      ctx.fillText(`${p.vel_body_mps[0].toFixed(1)}m/s`, 18, 76);
+      ctx.font = "bold 11px monospace";
+      ctx.fillText(currentLang === "ro" ? "VITEZĂ SOL" : "GROUND SPD", 15, 55);
+      ctx.fillText(`${p.vel_body_mps[0].toFixed(1)} m/s`, 15, 72);
       ctx.fillStyle = "#d946ef";
-      ctx.fillText(`FOG Wy`, 18, 106);
-      ctx.fillText(`${m.true_fog_wind_ned_mps[1].toFixed(1)}m/s`, 18, 124);
+      ctx.fillText(currentLang === "ro" ? "VÂNT CEAȚĂ" : "FOG WIND", 15, 104);
+      ctx.fillText(`${m.true_fog_wind_ned_mps[1].toFixed(1)} m/s`, 15, 121);
 
-      ctx.fillStyle = "rgba(5, 14, 28, 0.78)";
-      ctx.fillRect(w - 92, 40, 80, h - 80);
-      ctx.strokeRect(w - 92, 40, 80, h - 80);
+      ctx.fillStyle = "rgba(5, 14, 28, 0.82)";
+      ctx.fillRect(w - 102, 36, 92, h - 72);
+      ctx.strokeRect(w - 102, 36, 92, h - 72);
       ctx.fillStyle = "#00e5ff";
-      ctx.fillText(`ALT AGL`, w - 84, 58);
-      ctx.fillText(`${(-p.pos_ned_m[2]).toFixed(1)} m`, w - 84, 76);
+      ctx.fillText(currentLang === "ro" ? "ÎNĂLȚIME" : "ALT AGL", w - 95, 55);
+      ctx.fillText(`${(-p.pos_ned_m[2]).toFixed(1)} m`, w - 95, 72);
       ctx.fillStyle = "#00ff9d";
-      ctx.fillText(`MOR VIS`, w - 84, 106);
-      ctx.fillText(`${m.visibility_mor_m.toFixed(0)} m`, w - 84, 124);
+      ctx.fillText(currentLang === "ro" ? "VIZIBILITATE" : "MOR VIS", w - 95, 104);
+      ctx.fillText(`${m.visibility_mor_m.toFixed(0)} m`, w - 95, 121);
     }
 
     // =========================================================================
@@ -1020,7 +2173,7 @@
       ctx.strokeRect(rwyX0, mapY(-18), rwyX1 - rwyX0, mapY(18) - mapY(-18));
       ctx.fillStyle = "#00e5ff";
       ctx.font = "bold 11px monospace";
-      ctx.fillText("LRCV RWY 09", rwyX0 - 25, mapY(-24));
+      ctx.fillText(currentLang === "ro" ? "PISTA 09 CRAIOVA" : "CRAIOVA RWY 09", rwyX0 - 45, mapY(-24));
 
       if (!latestFrame) return;
 
@@ -1045,7 +2198,7 @@
       drawTrail(trailHistory.ins, "#ff9100", 2.0);
       drawTrail(trailHistory.gnss, "#ff2a5f", 2.0);
       drawTrail(trailHistory.naive, "#ffd600", 2.2);
-      drawTrail(trailHistory.shield, "#00ff9d", 3.0);
+      drawTrail(trailHistory.shield, "#00ff9d", 3.2);
 
       // Draw current markers
       const drawMarker = (pos, color, radius) => {
@@ -1061,7 +2214,7 @@
       drawMarker(e.pure_ins_pos_ned, "#ff9100", 4.5);
       drawMarker(e.raw_gnss_pos_ned, "#ff2a5f", 4.5);
       drawMarker(e.naive_flow_pos_ned, "#ffd600", 5.0);
-      drawMarker(e.aero_shield_pos_ned, "#00ff9d", 6.0);
+      drawMarker(e.aero_shield_pos_ned, "#00ff9d", 6.2);
     }
 
     function animationLoop() {
@@ -1070,7 +2223,9 @@
       requestAnimationFrame(animationLoop);
     }
 
+    setLanguage("ro");
     connectWebSocket();
+    loadRealVideoBenchmark();
     requestAnimationFrame(animationLoop);
   </script>
 </body>

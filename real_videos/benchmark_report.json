@@ -1,0 +1,96 @@
+{
+  "total_videos": 3,
+  "total_frames_processed": 825,
+  "overall_mean_frame_time_ms": 2.279433655757576,
+  "overall_fps_achieved": 438.70546417269924,
+  "all_zero_nan_or_inf": true,
+  "videos": [
+    {
+      "video_path": "real_01_cat3_whiteout_cockpit_lc130.mp4",
+      "source_description": "Real Cockpit ILS CAT III Dense Fog Approach & Autoland (ALS & Runway Threshold)",
+      "frame_width": 128,
+      "frame_height": 128,
+      "frames_processed": 300,
+      "mean_frame_time_ms": 1.91567958,
+      "p99_frame_time_ms": 3.1469430000000003,
+      "real_fps_achieved": 522.0079654448266,
+      "estimated_mor_visibility_m": 1460.0245600331734,
+      "mean_extinction_beta": 0.02182343593175141,
+      "mean_valid_ground_patches": 20.433333333333334,
+      "mean_valid_fog_patches": 34.693333333333335,
+      "mean_photonic_weight": 0.11897569307307489,
+      "mean_ground_velocity_body_mps": [
+        2.7036620415161545,
+        9.049223294087298,
+        46.411436988181435
+      ],
+      "mean_fog_wind_velocity_body_mps": [
+        0.030121808180021706,
+        0.6117648067330838,
+        1.7955818299045527
+      ],
+      "total_als_beacons_detected": 0,
+      "mean_als_beacons_per_frame": 0.0,
+      "gust_lookahead_triggers": 277,
+      "zero_nan_or_inf": true
+    },
+    {
+      "video_path": "real_02_als_runway_approach_cdg.mp4",
+      "source_description": "Real Aviation Cockpit Low-Visibility Approach (real_02_als_runway_approach_cdg)",
+      "frame_width": 128,
+      "frame_height": 128,
+      "frames_processed": 300,
+      "mean_frame_time_ms": 2.614713913333334,
+      "p99_frame_time_ms": 5.039820000000001,
+      "real_fps_achieved": 382.45101879048906,
+      "estimated_mor_visibility_m": 1031.1287154893503,
+      "mean_extinction_beta": 0.043269663401984425,
+      "mean_valid_ground_patches": 84.52333333333334,
+      "mean_valid_fog_patches": 55.01666666666667,
+      "mean_photonic_weight": 0.23670017179217157,
+      "mean_ground_velocity_body_mps": [
+        -0.8813045729410355,
+        11.23271824910823,
+        14.969270516160348
+      ],
+      "mean_fog_wind_velocity_body_mps": [
+        -16.487208128855382,
+        -46.1434625587913,
+        -16.403695725881786
+      ],
+      "total_als_beacons_detected": 11240,
+      "mean_als_beacons_per_frame": 37.46666666666667,
+      "gust_lookahead_triggers": 225,
+      "zero_nan_or_inf": true
+    },
+    {
+      "video_path": "real_03_crosswind_cockpit_landing.mp4",
+      "source_description": "Real Cockpit Severe Crosswind & Low-Visibility Gust Approach",
+      "frame_width": 128,
+      "frame_height": 128,
+      "frames_processed": 225,
+      "mean_frame_time_ms": 2.3173987466666657,
+      "p99_frame_time_ms": 3.5639,
+      "real_fps_achieved": 431.51831398821406,
+      "estimated_mor_visibility_m": 3353.831586530609,
+      "mean_extinction_beta": 0.0009333390460614505,
+      "mean_valid_ground_patches": 95.57333333333334,
+      "mean_valid_fog_patches": 84.13777777777777,
+      "mean_photonic_weight": 0.550490341020339,
+      "mean_ground_velocity_body_mps": [
+        0.5991141041349969,
+        3.175378476923198,
+        8.878625430924489
+      ],
+      "mean_fog_wind_velocity_body_mps": [
+        98.80593335983426,
+        47.312139774434286,
+        -192.01708349674232
+      ],
+      "total_als_beacons_detected": 4597,
+      "mean_als_beacons_per_frame": 20.43111111111111,
+      "gust_lookahead_triggers": 215,
+      "zero_nan_or_inf": true
+    }
+  ]
+}

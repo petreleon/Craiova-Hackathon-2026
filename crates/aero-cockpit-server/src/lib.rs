@@ -322,4 +322,20 @@ mod tests {
         let json_res = serde_json::to_string(&frame);
         assert!(json_res.is_ok());
     }
+
+    #[test]
+    fn test_replay_real_video_command_and_benchmark() {
+        let raw_json = serde_json::json!({ "type": "replay_real_video" });
+        let parsed = SimCommand::parse_flexible_json(&raw_json);
+        assert_eq!(parsed, Some(SimCommand::ReplayRealVideo));
+
+        let mut sim = make_test_sim();
+        sim.apply_command(SimCommand::ReplayRealVideo);
+        let frame = sim.step_60hz(1.0 / 60.0);
+        assert!(frame
+            .fog_and_meteo
+            .meteo_source_status
+            .contains("REAL AVIATION FOG VIDEO"));
+        assert!(frame.approach_phase.contains("REAL FOG VIDEO REPLAY"));
+    }
 }
