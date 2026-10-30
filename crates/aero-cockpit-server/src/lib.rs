@@ -365,5 +365,13 @@ mod tests {
         assert!(html_str.contains("Lecția 6:"));
         assert!(html_str.contains("FG-01"));
         assert!(html_str.contains("FG-10"));
+
+        for p in 1..=6 {
+            let page_html =
+                crate::ui_framework_rust::render_aero_shield_app_maud_page(&state, p).into_string();
+            let active_div = format!("id=\"concept-page-{}\" class=\"concept-page-view active-page\"", p);
+            assert!(page_html.contains(&active_div));
+            assert!(page_html.contains(&format!("Pagina {} din 6:", p)));
+        }
     }
 }

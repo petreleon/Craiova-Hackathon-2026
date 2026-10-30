@@ -8,7 +8,7 @@ use std::time::{Duration, Instant};
 
 use arc_swap::ArcSwap;
 use axum::extract::ws::{Message, WebSocket, WebSocketUpgrade};
-use axum::extract::State;
+use axum::extract::{Path as AxumPath, Query, State};
 use axum::http::StatusCode;
 use axum::response::{Html, IntoResponse};
 use axum::routing::{get, post};
@@ -26,7 +26,7 @@ use crate::flightgear_synthetic_10::{
 use crate::rt_loop_60hz::{LRCV_RWY09_LAT_DEG, LRCV_RWY09_LON_DEG};
 use crate::sim_commands::{sanitize_f64, SimCommand};
 use crate::ui_framework_rust::{
-    get_all_6_interactive_lessons, render_aero_shield_app_maud, InteractiveLesson6Yo,
+    get_all_6_interactive_lessons, render_aero_shield_app_maud_page, InteractiveLesson6Yo,
 };
 use crate::ui_lessons_6yo::{render_lessons_6yo_component, render_lessons_6yo_standalone_page};
 use crate::ui_visual_engine::{
@@ -80,6 +80,7 @@ pub fn build_cockpit_router(state: CockpitServerState) -> Router {
     Router::new()
         .route("/", get(serve_index_html))
         .route("/index.html", get(serve_index_html))
+        .route("/pagina/:page_num", get(serve_concept_page_html))
         .route("/ws/telemetry", get(ws_telemetry_handler))
         .route("/api/command", post(post_sim_command_handler))
         .route("/api/health", get(get_health_handler))
@@ -119,8 +120,25 @@ async fn get_flightgear_tests_handler() -> Json<FlightGearTestSuiteReport> {
     Json(report)
 }
 
-async fn serve_index_html(State(state): State<CockpitServerState>) -> Html<String> {
-    let markup = render_aero_shield_app_maud(&state);
+#[derive(Debug, Default, Deserialize)]
+struct PageQueryParams {
+    page: Option<u8>,
+}
+
+async fn serve_index_html(
+    State(state): State<CockpitServerState>,
+    Query(params): Query<PageQueryParams>,
+) -> Html<String> {
+    let page_num = params.page.unwrap_or(1).clamp(1, 6);
+    let markup = render_aero_shield_app_maud_page(&state, page_num);
+    Html(markup.into_string())
+}
+
+async fn serve_concept_page_html(
+    State(state): State<CockpitServerState>,
+    AxumPath(page_num): AxumPath<u8>,
+) -> Html<String> {
+    let markup = render_aero_shield_app_maud_page(&state, page_num.clamp(1, 6));
     Html(markup.into_string())
 }
 

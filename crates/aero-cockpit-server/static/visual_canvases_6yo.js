@@ -1,23 +1,27 @@
 // =============================================================================
-// AERO-SHIELD CRAIOVA 2026 — VISUAL CANVASES FOR 6-YEAR-OLDS & ZERO-EXPERIENCE
+// AERO-SHIELD CRAIOVA 2026 — SPACIOUS VISUAL CANVASES FOR 6-YEAR-OLDS
 // =============================================================================
-// Overhauls #hudCanvas ("Ce vede Camera prin Ceață") and #radarCanvas
-// ("Cursa celor 4 Avioane Văzută de Sus") with ultra-clear visual callouts,
-// playful airplane silhouettes, grass vs. runway safety zones, hacker bait
-// targets, fog cloud animations, and an interactive Game View / Error Chart toggle.
+// Respects the core UX rule: "Interfață aerisită — câte un singur concept pe
+// pagină, fără texte suprapuse sau înghesuite!"
+// - Page 2 (#hudCanvas, 900x460px): 3 short, clean callout bubbles strictly in
+//   the corners (Top-Left, Bottom-Left, Top-Right) so the runway center and our
+//   airplane are NEVER covered by text.
+// - Page 3 (#radarCanvas, 900x440px): Full 900px width dedicated to the 4
+//   airplanes (✈️🟢 AERO-SHIELD, ✈️🔴 GPS PĂCĂLIT, ✈️🟡 CEAȚĂ SIMPLĂ, ✈️🟠 FĂRĂ CAMERĂ),
+//   generous vertical lane spacing, Y-axis label anti-collision, and a sleek
+//   horizontal scoreboard bar at the top so the entire width is open for flight.
 
 (function () {
   "use strict";
 
   let radarViewMode6yo = "game"; // "game" | "chart"
   let radarToggleBound = false;
-  let errorHistory6yo = []; // Rolling buffer of { t, shield, gnss, naive, ins }
+  let errorHistory6yo = []; // Rolling buffer of { shield, gnss, naive, ins }
 
   function getLang() {
     return typeof currentLang !== "undefined" && currentLang === "en" ? "en" : "ro";
   }
 
-  // Helper: Draw rounded rectangle
   function drawRoundRect(ctx, x, y, w, h, r) {
     const radius = Math.min(r, w / 2, h / 2);
     ctx.beginPath();
@@ -33,8 +37,8 @@
     ctx.closePath();
   }
 
-  // Helper: Draw a high-contrast Callout Bubble with an indicator arrow pointing to (targetX, targetY)
-  function drawCalloutBubble(ctx, opts) {
+  // Draws a compact, corner-anchored callout bubble with a fine pointer line
+  function drawCornerCalloutBubble(ctx, opts) {
     const {
       x,
       y,
@@ -46,58 +50,58 @@
       bgColor,
       title,
       subtitle,
+      badge,
       titleColor,
       subtitleColor,
-      pulse = false,
     } = opts;
 
     ctx.save();
 
-    // Pointer triangle / line from box to target
     if (typeof targetX === "number" && typeof targetY === "number") {
-      const boxCx = x + w / 2;
-      const boxCy = y + h / 2;
+      const anchorX = targetX > x + w / 2 ? x + w : x;
+      const anchorY = targetY > y + h / 2 ? y + h * 0.72 : y + h * 0.28;
       ctx.strokeStyle = borderColor;
-      ctx.lineWidth = 2.4;
-      ctx.setLineDash([4, 3]);
+      ctx.lineWidth = 1.6;
+      ctx.setLineDash([4, 4]);
       ctx.beginPath();
-      ctx.moveTo(boxCx, boxCy);
+      ctx.moveTo(anchorX, anchorY);
       ctx.lineTo(targetX, targetY);
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Glowing dot at target
       ctx.fillStyle = borderColor;
       ctx.beginPath();
-      ctx.arc(targetX, targetY, 4.5, 0, Math.PI * 2);
+      ctx.arc(targetX, targetY, 3.8, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // Box background & border
-    drawRoundRect(ctx, x, y, w, h, 8);
-    ctx.fillStyle = bgColor || "rgba(4, 12, 26, 0.90)";
+    drawRoundRect(ctx, x, y, w, h, 9);
+    ctx.fillStyle = bgColor || "rgba(6, 14, 26, 0.90)";
     ctx.fill();
-    ctx.lineWidth = pulse ? 2.8 : 2.0;
+    ctx.lineWidth = 1.8;
     ctx.strokeStyle = borderColor || "#00e5ff";
     ctx.stroke();
 
-    // Title
     ctx.fillStyle = titleColor || borderColor || "#ffffff";
     ctx.font = "bold 12px 'Segoe UI', system-ui, sans-serif";
-    ctx.fillText(title, x + 10, y + 18);
+    ctx.fillText(title, x + 10, y + 20);
 
-    // Subtitle
     if (subtitle) {
       ctx.fillStyle = subtitleColor || "#dbeafe";
       ctx.font = "11px 'Segoe UI', system-ui, sans-serif";
-      ctx.fillText(subtitle, x + 10, y + 34);
+      ctx.fillText(subtitle, x + 10, y + 37);
+    }
+
+    if (badge) {
+      ctx.fillStyle = "#fde047";
+      ctx.font = "bold 10px 'Segoe UI', system-ui, sans-serif";
+      ctx.fillText(badge, x + 10, y + 53);
     }
 
     ctx.restore();
   }
 
-  // Helper: Draw an arrow with a clear arrowhead
-  function drawArrow(ctx, x1, y1, x2, y2, color, lineWidth = 2.2, headLen = 7) {
+  function drawArrow(ctx, x1, y1, x2, y2, color, lineWidth = 2.0, headLen = 6.5) {
     const dx = x2 - x1;
     const dy = y2 - y1;
     const len = Math.hypot(dx, dy);
@@ -129,16 +133,35 @@
     ctx.restore();
   }
 
+  // Deterministic Y-axis anti-collision for the 4 airplane pills
+  function resolveLabelCollisionsY(items, minY, maxY, minGapPx) {
+    const sorted = items.slice().sort((a, b) => a.labelY - b.labelY);
+    for (let pass = 0; pass < 4; pass++) {
+      for (let i = 1; i < sorted.length; i++) {
+        const prev = sorted[i - 1];
+        const curr = sorted[i];
+        if (curr.labelY - prev.labelY < minGapPx) {
+          const mid = 0.5 * (prev.labelY + curr.labelY);
+          prev.labelY = Math.max(minY, mid - 0.5 * minGapPx);
+          curr.labelY = Math.min(maxY, prev.labelY + minGapPx);
+        }
+      }
+    }
+    return sorted;
+  }
+
   // ===========================================================================
-  // 1. HUD CANVAS 6YO ("CE VEDE CAMERA PRIN CEAȚĂ + 3 BALOANE EXPLICATIVE")
+  // 1. PAGE 2: HUD CANVAS ("PARBRIZUL AVIONULUI", 900x460px, CORNER CALLOUTS ONLY)
   // ===========================================================================
   function renderHudCanvas6yo() {
     const canvas = document.getElementById("hudCanvas");
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
-    if (canvas.width !== rect.width || canvas.height !== rect.height) {
-      canvas.width = rect.width;
-      canvas.height = rect.height;
+    const targetW = rect.width > 100 ? Math.round(rect.width) : 900;
+    const targetH = rect.height > 100 ? Math.round(rect.height) : 460;
+    if (canvas.width !== targetW || canvas.height !== targetH) {
+      canvas.width = targetW;
+      canvas.height = targetH;
     }
     const ctx = canvas.getContext("2d");
     const w = canvas.width;
@@ -171,31 +194,31 @@
     const tSec = performance.now() * 0.001;
 
     // -------------------------------------------------------------------------
-    // STEP 1: 3D Sky, Ground, Horizon & Perspective Runway RWY 09 Craiova
+    // STEP 1: Spacious 3D Sky, Ground, Horizon & Runway 09 Craiova
     // -------------------------------------------------------------------------
     ctx.save();
     ctx.translate(w / 2, h / 2);
     ctx.rotate(-rollRad);
 
-    const pitchOffsetPx = pitchDeg * 6.5;
+    const pitchOffsetPx = pitchDeg * 6.0;
 
-    // Sky (upper half)
+    // Sky
     const skyGrad = ctx.createLinearGradient(0, -h, 0, pitchOffsetPx);
-    skyGrad.addColorStop(0, "#050d24");
-    skyGrad.addColorStop(1, "#182c52");
+    skyGrad.addColorStop(0, "#050d22");
+    skyGrad.addColorStop(1, "#142748");
     ctx.fillStyle = skyGrad;
     ctx.fillRect(-w, -h, w * 2, h + pitchOffsetPx);
 
-    // Subtle animated fog wisps in the sky/upper zone
-    ctx.fillStyle = "rgba(217, 70, 239, 0.09)";
+    // Soft fog clouds in upper middle
+    ctx.fillStyle = "rgba(217, 70, 239, 0.08)";
     const windShiftPx = ((tSec * (m.true_fog_wind_ned_mps[1] || 5) * 8) % 240) - 120;
     for (let i = -2; i <= 2; i++) {
       ctx.beginPath();
       ctx.ellipse(
-        i * 140 + windShiftPx,
-        pitchOffsetPx - 55 + (i % 2) * 18,
+        i * 150 + windShiftPx,
+        pitchOffsetPx - 64 + (i % 2) * 18,
         85,
-        20,
+        18,
         0,
         0,
         Math.PI * 2
@@ -203,32 +226,31 @@
       ctx.fill();
     }
 
-    // Ground (lower half — lush dark green terrain)
+    // Ground
     const gndGrad = ctx.createLinearGradient(0, pitchOffsetPx, 0, h);
-    gndGrad.addColorStop(0, "#0a281e");
-    gndGrad.addColorStop(1, "#04120d");
+    gndGrad.addColorStop(0, "#09261c");
+    gndGrad.addColorStop(1, "#04110c");
     ctx.fillStyle = gndGrad;
     ctx.fillRect(-w, pitchOffsetPx, w * 2, h * 2);
 
     // Horizon Line
-    ctx.strokeStyle = "#00ff9d";
-    ctx.lineWidth = 2.2;
+    ctx.strokeStyle = "rgba(0, 255, 157, 0.55)";
+    ctx.lineWidth = 1.8;
     ctx.beginPath();
     ctx.moveTo(-w, pitchOffsetPx);
     ctx.lineTo(w, pitchOffsetPx);
     ctx.stroke();
 
-    // Perspective Runway RWY 09 Craiova + ALS Approach Lights
-    const lateralShiftPx = -p.pos_ned_m[1] * 2.2 - yawDeg * 5.0;
-    const rwyTopY = pitchOffsetPx + 6;
+    // Perspective Runway RWY 09 Craiova completely clear in center
+    const lateralShiftPx = -p.pos_ned_m[1] * 2.2 - yawDeg * 4.5;
+    const rwyTopY = pitchOffsetPx + 8;
     const rwyBotY = h * 0.88;
-    const topHalfW = 24;
-    const botHalfW = 205;
+    const topHalfW = 26;
+    const botHalfW = 215;
 
-    // Runway asphalt polygon
     ctx.fillStyle = "rgba(18, 42, 58, 0.85)";
     ctx.strokeStyle = "#00e5ff";
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 2.4;
     ctx.beginPath();
     ctx.moveTo(lateralShiftPx - topHalfW, rwyTopY);
     ctx.lineTo(lateralShiftPx + topHalfW, rwyTopY);
@@ -238,7 +260,7 @@
     ctx.fill();
     ctx.stroke();
 
-    // Runway Centerline dashed
+    // Centerline dashed
     ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 2.2;
     ctx.setLineDash([14, 10]);
@@ -248,10 +270,10 @@
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // ALS SWIR Approach Light Bars (bright glowing bulbs!)
-    const numBars = Math.min(g.als_bars_detected || 8, 12);
+    // Warm ALS Approach Light Bars
+    const numBars = Math.min(g.als_bars_detected || 8, 11);
     let sampleBulbLocalX = lateralShiftPx;
-    let sampleBulbLocalY = rwyTopY + (rwyBotY - rwyTopY) * 0.55;
+    let sampleBulbLocalY = rwyTopY + (rwyBotY - rwyTopY) * 0.58;
 
     for (let i = 1; i <= numBars; i++) {
       const frac = i / (numBars + 1);
@@ -259,42 +281,32 @@
       const barHalfW = topHalfW + frac * (botHalfW - topHalfW) * 0.48;
       const isRedWing = i % 3 === 0;
       ctx.strokeStyle = isRedWing ? "#ff2a5f" : "#00ffcc";
-      ctx.lineWidth = 3.0;
+      ctx.lineWidth = 2.6;
       ctx.beginPath();
       ctx.moveTo(lateralShiftPx - barHalfW, by);
       ctx.lineTo(lateralShiftPx + barHalfW, by);
       ctx.stroke();
 
-      // Draw bright individual light bulbs along the bar
       for (let b = -2; b <= 2; b++) {
         const bx = lateralShiftPx + (b / 2) * barHalfW;
         ctx.fillStyle = b === 0 ? "#ffd600" : isRedWing ? "#ff5277" : "#00ff9d";
         ctx.beginPath();
-        ctx.arc(bx, by, 2.5 + frac * 1.8, 0, Math.PI * 2);
+        ctx.arc(bx, by, 2.4 + frac * 1.6, 0, Math.PI * 2);
         ctx.fill();
       }
       if (i === Math.floor(numBars * 0.65)) {
-        sampleBulbLocalX = lateralShiftPx + barHalfW * 0.6;
+        sampleBulbLocalX = lateralShiftPx - barHalfW * 0.35;
         sampleBulbLocalY = by;
       }
     }
 
-    // Label on the runway itself
-    ctx.fillStyle = "rgba(0, 229, 255, 0.9)";
-    ctx.font = "bold 11px monospace";
-    ctx.fillText(
-      lang === "ro" ? "🛬 PISTA 09 CRAIOVA" : "🛬 CRAIOVA RWY 09",
-      lateralShiftPx - 52,
-      rwyTopY + 22
-    );
-
     ctx.restore();
 
     // -------------------------------------------------------------------------
-    // STEP 2: Optical Flow Arrows (Purple = Fog Wind above, Green = Ground below)
+    // STEP 2: Optical Flow Arrows (Purple = Fog Wind, Green = Ground)
     // -------------------------------------------------------------------------
-    let fogTargetX = w * 0.35;
-    let fogTargetY = h * 0.28;
+    let fogTargetX = w * 0.28;
+    let fogTargetY = h * 0.24;
     let groundTargetX = w * 0.5 + sampleBulbLocalX;
     let groundTargetY = h * 0.5 + sampleBulbLocalY;
 
@@ -304,18 +316,18 @@
       for (const vec of latestFrame.optical_flow_vectors) {
         const sx = vec.x_norm * w;
         const sy = vec.y_norm * h;
-        const ex = sx + vec.dx_px * 1.25;
-        const ey = sy + vec.dy_px * 1.25;
+        const ex = sx + vec.dx_px * 1.2;
+        const ey = sy + vec.dy_px * 1.2;
         const isFog = vec.layer === "fog";
         const color = isFog ? "#e879f9" : "#00ff9d";
-        drawArrow(ctx, sx, sy, ex, ey, color, isFog ? 2.5 : 2.2, 6.5);
+        drawArrow(ctx, sx, sy, ex, ey, color, isFog ? 2.2 : 2.0, 6.0);
 
-        if (isFog && !foundFog && sy > 55 && sy < h * 0.42 && sx > w * 0.25 && sx < w * 0.75) {
+        if (isFog && !foundFog && sy > h * 0.2 && sy < h * 0.42 && sx > w * 0.24 && sx < w * 0.65) {
           fogTargetX = ex;
           fogTargetY = ey;
           foundFog = true;
         }
-        if (!isFog && !foundGround && sy > h * 0.58 && sy < h * 0.82 && sx > w * 0.3 && sx < w * 0.7) {
+        if (!isFog && !foundGround && sy > h * 0.58 && sy < h * 0.8 && sx > w * 0.32 && sx < w * 0.65) {
           groundTargetX = ex;
           groundTargetY = ey;
           foundGround = true;
@@ -337,48 +349,48 @@
     }
 
     // -------------------------------------------------------------------------
-    // STEP 4: Fixed Airplane Target Crosshair & Crab Angle Marker in Center
+    // STEP 4: Clean Airplane Nose Reticle in Center (NO text covering center!)
     // -------------------------------------------------------------------------
     const cx = w / 2;
     const cy = h / 2;
 
-    // Airplane nose reticle
     ctx.strokeStyle = "#00e5ff";
-    ctx.lineWidth = 2.8;
+    ctx.lineWidth = 2.6;
     ctx.beginPath();
-    ctx.moveTo(cx - 30, cy);
+    ctx.moveTo(cx - 28, cy);
     ctx.lineTo(cx - 8, cy);
     ctx.lineTo(cx - 8, cy + 7);
     ctx.moveTo(cx + 8, cy);
-    ctx.lineTo(cx + 30, cy);
+    ctx.lineTo(cx + 28, cy);
     ctx.lineTo(cx + 8, cy + 7);
     ctx.stroke();
 
-    // Crab angle diamond
-    const crabPx = (p.crab_angle_cmd_deg || 0) * 4.5;
-    ctx.strokeStyle = "#ffb800";
-    ctx.lineWidth = 2.2;
-    ctx.beginPath();
-    ctx.moveTo(cx + crabPx, cy - 9);
-    ctx.lineTo(cx + crabPx + 9, cy);
-    ctx.lineTo(cx + crabPx, cy + 9);
-    ctx.lineTo(cx + crabPx - 9, cy);
-    ctx.closePath();
-    ctx.stroke();
-
     // -------------------------------------------------------------------------
-    // STEP 5: THE 3 BIG KID-FRIENDLY EXPLANATORY CALLOUT BUBBLES
+    // STEP 5: THE 3 CORNER CALLOUT BUBBLES (STRICTLY IN CORNERS, SHORT & AIRY)
     // -------------------------------------------------------------------------
     const windSpeedLat = Math.abs(m.true_fog_wind_ned_mps[1] || 0);
     const groundSpeed = p.vel_body_mps[0] || 0;
     const shieldErr = e && typeof e.aero_shield_error_m === "number" ? e.aero_shield_error_m : 0.3;
+    const isTilting =
+      Math.abs(rollDeg) > 2.5 ||
+      Math.abs(p.omega_body_dps[0] || 0) > 1.5 ||
+      Math.abs(yawDeg) > 2.5;
 
-    // BUBBLE 1 (TOP — PURPLE: FOG CLOUD PUSHED BY WIND)
-    const b1W = Math.min(w - 24, 410);
-    const b1H = 42;
-    const b1X = 12;
-    const b1Y = 10;
-    drawCalloutBubble(ctx, {
+    // 1. TOP-LEFT CORNER: `fog_cloud` (`box_norm: [0.02, 0.04, 0.29, 0.14]`)
+    const b1X = w * 0.02;
+    const b1Y = h * 0.04;
+    const b1W = Math.max(230, w * 0.29);
+    const b1H = Math.max(58, h * 0.14);
+    const gustAlert =
+      m.gust_lookahead_warning || windSpeedLat > 8.0
+        ? lang === "ro"
+          ? `⚠️ RAFALĂ VĂZUTĂ ÎNAINTE (${(m.gust_lookahead_lead_sec || 0.9).toFixed(1)}s)`
+          : `⚠️ GUST SPOTTED AHEAD (${(m.gust_lookahead_lead_sec || 0.9).toFixed(1)}s)`
+        : lang === "ro"
+          ? `Vânt lateral: ${windSpeedLat.toFixed(1)} m/s`
+          : `Crosswind: ${windSpeedLat.toFixed(1)} m/s`;
+
+    drawCornerCalloutBubble(ctx, {
       x: b1X,
       y: b1Y,
       w: b1W,
@@ -386,108 +398,23 @@
       targetX: fogTargetX,
       targetY: fogTargetY,
       borderColor: "#e879f9",
-      bgColor: "rgba(28, 7, 38, 0.88)",
+      bgColor: "rgba(24, 7, 35, 0.88)",
       titleColor: "#f0abfc",
       subtitleColor: "#f5d0fe",
-      title:
-        lang === "ro"
-          ? `☁️💨 NORUL DE CEAȚĂ (Împins de vânt: ${windSpeedLat.toFixed(1)} m/s)`
-          : `☁️💨 FOG CLOUD (Pushed by wind: ${windSpeedLat.toFixed(1)} m/s)`,
+      title: lang === "ro" ? "☁️💨 VÂNT ÎN CEAȚĂ" : "☁️💨 FOG WIND",
       subtitle:
         lang === "ro"
-          ? "Săgețile MOV arată încotro suflă vântul prin ceață"
-          : "PURPLE arrows show where the wind pushes the fog",
+          ? "Săgețile mov arată vântul din nor"
+          : "Purple arrows show wind in fog",
+      badge: gustAlert,
     });
 
-    // Animated Early Gust Warning Banner (if gust lookahead active or strong crosswind > 8 m/s)
-    if (m.gust_lookahead_warning || windSpeedLat > 8.0) {
-      const pulseOn = Math.sin(tSec * 8) > -0.2;
-      const gwW = Math.min(w - 24, 460);
-      const gwH = 28;
-      const gwX = 12;
-      const gwY = b1Y + b1H + 5;
-      ctx.save();
-      drawRoundRect(ctx, gwX, gwY, gwW, gwH, 6);
-      ctx.fillStyle = pulseOn ? "rgba(220, 38, 38, 0.94)" : "rgba(153, 27, 27, 0.90)";
-      ctx.fill();
-      ctx.strokeStyle = "#fde047";
-      ctx.lineWidth = 2.2;
-      ctx.stroke();
-      ctx.fillStyle = "#fef08a";
-      ctx.font = "bold 11.5px 'Segoe UI', system-ui, sans-serif";
-      const leadSec = (m.gust_lookahead_lead_sec || 1.1).toFixed(1);
-      ctx.fillText(
-        lang === "ro"
-          ? `⚠️ VINE O RAFALĂ ÎN ${leadSec} SECUNDE! (Am văzut-o în ceață înainte să lovească aripile!)`
-          : `⚠️ WIND GUST IN ${leadSec} SECONDS! (Spotted in the fog before hitting our wings!)`,
-        gwX + 10,
-        gwY + 18
-      );
-      ctx.restore();
-    }
-
-    // BUBBLE 3 (CENTER-RIGHT — CYAN: OUR PLANE FOLLOWING THE RUNWAY LINE)
-    const b3W = Math.min(w - 24, 375);
-    const b3H = 38;
-    const b3X = Math.max(12, w - b3W - 12);
-    const b3Y = Math.max(58, cy - 58);
-    drawCalloutBubble(ctx, {
-      x: b3X,
-      y: b3Y,
-      w: b3W,
-      h: b3H,
-      targetX: cx,
-      targetY: cy,
-      borderColor: "#00e5ff",
-      bgColor: "rgba(4, 22, 38, 0.88)",
-      titleColor: "#00e5ff",
-      subtitleColor: "#bae6fd",
-      title:
-        lang === "ro"
-          ? `✈️ AVIONUL NOSTRU (Se ține după pistă — Eroare: ${shieldErr.toFixed(1)}m)`
-          : `✈️ OUR PLANE (Follows the runway line — Error: ${shieldErr.toFixed(1)}m)`,
-      subtitle:
-        lang === "ro"
-          ? `Altitudine: ${(-p.pos_ned_m[2]).toFixed(0)}m | Vizibilitate în ceață: ${m.visibility_mor_m.toFixed(0)}m`
-          : `Altitude: ${(-p.pos_ned_m[2]).toFixed(0)}m | Fog visibility: ${m.visibility_mor_m.toFixed(0)}m`,
-    });
-
-    // Tilt / Derotation Visual Badge when airplane banks/turns
-    const isTilting =
-      Math.abs(rollDeg) > 2.5 ||
-      Math.abs(p.omega_body_dps[0] || 0) > 1.5 ||
-      Math.abs(yawDeg) > 2.5;
-
-    if (isTilting) {
-      const tiltW = Math.min(w - 24, 430);
-      const tiltH = 26;
-      const tiltX = Math.max(12, w - tiltW - 12);
-      const tiltY = b3Y + b3H + 5;
-      ctx.save();
-      drawRoundRect(ctx, tiltX, tiltY, tiltW, tiltH, 6);
-      ctx.fillStyle = "rgba(180, 83, 9, 0.93)";
-      ctx.fill();
-      ctx.strokeStyle = "#fde047";
-      ctx.lineWidth = 2.0;
-      ctx.stroke();
-      ctx.fillStyle = "#fffbeb";
-      ctx.font = "bold 11px 'Segoe UI', system-ui, sans-serif";
-      ctx.fillText(
-        lang === "ro"
-          ? `🔄 AVIONUL SE ÎNCLINĂ (${rollDeg.toFixed(0)}°) — Scădem automat înclinarea din poză!`
-          : `🔄 PLANE IS TILTING (${rollDeg.toFixed(0)}°) — We automatically subtract tilt from the picture!`,
-        tiltX + 10,
-        tiltY + 17
-      );
-      ctx.restore();
-    }
-
-    // BUBBLE 2 (BOTTOM — BRIGHT GREEN: GROUND & RUNWAY LIGHTS)
-    const b2W = Math.min(w - 24, 445);
-    const b2H = 42;
-    const b2X = 12;
-    const b2Y = h - b2H - 10;
-    drawCalloutBubble(ctx, {
+    // 2. BOTTOM-LEFT CORNER: `ground_als` (`box_norm: [0.02, 0.80, 0.31, 0.14]`)
+    const b2X = w * 0.02;
+    const b2Y = h * 0.80;
+    const b2W = Math.max(250, w * 0.31);
+    const b2H = Math.max(58, h * 0.14);
+    drawCornerCalloutBubble(ctx, {
       x: b2X,
       y: b2Y,
       w: b2W,
@@ -495,27 +422,70 @@
       targetX: groundTargetX,
       targetY: groundTargetY,
       borderColor: "#00ff9d",
-      bgColor: "rgba(4, 28, 18, 0.90)",
+      bgColor: "rgba(4, 26, 18, 0.88)",
       titleColor: "#00ff9d",
       subtitleColor: "#d1fae5",
       title:
         lang === "ro"
-          ? `💡 PĂMÂNTUL & BECURILE PISTEI (Stau pe loc! Viteza: ${groundSpeed.toFixed(1)} m/s)`
-          : `💡 GROUND & RUNWAY LIGHTS (Stay still! Plane speed: ${groundSpeed.toFixed(1)} m/s)`,
+          ? "💡 BECURILE PISTEI (VITEZA SOL)"
+          : "💡 RUNWAY LIGHTS (GROUND SPEED)",
       subtitle:
         lang === "ro"
-          ? "Săgețile VERZI măsoară cât de repede zboară avionul peste pământ"
-          : "GREEN arrows measure how fast our plane flies over the ground",
+          ? `Repere fixe la sol (${groundSpeed.toFixed(1)} m/s)`
+          : `Fixed ground lights (${groundSpeed.toFixed(1)} m/s)`,
+      badge:
+        lang === "ro"
+          ? "🔒 ANCORĂ FIZICĂ PE PISTA 09"
+          : "🔒 SAFE GROUND ANCHOR RWY 09",
+    });
+
+    // 3. TOP-RIGHT CORNER: `our_plane` (`box_norm: [0.67, 0.04, 0.31, 0.14]`)
+    const b3W = Math.max(250, w * 0.31);
+    const b3H = Math.max(58, h * 0.14);
+    const b3X = w - b3W - w * 0.02;
+    const b3Y = h * 0.04;
+    const turnBadge = isTilting
+      ? lang === "ro"
+        ? `🔄 ÎNCLINARE ${rollDeg.toFixed(0)}° COMPENSATĂ`
+        : `🔄 TILT ${rollDeg.toFixed(0)}° COMPENSATED`
+      : lang === "ro"
+        ? `✅ EROARE: ${shieldErr.toFixed(1)}m (PE AX)`
+        : `✅ ERROR: ${shieldErr.toFixed(1)}m (ON AXIS)`;
+
+    drawCornerCalloutBubble(ctx, {
+      x: b3X,
+      y: b3Y,
+      w: b3W,
+      h: b3H,
+      targetX: cx,
+      targetY: cy,
+      borderColor: "#00e5ff",
+      bgColor: "rgba(4, 20, 36, 0.88)",
+      titleColor: "#00e5ff",
+      subtitleColor: "#bae6fd",
+      title:
+        lang === "ro"
+          ? "✈️ AVIONUL NOSTRU (PE CENTRU)"
+          : "✈️ OUR PLANE (ON CENTERLINE)",
+      subtitle:
+        lang === "ro"
+          ? `Alt: ${(-p.pos_ned_m[2]).toFixed(0)}m • MOR: ${m.visibility_mor_m.toFixed(0)}m`
+          : `Alt: ${(-p.pos_ned_m[2]).toFixed(0)}m • MOR: ${m.visibility_mor_m.toFixed(0)}m`,
+      badge: turnBadge,
     });
   }
 
   // ===========================================================================
-  // 2. RADAR CANVAS 6YO ("CURSA CELOR 4 AVIOANE VĂZUTĂ DE SUS — CA ÎNTR-UN JOC")
+  // 2. PAGE 3: RADAR CANVAS ("CURSA CELOR 4 AVIOANE", 900x440px, FULL WIDTH)
   // ===========================================================================
   function setRadarMode6yo(mode) {
     radarViewMode6yo = mode === "chart" ? "chart" : "game";
-    const btnGame = document.getElementById("btnRadarModeGame6yo");
-    const btnChart = document.getElementById("btnRadarModeChart6yo");
+    const btnGame =
+      document.getElementById("btnRadarModeGame6yo") ||
+      document.getElementById("btnRadarModeGame");
+    const btnChart =
+      document.getElementById("btnRadarModeChart6yo") ||
+      document.getElementById("btnRadarModeChart");
     if (btnGame && btnChart) {
       btnGame.style.background =
         radarViewMode6yo === "game" ? "#00ff9d" : "rgba(10, 25, 47, 0.85)";
@@ -526,16 +496,15 @@
     }
   }
 
-  // Helper: Draw a cute top-down airplane icon facing right (+X towards runway)
   function drawTopDownAirplane(ctx, x, y, color, scale = 1.0, headingRad = 0, halo = false) {
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(headingRad);
 
     if (halo) {
-      ctx.fillStyle = "rgba(0, 255, 157, 0.24)";
+      ctx.fillStyle = "rgba(0, 255, 157, 0.22)";
       ctx.beginPath();
-      ctx.arc(0, 0, 16 * scale, 0, Math.PI * 2);
+      ctx.arc(0, 0, 15 * scale, 0, Math.PI * 2);
       ctx.fill();
       ctx.strokeStyle = "#00ff9d";
       ctx.lineWidth = 1.5;
@@ -544,40 +513,37 @@
 
     ctx.fillStyle = color;
     ctx.strokeStyle = "#020813";
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 1.4;
 
-    // Airplane fuselage + swept wings + tail
     ctx.beginPath();
-    ctx.moveTo(13 * scale, 0); // Nose tip
+    ctx.moveTo(13 * scale, 0);
     ctx.lineTo(5 * scale, -3.2 * scale);
-    ctx.lineTo(-1 * scale, -12 * scale); // Left wingtip
-    ctx.lineTo(-5 * scale, -12 * scale);
+    ctx.lineTo(-1 * scale, -11.5 * scale);
+    ctx.lineTo(-5 * scale, -11.5 * scale);
     ctx.lineTo(-3 * scale, -3.2 * scale);
     ctx.lineTo(-10 * scale, -2.5 * scale);
-    ctx.lineTo(-13 * scale, -7 * scale); // Left tail
-    ctx.lineTo(-15 * scale, -7 * scale);
+    ctx.lineTo(-13 * scale, -6.5 * scale);
+    ctx.lineTo(-15 * scale, -6.5 * scale);
     ctx.lineTo(-13 * scale, 0);
-    ctx.lineTo(-15 * scale, 7 * scale); // Right tail
-    ctx.lineTo(-13 * scale, 7 * scale);
+    ctx.lineTo(-15 * scale, 6.5 * scale);
+    ctx.lineTo(-13 * scale, 6.5 * scale);
     ctx.lineTo(-10 * scale, 2.5 * scale);
     ctx.lineTo(-3 * scale, 3.2 * scale);
-    ctx.lineTo(-5 * scale, 12 * scale);
-    ctx.lineTo(-1 * scale, 12 * scale); // Right wingtip
+    ctx.lineTo(-5 * scale, 11.5 * scale);
+    ctx.lineTo(-1 * scale, 11.5 * scale);
     ctx.lineTo(5 * scale, 3.2 * scale);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
 
-    // Cockpit windshield highlight
     ctx.fillStyle = "#ffffff";
     ctx.beginPath();
-    ctx.ellipse(6.5 * scale, 0, 2.5 * scale, 1.3 * scale, 0, 0, Math.PI * 2);
+    ctx.ellipse(6.5 * scale, 0, 2.4 * scale, 1.2 * scale, 0, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
   }
 
-  // Bind click on #radarCanvas for the top-right toggle buttons & inject DOM buttons
   function ensureRadarToggleSetup(canvas) {
     if (!radarToggleBound && canvas) {
       radarToggleBound = true;
@@ -586,7 +552,6 @@
         const r = canvas.getBoundingClientRect();
         const cx = ev.clientX - r.left;
         const cy = ev.clientY - r.top;
-        // Check top-right button region
         if (cy >= 4 && cy <= 34 && cx >= r.width - 310) {
           const midX = r.width - 155;
           if (cx < midX) {
@@ -599,15 +564,63 @@
     }
   }
 
+  function drawHorizontalScoreboardBar(ctx, w, topY, e, lang) {
+    const barH = 30;
+    drawRoundRect(ctx, 10, topY, w - 20, barH, 8);
+    ctx.fillStyle = "rgba(7, 15, 28, 0.92)";
+    ctx.fill();
+    ctx.strokeStyle = "#1e293b";
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+
+    const items = [
+      {
+        label: lang === "ro" ? "✈️🟢 AERO-SHIELD" : "✈️🟢 AERO-SHIELD",
+        err: e.aero_shield_error_m || 0,
+        color: "#00ff9d",
+        ok: (e.aero_shield_error_m || 0) < 5,
+      },
+      {
+        label: lang === "ro" ? "✈️🟡 CEAȚĂ SIMPLĂ" : "✈️🟡 NAIVE FOG",
+        err: e.naive_flow_error_m || 0,
+        color: "#ffd600",
+        ok: (e.naive_flow_error_m || 0) < 8,
+      },
+      {
+        label: lang === "ro" ? "✈️🔴 GPS PĂCĂLIT" : "✈️🔴 HACKED GPS",
+        err: e.raw_gnss_error_m || 0,
+        color: "#ff2a5f",
+        ok: (e.raw_gnss_error_m || 0) < 8,
+      },
+      {
+        label: lang === "ro" ? "✈️🟠 FĂRĂ CAMERĂ" : "✈️🟠 NO CAMERA",
+        err: e.pure_ins_error_m || 0,
+        color: "#ff9100",
+        ok: (e.pure_ins_error_m || 0) < 8,
+      },
+    ];
+
+    const slotW = (w - 36) / 4;
+    items.forEach((it, idx) => {
+      const sx = 18 + idx * slotW;
+      ctx.fillStyle = it.color;
+      ctx.font = "bold 11px 'Segoe UI', system-ui, sans-serif";
+      const icon = it.ok ? "✅" : "🌱";
+      ctx.fillText(`${it.label}: ${it.err.toFixed(1)}m ${icon}`, sx, topY + 19);
+    });
+  }
+
   function renderRadarCanvas6yo() {
     const canvas = document.getElementById("radarCanvas");
     if (!canvas) return;
     ensureRadarToggleSetup(canvas);
 
     const rect = canvas.getBoundingClientRect();
-    if (canvas.width !== rect.width || canvas.height !== rect.height) {
-      canvas.width = rect.width;
-      canvas.height = rect.height;
+    const targetW = rect.width > 100 ? Math.round(rect.width) : 900;
+    const targetH = rect.height > 100 ? Math.round(rect.height) : 440;
+    if (canvas.width !== targetW || canvas.height !== targetH) {
+      canvas.width = targetW;
+      canvas.height = targetH;
     }
     const ctx = canvas.getContext("2d");
     const w = canvas.width;
@@ -634,105 +647,88 @@
     }
 
     // =========================================================================
-    // MODE 1: "VEDERE JOC 4 AVIOANE VĂZUTĂ DE SUS" (DEFAULT)
+    // MODE 1: FULL-WIDTH 900px 4-PLANES RACE (NO SIDE SCOREBOARD STEALING WIDTH)
     // =========================================================================
-    // Reserve right 185px for Live Scoreboard if canvas is wide enough
-    const scoreboardW = w > 520 ? 188 : 0;
-    const mapW = w - scoreboardW;
+    const topArenaY = 40;
+    const botArenaY = h - 38;
+    const arenaH = botArenaY - topArenaY;
+    const centerY = topArenaY + arenaH * 0.5;
 
-    const mapX = (xNed) => ((xNed + 950) / 1130) * (mapW - 44) + 22;
-    const mapY = (yNed) => h / 2 + (yNed / 145) * (h * 0.43);
+    const mapX = (xNed) => ((xNed + 950) / 1130) * (w - 190) + 32;
+    const mapY = (yNed) => centerY + (yNed / 150) * (arenaH * 0.44);
 
     const rwyTopY = mapY(-24);
     const rwyBotY = mapY(24);
     const rwyHeight = rwyBotY - rwyTopY;
 
-    // 1. GREEN GRASS DANGER ZONES ON TOP & BOTTOM
-    const grassGradTop = ctx.createLinearGradient(0, 0, 0, rwyTopY);
+    // 1. GREEN GRASS DANGER ZONES ON FULL WIDTH
+    const grassGradTop = ctx.createLinearGradient(0, topArenaY, 0, rwyTopY);
     grassGradTop.addColorStop(0, "#0b2e13");
     grassGradTop.addColorStop(1, "#144520");
     ctx.fillStyle = grassGradTop;
-    ctx.fillRect(0, 0, mapW, rwyTopY);
+    ctx.fillRect(0, topArenaY, w, rwyTopY - topArenaY);
 
-    const grassGradBot = ctx.createLinearGradient(0, rwyBotY, 0, h);
+    const grassGradBot = ctx.createLinearGradient(0, rwyBotY, 0, botArenaY);
     grassGradBot.addColorStop(0, "#144520");
     grassGradBot.addColorStop(1, "#0b2e13");
     ctx.fillStyle = grassGradBot;
-    ctx.fillRect(0, rwyBotY, mapW, h - rwyBotY);
+    ctx.fillRect(0, rwyBotY, w, botArenaY - rwyBotY);
 
-    // Subtle lawn mowing stripes in grass
-    ctx.fillStyle = "rgba(255, 255, 255, 0.03)";
-    for (let sx = 0; sx < mapW; sx += 48) {
-      ctx.fillRect(sx, 0, 24, rwyTopY);
-      ctx.fillRect(sx, rwyBotY, 24, h - rwyBotY);
-    }
-
-    // Grass danger watermarks
-    ctx.fillStyle = "rgba(134, 239, 172, 0.55)";
+    ctx.fillStyle = "rgba(134, 239, 172, 0.60)";
     ctx.font = "bold 10.5px 'Segoe UI', system-ui, sans-serif";
     ctx.fillText(
       lang === "ro"
         ? "🌱 IARBĂ (PERICOL DE IEȘIRE DE PE PISTĂ!)"
         : "🌱 GRASS (OFF-RUNWAY DANGER ZONE!)",
-      14,
-      20
+      16,
+      topArenaY + 16
     );
     ctx.fillText(
       lang === "ro"
         ? "🌱 IARBĂ (PERICOL DE IEȘIRE DE PE PISTĂ!)"
         : "🌱 GRASS (OFF-RUNWAY DANGER ZONE!)",
-      14,
-      h - 10
+      16,
+      botArenaY - 8
     );
 
-    // 2. SAFE APPROACH CORRIDOR & ASPHALT RUNWAY 09 IN THE MIDDLE
-    ctx.fillStyle = "rgba(30, 41, 59, 0.92)";
-    ctx.fillRect(0, rwyTopY, mapW, rwyHeight);
+    // 2. SAFE APPROACH CORRIDOR & ASPHALT RUNWAY 09 ACROSS FULL 900px WIDTH
+    ctx.fillStyle = "rgba(30, 41, 59, 0.94)";
+    ctx.fillRect(0, rwyTopY, w, rwyHeight);
 
-    // Safe corridor borders (white/green edge lines)
-    ctx.strokeStyle = "rgba(0, 255, 157, 0.55)";
+    ctx.strokeStyle = "rgba(0, 255, 157, 0.58)";
     ctx.lineWidth = 2.0;
     ctx.beginPath();
     ctx.moveTo(0, rwyTopY);
-    ctx.lineTo(mapW, rwyTopY);
+    ctx.lineTo(w, rwyTopY);
     ctx.moveTo(0, rwyBotY);
-    ctx.lineTo(mapW, rwyBotY);
+    ctx.lineTo(w, rwyBotY);
     ctx.stroke();
 
-    // Dashed white approach centerline
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.65)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.68)";
     ctx.lineWidth = 2.0;
-    ctx.setLineDash([10, 8]);
+    ctx.setLineDash([12, 9]);
     ctx.beginPath();
-    ctx.moveTo(mapX(-950), mapY(0));
-    ctx.lineTo(mapX(150), mapY(0));
+    ctx.moveTo(20, centerY);
+    ctx.lineTo(w - 20, centerY);
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // RWY 09 Paved Threshold & Zebra Markings (X = 0m to +150m)
     const rwyX0 = mapX(0);
     const rwyX1 = mapX(150);
     ctx.fillStyle = "#1e293b";
     ctx.strokeStyle = "#00e5ff";
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 2.4;
     ctx.fillRect(rwyX0, rwyTopY - 2, rwyX1 - rwyX0, rwyHeight + 4);
     ctx.strokeRect(rwyX0, rwyTopY - 2, rwyX1 - rwyX0, rwyHeight + 4);
 
-    // Zebra piano keys at threshold
-    ctx.fillStyle = "#f8fafc";
-    for (let z = -16; z <= 16; z += 8) {
-      ctx.fillRect(rwyX0 + 4, mapY(z) - 2, 14, 4);
-    }
-
-    // Label on the safe corridor
     ctx.fillStyle = "#00ff9d";
     ctx.font = "bold 11.5px 'Segoe UI', system-ui, sans-serif";
     ctx.fillText(
       lang === "ro"
         ? "🛬 PISTA 09 CRAIOVA (SIGUR PE MIJLOC ✅)"
         : "🛬 CRAIOVA RUNWAY 09 (SAFE ON CENTERLINE ✅)",
-      Math.max(14, rwyX0 - 245),
-      mapY(0) - rwyHeight / 2 + 13
+      18,
+      rwyTopY + 15
     );
 
     if (typeof latestFrame === "undefined" || !latestFrame) {
@@ -741,74 +737,86 @@
     }
 
     const e = latestFrame.estimators_arena;
-    const m = latestFrame.fog_and_meteo;
     const c = latestFrame.cyber_and_gpu ? latestFrame.cyber_and_gpu.cyber_flags : {};
     const tSec = performance.now() * 0.001;
 
-    // 3. SPECIAL VISUAL EFFECTS FOR HACKER SPOOFING & FOG WIND PUSH
-    const hasGpsHack =
-      (c && (c.gps_jump_spoof || c.gps_stealth_ramp_spoof)) || e.raw_gnss_error_m > 8.0;
-    const windSpeedLat = Math.abs(m.true_fog_wind_ned_mps[1] || 0);
+    // 3. GENEROUS VERTICAL LANE OFFSETS + ANTI-COLLISION FOR THE 4 AIRPLANES
+    const laneVisualSpreadY = {
+      ins: -28,
+      shield: 0,
+      naive: 28,
+      gnss: 54,
+    };
 
-    // If GPS Hack is active, draw a pulsing "HACKER BAIT TARGET" in the grass!
-    if (hasGpsHack) {
-      const gnssPx = mapX(e.raw_gnss_pos_ned[0]);
-      const gnssPy = mapY(e.raw_gnss_pos_ned[1]);
-      const baitX = Math.min(mapW - 40, gnssPx + 24);
-      const baitY = gnssPy > h / 2 ? Math.min(h - 22, gnssPy + 18) : Math.max(24, gnssPy - 18);
+    const rawPlanes = [
+      {
+        id: "ins",
+        pos: e.pure_ins_pos_ned,
+        err: e.pure_ins_error_m || 0,
+        color: "#ff9100",
+        scale: 0.92,
+        halo: false,
+        shortLabel:
+          lang === "ro"
+            ? `✈️🟠 FĂRĂ CAMERĂ (${(e.pure_ins_error_m || 0).toFixed(1)}m)`
+            : `✈️🟠 NO CAMERA (${(e.pure_ins_error_m || 0).toFixed(1)}m)`,
+      },
+      {
+        id: "shield",
+        pos: e.aero_shield_pos_ned,
+        err: e.aero_shield_error_m || 0,
+        color: "#00ff9d",
+        scale: 1.16,
+        halo: true,
+        shortLabel:
+          lang === "ro"
+            ? `✈️🟢 AERO-SHIELD (${(e.aero_shield_error_m || 0).toFixed(1)}m ✅)`
+            : `✈️🟢 AERO-SHIELD (${(e.aero_shield_error_m || 0).toFixed(1)}m ✅)`,
+      },
+      {
+        id: "naive",
+        pos: e.naive_flow_pos_ned,
+        err: e.naive_flow_error_m || 0,
+        color: "#ffd600",
+        scale: 0.95,
+        halo: false,
+        shortLabel:
+          lang === "ro"
+            ? `✈️🟡 CEAȚĂ SIMPLĂ (${(e.naive_flow_error_m || 0).toFixed(1)}m)`
+            : `✈️🟡 NAIVE FOG (${(e.naive_flow_error_m || 0).toFixed(1)}m)`,
+      },
+      {
+        id: "gnss",
+        pos: e.raw_gnss_pos_ned,
+        err: e.raw_gnss_error_m || 0,
+        color: "#ff2a5f",
+        scale: 0.95,
+        halo: false,
+        shortLabel:
+          lang === "ro"
+            ? `✈️🔴 GPS PĂCĂLIT (${(e.raw_gnss_error_m || 0).toFixed(1)}m)`
+            : `✈️🔴 HACKED GPS (${(e.raw_gnss_error_m || 0).toFixed(1)}m)`,
+      },
+    ].map((pl) => {
+      const px = mapX(pl.pos[0]);
+      const basePy = mapY(pl.pos[1]) + (laneVisualSpreadY[pl.id] || 0) * 0.35;
+      const py = Math.max(topArenaY + 18, Math.min(botArenaY - 18, basePy));
+      return {
+        ...pl,
+        px,
+        py,
+        labelY: py,
+      };
+    });
 
-      // Red attraction beam
-      ctx.strokeStyle = "#ff2a5f";
-      ctx.lineWidth = 2.2;
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath();
-      ctx.moveTo(gnssPx, gnssPy);
-      ctx.lineTo(baitX, baitY);
-      ctx.stroke();
-      ctx.setLineDash([]);
+    const safePlanes = resolveLabelCollisionsY(
+      rawPlanes,
+      topArenaY + 18,
+      botArenaY - 18,
+      30
+    );
 
-      // Target bullseye
-      ctx.fillStyle = "rgba(255, 42, 95, 0.25)";
-      ctx.beginPath();
-      ctx.arc(baitX, baitY, 14 + Math.sin(tSec * 7) * 3, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#ff2a5f";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      ctx.fillStyle = "#fda4af";
-      ctx.font = "bold 10.5px 'Segoe UI', system-ui, sans-serif";
-      const baitText =
-        lang === "ro" ? "👾 MOMEALA HACKERULUI (GPS FALS)" : "👾 HACKER BAIT (FAKE GPS)";
-      const btW = ctx.measureText(baitText).width;
-      ctx.fillText(baitText, Math.max(8, Math.min(mapW - btW - 8, baitX - btW / 2)), baitY - 16);
-    }
-
-    // If Fog Wind is blowing, draw purple wind arrows pushing the yellow plane
-    if (windSpeedLat > 2.5) {
-      const naivePx = mapX(e.naive_flow_pos_ned[0]);
-      const naivePy = mapY(e.naive_flow_pos_ned[1]);
-      const pushDir = (m.true_fog_wind_ned_mps[1] || 1) >= 0 ? 1 : -1;
-      drawArrow(
-        ctx,
-        naivePx,
-        naivePy - pushDir * 24,
-        naivePx,
-        naivePy - pushDir * 7,
-        "#e879f9",
-        2.4,
-        6
-      );
-      ctx.fillStyle = "#f0abfc";
-      ctx.font = "bold 10px 'Segoe UI', system-ui, sans-serif";
-      ctx.fillText(
-        lang === "ro" ? "☁️💨 Vânt din ceață" : "☁️💨 Fog wind push",
-        Math.max(8, naivePx - 45),
-        naivePy - pushDir * 28
-      );
-    }
-
-    // 4. DRAW COLORED TRAILS FOR ALL 4 PLANES
+    // 4. COLORED TRAILS
     const drawTrail = (pts, color, width, dashed = false) => {
       if (!pts || pts.length < 2) return;
       ctx.save();
@@ -827,187 +835,92 @@
     };
 
     if (typeof trailHistory !== "undefined") {
-      drawTrail(trailHistory.ins, "#ff9100", 2.2, true);
-      drawTrail(trailHistory.gnss, "#ff2a5f", 2.4);
-      drawTrail(trailHistory.naive, "#ffd600", 2.5);
-      drawTrail(trailHistory.shield, "#00ff9d", 3.8);
+      drawTrail(trailHistory.ins, "#ff9100", 2.0, true);
+      drawTrail(trailHistory.gnss, "#ff2a5f", 2.2);
+      drawTrail(trailHistory.naive, "#ffd600", 2.2);
+      drawTrail(trailHistory.shield, "#00ff9d", 3.4);
     }
 
-    // 5. DRAW THE 4 AIRPLANES + NON-OVERLAPPING KID-FRIENDLY LABELS
-    const planes = [
-      {
-        id: "ins",
-        pos: e.pure_ins_pos_ned,
-        err: e.pure_ins_error_m,
-        color: "#ff9100",
-        scale: 0.9,
-        halo: false,
-        label:
-          lang === "ro"
-            ? `✈️🟠 FĂRĂ CAMERĂ (${e.pure_ins_error_m.toFixed(1)}m)`
-            : `✈️🟠 BLINDFOLDED (${e.pure_ins_error_m.toFixed(1)}m)`,
-        labelOffsetY: -22,
-      },
-      {
-        id: "naive",
-        pos: e.naive_flow_pos_ned,
-        err: e.naive_flow_error_m,
-        color: "#ffd600",
-        scale: 0.95,
-        halo: false,
-        label:
-          lang === "ro"
-            ? `✈️🟡 PĂCĂLIT DE CEAȚĂ (${e.naive_flow_error_m.toFixed(1)}m)`
-            : `✈️🟡 FOOLED BY FOG (${e.naive_flow_error_m.toFixed(1)}m)`,
-        labelOffsetY: 24,
-      },
-      {
-        id: "gnss",
-        pos: e.raw_gnss_pos_ned,
-        err: e.raw_gnss_error_m,
-        color: "#ff2a5f",
-        scale: 0.95,
-        halo: false,
-        label:
-          lang === "ro"
-            ? `✈️🔴 GPS PĂCĂLIT (${e.raw_gnss_error_m.toFixed(1)}m)`
-            : `✈️🔴 HACKED GPS (${e.raw_gnss_error_m.toFixed(1)}m)`,
-        labelOffsetY: -24,
-      },
-      {
-        id: "shield",
-        pos: e.aero_shield_pos_ned,
-        err: e.aero_shield_error_m,
-        color: "#00ff9d",
-        scale: 1.18,
-        halo: true,
-        label:
-          lang === "ro"
-            ? `✈️🟢 AVIONUL NOSTRU (${e.aero_shield_error_m.toFixed(1)}m ✅)`
-            : `✈️🟢 OUR PLANE (${e.aero_shield_error_m.toFixed(1)}m ✅)`,
-        labelOffsetY: 22,
-      },
-    ];
+    // 5. HACKER BAIT TARGET IF GPS SPOOF IS ACTIVE
+    const hasGpsHack =
+      (c && (c.gps_jump_spoof || c.gps_stealth_ramp_spoof)) || e.raw_gnss_error_m > 8.0;
+    const gnssPlane = safePlanes.find((p) => p.id === "gnss");
+    if (hasGpsHack && gnssPlane) {
+      const baitX = Math.min(w - 90, gnssPlane.px + 42);
+      const baitY = Math.min(botArenaY - 18, gnssPlane.py + 22);
+      ctx.strokeStyle = "#ff2a5f";
+      ctx.lineWidth = 2.0;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(gnssPlane.px, gnssPlane.py);
+      ctx.lineTo(baitX, baitY);
+      ctx.stroke();
+      ctx.setLineDash([]);
 
-    for (const pl of planes) {
-      const px = mapX(pl.pos[0]);
-      const py = mapY(pl.pos[1]);
-      // Slight heading tilt if drifting off centerline
-      const driftAngle = Math.max(-0.45, Math.min(0.45, (pl.pos[1] / 90) * 0.35));
+      ctx.fillStyle = "rgba(255, 42, 95, 0.24)";
+      ctx.beginPath();
+      ctx.arc(baitX, baitY, 12 + Math.sin(tSec * 7) * 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 6. DRAW AIRPLANES + SHORT NON-OVERLAPPING LABELS
+    for (const pl of safePlanes) {
+      const driftAngle = Math.max(-0.4, Math.min(0.4, (pl.pos[1] / 90) * 0.3));
       drawTopDownAirplane(
         ctx,
-        px,
-        py,
+        pl.px,
+        pl.py,
         pl.color,
         pl.scale,
         pl.id === "shield" ? 0 : driftAngle,
         pl.halo
       );
 
-      // Pill badge near the plane, clamped inside map bounds
-      ctx.font = "bold 10.5px 'Segoe UI', system-ui, sans-serif";
-      const tw = ctx.measureText(pl.label).width + 12;
-      const th = 18;
-      const bx = Math.max(6, Math.min(mapW - tw - 6, px - tw / 2));
-      const by = Math.max(26, Math.min(h - th - 6, py + pl.labelOffsetY - th / 2));
+      ctx.font = "bold 11px 'Segoe UI', system-ui, sans-serif";
+      const tw = ctx.measureText(pl.shortLabel).width + 14;
+      const th = 22;
+      const bx = Math.max(10, Math.min(w - tw - 10, pl.px + 16));
+      const by = pl.labelY - th / 2;
 
-      drawRoundRect(ctx, bx, by, tw, th, 5);
-      ctx.fillStyle = "rgba(4, 12, 24, 0.88)";
+      // Subtle connector if anti-collision shifted the label vertically
+      if (Math.abs(pl.labelY - pl.py) > 4) {
+        ctx.strokeStyle = pl.color;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(pl.px + 8, pl.py);
+        ctx.lineTo(bx, pl.labelY);
+        ctx.stroke();
+      }
+
+      drawRoundRect(ctx, bx, by, tw, th, 6);
+      ctx.fillStyle = "rgba(5, 13, 25, 0.92)";
       ctx.fill();
       ctx.strokeStyle = pl.color;
-      ctx.lineWidth = 1.4;
+      ctx.lineWidth = pl.id === "shield" ? 2.0 : 1.4;
       ctx.stroke();
 
       ctx.fillStyle = pl.color;
-      ctx.fillText(pl.label, bx + 6, by + 13);
+      ctx.fillText(pl.shortLabel, bx + 7, by + 15);
     }
 
-    // 6. RIGHT-HAND LIVE SCOREBOARD PANEL (IF CANVAS IS WIDE ENOUGH)
-    if (scoreboardW > 0) {
-      const sx = mapW + 4;
-      const sy = 36;
-      const sw = scoreboardW - 8;
-      const sh = h - sy - 6;
+    // 7. HORIZONTAL SCOREBOARD BAR AT THE BOTTOM OF CANVAS (FULL 900px RUNWAY WIDTH PRESERVED)
+    drawHorizontalScoreboardBar(ctx, w, h - 34, e, lang);
 
-      drawRoundRect(ctx, sx, sy, sw, sh, 8);
-      ctx.fillStyle = "rgba(4, 13, 26, 0.94)";
-      ctx.fill();
-      ctx.strokeStyle = "#164e63";
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      ctx.fillStyle = "#e2e8f0";
-      ctx.font = "bold 10.5px 'Segoe UI', system-ui, sans-serif";
-      ctx.fillText(
-        lang === "ro" ? "🏆 CINE STĂ PE PISTĂ?" : "🏆 WHO STAYS ON RUNWAY?",
-        sx + 8,
-        sy + 16
-      );
-
-      const rows = [
-        {
-          name: lang === "ro" ? "🟢 Avionul Nostru" : "🟢 Our Plane",
-          err: e.aero_shield_error_m,
-          color: "#00ff9d",
-          ok: e.aero_shield_error_m < 5,
-        },
-        {
-          name: lang === "ro" ? "🟡 Păcălit de Ceață" : "🟡 Fooled by Fog",
-          err: e.naive_flow_error_m,
-          color: "#ffd600",
-          ok: e.naive_flow_error_m < 8,
-        },
-        {
-          name: lang === "ro" ? "🔴 GPS Păcălit" : "🔴 Hacked GPS",
-          err: e.raw_gnss_error_m,
-          color: "#ff2a5f",
-          ok: e.raw_gnss_error_m < 8,
-        },
-        {
-          name: lang === "ro" ? "🟠 Fără Cameră" : "🟠 Blindfolded",
-          err: e.pure_ins_error_m,
-          color: "#ff9100",
-          ok: e.pure_ins_error_m < 8,
-        },
-      ];
-
-      const rowH = Math.max(24, Math.floor((sh - 24) / 4));
-      rows.forEach((r, idx) => {
-        const ry = sy + 24 + idx * rowH;
-        ctx.fillStyle = r.color;
-        ctx.font = "bold 10px 'Segoe UI', system-ui, sans-serif";
-        const statusIcon = r.ok ? "✅" : "🌱❌";
-        ctx.fillText(`${r.name}: ${r.err.toFixed(1)}m ${statusIcon}`, sx + 8, ry + 10);
-
-        // Visual progress bar of error (capped at 60m)
-        const barMaxW = sw - 16;
-        const fillW = Math.max(4, Math.min(barMaxW, (r.err / 60.0) * barMaxW));
-        ctx.fillStyle = "rgba(255,255,255,0.1)";
-        ctx.fillRect(sx + 8, ry + 14, barMaxW, 5);
-        ctx.fillStyle = r.color;
-        ctx.fillRect(sx + 8, ry + 14, fillW, 5);
-      });
-    }
-
-    // 7. TOP-RIGHT INTERACTIVE TOGGLE BUTTONS ON CANVAS
+    // 8. TOP-RIGHT MODE TOGGLE BUTTONS
     drawModeToggleOnCanvas(ctx, w, lang);
   }
 
-  // ===========================================================================
-  // MODE 2: "📈 GRAFIC EROARE & TRASEU" (CHART VIEW WHEN TOGGLED)
-  // ===========================================================================
   function renderRadarChartMode6yo(ctx, w, h, lang) {
     ctx.fillStyle = "#040d1a";
     ctx.fillRect(0, 0, w, h);
 
     const padL = 46;
     const padR = 18;
-    const padT = 40;
-    const padB = 26;
+    const padT = 42;
+    const padB = 28;
     const cw = w - padL - padR;
     const ch = h - padT - padB;
 
-    // Safe zone highlight (< 5m error)
     const maxErr = 75;
     const yForErr = (err) => padT + ch - (Math.min(maxErr, Math.max(0, err)) / maxErr) * ch;
 
@@ -1015,7 +928,6 @@
     ctx.fillStyle = "rgba(0, 255, 157, 0.12)";
     ctx.fillRect(padL, safeY, cw, padT + ch - safeY);
 
-    // Grid lines
     ctx.strokeStyle = "rgba(148, 163, 184, 0.2)";
     ctx.lineWidth = 1;
     for (let eVal = 0; eVal <= maxErr; eVal += 25) {
@@ -1033,10 +945,10 @@
     ctx.font = "bold 11px 'Segoe UI', system-ui, sans-serif";
     ctx.fillText(
       lang === "ro"
-        ? "📈 GRAFIC EROARE ÎN TIMP REAL: Cât de departe de centrul pistei este fiecare avion (0m = Perfect pe mijloc)"
-        : "📈 LIVE ERROR CHART: How far each plane is from the runway centerline (0m = Perfect on centerline)",
-      12,
-      22
+        ? "📈 GRAFIC EROARE (m): ✈️🟢 AERO-SHIELD rămâne pe centru (< 0.8m)"
+        : "📈 LIVE ERROR CHART (m): ✈️🟢 AERO-SHIELD stays on centerline (< 0.8m)",
+      14,
+      23
     );
 
     if (errorHistory6yo.length < 2) return;
@@ -1068,7 +980,6 @@
     const x2 = w - btnW - 8;
     const y = 6;
 
-    // Button 1: Game View
     drawRoundRect(ctx, x1, y, btnW, btnH, 6);
     ctx.fillStyle = radarViewMode6yo === "game" ? "#00ff9d" : "rgba(15, 23, 42, 0.9)";
     ctx.fill();
@@ -1083,7 +994,6 @@
       y + 16
     );
 
-    // Button 2: Chart View
     drawRoundRect(ctx, x2, y, btnW, btnH, 6);
     ctx.fillStyle = radarViewMode6yo === "chart" ? "#00e5ff" : "rgba(15, 23, 42, 0.9)";
     ctx.fill();
@@ -1099,9 +1009,6 @@
     );
   }
 
-  // ===========================================================================
-  // 3. SAFE AUTO-INTEGRATION WITH INDEX.HTML
-  // ===========================================================================
   function install6yoCanvases() {
     window.renderHudCanvas = renderHudCanvas6yo;
     window.renderRadarCanvas = renderRadarCanvas6yo;
