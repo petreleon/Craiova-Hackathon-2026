@@ -242,13 +242,13 @@
       line-height: 1.4;
     }
 
-    /* MAIN VIEWPORT MODE SELECTOR BAR (SIMULATOR VS 3 REAL VIDEOS) */
+    /* MAIN VIEWPORT MODE SELECTOR BAR (SIMULATOR + 50% TRANSPARENT REAL VIDEO OVERLAY) */
     .view-mode-bar {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 6px;
+      gap: 8px;
       padding: 8px 10px;
       background: linear-gradient(90deg, #07152b 0%, #0d1f3d 100%);
       border-bottom: 1px solid #1e4273;
@@ -256,14 +256,14 @@
     .view-mode-buttons {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 5px;
       align-items: center;
     }
     .mode-btn {
       background: #0f2242;
       color: #d8ecff;
       border: 1px solid #255085;
-      padding: 6px 10px;
+      padding: 5px 9px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 800;
@@ -280,11 +280,23 @@
       border-color: #ffffff;
       box-shadow: 0 0 14px rgba(0, 255, 157, 0.55);
     }
+    .opacity-control-box {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: #061020;
+      border: 1px solid #00ff9d;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      color: #e2f1ff;
+      box-shadow: 0 0 12px rgba(0, 255, 157, 0.25);
+    }
     .overlay-toggle-btn {
       background: #1a1438;
       color: #f0abfc;
       border: 1px solid #c026d3;
-      padding: 6px 10px;
+      padding: 5px 9px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 800;
@@ -568,8 +580,8 @@
         <span class="btn-sub" data-i18n="act3_sub">Hackerul atacă GPS-ul în ceață oarbă, dar noi aterizăm fix pe pistă</span>
       </button>
       <button class="btn btn-gust" id="btn-real-video" onclick="testRealFogVideo()">
-        <span data-i18n="btn_real_video_title">🎬 VEZI FILMĂRILE VIDEO REALE PE ECRAN</span>
-        <span class="btn-sub" style="color:#fce7f3;" data-i18n="btn_real_video_sub">Pornește filmarea reală din cabină direct pe Parbrizul Principal!</span>
+        <span data-i18n="btn_real_video_title">🎬 SCHIMBĂ FILMAREA REALĂ (50% PESTE GRAFIC)</span>
+        <span class="btn-sub" style="color:#fce7f3;" data-i18n="btn_real_video_sub">Comută între cele 3 filmări reale suprapuse 50% peste grafic!</span>
       </button>
       <button class="btn" style="background:linear-gradient(90deg,#0284c7,#0ea5e9);border-color:#7dd3fc;color:#fff;" onclick="toggleSimpleGuide()">
         <span data-i18n="btn_guide_title">💡 ASCUNDE / ARATĂ GHIDUL DE ÎNCEPUT</span>
@@ -595,7 +607,7 @@
   <section id="simple-guide-panel" class="beginner-steps-banner">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1e4273; padding-bottom:6px;">
       <strong style="color:#00ff9d; font-size:13.5px;" data-i18n="guide_header_title">👋 BUN VENIT! ÎNȚELEGE APLICAȚIA ÎN 3 PAȘI SIMPLI (FĂRĂ TERMENI COMPLICAȚI):</strong>
-      <span style="color:#7dd3fc; font-size:11px;" data-i18n="guide_header_sub">Aeroportul Craiova (LRCV) — Pista 09 | Simulator 60 FPS + 3 Filmări Video Reale</span>
+      <span style="color:#7dd3fc; font-size:11px;" data-i18n="guide_header_sub">Aeroportul Craiova (LRCV) — Pista 09 | Grafic 60 FPS + Filmare Reală Suprapusă 50%</span>
     </div>
     <div class="steps-grid">
       <div class="step-card" style="border-left: 4px solid #ff2a5f;">
@@ -615,7 +627,7 @@
       <div class="step-card" style="border-left: 4px solid #00e5ff;">
         <div style="color:#00e5ff; font-weight:900; font-size:13px; margin-bottom:4px;" data-i18n="step3_title">PASUL 3 — Cum testezi aplicația în 10 secunde? 🎮</div>
         <p style="color:#e2f1ff;" data-i18n="step3_body">
-          <strong>Apasă pe butoanele „🎥 Filmare Reală 1 / 2 / 3” de deasupra Parbrizului ca să vezi filmările video reale din cabina piloților, sau atacă avionul din Telecomandă și privește cum linia verde rămâne pe pistă!</strong>
+          <strong>Privește mai jos cum filmarea video reală din cabină este suprapusă cu transparență 50% direct peste graficul 3D și peste graficul radar! Poți regla oricând transparența din glisorul „🎚️ Transparență Video peste Grafic: 50%”.</strong>
         </p>
       </div>
     </div>
@@ -626,7 +638,7 @@
     <div style="flex:1;">
       <div class="storyteller-title" id="storyteller-badge">💬 CE SE ÎNTÂMPLĂ CHIAR ACUM CU AVIONUL? (TRADUCERE ÎN TIMP REAL PENTRU ÎNCEPĂTORI)</div>
       <div class="storyteller-text" id="storyteller-main-text">
-        ✈️ Avionul coboară lin spre pista din Craiova (Pista 09). Camera video privește prin ceață, fixează luminile pistei și măsoară distanța până la sol cu eroare sub 1 metru.
+        ✈️ Filmarea reală din cabina piloților rulează cu transparență 50% direct peste graficul nostru 3D și peste radar! Camera video privește prin ceață, fixează luminile pistei și menține avionul pe centru cu eroare sub 1 metru.
       </div>
     </div>
     <div style="text-align:right; min-width:210px; background:rgba(3,9,20,0.85); padding:6px 10px; border-radius:6px; border:1px solid #1e4273;">
@@ -637,53 +649,69 @@
 
   <!-- MAIN COCKPIT VIEWPORTS (ZONA 2: PARBRIZUL & ZONA 3: CURSA CELOR 4 AVIOANE) -->
   <main class="cockpit-grid" id="main-cockpit-anchor">
-    <!-- ZONA 2: PARBRIZUL AVIONULUI — CE VEDE CAMERA PRIN CEAȚĂ + PLAYER VIDEO REAL -->
+    <!-- ZONA 2: PARBRIZUL AVIONULUI — GRAFIC 3D + FILMARE VIDEO REALĂ SUPRAPUSĂ 50% -->
     <section class="viewport-card">
       <div class="card-header">
-        <span data-i18n="zone2_header">👁️ ZONA 2: PARBRIZUL AVIONULUI — SIMULATOR 3D &amp; FILMĂRI VIDEO REALE DIN CABINĂ</span>
-        <span id="hud-guidance-summary">DISTANȚĂ PISTĂ: 900.0 m | DIRECȚIE: 087.4°</span>
+        <span data-i18n="zone2_header">👁️ ZONA 2: PARBRIZUL AVIONULUI — GRAFIC 3D + FILMARE REALĂ SUPRAPUSĂ 50%</span>
+        <span id="hud-guidance-summary">TRANSPARENȚĂ VIDEO: 50% PESTE GRAFIC</span>
       </div>
 
-      <!-- BARA DE SELECTARE DIRECTĂ: SIMULATOR 3D SAU CELE 3 FILMĂRI VIDEO REALE -->
+      <!-- BARA DE SELECTARE VIDEO + SLIDER TRANSPARENȚĂ 50% PESTE GRAFIC -->
       <div class="view-mode-bar">
         <div class="view-mode-buttons">
-          <span style="font-size:11px; font-weight:900; color:#00e5ff;" data-i18n="choose_screen_lbl">📺 ALEGE CE VEZI PE ECRAN:</span>
-          <button class="mode-btn active" id="mode-btn-sim" onclick="setMainViewMode('sim')">
-            <span data-i18n="mode_sim_btn">🕹️ Simulator 3D (Craiova)</span>
-          </button>
+          <span style="font-size:11px; font-weight:900; color:#00e5ff;" data-i18n="choose_screen_lbl">📺 FILMARE PESTE GRAFIC:</span>
           <button class="mode-btn" id="mode-btn-video1" onclick="setMainViewMode('video1')">
-            <span data-i18n="mode_v1_btn">🎥 Filmare Reală 1: Ceață Albă (LC-130)</span>
+            <span data-i18n="mode_v1_btn">🎥 Filmare Reală 1: Ceață Albă (50%)</span>
           </button>
-          <button class="mode-btn" id="mode-btn-video2" onclick="setMainViewMode('video2')">
-            <span data-i18n="mode_v2_btn">🎥 Filmare Reală 2: Luminile Pistei (Paris CDG)</span>
+          <button class="mode-btn active" id="mode-btn-video2" onclick="setMainViewMode('video2')">
+            <span data-i18n="mode_v2_btn">🎥 Filmare Reală 2: Luminile Pistei (50%)</span>
           </button>
           <button class="mode-btn" id="mode-btn-video3" onclick="setMainViewMode('video3')">
-            <span data-i18n="mode_v3_btn">🎥 Filmare Reală 3: Vânt Lateral Puternic</span>
+            <span data-i18n="mode_v3_btn">🎥 Filmare Reală 3: Vânt Lateral (50%)</span>
+          </button>
+          <button class="mode-btn" id="mode-btn-sim" onclick="setMainViewMode('sim')">
+            <span data-i18n="mode_sim_btn">🕹️ Doar Grafic (0% Video)</span>
           </button>
         </div>
-        <button class="overlay-toggle-btn active" id="btn-toggle-ai-overlay" onclick="toggleAiOverlayOnVideo()">
-          👁️ Detecția AI peste Filmare: PORNITĂ
-        </button>
+
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <div class="opacity-control-box">
+            <span data-i18n="lbl_video_opacity">🎚️ Transparență Video: 50%</span>
+            <input
+              type="range"
+              id="video-opacity-slider"
+              min="0"
+              max="100"
+              value="50"
+              style="width:85px; cursor:pointer;"
+              oninput="onVideoOpacityChange(this.value)"
+            />
+            <strong id="video-opacity-val" style="color:#00ff9d; min-width:34px;">50%</strong>
+          </div>
+          <button class="overlay-toggle-btn active" id="btn-toggle-ai-overlay" onclick="toggleAiOverlayOnVideo()">
+            👁️ Ținte AI: PORNITE
+          </button>
+        </div>
       </div>
 
       <div class="canvas-wrap">
-        <!-- ELEMENTUL <video> REAL CARE SE VEDE DIRECT PE PARBRIZUL CENTRAL -->
+        <!-- GRAFICUL 3D SUB VIDEO (Z-INDEX 1) -->
+        <canvas id="hudCanvas" style="position:relative; z-index:1;"></canvas>
+
+        <!-- FILMAREA VIDEO REALĂ SUPRAPUSĂ CU TRANSPARENȚĂ 50% (OPACITY: 0.50) PESTE GRAFIC (Z-INDEX 3) -->
         <video
-          id="main-cockpit-video"
+          id="real-cockpit-video-overlay"
           src="/real_videos/real_02_als_runway_approach_cdg.mp4"
           muted
           loop
           autoplay
           playsinline
-          controls
-          style="display:none; position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; background:#000;"
+          style="display:block; position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity: 0.50; pointer-events: none; z-index:3;"
         ></video>
 
         <div class="gust-alert-overlay" id="gust-overlay">
           🌪️ ALERTĂ TIMPURIE DE RAFALĂ ÎN CEAȚĂ: Vânt lateral de 18.0 m/s văzut în nori cu 0.85 secunde ÎNAINTE să lovească avionul!
         </div>
-
-        <canvas id="hudCanvas" style="position:relative; z-index:2; pointer-events:none;"></canvas>
       </div>
 
       <!-- LEGENDĂ VIZUALĂ FOARTE CLARĂ SUB PARBRIZ -->
@@ -697,20 +725,32 @@
           <div style="color:#cbd5e1; margin-top:2px;" data-i18n="leg_purple_desc">Arată cum vântul împinge ceața în lateral. Noi le ignorăm la ghidaj și le folosim ca să vedem rafalele din timp!</div>
         </div>
         <div class="legend-chip" style="border-left: 3px solid #ffb800;">
-          <strong style="color:#ffb800;" data-i18n="leg_yellow_title">🟡 Țintele &amp; Luminile Pistei = Reper Vizual</strong>
-          <div style="color:#cbd5e1; margin-top:2px;" data-i18n="leg_yellow_desc">Luminile pistei detectate automat în filmarea reală sau în simulator, care ne țin aliniați pe centru.</div>
+          <strong style="color:#ffb800;" data-i18n="leg_yellow_title">🟡 Suprapunere 50% Video Real + Grafic</strong>
+          <div style="color:#cbd5e1; margin-top:2px;" data-i18n="leg_yellow_desc">Vezi simultan filmarea reală din cabină (50% transparență) suprapusă peste graficul 3D de ghidare.</div>
         </div>
       </div>
     </section>
 
-    <!-- ZONA 3: CURSA CELOR 4 AVIOANE — DE CE NOI ATERIZĂM PE PISTĂ ȘI CEILALȚI NU? -->
+    <!-- ZONA 3: CURSA CELOR 4 AVIOANE — GRAFIC RADAR + FILMARE REALĂ SUPRAPUSĂ 50% -->
     <section class="viewport-card">
       <div class="card-header">
-        <span data-i18n="zone3_header">🏁 ZONA 3: CURSA CELOR 4 AVIOANE (RADAR) — DE CE NOI ATERIZĂM PE PISTĂ ȘI CEILALȚI NU?</span>
+        <span data-i18n="zone3_header">🏁 ZONA 3: CURSA CELOR 4 AVIOANE (GRAFIC + VIDEO 50%) — DE CE NOI ATERIZĂM PE PISTĂ?</span>
         <span id="eta-summary">TIMP PÂNĂ LA ATERIZARE: 13.2 s | LUMINI VĂZUTE: 12</span>
       </div>
       <div class="canvas-wrap" style="height: 265px;">
-        <canvas id="radarCanvas"></canvas>
+        <!-- GRAFICUL CELOR 4 TRAIECTORII SUB VIDEO (Z-INDEX 1) -->
+        <canvas id="radarCanvas" style="position:relative; z-index:1;"></canvas>
+
+        <!-- FILMAREA VIDEO REALĂ SUPRAPUSĂ CU TRANSPARENȚĂ 50% (OPACITY: 0.5) PESTE GRAFICUL RADAR (Z-INDEX 3) -->
+        <video
+          id="radar-overlay-video"
+          src="/real_videos/real_02_als_runway_approach_cdg.mp4"
+          muted
+          loop
+          autoplay
+          playsinline
+          style="display:block; position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.5; pointer-events:none; z-index:3;"
+        ></video>
       </div>
       <div class="arena-legend">
         <div class="est-pill" style="border-left: 4px solid #00ff9d; background:#07221c;">
@@ -752,14 +792,14 @@
   <section class="real-videos-section" id="real-videos-permanent-section">
     <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; border-bottom:1px solid #1d4d7a; padding-bottom:8px;">
       <div>
-        <strong style="color:#00ff9d; font-size:14px;" data-i18n="rv_sec_title">🎬 CELE 3 FILMĂRI VIDEO REALE DIN CABINA PILOȚILOR (RULEAZĂ LIVE MAI JOS SAU PE PARBRIZUL PRINCIPAL!)</strong>
+        <strong style="color:#00ff9d; font-size:14px;" data-i18n="rv_sec_title">🎬 CELE 3 FILMĂRI VIDEO REALE DIN CABINA PILOȚILOR (VIZIBILE MAI JOS ȘI SUPRAPUSE 50% PESTE GRAFICELE DE SUS!)</strong>
         <div style="font-size:11.5px; color:#9ec0e6; margin-top:2px;" data-i18n="rv_sec_sub">
-          Poți vedea fiecare filmare reală direct în caseta ei sau poți apăsa butonul verde de sub videoclip ca să o pui pe Ecranul Principal cu detecția AI peste imagine:
+          Apasă pe butonul verde de sub oricare filmare ca să o pui cu transparență 50% peste graficele principale de sus:
         </div>
       </div>
       <div style="display:flex; gap:6px;">
         <button class="btn btn-gust" onclick="setMainViewMode('video2', true)" data-i18n="rv_sec_btn">
-          📺 PUNE FILMAREA REALĂ PE ECRANUL PRINCIPAL ACUM
+          📺 SUPRAPUNE FILMAREA REALĂ (50% TRANSPARENȚĂ) PESTE GRAFIC
         </button>
       </div>
     </div>
@@ -782,7 +822,7 @@
           <p style="color:#d0f0df;">🤖 <strong data-i18n="rv_measured_lbl">Ce a măsurat programul nostru:</strong> <strong id="rv1-stats">300 cadre reale procesate la &gt;520 cadre/secundă, vântul din ceață separat de viteza avionului, 277 rafale anticipate, 0 blocaje!</strong></p>
         </div>
         <button class="watch-main-btn" onclick="setMainViewMode('video1', true)" data-i18n="btn_put_v1_main">
-          📺 Pune Filmarea #1 pe Ecranul Principal (cu Detecție AI)
+          📺 Suprapune Filmarea #1 (50% Transparență) peste Grafic
         </button>
       </div>
 
@@ -803,7 +843,7 @@
           <p style="color:#d0f0df;">🤖 <strong data-i18n="rv_measured_lbl">Ce a măsurat programul nostru:</strong> <strong id="rv2-stats">225 cadre reale procesate la ~382 cadre/secundă, peste 11.240 puncte luminoase ale pistei fixate cu precizie pentru ghidaj!</strong></p>
         </div>
         <button class="watch-main-btn" onclick="setMainViewMode('video2', true)" data-i18n="btn_put_v2_main">
-          📺 Pune Filmarea #2 pe Ecranul Principal (cu Detecție AI)
+          📺 Suprapune Filmarea #2 (50% Transparență) peste Grafic
         </button>
       </div>
 
@@ -824,7 +864,7 @@
           <p style="color:#d0f0df;">🤖 <strong data-i18n="rv_measured_lbl">Ce a măsurat programul nostru:</strong> <strong id="rv3-stats">300 cadre reale procesate la ~431 cadre/secundă, separând impecabil înclinării aripilor de vântul lateral (280 alerte timpurii)!</strong></p>
         </div>
         <button class="watch-main-btn" onclick="setMainViewMode('video3', true)" data-i18n="btn_put_v3_main">
-          📺 Pune Filmarea #3 pe Ecranul Principal (cu Detecție AI)
+          📺 Suprapune Filmarea #3 (50% Transparență) peste Grafic
         </button>
       </div>
     </div>
@@ -992,7 +1032,9 @@
 
   <script>
     let currentLang = "ro";
-    let mainViewMode = "sim"; // 'sim' | 'video1' | 'video2' | 'video3'
+    // DEFAULT: Real Video #2 active with 50% transparency (opacity 0.5) over both graphics!
+    let mainViewMode = "video2"; // 'video1' | 'video2' | 'video3' | 'sim'
+    let videoOpacityPct = 50;
     let showAiOverlayOnVideo = true;
     let ws = null;
     let latestFrame = null;
@@ -1014,8 +1056,8 @@
         mor_m: 95,
         als_count: 6,
         gust_mps: 14.2,
-        desc_ro: "📹 RULARE FILMARE REALĂ #1 (LC-130 Ceață Albă): Cu ochiul liber se vede doar un perete alb de ceață, dar algoritmul AERO-SHIELD măsoară densitatea ceții (Koschmieder) la >520 FPS și separă vântul lateral înainte de apariția pistei!",
-        desc_en: "📹 PLAYING REAL FOOTAGE #1 (LC-130 Whiteout): The naked eye sees only a white wall of fog, while AERO-SHIELD measures Koschmieder fog density at >520 FPS and separates crosswind shear before the runway even appears!"
+        desc_ro: "📹 SUPRAPUNERE 50% VIDEO REAL #1 PESTE GRAFIC (LC-130 Ceață Albă): Vezi simultan filmarea reală a peretelui de ceață (cu transparență 50%) și graficul 3D AERO-SHIELD care măsoară densitatea ceții la >520 FPS!",
+        desc_en: "📹 50% REAL VIDEO #1 OVERLAY ON GRAPHIC (LC-130 Whiteout): Simultaneously view the real whiteout fog footage (at 50% transparency) and the 3D AERO-SHIELD graphic measuring fog density at >520 FPS!"
       },
       video2: {
         src: "/real_videos/real_02_als_runway_approach_cdg.mp4",
@@ -1025,8 +1067,8 @@
         mor_m: 180,
         als_count: 14,
         gust_mps: 6.8,
-        desc_ro: "📹 RULARE FILMARE REALĂ #2 (Aeroportul Paris CDG): Privește pe ecran cum AERO-SHIELD încercuiește automat luminile pistei (ALS) prin ceață și calculează alinierea avionului la 382 cadre pe secundă!",
-        desc_en: "📹 PLAYING REAL FOOTAGE #2 (Paris CDG Airport): Watch on screen how AERO-SHIELD automatically locks onto the Approach Lighting System (ALS) beacons through fog at 382 FPS!"
+        desc_ro: "📹 SUPRAPUNERE 50% VIDEO REAL #2 PESTE GRAFIC (Paris CDG): Filmarea reală a luminilor pistei este suprapusă cu transparență 50% peste graficul 3D și peste radarul celor 4 avioane (382 cadre/secundă)!",
+        desc_en: "📹 50% REAL VIDEO #2 OVERLAY ON GRAPHIC (Paris CDG): The real runway approach lights video is overlaid at 50% transparency directly over the 3D graphic and the 4-aircraft radar (382 FPS)!"
       },
       video3: {
         src: "/real_videos/real_03_crosswind_cockpit_landing.mp4",
@@ -1036,8 +1078,8 @@
         mor_m: 310,
         als_count: 11,
         gust_mps: 19.4,
-        desc_ro: "📹 RULARE FILMARE REALĂ #3 (Vânt Lateral Puternic): Avionul real se înclină și se leagănă puternic din cauza rafalelor, iar AERO-SHIELD scade rotirea camerei din imagine și măsoară vântul lateral la 431 FPS!",
-        desc_en: "📹 PLAYING REAL FOOTAGE #3 (Severe Crosswind): The real aircraft rocks and banks heavily under gusts, while AERO-SHIELD subtracts camera rotation and measures crosswind shear at 431 FPS!"
+        desc_ro: "📹 SUPRAPUNERE 50% VIDEO REAL #3 PESTE GRAFIC (Vânt Lateral Puternic): Vezi cu transparență 50% cum avionul real se înclină în rafale peste graficul nostru care compensează rotirea camerei la 431 FPS!",
+        desc_en: "📹 50% REAL VIDEO #3 OVERLAY ON GRAPHIC (Severe Crosswind): Watch at 50% transparency how the real aircraft banks under gusts over our graphic compensating camera rotation at 431 FPS!"
       }
     };
 
@@ -1051,34 +1093,35 @@
         act2_sub: "Avionul virează și se înclină fără să încurce mișcarea camerei cu solul",
         act3_title: "🎬 SCENARIUL 3: ATAC HACKER GPS + ATERIZARE PE ORB",
         act3_sub: "Hackerul atacă GPS-ul în ceață oarbă, dar noi aterizăm fix pe pistă",
-        btn_real_video_title: "🎬 VEZI FILMĂRILE VIDEO REALE PE ECRAN",
-        btn_real_video_sub: "Pornește filmarea reală din cabină direct pe Parbrizul Principal!",
+        btn_real_video_title: "🎬 SCHIMBĂ FILMAREA REALĂ (50% PESTE GRAFIC)",
+        btn_real_video_sub: "Comută între cele 3 filmări reale suprapuse 50% peste grafic!",
         btn_guide_title: "💡 ASCUNDE / ARATĂ GHIDUL DE ÎNCEPUT",
         btn_guide_sub: "Explicație simplă în 3 pași pentru orice începător",
         btn_reset_title: "🔄 REIA ATERIZAREA DE LA ÎNCEPUT",
         btn_reset_sub: "Resetează poziția avionului la 900m de pista Craiova",
         guide_header_title: "👋 BUN VENIT! ÎNȚELEGE APLICAȚIA ÎN 3 PAȘI SIMPLI (FĂRĂ TERMENI COMPLICAȚI):",
-        guide_header_sub: "Aeroportul Craiova (LRCV) — Pista 09 | Simulator 60 FPS + 3 Filmări Video Reale",
+        guide_header_sub: "Aeroportul Craiova (LRCV) — Pista 09 | Grafic 60 FPS + Filmare Reală Suprapusă 50%",
         step1_title: "PASUL 1 — Care e pericolul? 🚨",
         step1_body: "<strong>Avionul aterizează la Craiova (Pista 09) pe ceață densă. Un hacker îi păcălește GPS-ul ca să-l scoată în afara pistei.</strong> În plus, vântul bate tare din lateral și suflă norii de ceață peste parbriz, încercând să păcălească aparatele de zbor.",
         step2_title: "PASUL 2 — Cum îl salvăm noi fără GPS? 🛡️",
         step2_body: "<strong>Camera video curăță ceața, măsoară viteza uitându-se la luminile pistei și separă mișcarea pământului de mișcarea norilor și de virajele avionului.</strong> Astfel, chiar dacă oprim complet GPS-ul și internetul, avionul știe exact unde este pista!",
         step3_title: "PASUL 3 — Cum testezi aplicația în 10 secunde? 🎮",
-        step3_body: "<strong>Apasă pe butoanele „🎥 Filmare Reală 1 / 2 / 3” de deasupra Parbrizului ca să vezi filmările video reale din cabina piloților, sau atacă avionul din Telecomandă și privește cum linia verde rămâne pe pistă!</strong>",
+        step3_body: "<strong>Privește mai jos cum filmarea video reală din cabină este suprapusă cu transparență 50% direct peste graficul 3D și peste graficul radar! Poți regla oricând transparența din glisorul „🎚️ Transparență Video peste Grafic: 50%”.</strong>",
         story_err_label: "EROAREA AVIONULUI NOSTRU PE PISTĂ:",
-        zone2_header: "👁️ ZONA 2: PARBRIZUL AVIONULUI — SIMULATOR 3D & FILMĂRI VIDEO REALE DIN CABINĂ",
-        choose_screen_lbl: "📺 ALEGE CE VEZI PE ECRAN:",
-        mode_sim_btn: "🕹️ Simulator 3D (Craiova)",
-        mode_v1_btn: "🎥 Filmare Reală 1: Ceață Albă (LC-130)",
-        mode_v2_btn: "🎥 Filmare Reală 2: Luminile Pistei (Paris CDG)",
-        mode_v3_btn: "🎥 Filmare Reală 3: Vânt Lateral Puternic",
+        zone2_header: "👁️ ZONA 2: PARBRIZUL AVIONULUI — GRAFIC 3D + FILMARE REALĂ SUPRAPUSĂ 50%",
+        choose_screen_lbl: "📺 FILMARE PESTE GRAFIC:",
+        mode_v1_btn: "🎥 Filmare Reală 1: Ceață Albă (50%)",
+        mode_v2_btn: "🎥 Filmare Reală 2: Luminile Pistei (50%)",
+        mode_v3_btn: "🎥 Filmare Reală 3: Vânt Lateral (50%)",
+        mode_sim_btn: "🕹️ Doar Grafic (0% Video)",
+        lbl_video_opacity: "🎚️ Transparență Video: 50%",
         leg_green_title: "🟢 Săgețile Verzi = Solul & Pista Reală",
         leg_green_desc: "Arată cum se mișcă pământul fix sub avion (după ce am eliminat matematic înclinarea camerei).",
         leg_purple_title: "🟣 Săgețile Mov = Norii de Ceață",
         leg_purple_desc: "Arată cum vântul împinge ceața în lateral. Noi le ignorăm la ghidaj și le folosim ca să vedem rafalele din timp!",
-        leg_yellow_title: "🟡 Țintele & Luminile Pistei = Reper Vizual",
-        leg_yellow_desc: "Luminile pistei detectate automat în filmarea reală sau în simulator, care ne țin aliniați pe centru.",
-        zone3_header: "🏁 ZONA 3: CURSA CELOR 4 AVIOANE (RADAR) — DE CE NOI ATERIZĂM PE PISTĂ ȘI CEILALȚI NU?",
+        leg_yellow_title: "🟡 Suprapunere 50% Video Real + Grafic",
+        leg_yellow_desc: "Vezi simultan filmarea reală din cabină (50% transparență) suprapusă peste graficul 3D de ghidare.",
+        zone3_header: "🏁 ZONA 3: CURSA CELOR 4 AVIOANE (GRAFIC + VIDEO 50%) — DE CE NOI ATERIZĂM PE PISTĂ?",
         est_shield_title: "🟢 AERO-SHIELD (Avionul nostru inteligent)",
         est_shield_desc: "Rămâne lipit de mijlocul pistei (sub 1 metru eroare), chiar și fără GPS și pe ceață oarbă!",
         est_gnss_title: "🔴 Avion Clasic cu GPS (Fără scut)",
@@ -1139,9 +1182,9 @@
         lbl_ai_lat: "Timp de Gândire AI pe Cadru:",
         lbl_whiteout_safe: "Protecție la Ceață Oarbă:",
         val_whiteout_safe: "100% ACTIVĂ (FĂRĂ BLOCAJE)",
-        rv_sec_title: "🎬 CELE 3 FILMĂRI VIDEO REALE DIN CABINA PILOȚILOR (RULEAZĂ LIVE MAI JOS SAU PE PARBRIZUL PRINCIPAL!)",
-        rv_sec_sub: "Poți vedea fiecare filmare reală direct în caseta ei sau poți apăsa butonul verde de sub videoclip ca să o pui pe Ecranul Principal cu detecția AI peste imagine:",
-        rv_sec_btn: "📺 PUNE FILMAREA REALĂ PE ECRANUL PRINCIPAL ACUM",
+        rv_sec_title: "🎬 CELE 3 FILMĂRI VIDEO REALE DIN CABINA PILOȚILOR (VIZIBILE MAI JOS ȘI SUPRAPUSE 50% PESTE GRAFICELE DE SUS!)",
+        rv_sec_sub: "Apasă pe butonul verde de sub oricare filmare ca să o pui cu transparență 50% peste graficele principale de sus:",
+        rv_sec_btn: "📺 SUPRAPUNE FILMAREA REALĂ (50% TRANSPARENȚĂ) PESTE GRAFIC",
         rv1_title: "1. Aterizare în orb prin ceață albă densă (Avion militar LC-130)",
         rv1_human: "👁️ <strong>Ce se vede în filmare:</strong> Aproape doar un zid alb de ceață groasă; pilotul nu vede pista din față până în ultimele secunde.",
         rv2_title: "2. Apropiere pe luminile pistei în ceață (Aeroportul Paris CDG)",
@@ -1149,9 +1192,9 @@
         rv3_title: "3. Aterizare pe vânt lateral puternic și vizibilitate redusă",
         rv3_human: "👁️ <strong>Ce se vede în filmare:</strong> Avionul se leagănă puternic și se înclină din cauza rafalelor violente de vânt lateral.",
         rv_measured_lbl: "Ce a măsurat programul nostru:",
-        btn_put_v1_main: "📺 Pune Filmarea #1 pe Ecranul Principal (cu Detecție AI)",
-        btn_put_v2_main: "📺 Pune Filmarea #2 pe Ecranul Principal (cu Detecție AI)",
-        btn_put_v3_main: "📺 Pune Filmarea #3 pe Ecranul Principal (cu Detecție AI)"
+        btn_put_v1_main: "📺 Suprapune Filmarea #1 (50% Transparență) peste Grafic",
+        btn_put_v2_main: "📺 Suprapune Filmarea #2 (50% Transparență) peste Grafic",
+        btn_put_v3_main: "📺 Suprapune Filmarea #3 (50% Transparență) peste Grafic"
       },
       en: {
         brand_badge: "DO-178C VISUAL SHIELD",
@@ -1162,34 +1205,35 @@
         act2_sub: "Aircraft banks and turns while mathematically subtracting camera rotation",
         act3_title: "🎬 SCENARIO 3: GPS HACKER SIEGE + BLIND TOUCHDOWN",
         act3_sub: "Hacker spoofs GPS in zero-visibility fog, yet we land right on centerline",
-        btn_real_video_title: "🎬 WATCH REAL COCKPIT VIDEOS ON SCREEN",
-        btn_real_video_sub: "Play real cockpit landing footage directly on the Main Windshield!",
+        btn_real_video_title: "🎬 SWITCH REAL VIDEO (50% OVER GRAPHIC)",
+        btn_real_video_sub: "Cycle through the 3 real videos overlaid at 50% transparency over the graphic!",
         btn_guide_title: "💡 HIDE / SHOW BEGINNER GUIDE",
         btn_guide_sub: "Simple 3-step explanation for everyone",
         btn_reset_title: "🔄 RESET APPROACH TO START",
         btn_reset_sub: "Reset aircraft position to 900m before Craiova Runway 09",
         guide_header_title: "👋 WELCOME! UNDERSTAND THE SYSTEM IN 3 SIMPLE STEPS (NO JARGON):",
-        guide_header_sub: "Craiova Airport (LRCV) — Runway 09 | 60 FPS Simulator + 3 Real Cockpit Videos",
+        guide_header_sub: "Craiova Airport (LRCV) — Runway 09 | 60 FPS Graphic + 50% Real Video Overlay",
         step1_title: "STEP 1 — What is the danger? 🚨",
         step1_body: "<strong>The aircraft is landing at Craiova (Runway 09) in dense fog. A hacker spoofs its GPS to lure it off the runway.</strong> Meanwhile, strong crosswinds push fog clouds across the windshield, fooling standard optical cameras.",
         step2_title: "STEP 2 — How do we save it without GPS? 🛡️",
         step2_body: "<strong>Our camera sees through fog, locks onto the runway lights, and separates ground motion from blowing fog clouds and aircraft turns.</strong> Even with GPS and internet completely cut, the plane knows exactly where the runway is!",
         step3_title: "STEP 3 — How to test it in 10 seconds? 🎮",
-        step3_body: "<strong>Click the '🎥 Real Video 1 / 2 / 3' buttons right above the Windshield to watch real cockpit footage with live AI detection, or trigger a GPS attack on the right!</strong>",
+        step3_body: "<strong>Watch below how the real cockpit video is overlaid at 50% transparency directly over the 3D graphic and radar! Adjust the '🎚️ Video Opacity over Graphic: 50%' slider anytime.</strong>",
         story_err_label: "OUR AIRCRAFT RUNWAY CENTERLINE ERROR:",
-        zone2_header: "👁️ ZONE 2: COCKPIT WINDSHIELD — 3D SIMULATOR & REAL COCKPIT VIDEO FOOTAGE",
-        choose_screen_lbl: "📺 CHOOSE MAIN SCREEN VIEW:",
-        mode_sim_btn: "🕹️ 3D Simulator (Craiova)",
-        mode_v1_btn: "🎥 Real Video 1: Whiteout Fog (LC-130)",
-        mode_v2_btn: "🎥 Real Video 2: Runway Lights (Paris CDG)",
-        mode_v3_btn: "🎥 Real Video 3: Severe Crosswind",
+        zone2_header: "👁️ ZONE 2: COCKPIT WINDSHIELD — 3D GRAPHIC + 50% REAL VIDEO OVERLAY",
+        choose_screen_lbl: "📺 VIDEO OVER GRAPHIC:",
+        mode_v1_btn: "🎥 Video 1: Whiteout Fog (50%)",
+        mode_v2_btn: "🎥 Video 2: Runway Lights (50%)",
+        mode_v3_btn: "🎥 Video 3: Crosswind (50%)",
+        mode_sim_btn: "🕹️ Graphic Only (0% Video)",
+        lbl_video_opacity: "🎚️ Video Opacity over Graphic:",
         leg_green_title: "🟢 Green Arrows = Real Ground & Runway",
         leg_green_desc: "Shows true fixed ground motion beneath the aircraft (after mathematically removing camera rotation).",
         leg_purple_title: "🟣 Purple Arrows = Blowing Fog Clouds",
         leg_purple_desc: "Shows lateral wind pushing fog clouds. We filter them out from navigation and use them to warn of gusts early!",
-        leg_yellow_title: "🟡 Targets & Runway Lights = Visual Lock",
-        leg_yellow_desc: "Approach lights automatically locked in real video footage or simulation, keeping us on centerline.",
-        zone3_header: "🏁 ZONE 3: 4-AIRCRAFT RACE (RADAR) — WHY WE LAND ON THE RUNWAY AND OTHERS FAIL",
+        leg_yellow_title: "🟡 50% Real Video + 3D Graphic Blend",
+        leg_yellow_desc: "Simultaneously view the real cockpit video (at 50% transparency) blended over the 3D guidance graphic.",
+        zone3_header: "🏁 ZONE 3: 4-AIRCRAFT RACE (GRAPHIC + 50% VIDEO) — WHY WE LAND ON THE RUNWAY",
         est_shield_title: "🟢 AERO-SHIELD (Our Smart Visual Aircraft)",
         est_shield_desc: "Stays glued to the runway centerline (< 1m error), even without GPS in blind fog!",
         est_gnss_title: "🔴 Classic GPS Aircraft (Unprotected)",
@@ -1250,9 +1294,9 @@
         lbl_ai_lat: "AI Thinking Time per Frame:",
         lbl_whiteout_safe: "100% Whiteout Fog Protection:",
         val_whiteout_safe: "100% ACTIVE (ZERO CRASHES)",
-        rv_sec_title: "🎬 THE 3 REAL COCKPIT VIDEOS (PLAYING LIVE BELOW OR ON THE MAIN WINDSHIELD!)",
-        rv_sec_sub: "Watch each real video directly in its card below, or click the green button under any video to put it on the Main Screen with live AI detection overlay:",
-        rv_sec_btn: "📺 PUT REAL VIDEO ON MAIN SCREEN NOW",
+        rv_sec_title: "🎬 THE 3 REAL COCKPIT VIDEOS (PLAYING BELOW & OVERLAID AT 50% TRANSPARENCY ON THE GRAPHICS ABOVE!)",
+        rv_sec_sub: "Click the green button under any video to overlay it at 50% transparency over the main graphics above:",
+        rv_sec_btn: "📺 OVERLAY REAL VIDEO (50% TRANSPARENCY) ON GRAPHIC",
         rv1_title: "1. Blind Whiteout Fog Landing (Military LC-130 Cockpit)",
         rv1_human: "👁️ <strong>What is seen in the video:</strong> Almost a solid white wall of dense fog; pilot cannot see the runway until the last seconds.",
         rv2_title: "2. Night/Fog Approach on Runway Lights (Paris CDG Airport)",
@@ -1260,11 +1304,54 @@
         rv3_title: "3. Severe Crosswind & Low-Visibility Cockpit Landing",
         rv3_human: "👁️ <strong>What is seen in the video:</strong> Aircraft rocks and banks heavily under violent lateral wind gusts.",
         rv_measured_lbl: "What our software measured:",
-        btn_put_v1_main: "📺 Put Real Video #1 on Main Screen (with AI Overlay)",
-        btn_put_v2_main: "📺 Put Real Video #2 on Main Screen (with AI Overlay)",
-        btn_put_v3_main: "📺 Put Real Video #3 on Main Screen (with AI Overlay)"
+        btn_put_v1_main: "📺 Overlay Real Video #1 (50% Transparency) on Graphic",
+        btn_put_v2_main: "📺 Overlay Real Video #2 (50% Transparency) on Graphic",
+        btn_put_v3_main: "📺 Overlay Real Video #3 (50% Transparency) on Graphic"
       }
     };
+
+    function applyVideoOpacityToDom() {
+      const mainVid = document.getElementById("real-cockpit-video-overlay");
+      const radarVid = document.getElementById("radar-overlay-video");
+      const slider = document.getElementById("video-opacity-slider");
+      const valEl = document.getElementById("video-opacity-val");
+      const summaryEl = document.getElementById("hud-guidance-summary");
+
+      const effectivePct = mainViewMode === "sim" ? 0 : videoOpacityPct;
+      const alpha = (effectivePct / 100.0).toFixed(2);
+
+      if (slider) slider.value = effectivePct;
+      if (valEl) valEl.textContent = `${effectivePct}%`;
+      if (summaryEl) {
+        summaryEl.textContent = currentLang === "ro"
+          ? `TRANSPARENȚĂ VIDEO: ${effectivePct}% PESTE GRAFIC`
+          : `VIDEO OPACITY: ${effectivePct}% OVER GRAPHIC`;
+      }
+
+      [mainVid, radarVid].forEach((vidEl) => {
+        if (!vidEl) return;
+        if (effectivePct <= 0 || mainViewMode === "sim") {
+          vidEl.style.opacity = "0";
+          vidEl.style.display = "none";
+        } else {
+          vidEl.style.display = "block";
+          vidEl.style.opacity = alpha;
+        }
+      });
+    }
+
+    function onVideoOpacityChange(val) {
+      const pct = Math.max(0, Math.min(100, parseInt(val, 10) || 0));
+      videoOpacityPct = pct;
+      if (pct > 0 && mainViewMode === "sim") {
+        mainViewMode = "video2";
+        ["sim", "video1", "video2", "video3"].forEach((m) => {
+          const b = document.getElementById(`mode-btn-${m}`);
+          if (b) b.classList.toggle("active", m === mainViewMode);
+        });
+      }
+      applyVideoOpacityToDom();
+    }
 
     function updateOverlayToggleBtnText() {
       const btn = document.getElementById("btn-toggle-ai-overlay");
@@ -1272,12 +1359,12 @@
       btn.classList.toggle("active", showAiOverlayOnVideo);
       if (currentLang === "ro") {
         btn.textContent = showAiOverlayOnVideo
-          ? "👁️ Detecția AI peste Filmare: PORNITĂ"
-          : "👁️ Detecția AI peste Filmare: OPRITĂ (Video Brut)";
+          ? "👁️ Ținte AI: PORNITE"
+          : "👁️ Ținte AI: OPRITE";
       } else {
         btn.textContent = showAiOverlayOnVideo
-          ? "👁️ AI Overlay on Video: ON"
-          : "👁️ AI Overlay on Video: OFF (Raw Video)";
+          ? "👁️ AI Targets: ON"
+          : "👁️ AI Targets: OFF";
       }
     }
 
@@ -1288,30 +1375,25 @@
         if (b) b.classList.toggle("active", m === mode);
       });
 
-      const vidEl = document.getElementById("main-cockpit-video");
-      const hudCanvas = document.getElementById("hudCanvas");
-      if (mode === "sim") {
-        if (vidEl) {
-          vidEl.pause();
-          vidEl.style.display = "none";
+      const mainVid = document.getElementById("real-cockpit-video-overlay");
+      const radarVid = document.getElementById("radar-overlay-video");
+
+      if (mode !== "sim") {
+        if (videoOpacityPct === 0) {
+          videoOpacityPct = 50;
         }
-        if (hudCanvas) {
-          hudCanvas.style.pointerEvents = "none";
-        }
-      } else {
         const info = REAL_VIDEO_CATALOG[mode] || REAL_VIDEO_CATALOG.video2;
-        if (vidEl) {
+        [mainVid, radarVid].forEach((vidEl) => {
+          if (!vidEl) return;
           if (vidEl.getAttribute("src") !== info.src) {
             vidEl.setAttribute("src", info.src);
             vidEl.load();
           }
-          vidEl.style.display = "block";
           vidEl.play().catch(() => {});
-        }
-        if (hudCanvas) {
-          hudCanvas.style.pointerEvents = "none";
-        }
+        });
       }
+
+      applyVideoOpacityToDom();
 
       if (scrollToMain) {
         const anchor = document.getElementById("main-cockpit-anchor");
@@ -1347,6 +1429,7 @@
       });
 
       updateOverlayToggleBtnText();
+      applyVideoOpacityToDom();
 
       const slider = document.getElementById("fog-slider");
       if (slider) {
@@ -1380,8 +1463,8 @@
       ws.onopen = () => {
         const el = document.getElementById("conn-status");
         el.textContent = currentLang === "ro"
-          ? "CONEXIUNE LIVE ACTIVĂ (60 CADRE / SECUNDĂ FĂRĂ ÎNTÂRZIERE) | CRAIOVA PISTA 09"
-          : "LIVE CONNECTION ACTIVE (60.0 Hz ZERO-LAG CONFLATION) | CRAIOVA RWY 09";
+          ? "CONEXIUNE LIVE ACTIVĂ (60 CADRE / SECUNDĂ + VIDEO 50% PESTE GRAFIC) | CRAIOVA PISTA 09"
+          : "LIVE CONNECTION ACTIVE (60.0 Hz + 50% VIDEO OVER GRAPHIC) | CRAIOVA RWY 09";
         el.style.color = "#00ff9d";
       };
 
@@ -1419,7 +1502,6 @@
     }
 
     function triggerScenario(id) {
-      setMainViewMode("sim");
       trailHistory.truth = [];
       trailHistory.gnss = [];
       trailHistory.ins = [];
@@ -1488,10 +1570,8 @@
     function testRealFogVideo() {
       lastRealVideoTestTime = Date.now();
       sendSimCommand({ type: "replay_real_video" });
-      // Cycle or switch directly to real video on the main windshield so the user sees the real footage immediately!
-      if (mainViewMode === "sim") {
-        setMainViewMode("video2", true);
-      } else if (mainViewMode === "video2") {
+      videoOpacityPct = 50;
+      if (mainViewMode === "video2") {
         setMainViewMode("video1", true);
       } else if (mainViewMode === "video1") {
         setMainViewMode("video3", true);
@@ -1602,17 +1682,6 @@
           : `${e.aero_shield_error_m.toFixed(2)} meters (ON CENTERLINE!)`;
       }
 
-      if (mainViewMode !== "sim") {
-        const vInfo = REAL_VIDEO_CATALOG[mainViewMode] || REAL_VIDEO_CATALOG.video2;
-        banner.style.borderColor = "#00e5ff";
-        badge.style.color = "#00e5ff";
-        badge.textContent = currentLang === "ro"
-          ? `🎥 ACUM PE ECRANUL PRINCIPAL: ${vInfo.title_ro}`
-          : `🎥 NOW PLAYING ON MAIN SCREEN: ${vInfo.title_en}`;
-        text.innerHTML = currentLang === "ro" ? vInfo.desc_ro : vInfo.desc_en;
-        return;
-      }
-
       const hasGpsHack = c.cyber_flags && (c.cyber_flags.gps_jump_spoof || c.cyber_flags.gps_stealth_ramp_spoof);
       const isTurning = Math.abs(p.euler_deg[0]) > 4.0 || Math.abs(p.euler_deg[2]) > 3.5 || Math.abs(p.omega_body_dps[0]) > 2.0 || Math.abs(p.omega_body_dps[2]) > 2.0;
 
@@ -1643,6 +1712,14 @@
         text.innerHTML = currentLang === "ro"
           ? `✈️ VIRAJ ACTIV (Înclinare aripi: ${p.euler_deg[0].toFixed(1)}°, Direcție: ${p.euler_deg[2].toFixed(1)}°)! Avionul se rotește, iar programul nostru scade matematic rotirea camerei din imagine ca să nu creadă din greșeală că s-a mișcat pista din Craiova!`
           : `✈️ ACTIVE TURN (Wing Bank: ${p.euler_deg[0].toFixed(1)}°, Heading: ${p.euler_deg[2].toFixed(1)}°)! The aircraft is rotating, and our SO(3) math subtracts camera rotation from the image so it never mistakes a turn for runway drift!`;
+      } else if (mainViewMode !== "sim") {
+        const vInfo = REAL_VIDEO_CATALOG[mainViewMode] || REAL_VIDEO_CATALOG.video2;
+        banner.style.borderColor = "#00ff9d";
+        badge.style.color = "#00ff9d";
+        badge.textContent = currentLang === "ro"
+          ? `🎥 SUPRAPUNERE ${videoOpacityPct}% FILMARE REALĂ PESTE GRAFIC: ${vInfo.title_ro}`
+          : `🎥 ${videoOpacityPct}% REAL VIDEO OVERLAY ON GRAPHIC: ${vInfo.title_en}`;
+        text.innerHTML = currentLang === "ro" ? vInfo.desc_ro : vInfo.desc_en;
       } else {
         banner.style.borderColor = "#00ff9d";
         badge.style.color = "#00ff9d";
@@ -1669,7 +1746,7 @@
       for (let i = 1; i <= 3; i++) {
         const btn = document.getElementById(`btn-act-${i}`);
         if (btn) {
-          btn.classList.toggle("active", mainViewMode === "sim" && c.active_director_scenario === i);
+          btn.classList.toggle("active", c.active_director_scenario === i);
         }
       }
 
@@ -1793,50 +1870,35 @@
     }
 
     // =========================================================================
-    // CANVAS 1: 60 FPS 3D COCKPIT HUD + REAL VIDEO AI OVERLAY
+    // CANVAS 1: 60 FPS 3D COCKPIT HUD (ALWAYS DRAWN UNDER THE 50% VIDEO OVERLAY!)
     // =========================================================================
     function renderRealVideoAiOverlay(ctx, w, h) {
-      // Leave video 100% visible underneath!
       if (!showAiOverlayOnVideo) {
         return;
       }
 
       const vInfo = REAL_VIDEO_CATALOG[mainViewMode] || REAL_VIDEO_CATALOG.video2;
-      const vidEl = document.getElementById("main-cockpit-video");
+      const vidEl = document.getElementById("real-cockpit-video-overlay");
       const tSec = vidEl && !isNaN(vidEl.currentTime) ? vidEl.currentTime : performance.now() / 1000;
 
-      // Top translucent HUD badge over the real video
-      ctx.fillStyle = "rgba(4, 14, 28, 0.82)";
+      // Top translucent HUD badge showing 50% Video + 3D Graphic active
+      ctx.fillStyle = "rgba(4, 14, 28, 0.85)";
       ctx.strokeStyle = "#00ff9d";
-      ctx.lineWidth = 1.8;
-      ctx.fillRect(14, 10, w - 28, 34);
-      ctx.strokeRect(14, 10, w - 28, 34);
+      ctx.lineWidth = 1.6;
+      ctx.fillRect(12, 6, w - 24, 26);
+      ctx.strokeRect(12, 6, w - 24, 26);
 
       ctx.fillStyle = "#00ff9d";
-      ctx.font = "bold 12px monospace";
+      ctx.font = "bold 11px monospace";
       const badgeTxt = currentLang === "ro"
-        ? `🎥 ${vInfo.title_ro} — DETECȚIE AERO-SHIELD PESTE FILMAREA REALĂ (${vInfo.fps.toFixed(1)} FPS)`
-        : `🎥 ${vInfo.title_en} — LIVE AERO-SHIELD AI OVERLAY (${vInfo.fps.toFixed(1)} FPS)`;
-      ctx.fillText(badgeTxt, 24, 31);
+        ? `🎥 SUPRAPUNERE ${videoOpacityPct}% VIDEO REAL PESTE GRAFIC: ${vInfo.title_ro} (${vInfo.fps.toFixed(1)} FPS)`
+        : `🎥 ${videoOpacityPct}% REAL VIDEO OVERLAY ON GRAPHIC: ${vInfo.title_en} (${vInfo.fps.toFixed(1)} FPS)`;
+      ctx.fillText(badgeTxt, 20, 23);
 
       const cx = w / 2;
       const cy = h / 2;
-
-      // Simulated / extracted dynamic runway corridor & ALS beacon locks over the real video
-      const swayX = Math.sin(tSec * 1.9) * (mainViewMode === "video3" ? 26 : 9);
-      const swayY = Math.cos(tSec * 1.4) * (mainViewMode === "video3" ? 12 : 5);
-
-      // Runway corridor detection lines
-      ctx.strokeStyle = "rgba(0, 229, 255, 0.78)";
-      ctx.lineWidth = 2;
-      ctx.setLineDash([8, 6]);
-      ctx.beginPath();
-      ctx.moveTo(cx + swayX - 28, cy + swayY + 8);
-      ctx.lineTo(cx + swayX - 155, h - 36);
-      ctx.moveTo(cx + swayX + 28, cy + swayY + 8);
-      ctx.lineTo(cx + swayX + 155, h - 36);
-      ctx.stroke();
-      ctx.setLineDash([]);
+      const swayX = Math.sin(tSec * 1.9) * (mainViewMode === "video3" ? 22 : 8);
+      const swayY = Math.cos(tSec * 1.4) * (mainViewMode === "video3" ? 10 : 4);
 
       // Target lock boxes on ALS Runway Lights / Features
       const numLocks = vInfo.als_count;
@@ -1848,56 +1910,9 @@
 
         ctx.strokeStyle = i % 3 === 0 ? "#ffb800" : "#00ff9d";
         ctx.lineWidth = 1.8;
-        // Left & right ALS light locks
         ctx.strokeRect(cx + swayX - span - pulse, ly - pulse, pulse * 2, pulse * 2);
         ctx.strokeRect(cx + swayX + span - pulse, ly - pulse, pulse * 2, pulse * 2);
-        // Centerline beacon lock
-        ctx.beginPath();
-        ctx.arc(cx + swayX, ly, 3.2, 0, Math.PI * 2);
-        ctx.stroke();
       }
-
-      // Optical flow arrows over the real video (Green = Derotated Ground, Purple = Fog Wind Shear)
-      if (latestFrame && latestFrame.optical_flow_vectors) {
-        for (const vec of latestFrame.optical_flow_vectors) {
-          const sx = vec.x_norm * w;
-          const sy = vec.y_norm * h;
-          if (sy < 55 || sy > h - 45) continue;
-          const ex = sx + vec.dx_px;
-          const ey = sy + vec.dy_px;
-          const isFog = vec.layer === "fog";
-          ctx.strokeStyle = isFog ? "rgba(217, 70, 239, 0.9)" : "rgba(0, 255, 157, 0.9)";
-          ctx.fillStyle = isFog ? "#d946ef" : "#00ff9d";
-          ctx.lineWidth = 2.0;
-
-          ctx.beginPath();
-          ctx.moveTo(sx, sy);
-          ctx.lineTo(ex, ey);
-          ctx.stroke();
-
-          ctx.beginPath();
-          ctx.arc(ex, ey, 2.5, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-
-      // Left & Right transparent telemetry boxes for the real video
-      ctx.fillStyle = "rgba(4, 12, 24, 0.78)";
-      ctx.strokeStyle = "#00e5ff";
-      ctx.lineWidth = 1.2;
-      ctx.fillRect(14, 54, 155, 112);
-      ctx.strokeRect(14, 54, 155, 112);
-
-      ctx.fillStyle = "#00ff9d";
-      ctx.font = "bold 11px monospace";
-      ctx.fillText(currentLang === "ro" ? "VITEZĂ PROCESARE:" : "PROCESSING FPS:", 22, 73);
-      ctx.fillText(`${vInfo.fps.toFixed(1)} FPS (LIVE)`, 22, 89);
-      ctx.fillStyle = "#ffb800";
-      ctx.fillText(currentLang === "ro" ? "CEAȚĂ MĂSURATĂ:" : "MEASURED FOG MOR:", 22, 112);
-      ctx.fillText(`MOR ~${vInfo.mor_m} m`, 22, 128);
-      ctx.fillStyle = "#f0abfc";
-      ctx.fillText(currentLang === "ro" ? "VÂNT ÎN CEAȚĂ:" : "FOG CROSSWIND:", 22, 148);
-      ctx.fillText(`${vInfo.gust_mps.toFixed(1)} m/s`, 22, 162);
     }
 
     function renderHudCanvas() {
@@ -1912,12 +1927,6 @@
       const w = canvas.width;
       const h = canvas.height;
       ctx.clearRect(0, 0, w, h);
-
-      // IF A REAL VIDEO IS SELECTED ON THE MAIN WINDSHIELD, DO NOT DRAW OPAQUE SKY/GROUND!
-      if (mainViewMode !== "sim") {
-        renderRealVideoAiOverlay(ctx, w, h);
-        return;
-      }
 
       if (!latestFrame) {
         ctx.fillStyle = "#00ff9d";
@@ -1939,7 +1948,7 @@
       const pitchDeg = p.euler_deg[1];
       const yawDeg = p.euler_deg[2];
 
-      // 1. Sky & Ground with artificial horizon transform
+      // 1. ALWAYS DRAW THE 3D GRAPHIC (Sky, Ground, Runway 09, ALS Bars, Horizon) UNDER THE 50% VIDEO OVERLAY!
       ctx.save();
       ctx.translate(w / 2, h / 2);
       ctx.rotate(-rollRad);
@@ -1961,7 +1970,7 @@
 
       // Horizon Line
       ctx.strokeStyle = "#00ff9d";
-      ctx.lineWidth = 1.8;
+      ctx.lineWidth = 2.0;
       ctx.beginPath();
       ctx.moveTo(-w, pitchOffsetPx);
       ctx.lineTo(w, pitchOffsetPx);
@@ -1975,9 +1984,9 @@
       const botHalfW = 195;
 
       // Runway pavement polygon
-      ctx.fillStyle = "rgba(16, 45, 58, 0.72)";
+      ctx.fillStyle = "rgba(16, 45, 58, 0.78)";
       ctx.strokeStyle = "#00e5ff";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.2;
       ctx.beginPath();
       ctx.moveTo(lateralShiftPx - topHalfW, rwyTopY);
       ctx.lineTo(lateralShiftPx + topHalfW, rwyTopY);
@@ -2003,7 +2012,7 @@
         const by = rwyTopY + frac * (rwyBotY - rwyTopY) * 0.82;
         const barHalfW = topHalfW + frac * (botHalfW - topHalfW) * 0.45;
         ctx.strokeStyle = i % 3 === 0 ? "#ff2a5f" : "#00ffcc";
-        ctx.lineWidth = 2.5;
+        ctx.lineWidth = 2.8;
         ctx.beginPath();
         ctx.moveTo(lateralShiftPx - barHalfW, by);
         ctx.lineTo(lateralShiftPx + barHalfW, by);
@@ -2011,10 +2020,10 @@
       }
 
       // 3. Pitch Ladder (-15 to +15 deg)
-      ctx.strokeStyle = "rgba(0, 255, 157, 0.75)";
+      ctx.strokeStyle = "rgba(0, 255, 157, 0.82)";
       ctx.fillStyle = "#00ff9d";
       ctx.font = "10px monospace";
-      ctx.lineWidth = 1.4;
+      ctx.lineWidth = 1.5;
       for (let deg = -15; deg <= 15; deg += 5) {
         if (deg === 0) continue;
         const y = pitchOffsetPx - deg * 6.5;
@@ -2028,11 +2037,6 @@
         ctx.fillText(`${deg > 0 ? "+" : ""}${deg}°`, lw + 5, y + 3);
       }
 
-      // Atmospheric Fog Veil Overlay based on MOR visibility
-      const fogAlpha = Math.min(Math.max((180 - m.visibility_mor_m) / 220, 0.06), 0.52);
-      ctx.fillStyle = `rgba(145, 165, 195, ${fogAlpha})`;
-      ctx.fillRect(-w, -h, w * 2, h * 2);
-
       ctx.restore();
 
       // 4. Optical Flow Vectors (Green = Ground derotated, Purple = Fog Wind Shear)
@@ -2045,7 +2049,7 @@
           const isFog = vec.layer === "fog";
           ctx.strokeStyle = isFog ? "#d946ef" : "#00ff9d";
           ctx.fillStyle = isFog ? "#d946ef" : "#00ff9d";
-          ctx.lineWidth = isFog ? 2.2 : 1.8;
+          ctx.lineWidth = isFog ? 2.4 : 2.0;
 
           ctx.beginPath();
           ctx.moveTo(sx, sy);
@@ -2053,7 +2057,7 @@
           ctx.stroke();
 
           ctx.beginPath();
-          ctx.arc(ex, ey, 2.6, 0, Math.PI * 2);
+          ctx.arc(ex, ey, 2.8, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -2062,7 +2066,7 @@
       const cx = w / 2;
       const cy = h / 2;
       ctx.strokeStyle = "#00e5ff";
-      ctx.lineWidth = 2.2;
+      ctx.lineWidth = 2.4;
       ctx.beginPath();
       ctx.moveTo(cx - 28, cy);
       ctx.lineTo(cx - 8, cy);
@@ -2075,7 +2079,7 @@
       // Crab Angle Diamond Marker
       const crabPx = p.crab_angle_cmd_deg * 4.5;
       ctx.strokeStyle = "#ffb800";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.2;
       ctx.beginPath();
       ctx.moveTo(cx + crabPx, cy - 10);
       ctx.lineTo(cx + crabPx + 8, cy);
@@ -2089,28 +2093,33 @@
       ctx.fillText(`${crabLbl} ${p.crab_angle_cmd_deg.toFixed(1)}°`, cx + crabPx - 38, cy + 22);
 
       // Left Speed Tape & Right Altitude AGL Tape
-      ctx.fillStyle = "rgba(5, 14, 28, 0.82)";
+      ctx.fillStyle = "rgba(5, 14, 28, 0.85)";
       ctx.strokeStyle = "#164e63";
       ctx.lineWidth = 1;
-      ctx.fillRect(10, 36, 88, h - 72);
-      ctx.strokeRect(10, 36, 88, h - 72);
+      ctx.fillRect(10, 40, 88, h - 76);
+      ctx.strokeRect(10, 40, 88, h - 76);
       ctx.fillStyle = "#00ff9d";
       ctx.font = "bold 11px monospace";
-      ctx.fillText(currentLang === "ro" ? "VITEZĂ SOL" : "GROUND SPD", 15, 55);
-      ctx.fillText(`${p.vel_body_mps[0].toFixed(1)} m/s`, 15, 72);
+      ctx.fillText(currentLang === "ro" ? "VITEZĂ SOL" : "GROUND SPD", 15, 59);
+      ctx.fillText(`${p.vel_body_mps[0].toFixed(1)} m/s`, 15, 76);
       ctx.fillStyle = "#d946ef";
-      ctx.fillText(currentLang === "ro" ? "VÂNT CEAȚĂ" : "FOG WIND", 15, 104);
-      ctx.fillText(`${m.true_fog_wind_ned_mps[1].toFixed(1)} m/s`, 15, 121);
+      ctx.fillText(currentLang === "ro" ? "VÂNT CEAȚĂ" : "FOG WIND", 15, 108);
+      ctx.fillText(`${m.true_fog_wind_ned_mps[1].toFixed(1)} m/s`, 15, 125);
 
-      ctx.fillStyle = "rgba(5, 14, 28, 0.82)";
-      ctx.fillRect(w - 102, 36, 92, h - 72);
-      ctx.strokeRect(w - 102, 36, 92, h - 72);
+      ctx.fillStyle = "rgba(5, 14, 28, 0.85)";
+      ctx.fillRect(w - 102, 40, 92, h - 76);
+      ctx.strokeRect(w - 102, 40, 92, h - 76);
       ctx.fillStyle = "#00e5ff";
-      ctx.fillText(currentLang === "ro" ? "ÎNĂLȚIME" : "ALT AGL", w - 95, 55);
-      ctx.fillText(`${(-p.pos_ned_m[2]).toFixed(1)} m`, w - 95, 72);
+      ctx.fillText(currentLang === "ro" ? "ÎNĂLȚIME" : "ALT AGL", w - 95, 59);
+      ctx.fillText(`${(-p.pos_ned_m[2]).toFixed(1)} m`, w - 95, 76);
       ctx.fillStyle = "#00ff9d";
-      ctx.fillText(currentLang === "ro" ? "VIZIBILITATE" : "MOR VIS", w - 95, 104);
-      ctx.fillText(`${m.visibility_mor_m.toFixed(0)} m`, w - 95, 121);
+      ctx.fillText(currentLang === "ro" ? "VIZIBILITATE" : "MOR VIS", w - 95, 108);
+      ctx.fillText(`${m.visibility_mor_m.toFixed(0)} m`, w - 95, 125);
+
+      // Draw Real Video AI Target Locks if a real video overlay is active
+      if (mainViewMode !== "sim" && videoOpacityPct > 0) {
+        renderRealVideoAiOverlay(ctx, w, h);
+      }
     }
 
     // =========================================================================
@@ -2134,7 +2143,7 @@
       const mapY = (yNed) => h / 2 + (yNed / 150) * (h * 0.42);
 
       // Radar Grid
-      ctx.strokeStyle = "rgba(0, 229, 255, 0.12)";
+      ctx.strokeStyle = "rgba(0, 229, 255, 0.16)";
       ctx.lineWidth = 1;
       for (let x = -900; x <= 100; x += 200) {
         const cx = mapX(x);
@@ -2142,7 +2151,7 @@
         ctx.moveTo(cx, 0);
         ctx.lineTo(cx, h);
         ctx.stroke();
-        ctx.fillStyle = "rgba(127, 162, 199, 0.5)";
+        ctx.fillStyle = "rgba(127, 162, 199, 0.65)";
         ctx.font = "9px monospace";
         ctx.fillText(`${x}m`, cx + 3, h - 8);
       }
@@ -2155,7 +2164,7 @@
       }
 
       // ILS Approach Centerline & RWY 09 Threshold Box
-      ctx.strokeStyle = "rgba(0, 255, 157, 0.35)";
+      ctx.strokeStyle = "rgba(0, 255, 157, 0.45)";
       ctx.setLineDash([6, 6]);
       ctx.beginPath();
       ctx.moveTo(mapX(-950), mapY(0));
@@ -2166,9 +2175,9 @@
       // RWY 09 Strip (from X = 0m to +150m)
       const rwyX0 = mapX(0);
       const rwyX1 = mapX(140);
-      ctx.fillStyle = "rgba(0, 229, 255, 0.22)";
+      ctx.fillStyle = "rgba(0, 229, 255, 0.28)";
       ctx.strokeStyle = "#00e5ff";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.2;
       ctx.fillRect(rwyX0, mapY(-18), rwyX1 - rwyX0, mapY(18) - mapY(-18));
       ctx.strokeRect(rwyX0, mapY(-18), rwyX1 - rwyX0, mapY(18) - mapY(-18));
       ctx.fillStyle = "#00e5ff";
@@ -2194,11 +2203,11 @@
       };
 
       // Draw all 4 estimator trails + Ground Truth
-      drawTrail(trailHistory.truth, "rgba(255, 255, 255, 0.45)", 1.5, true);
-      drawTrail(trailHistory.ins, "#ff9100", 2.0);
-      drawTrail(trailHistory.gnss, "#ff2a5f", 2.0);
-      drawTrail(trailHistory.naive, "#ffd600", 2.2);
-      drawTrail(trailHistory.shield, "#00ff9d", 3.2);
+      drawTrail(trailHistory.truth, "rgba(255, 255, 255, 0.55)", 1.6, true);
+      drawTrail(trailHistory.ins, "#ff9100", 2.4);
+      drawTrail(trailHistory.gnss, "#ff2a5f", 2.4);
+      drawTrail(trailHistory.naive, "#ffd600", 2.6);
+      drawTrail(trailHistory.shield, "#00ff9d", 3.6);
 
       // Draw current markers
       const drawMarker = (pos, color, radius) => {
@@ -2211,10 +2220,10 @@
       };
 
       const e = latestFrame.estimators_arena;
-      drawMarker(e.pure_ins_pos_ned, "#ff9100", 4.5);
-      drawMarker(e.raw_gnss_pos_ned, "#ff2a5f", 4.5);
-      drawMarker(e.naive_flow_pos_ned, "#ffd600", 5.0);
-      drawMarker(e.aero_shield_pos_ned, "#00ff9d", 6.2);
+      drawMarker(e.pure_ins_pos_ned, "#ff9100", 5.0);
+      drawMarker(e.raw_gnss_pos_ned, "#ff2a5f", 5.0);
+      drawMarker(e.naive_flow_pos_ned, "#ffd600", 5.5);
+      drawMarker(e.aero_shield_pos_ned, "#00ff9d", 6.8);
     }
 
     function animationLoop() {
@@ -2224,6 +2233,7 @@
     }
 
     setLanguage("ro");
+    setMainViewMode("video2", false);
     connectWebSocket();
     loadRealVideoBenchmark();
     requestAnimationFrame(animationLoop);
