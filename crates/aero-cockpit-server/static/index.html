@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AERO-SHIELD LRCV V2.0 — 6-DoF CAT IIIc Cyber-Avionics Cockpit (Craiova RWY 09)</title>
+  <style>
+    :root {
+      --bg-deep: #040811;
+      --bg-panel: #0a1222;
+      --bg-card: #0f1b33;
+      --border-cyan: #164e63;
+      --hud-green: #00ff9d;
+      --hud-cyan: #00e5ff;
+      --fog-purple: #d946ef;
+      --alert-red: #ff2a5f;
+      --warn-amber: #ffb800;
+      --text-main: #e2f1ff;
+      --text-dim: #7fa2c7;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+      user-select: none;
+    }
+    body {
+      background: radial-gradient(circle at 50% 0%, #0d1b36 0%, var(--bg-deep) 75%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    /* TOP DIRECTOR BAR */
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 14px;
+      background: rgba(7, 14, 28, 0.96);
+      border-bottom: 1px solid var(--border-cyan);
+      box-shadow: 0 2px 18px rgba(0, 229, 255, 0.12);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-badge {
+      background: linear-gradient(135deg, #00ff9d 0%, #00b8ff 100%);
+      color: #021019;
+      font-weight: 900;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.8px;
+    }
+    .brand-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--hud-cyan);
+      letter-spacing: 0.5px;
+    }
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+    .director-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .btn {
+      background: #10203d;
+      color: var(--text-main);
+      border: 1px solid #1e4273;
+      padding: 6px 11px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+    .btn:hover {
+      border-color: var(--hud-cyan);
+      background: #16305c;
+      transform: translateY(-1px);
+    }
+    .btn:active {
+      transform: translateY(0);
+    }
+    .btn-act {
+      background: linear-gradient(180deg, #132c52 0%, #0b1b36 100%);
+      border-color: #00b8ff;
+      color: #e0f7ff;
+    }
+    .btn-act.active {
+      background: linear-gradient(180deg, #00ff9d 0%, #009e60 100%);
+      color: #02140c;
+      border-color: #ffffff;
+      box-shadow: 0 0 14px rgba(0, 255, 157, 0.6);
+    }
+    .btn-danger {
+      background: linear-gradient(180deg, #4a1025 0%, #2b0714 100%);
+      border-color: var(--alert-red);
+      color: #ffd6e0;
+    }
+    .btn-danger.active {
+      background: var(--alert-red);
+      color: #fff;
+      box-shadow: 0 0 14px rgba(255, 42, 95, 0.75);
+    }
+    .btn-gust {
+      background: linear-gradient(90deg, #7e22ce 0%, #c026d3 100%);
+      border-color: #f0abfc;
+      color: #ffffff;
+      font-size: 12px;
+      padding: 8px 12px;
+      box-shadow: 0 0 14px rgba(217, 70, 239, 0.45);
+    }
+    .btn-cuda {
+      background: linear-gradient(90deg, #ea580c 0%, #dc2626 100%);
+      border-color: #fdba74;
+      color: #fff;
+      font-size: 12px;
+      padding: 8px 12px;
+    }
+    .phase-banner {
+      background: #081529;
+      border: 1px solid #1d4d7a;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      color: var(--hud-green);
+      font-weight: 700;
+    }
+
+    /* MAIN GRID */
+    .cockpit-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 10px;
+      padding: 10px 14px;
+      flex: 1;
+    }
+    @media (max-width: 1200px) {
+      .cockpit-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .viewport-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-cyan);
+      border-radius: 7px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 12px;
+      background: rgba(15, 27, 51, 0.9);
+      border-bottom: 1px solid #153759;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--hud-cyan);
+    }
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 410px;
+      background: #030710;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    /* PULSING OPTICAL GUST LOOKAHEAD BANNER */
+    .gust-alert-overlay {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(192, 38, 211, 0.92);
+      border: 2px solid #fdf4ff;
+      color: #ffffff;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.6px;
+      box-shadow: 0 0 24px rgba(217, 70, 239, 0.95);
+      display: none;
+      animation: pulseAlert 0.45s infinite alternate;
+      pointer-events: none;
+      z-index: 10;
+    }
+    @keyframes pulseAlert {
+      from { transform: translateX(-50%) scale(0.98); opacity: 0.88; }
+      to { transform: translateX(-50%) scale(1.03); opacity: 1.0; }
+    }
+
+    /* LOWER DECK: 3 CONTROL & TELEMETRY PANELS */
+    .lower-deck {
+      display: grid;
+      grid-template-columns: 1.15fr 1.15fr 1fr;
+      gap: 10px;
+      padding: 0 14px 12px 14px;
+    }
+    @media (max-width: 1250px) {
+      .lower-deck {
+        grid-template-columns: 1fr;
+      }
+    }
+    .panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-cyan);
+      border-radius: 7px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .panel-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--hud-cyan);
+      border-bottom: 1px solid #153554;
+      padding-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .controls-6dof-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+    .matrix-box {
+      background: #050c18;
+      border: 1px solid #163759;
+      border-radius: 5px;
+      padding: 6px 8px;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      margin-top: 4px;
+      text-align: right;
+      font-family: monospace;
+      color: var(--hud-green);
+    }
+    .kv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px 10px;
+      font-size: 11px;
+    }
+    .kv-item {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed rgba(127, 162, 199, 0.16);
+      padding-bottom: 2px;
+    }
+    .kv-label { color: var(--text-dim); }
+    .kv-val { font-weight: 700; color: var(--text-main); }
+    .arena-legend {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      padding: 6px 10px;
+      background: #060d1b;
+      border-top: 1px solid #153554;
+      font-size: 11px;
+    }
+    .est-pill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: #0b162c;
+    }
+    .progress-bar-outer {
+      width: 100%;
+      height: 10px;
+      background: #061020;
+      border: 1px solid #1e4273;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .progress-bar-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00ff9d 0%, #00e5ff 100%);
+      transition: width 0.15s ease;
+    }
+  </style>
+</head>
+<body>
+  <!-- TOP DIRECTOR MODE BAR -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-badge">DO-178C DAL-A</span>
+      <div>
+        <div class="brand-title">AERO-SHIELD LRCV V2.0 — CRAIOVA RWY 09 (44.3181°N, 23.8886°E)</div>
+        <div class="brand-sub" id="conn-status">WS: CONNECTING... | 60.0 Hz REAL-TIME LOOP</div>
+      </div>
+    </div>
+
+    <div class="director-buttons">
+      <button class="btn btn-act" id="btn-act-1" onclick="triggerScenario(1)">
+        🎬 ACT 1: STRAIGHT FLIGHT &amp; SUDDEN FOG SHEAR
+      </button>
+      <button class="btn btn-act" id="btn-act-2" onclick="triggerScenario(2)">
+        🎬 ACT 2: DYNAMIC 6-DoF MANEUVERS IN SHIFTING FOG
+      </button>
+      <button class="btn btn-act" id="btn-act-3" onclick="triggerScenario(3)">
+        🎬 ACT 3: FULL CYBER-SIEGE CAT IIIc TOUCHDOWN RWY 09
+      </button>
+      <button class="btn" onclick="sendSimCommand({ type: 'ResetApproach' })">
+        🔄 RESET APPROACH
+      </button>
+    </div>
+
+    <div class="phase-banner" id="phase-banner">PHASE 2: ALS SWIR LOCK (RWY 09)</div>
+  </header>
+
+  <!-- DUAL 60 FPS VIEWPORTS -->
+  <main class="cockpit-grid">
+    <!-- CANVAS 1: 3D COCKPIT HUD + SWIR CAMERA + OPTICAL FLOW -->
+    <section class="viewport-card">
+      <div class="card-header">
+        <span>CANVAS 1 — 6-DoF COCKPIT HUD + SWIR 1550nm ALS + OPTICAL FLOW (GREEN=GROUND, PURPLE=FOG)</span>
+        <span id="hud- guidance-summary">RWY 09 DIST: 900.0 m | BRG: 087.4°</span>
+      </div>
+      <div class="canvas-wrap">
+        <div class="gust-alert-overlay" id="gust-overlay">
+          ⚠️ OPTICAL GUST LOOKAHEAD WARNING: 18.0 m/s LATERAL FOG SHEAR DETECTED (0.85s LEAD!)
+        </div>
+        <canvas id="hudCanvas"></canvas>
+      </div>
+    </section>
+
+    <!-- CANVAS 2: TACTICAL RADAR LRCV CRAIOVA (4-ESTIMATOR ARENA) -->
+    <section class="viewport-card">
+      <div class="card-header">
+        <span>CANVAS 2 — LRCV RWY 09 TACTICAL RADAR &amp; 4-ESTIMATOR BENCHMARK ARENA</span>
+        <span id="eta-summary">ETA TOUCHDOWN: 13.2 s | ALS BARS: 12</span>
+      </div>
+      <div class="canvas-wrap" style="height: 348px;">
+        <canvas id="radarCanvas"></canvas>
+      </div>
+      <div class="arena-legend">
+        <div class="est-pill" style="border-left: 3px solid #ff2a5f;">
+          <span>🔴 1. RAW GNSS</span>
+          <strong id="err-gnss" style="color:#ff2a5f;">0.65 m</strong>
+        </div>
+        <div class="est-pill" style="border-left: 3px solid #ff9100;">
+          <span>🟠 2. PURE INS (IMU DRIFT)</span>
+          <strong id="err-ins" style="color:#ff9100;">1.20 m</strong>
+        </div>
+        <div class="est-pill" style="border-left: 3px solid #ffd600;">
+          <span>🟡 3. NAIVE OPTICAL FLOW</span>
+          <strong id="err-naive" style="color:#ffd600;">0.95 m</strong>
+        </div>
+        <div class="est-pill" style="border-left: 3px solid #00ff9d;">
+          <span>🟢 4. AERO-SHIELD LRCV V2.0</span>
+          <strong id="err-shield" style="color:#00ff9d;">0.28 m</strong>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- LOWER DECK: 6-DoF CONTROLS, QUATERNION/MATRIX R_b^n(q), CYBER & GPU -->
+  <section class="lower-deck">
+    <!-- PANEL 1: 6-DoF FLIGHT CONTROLS & KEYBOARD -->
+    <div class="panel">
+      <div class="panel-title">
+        <span>🕹️ 6-DoF INTERACTIVE FLIGHT MANEUVERS (WASD / QE / SHIFT-CTRL)</span>
+        <span style="color:var(--hud-green); font-size:10px;">ZERO-LAG WATCH CONFLATION</span>
+      </div>
+      <div class="controls-6dof-grid">
+        <button class="btn" onclick="stepManeuver(-6, 0, 0, 0)">◀ YAW LEFT (A)</button>
+        <button class="btn" onclick="stepManeuver(6, 0, 0, 0)">YAW RIGHT (D) ▶</button>
+        <button class="btn" onclick="stepManeuver(0, 3.5, 0, 0)">▲ PITCH UP (W)</button>
+        <button class="btn" onclick="stepManeuver(0, -3.5, 0, 0)">▼ PITCH DN (S)</button>
+        <button class="btn" onclick="stepManeuver(0, 0, -10, 0)">↺ ROLL LEFT (Q)</button>
+        <button class="btn" onclick="stepManeuver(0, 0, 10, 0)">↻ ROLL RIGHT (E)</button>
+        <button class="btn" onclick="stepManeuver(0, 0, 0, 6)">⚡ ACCEL (+6 m/s)</button>
+        <button class="btn" onclick="stepManeuver(0, 0, 0, -6)">🛑 DECEL (-6 m/s)</button>
+      </div>
+
+      <div class="kv-grid">
+        <div class="kv-item"><span class="kv-label">Pos NED (LRCV RWY09):</span><span class="kv-val" id="val-pos">[-900, 0, -52] m</span></div>
+        <div class="kv-item"><span class="kv-label">Ground Vel NED:</span><span class="kv-val" id="val-vel-ned">[68.0, 0.0, 3.5] m/s</span></div>
+        <div class="kv-item"><span class="kv-label">Euler [Roll, Pitch, Yaw]:</span><span class="kv-val" id="val-euler">[0.0°, -3.0°, 0.0°]</span></div>
+        <div class="kv-item"><span class="kv-label">Angular ω [p, q, r]:</span><span class="kv-val" id="val-omega">[0.0, 0.0, 0.0] °/s</span></div>
+        <div class="kv-item"><span class="kv-label">AoA α / Sideslip β:</span><span class="kv-val" id="val-aero">2.4° / 0.0°</span></div>
+        <div class="kv-item"><span class="kv-label">Autopilot Crab ψ_crab:</span><span class="kv-val" id="val-crab" style="color:var(--hud-cyan);">0.0°</span></div>
+      </div>
+    </div>
+
+    <!-- PANEL 2: QUATERNION q_b^n, ROTATION MATRIX R_b^n(q) & INVERSE DEPTH -->
+    <div class="panel">
+      <div class="panel-title">
+        <span>📐 LIE GROUP SO(3) QUATERNION q_b^n &amp; ROTATION MATRIX R_b^n(q)</span>
+        <span id="val-qnorm" style="color:var(--hud-green); font-size:10px;">||q|| = 1.000000</span>
+      </div>
+      <div class="matrix-box">
+        <div style="display:flex; justify-content:space-between; color:var(--text-dim);">
+          <span>Unit Quaternion q = [qw, qx, qy, qz]:</span>
+          <strong id="val-quat" style="color:var(--hud-cyan);">[0.9997, 0.0000, -0.0262, 0.0000]</strong>
+        </div>
+        <div class="matrix-grid" id="val-rot-matrix">
+          <span>+0.9986</span><span>+0.0000</span><span>-0.0523</span>
+          <span>+0.0000</span><span>+1.0000</span><span>+0.0000</span>
+          <span>+0.0523</span><span>+0.0000</span><span>+0.9986</span>
+        </div>
+      </div>
+
+      <div class="kv-grid">
+        <div class="kv-item"><span class="kv-label">Horizon ρ_ground (No-NaN):</span><span class="kv-val" id="val-rho-hor" style="color:var(--hud-green);">0.000000 m⁻¹</span></div>
+        <div class="kv-item"><span class="kv-label">Dual-Anchored ρ̂_fog:</span><span class="kv-val" id="val-rho-fog" style="color:var(--fog-purple);">0.0204 m⁻¹</span></div>
+        <div class="kv-item"><span class="kv-label">Koschmieder β_ext:</span><span class="kv-val" id="val-beta">0.0399 m⁻¹</span></div>
+        <div class="kv-item"><span class="kv-label">True vs Est Fog Wind:</span><span class="kv-val" id="val-fog-wind">1.5 vs 1.5 m/s</span></div>
+        <div class="kv-item"><span class="kv-label">Photonic Certainty:</span><span class="kv-val" id="val-cert">0.91</span></div>
+        <div class="kv-item"><span class="kv-label">Open-Meteo LRCV:</span><span class="kv-val" id="val-meteo-env">8.5°C | QNH 1016</span></div>
+      </div>
+    </div>
+
+    <!-- PANEL 3: FOG GUST, RED-TEAM CYBER-WARFARE & LIVE CUDA FINE-TUNING -->
+    <div class="panel">
+      <div class="panel-title">
+        <span>🛡️ FOG SHEAR, RED-TEAM CYBER SANDBOX &amp; GPU CUDA</span>
+        <span id="val-gpu-dev" style="color:var(--warn-amber); font-size:10px;">CUDA / SIMD READY</span>
+      </div>
+
+      <div style="display:flex; gap:6px; align-items:center;">
+        <button class="btn btn-gust" style="flex:1;" onclick="injectSuddenFogGust()">
+          🌪️ INJECT SUDDEN FOG GUST / SHEAR (18 m/s)
+        </button>
+        <button class="btn btn-cuda" onclick="startLiveCudaTraining()">
+          🔥 LIVE CUDA FINE-TUNING (15s)
+        </button>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px; font-size:11px;">
+        <span style="color:var(--text-dim);">CAT IIIc Fog Visibility (MOR):</span>
+        <input type="range" id="fog-slider" min="25" max="1500" value="75" style="flex:1;" oninput="onFogSliderChange(this.value)" />
+        <strong id="fog-slider-val" style="color:var(--hud-cyan); min-width:52px;">75 m</strong>
+      </div>
+
+      <div class="controls-6dof-grid">
+        <button class="btn btn-danger" id="btn-cyber-jump" onclick="toggleCyber('jump')">🔴 GPS JUMP SPOOF</button>
+        <button class="btn btn-danger" id="btn-cyber-stealth" onclick="toggleCyber('stealth')">🕵️ STEALTH RAMP SPOOF</button>
+        <button class="btn btn-danger" id="btn-cyber-comms" onclick="toggleCyber('comms')">🌐 CUT INTERNET</button>
+        <button class="btn btn-danger" id="btn-cyber-poison" onclick="toggleCyber('poison')">☣️ POISON METEO</button>
+      </div>
+
+      <div class="kv-grid">
+        <div class="kv-item"><span class="kv-label">GNSS Watchdog:</span><span class="kv-val" id="val-watchdog" style="color:var(--hud-green);">NOMINAL</span></div>
+        <div class="kv-item"><span class="kv-label">χ² Mahalanobis / CUSUM:</span><span class="kv-val" id="val-chi2-cusum">1.18 / 0.12</span></div>
+        <div class="kv-item"><span class="kv-label">Meteo Sanity Gate:</span><span class="kv-val" id="val-meteo-status">LIVE OPEN-METEO LRCV</span></div>
+        <div class="kv-item"><span class="kv-label">AI Inference / σ_v:</span><span class="kv-val" id="val-ai-lat">0.21 ms | σ=0.16m/s</span></div>
+      </div>
+
+      <div id="cuda-progress-box" style="display:none; flex-direction:column; gap:3px; font-size:10px;">
+        <div style="display:flex; justify-content:space-between;">
+          <span id="cuda-epoch-txt" style="color:var(--hud-green);">ShadowTrainer CUDA Epoch 1/60</span>
+          <span id="cuda-loss-txt" style="color:var(--hud-cyan);">Loss: 0.1420</span>
+        </div>
+        <div class="progress-bar-outer">
+          <div class="progress-bar-inner" id="cuda-progress-bar"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    let ws = null;
+    let latestFrame = null;
+    let cyberState = {
+      gps_jump_spoof: false,
+      gps_stealth_ramp_spoof: false,
+      cut_internet_comms: false,
+      poison_meteo_cache: false
+    };
+
+    // Trail history for the 4 estimators on Radar Canvas
+    const trailHistory = {
+      truth: [],
+      gnss: [],
+      ins: [],
+      naive: [],
+      shield: []
+    };
+    const MAX_TRAIL_LEN = 160;
+
+    function connectWebSocket() {
+      const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const wsUrl = `${proto}//${window.location.host}/ws/telemetry`;
+      ws = new WebSocket(wsUrl);
+
+      ws.onopen = () => {
+        const el = document.getElementById("conn-status");
+        el.textContent = "WS: CONNECTED (60.0 Hz ZERO-LAG CONFLATION) | LRCV RWY 09";
+        el.style.color = "#00ff9d";
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const frame = JSON.parse(event.data);
+          latestFrame = frame;
+          updateTelemetryDom(frame);
+          recordEstimatorTrails(frame);
+        } catch (err) {
+          console.error("Telemetry parse error:", err);
+        }
+      };
+
+      ws.onclose = () => {
+        const el = document.getElementById("conn-status");
+        el.textContent = "WS: RECONNECTING IN 1s...";
+        el.style.color = "#ffb800";
+        setTimeout(connectWebSocket, 1000);
+      };
+    }
+
+    function sendSimCommand(cmdObj) {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify(cmdObj));
+      } else {
+        fetch("/api/command", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(cmdObj)
+        }).catch(() => {});
+      }
+    }
+
+    function triggerScenario(id) {
+      trailHistory.truth = [];
+      trailHistory.gnss = [];
+      trailHistory.ins = [];
+      trailHistory.naive = [];
+      trailHistory.shield = [];
+      sendSimCommand({
+        type: "TriggerDirectorScenario",
+        payload: { scenario_id: id }
+      });
+    }
+
+    function stepManeuver(dYaw, dPitch, dRoll, dThrottle) {
+      sendSimCommand({
+        type: "ManeuverStep",
+        payload: {
+          d_yaw_deg: dYaw,
+          d_pitch_deg: dPitch,
+          d_roll_deg: dRoll,
+          d_throttle_mps: dThrottle
+        }
+      });
+    }
+
+    function injectSuddenFogGust() {
+      sendSimCommand({
+        type: "InjectSuddenFogGust",
+        payload: {
+          wx_ned_mps: -4.5,
+          wy_ned_mps: 18.5,
+          wz_ned_mps: 0.8,
+          turbulence_intensity: 0.95
+        }
+      });
+    }
+
+    function onFogSliderChange(val) {
+      const mor = parseFloat(val);
+      document.getElementById("fog-slider-val").textContent = `${mor.toFixed(0)} m`;
+      sendSimCommand({
+        type: "SetFogDensity",
+        payload: {
+          visibility_mor_m: mor,
+          enable_swir_als: true
+        }
+      });
+    }
+
+    function toggleCyber(which) {
+      if (which === "jump") cyberState.gps_jump_spoof = !cyberState.gps_jump_spoof;
+      if (which === "stealth") cyberState.gps_stealth_ramp_spoof = !cyberState.gps_stealth_ramp_spoof;
+      if (which === "comms") cyberState.cut_internet_comms = !cyberState.cut_internet_comms;
+      if (which === "poison") cyberState.poison_meteo_cache = !cyberState.poison_meteo_cache;
+
+      sendSimCommand({
+        type: "ConfigureCyberAttack",
+        payload: cyberState
+      });
+    }
+
+    function startLiveCudaTraining() {
+      sendSimCommand({
+        type: "StartLiveCudaFineTuning",
+        payload: { epochs: 60 }
+      });
+    }
+
+    // Keyboard flight controls (WASD / QE / Shift / Ctrl)
+    window.addEventListener("keydown", (e) => {
+      if (e.target && e.target.tagName === "INPUT") return;
+      const key = e.key.toLowerCase();
+      if (key === "a" || key === "arrowleft") stepManeuver(-4.5, 0, 0, 0);
+      if (key === "d" || key === "arrowright") stepManeuver(4.5, 0, 0, 0);
+      if (key === "w" || key === "arrowup") stepManeuver(0, 2.5, 0, 0);
+      if (key === "s" || key === "arrowdown") stepManeuver(0, -2.5, 0, 0);
+      if (key === "q") stepManeuver(0, 0, -8.0, 0);
+      if (key === "e") stepManeuver(0, 0, 8.0, 0);
+      if (e.key === "Shift") stepManeuver(0, 0, 0, 5.0);
+      if (e.key === "Control") stepManeuver(0, 0, 0, -5.0);
+    });
+
+    function recordEstimatorTrails(f) {
+      const pushPt = (arr, pt) => {
+        arr.push([pt[0], pt[1]]);
+        if (arr.length > MAX_TRAIL_LEN) arr.shift();
+      };
+      pushPt(trailHistory.truth, f.aircraft_pose.pos_ned_m);
+      pushPt(trailHistory.gnss, f.estimators_arena.raw_gnss_pos_ned);
+      pushPt(trailHistory.ins, f.estimators_arena.pure_ins_pos_ned);
+      pushPt(trailHistory.naive, f.estimators_arena.naive_flow_pos_ned);
+      pushPt(trailHistory.shield, f.estimators_arena.aero_shield_pos_ned);
+    }
+
+    function updateTelemetryDom(f) {
+      document.getElementById("phase-banner").textContent = f.approach_phase;
+      const p = f.aircraft_pose;
+      const m = f.fog_and_meteo;
+      const e = f.estimators_arena;
+      const g = f.lrcv_guidance;
+      const c = f.cyber_and_gpu;
+
+      // Director scenario button highlight
+      for (let i = 1; i <= 3; i++) {
+        const btn = document.getElementById(`btn-act-${i}`);
+        if (btn) {
+          btn.classList.toggle("active", c.active_director_scenario === i);
+        }
+      }
+
+      // Cyber buttons highlight
+      if (c.cyber_flags) {
+        cyberState = c.cyber_flags;
+        document.getElementById("btn-cyber-jump").classList.toggle("active", !!c.cyber_flags.gps_jump_spoof);
+        document.getElementById("btn-cyber-stealth").classList.toggle("active", !!c.cyber_flags.gps_stealth_ramp_spoof);
+        document.getElementById("btn-cyber-comms").classList.toggle("active", !!c.cyber_flags.cut_internet_comms);
+        document.getElementById("btn-cyber-poison").classList.toggle("active", !!c.cyber_flags.poison_meteo_cache);
+      }
+
+      // Gust Lookahead Warning Banner
+      const gustOverlay = document.getElementById("gust-overlay");
+      if (m.gust_lookahead_warning) {
+        gustOverlay.style.display = "block";
+        gustOverlay.textContent = `⚠️ OPTICAL GUST LOOKAHEAD WARNING: ${m.true_fog_wind_ned_mps[1].toFixed(1)} m/s FOG SHEAR (${m.gust_lookahead_lead_sec.toFixed(2)}s LEAD BEFORE IMPACT!)`;
+      } else {
+        gustOverlay.style.display = "none";
+      }
+
+      // Arena Error Readouts
+      document.getElementById("err-gnss").textContent = `${e.raw_gnss_error_m.toFixed(2)} m`;
+      document.getElementById("err-ins").textContent = `${e.pure_ins_error_m.toFixed(2)} m`;
+      document.getElementById("err-naive").textContent = `${e.naive_flow_error_m.toFixed(2)} m`;
+      document.getElementById("err-shield").textContent = `${e.aero_shield_error_m.toFixed(2)} m`;
+
+      // 6-DoF Pose
+      document.getElementById("val-pos").textContent =
+        `[${p.pos_ned_m[0].toFixed(0)}, ${p.pos_ned_m[1].toFixed(1)}, ${p.pos_ned_m[2].toFixed(1)}] m`;
+      document.getElementById("val-vel-ned").textContent =
+        `[${p.vel_ground_ned_mps[0].toFixed(1)}, ${p.vel_ground_ned_mps[1].toFixed(1)}, ${p.vel_ground_ned_mps[2].toFixed(1)}] m/s`;
+      document.getElementById("val-euler").textContent =
+        `[${p.euler_deg[0].toFixed(1)}°, ${p.euler_deg[1].toFixed(1)}°, ${p.euler_deg[2].toFixed(1)}°]`;
+      document.getElementById("val-omega").textContent =
+        `[${p.omega_body_dps[0].toFixed(1)}, ${p.omega_body_dps[1].toFixed(1)}, ${p.omega_body_dps[2].toFixed(1)}] °/s`;
+      document.getElementById("val-aero").textContent =
+        `${p.alpha_aoa_deg.toFixed(1)}° / ${p.beta_sideslip_deg.toFixed(1)}°`;
+      document.getElementById("val-crab").textContent = `${p.crab_angle_cmd_deg.toFixed(2)}°`;
+
+      // Quaternion & Rotation Matrix R_b^n(q)
+      const q = p.quat_b_to_n;
+      const qNorm = Math.sqrt(q[0]*q[0] + q[1]*q[1] + q[2]*q[2] + q[3]*q[3]);
+      document.getElementById("val-qnorm").textContent = `||q|| = ${qNorm.toFixed(6)}`;
+      document.getElementById("val-quat").textContent =
+        `[${q[0].toFixed(4)}, ${q[1].toFixed(4)}, ${q[2].toFixed(4)}, ${q[3].toFixed(4)}]`;
+
+      if (p.rot_matrix_b_to_n) {
+        const rm = p.rot_matrix_b_to_n;
+        const cells = [];
+        for (let r = 0; r < 3; r++) {
+          for (let col = 0; col < 3; col++) {
+            const v = rm[r][col];
+            cells.push(`<span>${v >= 0 ? "+" : ""}${v.toFixed(4)}</span>`);
+          }
+        }
+        document.getElementById("val-rot-matrix").innerHTML = cells.join("");
+      }
+
+      // Fog & Inverse Depth
+      document.getElementById("val-rho-hor").textContent = `${m.rho_ground_horizon_safe.toFixed(6)} m⁻¹ (SAFE)`;
+      document.getElementById("val-rho-fog").textContent = `${m.rho_fog_scale_inv_m.toFixed(4)} m⁻¹`;
+      document.getElementById("val-beta").textContent = `${m.beta_ext_koschmieder.toFixed(4)} m⁻¹`;
+      document.getElementById("val-fog-wind").textContent =
+        `Wy: ${m.true_fog_wind_ned_mps[1].toFixed(1)} vs ${m.est_fog_wind_ned_mps[1].toFixed(1)} m/s`;
+      document.getElementById("val-cert").textContent =
+        `${(g.photonic_certainty_mean * 100).toFixed(1)}% (${g.als_bars_detected} ALS bars)`;
+      document.getElementById("val-meteo-env").textContent =
+        `${m.lrcv_temp_c.toFixed(1)}°C | QNH ${m.lrcv_qnh_hpa.toFixed(1)} | RH ${m.lrcv_rh_pct.toFixed(0)}%`;
+
+      document.getElementById("eta-summary").textContent =
+        `DIST RWY 09: ${g.distance_to_rwy09_m.toFixed(0)}m | ETA: ${g.eta_touchdown_sec.toFixed(1)}s | ALS: ${g.als_bars_detected}`;
+
+      // Cyber & GPU
+      const wdEl = document.getElementById("val-watchdog");
+      wdEl.textContent = c.gnss_watchdog_status;
+      wdEl.style.color = c.gnss_watchdog_status.startsWith("NOMINAL") ? "#00ff9d" : "#ff2a5f";
+
+      document.getElementById("val-chi2-cusum").textContent =
+        `χ²=${c.chi2_mahalanobis_stat.toFixed(2)} / CUSUM=${c.cusum_stealth_stat.toFixed(2)}`;
+
+      const msEl = document.getElementById("val-meteo-status");
+      msEl.textContent = m.meteo_source_status;
+      msEl.style.color = m.meteo_source_status.includes("POISON") ? "#ff2a5f" : "#00e5ff";
+
+      document.getElementById("val-gpu-dev").textContent = c.gpu_device_name;
+      document.getElementById("val-ai-lat").textContent =
+        `${c.inference_latency_ms.toFixed(2)} ms | σ=[${c.heteroscedastic_sigma_v[0].toFixed(2)}, ${c.heteroscedastic_sigma_v[1].toFixed(2)}]`;
+
+      const progBox = document.getElementById("cuda-progress-box");
+      if (c.live_training_progress) {
+        progBox.style.display = "flex";
+        const tp = c.live_training_progress;
+        document.getElementById("cuda-epoch-txt").textContent =
+          `🔥 ShadowTrainer Epoch ${tp.current_epoch}/${tp.total_epochs} (${tp.progress_pct.toFixed(0)}%)`;
+        document.getElementById("cuda-loss-txt").textContent =
+          `Loss: ${tp.current_loss.toFixed(4)} | PhysRes: ${tp.koschmieder_phys_residual.toFixed(4)}`;
+        document.getElementById("cuda-progress-bar").style.width = `${tp.progress_pct}%`;
+      }
+    }
+
+    // =========================================================================
+    // CANVAS 1: 60 FPS 3D COCKPIT HUD + SWIR ALS + OPTICAL FLOW VECTORS
+    // =========================================================================
+    function renderHudCanvas() {
+      const canvas = document.getElementById("hudCanvas");
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      if (canvas.width !== rect.width || canvas.height !== rect.height) {
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+      }
+      const ctx = canvas.getContext("2d");
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      if (!latestFrame) {
+        ctx.fillStyle = "#00ff9d";
+        ctx.font = "14px monospace";
+        ctx.fillText("WAITING FOR 60Hz TELEMETRY STREAM...", 24, 40);
+        return;
+      }
+
+      const p = latestFrame.aircraft_pose;
+      const m = latestFrame.fog_and_meteo;
+      const g = latestFrame.lrcv_guidance;
+      const rollRad = (p.euler_deg[0] * Math.PI) / 180.0;
+      const pitchDeg = p.euler_deg[1];
+      const yawDeg = p.euler_deg[2];
+
+      // 1. Sky & Ground with artificial horizon transform
+      ctx.save();
+      ctx.translate(w / 2, h / 2);
+      ctx.rotate(-rollRad);
+
+      const pitchOffsetPx = pitchDeg * 6.5;
+      // Sky
+      const skyGrad = ctx.createLinearGradient(0, -h, 0, pitchOffsetPx);
+      skyGrad.addColorStop(0, "#040b1a");
+      skyGrad.addColorStop(1, "#0f2442");
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(-w, -h, w * 2, h + pitchOffsetPx);
+
+      // Ground (SWIR false-color terrain)
+      const gndGrad = ctx.createLinearGradient(0, pitchOffsetPx, 0, h);
+      gndGrad.addColorStop(0, "#091e1a");
+      gndGrad.addColorStop(1, "#030b09");
+      ctx.fillStyle = gndGrad;
+      ctx.fillRect(-w, pitchOffsetPx, w * 2, h * 2);
+
+      // Horizon Line
+      ctx.strokeStyle = "#00ff9d";
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.moveTo(-w, pitchOffsetPx);
+      ctx.lineTo(w, pitchOffsetPx);
+      ctx.stroke();
+
+      // 2. Perspective Runway RWY 09 Craiova (LRCV) + ALS SWIR Bars
+      const lateralShiftPx = (-p.pos_ned_m[1] * 2.2) - (yawDeg * 5.0);
+      const rwyTopY = pitchOffsetPx + 6;
+      const rwyBotY = h * 0.85;
+      const topHalfW = 22;
+      const botHalfW = 195;
+
+      // Runway pavement polygon
+      ctx.fillStyle = "rgba(16, 45, 58, 0.72)";
+      ctx.strokeStyle = "#00e5ff";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(lateralShiftPx - topHalfW, rwyTopY);
+      ctx.lineTo(lateralShiftPx + topHalfW, rwyTopY);
+      ctx.lineTo(lateralShiftPx + botHalfW, rwyBotY);
+      ctx.lineTo(lateralShiftPx - botHalfW, rwyBotY);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Centerline dashed
+      ctx.strokeStyle = "#00ff9d";
+      ctx.setLineDash([12, 10]);
+      ctx.beginPath();
+      ctx.moveTo(lateralShiftPx, rwyTopY);
+      ctx.lineTo(lateralShiftPx, rwyBotY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // ALS SWIR Approach Light Bars (penetrating CAT IIIc fog!)
+      const numBars = Math.min(g.als_bars_detected || 8, 14);
+      for (let i = 1; i <= numBars; i++) {
+        const frac = i / (numBars + 1);
+        const by = rwyTopY + frac * (rwyBotY - rwyTopY) * 0.82;
+        const barHalfW = topHalfW + frac * (botHalfW - topHalfW) * 0.45;
+        ctx.strokeStyle = i % 3 === 0 ? "#ff2a5f" : "#00ffcc";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(lateralShiftPx - barHalfW, by);
+        ctx.lineTo(lateralShiftPx + barHalfW, by);
+        ctx.stroke();
+      }
+
+      // 3. Pitch Ladder (-15 to +15 deg)
+      ctx.strokeStyle = "rgba(0, 255, 157, 0.75)";
+      ctx.fillStyle = "#00ff9d";
+      ctx.font = "10px monospace";
+      ctx.lineWidth = 1.4;
+      for (let deg = -15; deg <= 15; deg += 5) {
+        if (deg === 0) continue;
+        const y = pitchOffsetPx - deg * 6.5;
+        const lw = 38;
+        ctx.beginPath();
+        ctx.moveTo(-lw, y);
+        ctx.lineTo(-12, y);
+        ctx.moveTo(12, y);
+        ctx.lineTo(lw, y);
+        ctx.stroke();
+        ctx.fillText(`${deg > 0 ? "+" : ""}${deg}`, lw + 5, y + 3);
+      }
+
+      // Atmospheric Fog Veil Overlay based on MOR visibility
+      const fogAlpha = Math.min(Math.max((180 - m.visibility_mor_m) / 220, 0.06), 0.52);
+      ctx.fillStyle = `rgba(145, 165, 195, ${fogAlpha})`;
+      ctx.fillRect(-w, -h, w * 2, h * 2);
+
+      ctx.restore();
+
+      // 4. Optical Flow Vectors (Green = Ground derotated, Purple = Fog Wind Shear)
+      if (latestFrame.optical_flow_vectors) {
+        for (const vec of latestFrame.optical_flow_vectors) {
+          const sx = vec.x_norm * w;
+          const sy = vec.y_norm * h;
+          const ex = sx + vec.dx_px;
+          const ey = sy + vec.dy_px;
+          const isFog = vec.layer === "fog";
+          ctx.strokeStyle = isFog ? "#d946ef" : "#00ff9d";
+          ctx.fillStyle = isFog ? "#d946ef" : "#00ff9d";
+          ctx.lineWidth = isFog ? 2.2 : 1.8;
+
+          ctx.beginPath();
+          ctx.moveTo(sx, sy);
+          ctx.lineTo(ex, ey);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(ex, ey, 2.6, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // 5. Fixed Aircraft Boresight & Crab Angle Marker
+      const cx = w / 2;
+      const cy = h / 2;
+      ctx.strokeStyle = "#00e5ff";
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(cx - 28, cy);
+      ctx.lineTo(cx - 8, cy);
+      ctx.lineTo(cx - 8, cy + 6);
+      ctx.moveTo(cx + 8, cy);
+      ctx.lineTo(cx + 28, cy);
+      ctx.lineTo(cx + 8, cy + 6);
+      ctx.stroke();
+
+      // Crab Angle Diamond Marker
+      const crabPx = p.crab_angle_cmd_deg * 4.5;
+      ctx.strokeStyle = "#ffb800";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(cx + crabPx, cy - 10);
+      ctx.lineTo(cx + crabPx + 8, cy);
+      ctx.lineTo(cx + crabPx, cy + 10);
+      ctx.lineTo(cx + crabPx - 8, cy);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.fillStyle = "#ffb800";
+      ctx.font = "10px monospace";
+      ctx.fillText(`ψ_crab ${p.crab_angle_cmd_deg.toFixed(1)}°`, cx + crabPx - 28, cy + 22);
+
+      // Left Speed Tape & Right Altitude AGL Tape
+      ctx.fillStyle = "rgba(5, 14, 28, 0.78)";
+      ctx.strokeStyle = "#164e63";
+      ctx.lineWidth = 1;
+      ctx.fillRect(12, 40, 74, h - 80);
+      ctx.strokeRect(12, 40, 74, h - 80);
+      ctx.fillStyle = "#00ff9d";
+      ctx.font = "bold 12px monospace";
+      ctx.fillText(`IAS/GS`, 18, 58);
+      ctx.fillText(`${p.vel_body_mps[0].toFixed(1)}m/s`, 18, 76);
+      ctx.fillStyle = "#d946ef";
+      ctx.fillText(`FOG Wy`, 18, 106);
+      ctx.fillText(`${m.true_fog_wind_ned_mps[1].toFixed(1)}m/s`, 18, 124);
+
+      ctx.fillStyle = "rgba(5, 14, 28, 0.78)";
+      ctx.fillRect(w - 92, 40, 80, h - 80);
+      ctx.strokeRect(w - 92, 40, 80, h - 80);
+      ctx.fillStyle = "#00e5ff";
+      ctx.fillText(`ALT AGL`, w - 84, 58);
+      ctx.fillText(`${(-p.pos_ned_m[2]).toFixed(1)} m`, w - 84, 76);
+      ctx.fillStyle = "#00ff9d";
+      ctx.fillText(`MOR VIS`, w - 84, 106);
+      ctx.fillText(`${m.visibility_mor_m.toFixed(0)} m`, w - 84, 124);
+    }
+
+    // =========================================================================
+    // CANVAS 2: TACTICAL RADAR LRCV CRAIOVA (4-ESTIMATOR ARENA)
+    // =========================================================================
+    function renderRadarCanvas() {
+      const canvas = document.getElementById("radarCanvas");
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      if (canvas.width !== rect.width || canvas.height !== rect.height) {
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+      }
+      const ctx = canvas.getContext("2d");
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      // Coordinate mapping: X_ned in [-950m, +150m] -> canvas X, Y_ned in [-140m, +140m] -> canvas Y
+      const mapX = (xNed) => ((xNed + 950) / 1150) * (w - 60) + 30;
+      const mapY = (yNed) => h / 2 + (yNed / 150) * (h * 0.42);
+
+      // Radar Grid
+      ctx.strokeStyle = "rgba(0, 229, 255, 0.12)";
+      ctx.lineWidth = 1;
+      for (let x = -900; x <= 100; x += 200) {
+        const cx = mapX(x);
+        ctx.beginPath();
+        ctx.moveTo(cx, 0);
+        ctx.lineTo(cx, h);
+        ctx.stroke();
+        ctx.fillStyle = "rgba(127, 162, 199, 0.5)";
+        ctx.font = "9px monospace";
+        ctx.fillText(`${x}m`, cx + 3, h - 8);
+      }
+      for (let y = -100; y <= 100; y += 50) {
+        const cy = mapY(y);
+        ctx.beginPath();
+        ctx.moveTo(0, cy);
+        ctx.lineTo(w, cy);
+        ctx.stroke();
+      }
+
+      // ILS Approach Centerline & RWY 09 Threshold Box
+      ctx.strokeStyle = "rgba(0, 255, 157, 0.35)";
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      ctx.moveTo(mapX(-950), mapY(0));
+      ctx.lineTo(mapX(0), mapY(0));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // RWY 09 Strip (from X = 0m to +150m)
+      const rwyX0 = mapX(0);
+      const rwyX1 = mapX(140);
+      ctx.fillStyle = "rgba(0, 229, 255, 0.22)";
+      ctx.strokeStyle = "#00e5ff";
+      ctx.lineWidth = 2;
+      ctx.fillRect(rwyX0, mapY(-18), rwyX1 - rwyX0, mapY(18) - mapY(-18));
+      ctx.strokeRect(rwyX0, mapY(-18), rwyX1 - rwyX0, mapY(18) - mapY(-18));
+      ctx.fillStyle = "#00e5ff";
+      ctx.font = "bold 11px monospace";
+      ctx.fillText("LRCV RWY 09", rwyX0 - 25, mapY(-24));
+
+      if (!latestFrame) return;
+
+      const drawTrail = (pts, color, width, dashed = false) => {
+        if (pts.length < 2) return;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        if (dashed) ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        for (let i = 0; i < pts.length; i++) {
+          const px = mapX(pts[i][0]);
+          const py = mapY(pts[i][1]);
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+      };
+
+      // Draw all 4 estimator trails + Ground Truth
+      drawTrail(trailHistory.truth, "rgba(255, 255, 255, 0.45)", 1.5, true);
+      drawTrail(trailHistory.ins, "#ff9100", 2.0);
+      drawTrail(trailHistory.gnss, "#ff2a5f", 2.0);
+      drawTrail(trailHistory.naive, "#ffd600", 2.2);
+      drawTrail(trailHistory.shield, "#00ff9d", 3.0);
+
+      // Draw current markers
+      const drawMarker = (pos, color, radius) => {
+        const px = mapX(pos[0]);
+        const py = mapY(pos[1]);
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(px, py, radius, 0, Math.PI * 2);
+        ctx.fill();
+      };
+
+      const e = latestFrame.estimators_arena;
+      drawMarker(e.pure_ins_pos_ned, "#ff9100", 4.5);
+      drawMarker(e.raw_gnss_pos_ned, "#ff2a5f", 4.5);
+      drawMarker(e.naive_flow_pos_ned, "#ffd600", 5.0);
+      drawMarker(e.aero_shield_pos_ned, "#00ff9d", 6.0);
+    }
+
+    function animationLoop() {
+      renderHudCanvas();
+      renderRadarCanvas();
+      requestAnimationFrame(animationLoop);
+    }
+
+    connectWebSocket();
+    requestAnimationFrame(animationLoop);
+  </script>
+</body>
+</html>

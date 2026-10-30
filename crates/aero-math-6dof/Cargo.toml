@@ -1,0 +1,15 @@
+[package]
+name = "aero-math-6dof"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+nalgebra = { workspace = true }
+simba = { workspace = true }
+statrs = { workspace = true }
+rand = { workspace = true }
+rand_chacha = { workspace = true }
+serde = { workspace = true }
+thiserror = { workspace = true }

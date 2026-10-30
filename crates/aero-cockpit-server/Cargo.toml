@@ -1,0 +1,43 @@
+[package]
+name = "aero-cockpit-server"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "AERO-SHIELD LRCV V2.0 — 60Hz Real-Time Avionics Loop, Axum WebSocket Conflation Server, 4-Estimator Arena, CUDA Shadow Trainer & 3D Cyber-Cockpit HUD"
+
+[lib]
+name = "aero_cockpit_server"
+path = "src/lib.rs"
+
+[[bin]]
+name = "aero-cockpit-server"
+path = "src/main.rs"
+
+[features]
+default = []
+cuda = ["candle-core/cuda", "candle-nn/cuda"]
+
+[dependencies]
+nalgebra = { workspace = true }
+simba = { workspace = true }
+statrs = { workspace = true }
+rand = { workspace = true }
+rand_chacha = { workspace = true }
+rayon = { workspace = true }
+image = { workspace = true }
+bytemuck = { workspace = true }
+candle-core = { workspace = true }
+candle-nn = { workspace = true }
+safetensors = { workspace = true }
+arc-swap = { workspace = true }
+tokio = { workspace = true }
+reqwest = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+axum = { workspace = true }
+tower-http = { workspace = true }
+crossbeam-channel = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+thiserror = { workspace = true }

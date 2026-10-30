@@ -1,0 +1,17 @@
+[package]
+name = "aero-vision-fog"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "100% Pure Rust Vision Pipeline for AERO-SHIELD LRCV V2.0: Dual-Band VIS+SWIR Fusion, SNR-Gated CLAHE, Koschmieder + Active Inertial Scale Probing, 3-Frame Structure Tensor with Anisotropic Fisher Information, ALS Mie Halo Suppression, and 3D Derotated Optical Flow with Gust Lookahead"
+
+[dependencies]
+nalgebra = { workspace = true }
+rayon = { workspace = true }
+image = { workspace = true }
+bytemuck = { workspace = true }
+serde = { workspace = true }
+rand = { workspace = true }
+rand_chacha = { workspace = true }
+thiserror = { workspace = true }

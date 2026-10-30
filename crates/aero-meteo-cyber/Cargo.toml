@@ -1,0 +1,20 @@
+[package]
+name = "aero-meteo-cyber"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Lock-Free Open-Meteo & METAR LRCV Ingestor (ArcSwap), Optical-Aerodynamic Meteo Sanity Gate, and Dual-Layer Federated GNSS Anti-Spoofing Watchdog"
+
+[dependencies]
+nalgebra.workspace = true
+statrs.workspace = true
+arc-swap.workspace = true
+tokio.workspace = true
+reqwest.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+rand.workspace = true
+rand_chacha.workspace = true
