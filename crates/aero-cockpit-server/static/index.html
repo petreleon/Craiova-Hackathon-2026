@@ -553,9 +553,255 @@
       transform: translateY(-1px);
       box-shadow: 0 0 18px rgba(0, 255, 157, 0.65);
     }
+
+    /* =========================================================================
+       ȘCOALA INTERACTIVĂ ÎN 6 LECȚII VIZUALE (PENTRU COPII DE 6 ANI & ÎNCEPĂTORI)
+       + SISTEMUL GLOBAL DE SUBLINIERE VIZUALĂ (SPOTLIGHT & SĂGEATĂ PLUTITOARE)
+       ========================================================================= */
+    .school-6yo-section {
+      margin: 10px 14px 4px 14px;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, rgba(14, 30, 58, 0.98) 0%, rgba(7, 17, 36, 0.98) 100%);
+      border: 3px solid #facc15;
+      border-radius: 12px;
+      box-shadow: 0 0 32px rgba(250, 204, 21, 0.28);
+      position: relative;
+    }
+    .school-header-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 2px dashed rgba(250, 204, 21, 0.45);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .school-title-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(90deg, #facc15 0%, #fb923c 100%);
+      color: #04101f;
+      font-weight: 900;
+      font-size: 13px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      box-shadow: 0 0 14px rgba(250, 204, 21, 0.5);
+    }
+    .school-stars-progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #061226;
+      border: 1px solid #facc15;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 900;
+      color: #fde047;
+    }
+    .lesson-tabs-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    @media (max-width: 1150px) {
+      .lesson-tabs-row {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (max-width: 680px) {
+      .lesson-tabs-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .lesson-tab-btn {
+      background: #091933;
+      border: 2px solid #1e4273;
+      color: #dbeafe;
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.16s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .lesson-tab-btn:hover {
+      border-color: #fde047;
+      transform: translateY(-2px);
+      background: #10264a;
+    }
+    .lesson-tab-btn.active {
+      background: linear-gradient(135deg, #facc15 0%, #f59e0b 100%);
+      color: #030b17;
+      border-color: #ffffff;
+      box-shadow: 0 0 20px rgba(250, 204, 21, 0.7);
+      transform: translateY(-2px);
+    }
+    .lesson-tab-num {
+      font-size: 10.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      opacity: 0.9;
+    }
+    .lesson-tab-title {
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+    .lesson-stage-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1.25fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+    @media (max-width: 1050px) {
+      .lesson-stage-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .lesson-story-box {
+      background: #07152b;
+      border: 2px solid #25548f;
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .lesson-story-headline {
+      font-size: 17px;
+      font-weight: 900;
+      color: #fde047;
+      line-height: 1.3;
+    }
+    .lesson-story-text {
+      font-size: 14px;
+      line-height: 1.55;
+      color: #f1f5f9;
+    }
+    .lesson-story-analogy {
+      background: rgba(0, 255, 157, 0.1);
+      border-left: 4px solid #00ff9d;
+      padding: 9px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #d1fae5;
+      line-height: 1.45;
+    }
+    .lesson-interactive-box {
+      background: #040d1c;
+      border: 2px solid #00e5ff;
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+      position: relative;
+    }
+    #lessonInteractiveCanvas {
+      width: 100%;
+      height: 225px;
+      display: block;
+      background: #030914;
+      border-radius: 8px;
+      border: 1px solid #1e4273;
+      cursor: pointer;
+    }
+    .lesson-action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .lesson-toy-btn {
+      background: linear-gradient(90deg, #ec4899 0%, #8b5cf6 100%);
+      color: #ffffff;
+      border: 2px solid #fbcfe8;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+      transition: transform 0.14s ease;
+    }
+    .lesson-toy-btn:hover {
+      transform: scale(1.03);
+    }
+    .lesson-nav-btn {
+      background: #102a4c;
+      color: #e0f2fe;
+      border: 1px solid #38bdf8;
+      padding: 7px 12px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .lesson-nav-btn.next {
+      background: linear-gradient(90deg, #00ff9d 0%, #00e5ff 100%);
+      color: #03111c;
+      border-color: #ffffff;
+      font-weight: 900;
+    }
+
+    /* GLOBAL VISUAL SPOTLIGHT & FLOATING POINTER */
+    @keyframes spotlightPulse {
+      0% {
+        box-shadow: 0 0 0 4px #facc15, 0 0 25px rgba(250, 204, 21, 0.9), inset 0 0 20px rgba(250, 204, 21, 0.25);
+      }
+      50% {
+        box-shadow: 0 0 0 7px #00ff9d, 0 0 48px rgba(0, 255, 157, 0.95), inset 0 0 28px rgba(0, 255, 157, 0.35);
+      }
+      100% {
+        box-shadow: 0 0 0 4px #facc15, 0 0 25px rgba(250, 204, 21, 0.9), inset 0 0 20px rgba(250, 204, 21, 0.25);
+      }
+    }
+    .visual-spotlight-active {
+      animation: spotlightPulse 1.2s infinite ease-in-out !important;
+      border-color: #facc15 !important;
+      position: relative;
+      z-index: 40 !important;
+    }
+    #floating-visual-pointer {
+      display: none;
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      max-width: 430px;
+      background: linear-gradient(135deg, #facc15 0%, #fb923c 100%);
+      color: #040d1a;
+      border: 3px solid #ffffff;
+      border-radius: 14px;
+      padding: 12px 16px;
+      box-shadow: 0 12px 38px rgba(0, 0, 0, 0.75), 0 0 30px rgba(250, 204, 21, 0.85);
+      z-index: 9999;
+      font-size: 13px;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
+  <!-- FLOATING VISUAL CALLOUT POINTER (PENTRU SUBLINIERE VIZUALĂ INSTANTANEE) -->
+  <div id="floating-visual-pointer">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
+      <strong id="fvp-title" style="font-size:14px; font-weight:900; color:#020617;">👇 UITE AICI CE SE SCHIMBĂ ACUM!</strong>
+      <button onclick="clearVisualSpotlight()" style="background:#020617; color:#fde047; border:none; border-radius:6px; padding:2px 8px; font-weight:900; cursor:pointer; font-size:11px;">✖ Am văzut</button>
+    </div>
+    <div id="fvp-desc" style="font-weight:700; color:#0f172a;">
+      Uită-te la chenarul care luminează galben-verde pe ecran!
+    </div>
+  </div>
+
   <!-- TOP DIRECTOR MODE BAR -->
   <header class="topbar">
     <div class="brand">
@@ -567,6 +813,10 @@
     </div>
 
     <div class="director-buttons">
+      <button class="btn" style="background:linear-gradient(90deg,#facc15,#f97316);border-color:#fff;color:#030b17;font-weight:900;" onclick="startVisualGuidedTour()">
+        <span data-i18n="btn_tour_title">🔦 TUR VIZUAL GHIDAT (ARATĂ-MI TOT ECRANUL!)</span>
+        <span class="btn-sub" style="color:#1e293b;font-weight:800;" data-i18n="btn_tour_sub">Subliniază cu chenar luminos fiecare zonă pe rând, pas cu pas!</span>
+      </button>
       <button class="btn btn-act" id="btn-act-1" onclick="triggerScenario(1)">
         <span data-i18n="act1_title">🎬 SCENARIUL 1: ZBOR LIN + RAFALĂ BRUSCĂ ÎN CEAȚĂ</span>
         <span class="btn-sub" data-i18n="act1_sub">Vezi cum camera simte vântul din ceață înainte să lovească avionul</span>
@@ -587,9 +837,9 @@
         <span data-i18n="btn_fg_top_title">✈️ 10 TESTE SINTETICE FLIGHTGEAR (10/10)</span>
         <span class="btn-sub" style="color:#ecfdf5;" data-i18n="btn_fg_top_sub">Vezi cele 10 teste FlightGear rulate pe VM-ul GPU</span>
       </button>
-      <button class="btn" style="background:linear-gradient(90deg,#0284c7,#0ea5e9);border-color:#7dd3fc;color:#fff;" onclick="toggleSimpleGuide()">
-        <span data-i18n="btn_guide_title">💡 ASCUNDE / ARATĂ GHIDUL DE ÎNCEPUT</span>
-        <span class="btn-sub" style="color:#e0f2fe;" data-i18n="btn_guide_sub">Explicație simplă în 3 pași pentru orice începător</span>
+      <button class="btn" style="background:linear-gradient(90deg,#0284c7,#0ea5e9);border-color:#7dd3fc;color:#fff;" onclick="toggleInteractiveSchool()">
+        <span data-i18n="btn_guide_title">🎓 ASCUNDE / ARATĂ ȘCOALA ÎN 6 LECȚII</span>
+        <span class="btn-sub" style="color:#e0f2fe;" data-i18n="btn_guide_sub">Cele 6 lecții interactive explicate ca pentru un copil de 6 ani</span>
       </button>
       <button class="btn" onclick="sendSimCommand({ type: 'ResetApproach' })">
         <span data-i18n="btn_reset_title">🔄 REIA ATERIZAREA DE LA ÎNCEPUT</span>
@@ -607,8 +857,94 @@
     </div>
   </header>
 
-  <!-- A. BANNER / GHID VIZUAL DE ÎNCEPUT ÎN 3 PAȘI SIMPLI (VIZIBIL DIN PRIMA SECUNDĂ) -->
-  <section id="simple-guide-panel" class="beginner-steps-banner">
+  <!-- =========================================================================
+       A0. ȘCOALA INTERACTIVĂ ÎN 6 LECȚII VIZUALE (PENTRU UN COPIL DE 6 ANI / 0 EXPERIENȚĂ)
+       ========================================================================= -->
+  <section id="interactive-school-6yo" class="school-6yo-section">
+    <div class="school-header-bar">
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <span class="school-title-badge" data-i18n="school_badge">🎓 ȘCOALA INTERACTIVĂ ÎN 6 LECȚII VIZUALE</span>
+        <strong style="color:#ffffff; font-size:14.5px;" data-i18n="school_main_title">
+          Înțelege de la ZERO cum aterizează avionul singur prin ceață (explicat pas cu pas, chiar și pentru un copil de 6 ani!)
+        </strong>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="school-stars-progress" id="school-progress-pill">
+          ⭐ Lecția 1 din 6 | ⭐ ☆ ☆ ☆ ☆ ☆
+        </div>
+        <button class="lesson-nav-btn" onclick="toggleSimpleGuide()" data-i18n="btn_toggle_3steps">
+          📋 Rezumat Scurt (3 Pași)
+        </button>
+      </div>
+    </div>
+
+    <!-- CELE 6 TAB-URI DE LECȚII INTERACTIVE -->
+    <div class="lesson-tabs-row">
+      <button class="lesson-tab-btn active" id="lesson-tab-1" onclick="selectSchoolLesson(1)">
+        <span class="lesson-tab-num" data-i18n="lt1_num">🧸 LECȚIA 1</span>
+        <span class="lesson-tab-title" data-i18n="lt1_title">Ceața și Hackerul Răutăcios</span>
+      </button>
+      <button class="lesson-tab-btn" id="lesson-tab-2" onclick="selectSchoolLesson(2)">
+        <span class="lesson-tab-num" data-i18n="lt2_num">🔦 LECȚIA 2</span>
+        <span class="lesson-tab-title" data-i18n="lt2_title">Ochiul Magic cu Lupă prin Ceață</span>
+      </button>
+      <button class="lesson-tab-btn" id="lesson-tab-3" onclick="selectSchoolLesson(3)">
+        <span class="lesson-tab-num" data-i18n="lt3_num">💡 LECȚIA 3</span>
+        <span class="lesson-tab-title" data-i18n="lt3_title">Cum măsurăm viteza cu becurile?</span>
+      </button>
+      <button class="lesson-tab-btn" id="lesson-tab-4" onclick="selectSchoolLesson(4)">
+        <span class="lesson-tab-num" data-i18n="lt4_num">☁️💨 LECȚIA 4</span>
+        <span class="lesson-tab-title" data-i18n="lt4_title">Norul mișcat de Vânt vs. Pământul</span>
+      </button>
+      <button class="lesson-tab-btn" id="lesson-tab-5" onclick="selectSchoolLesson(5)">
+        <span class="lesson-tab-num" data-i18n="lt5_num">⚖️ LECȚIA 5</span>
+        <span class="lesson-tab-title" data-i18n="lt5_title">Paharul de Minciuni &amp; Cântarul</span>
+      </button>
+      <button class="lesson-tab-btn" id="lesson-tab-6" onclick="selectSchoolLesson(6)">
+        <span class="lesson-tab-num" data-i18n="lt6_num">🎯 LECȚIA 6</span>
+        <span class="lesson-tab-title" data-i18n="lt6_title">Tur Ghidat pe Ecranul Mare!</span>
+      </button>
+    </div>
+
+    <!-- SCENA LECȚIEI CURENTE: POVESTE SIMPLĂ (STÂNGA) + MINI-JOC ANIMAT (DREAPTA) -->
+    <div class="lesson-stage-grid">
+      <div class="lesson-story-box">
+        <div>
+          <div class="lesson-story-headline" id="lesson-headline">
+            🧸 Lecția 1: De ce se poate rătăci un avion când e ceață groasă?
+          </div>
+          <p class="lesson-story-text" id="lesson-body-text" style="margin-top:8px;">
+            Imaginează-ți că mergi cu bicicleta prin cameră cu o pătură albă pe cap (asta este <strong>ceața densă</strong>). Nu vezi drumul! Un prieten îți strigă prin telefon: „Mergi la stânga!” (acesta este <strong>GPS-ul</strong>). Dar dacă un <strong>hacker răutăcios 👾</strong> intră pe fir și îți strigă o minciună, ieși direct în iarbă!
+          </p>
+        </div>
+
+        <div class="lesson-story-analogy" id="lesson-analogy-box">
+          💡 <strong>Cum rezolvă avionul nostru (🟢 AERO-SHIELD)?</strong> El nu ascultă orbește de telefonul GPS! El își folosește propriii ochi (camera video) ca să vadă luminile pistei din Craiova și să aterizeze pe mijlocul drumului!
+        </div>
+
+        <div class="lesson-action-bar">
+          <button class="lesson-nav-btn" onclick="prevSchoolLesson()" id="btn-prev-lesson">⬅️ Lecția Anterioară</button>
+          <button class="lesson-toy-btn" onclick="triggerLessonInteractiveToy()" id="btn-lesson-toy">
+            👾 Apasă aici ca Hackerul să păcălească GPS-ul!
+          </button>
+          <button class="lesson-nav-btn next" onclick="nextSchoolLesson()" id="btn-next-lesson">➡️ Mergi la Lecția Următoare</button>
+        </div>
+      </div>
+
+      <div class="lesson-interactive-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:#7dd3fc;">
+          <strong id="lesson-canvas-caption">🎮 DESEN ANIMAT INTERACTIV (Apasă sau mișcă mouse-ul pe desenul de mai jos!):</strong>
+          <button onclick="spotlightZoneForCurrentLesson()" style="background:#facc15; color:#020617; border:none; border-radius:5px; padding:4px 10px; font-weight:900; cursor:pointer; font-size:11px;">
+            🔦 Arată-mi unde e asta pe ecranul mare de jos!
+          </button>
+        </div>
+        <canvas id="lessonInteractiveCanvas" width="680" height="225"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- A. BANNER / GHID VIZUAL DE ÎNCEPUT ÎN 3 PAȘI SIMPLI (ASCUNS IMPLICIT CÂND ȘCOALA E DESCHISĂ, COMUTABIL) -->
+  <section id="simple-guide-panel" class="beginner-steps-banner" style="display:none;">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1e4273; padding-bottom:6px;">
       <strong style="color:#00ff9d; font-size:13.5px;" data-i18n="guide_header_title">👋 BUN VENIT! ÎNȚELEGE APLICAȚIA ÎN 3 PAȘI SIMPLI (FĂRĂ TERMENI COMPLICAȚI):</strong>
       <span style="color:#7dd3fc; font-size:11px;" data-i18n="guide_header_sub">Aeroportul Craiova (LRCV) — Pista 09 | Grafic 60 FPS + Filmare Reală Suprapusă 50%</span>
@@ -654,7 +990,7 @@
   <!-- MAIN COCKPIT VIEWPORTS (ZONA 2: PARBRIZUL & ZONA 3: CURSA CELOR 4 AVIOANE) -->
   <main class="cockpit-grid" id="main-cockpit-anchor">
     <!-- ZONA 2: PARBRIZUL AVIONULUI — GRAFIC 3D + FILMARE VIDEO REALĂ SUPRAPUSĂ 50% -->
-    <section class="viewport-card">
+    <section class="viewport-card" id="zone-parbriz-card">
       <div class="card-header">
         <span data-i18n="zone2_header">👁️ ZONA 2: PARBRIZUL AVIONULUI — GRAFIC 3D + FILMARE REALĂ SUPRAPUSĂ 50%</span>
         <span id="hud-guidance-summary">TRANSPARENȚĂ VIDEO: 50% PESTE GRAFIC</span>
@@ -736,7 +1072,7 @@
     </section>
 
     <!-- ZONA 3: CURSA CELOR 4 AVIOANE — GRAFIC RADAR + FILMARE REALĂ SUPRAPUSĂ 50% -->
-    <section class="viewport-card">
+    <section class="viewport-card" id="zone-radar-card">
       <div class="card-header">
         <span data-i18n="zone3_header">🏁 ZONA 3: CURSA CELOR 4 AVIOANE (GRAFIC + VIDEO 50%) — DE CE NOI ATERIZĂM PE PISTĂ?</span>
         <span id="eta-summary">TIMP PÂNĂ LA ATERIZARE: 13.2 s | LUMINI VĂZUTE: 12</span>
@@ -901,7 +1237,7 @@
   <!-- LOWER DECK: ZONA 4 (TELECOMANDA DE MANEVRE + ATACURI) & ZONA 1 (SCUTUL DE SIGURANȚĂ & SENZORII) -->
   <section class="lower-deck">
     <!-- ZONA 4 (PARTEA A): TELECOMANDA DE PILOTARE MANUALĂ A AVIONULUI -->
-    <div class="panel">
+    <div class="panel" id="zone-maneuvers-card">
       <div class="panel-title">
         <span data-i18n="zone4a_header">🕹️ ZONA 4A: TELECOMANDA DE ZBOR — PILOTEAZĂ AVIONUL CU BUTOANELE SAU TASTATURA</span>
         <span style="color:var(--hud-green); font-size:10px;" data-i18n="zone4a_badge">RĂSPUNS INSTANTANEU (60 Hz)</span>
@@ -952,7 +1288,7 @@
     </div>
 
     <!-- ZONA 1: SCUTUL DE SIGURANȚĂ, SENZORII & COMPENSAREA ROTIRII CAMEREI -->
-    <div class="panel">
+    <div class="panel" id="zone-safety-shield-card">
       <div class="panel-title">
         <span data-i18n="zone1_header">🛡️ ZONA 1: SCUTUL DE SIGURANȚĂ — SENZORI, VÂNT ÎN CEAȚĂ &amp; ORIENTARE 3D</span>
         <span id="val-qnorm" style="color:var(--hud-green); font-size:10px;">||q|| = 1.000000</span>
@@ -997,7 +1333,7 @@
     </div>
 
     <!-- ZONA 4 (PARTEA B): TELECOMANDA DE ATACURI HACKER, RAFALE DE CEAȚĂ & PLACĂ VIDEO AI -->
-    <div class="panel">
+    <div class="panel" id="zone-cyber-attacks-card">
       <div class="panel-title">
         <span data-i18n="zone4b_header">⚡ ZONA 4B: TELECOMANDA DE TEST — DECLANȘEAZĂ FURTUNI, HACKERI &amp; ANTRENARE AI</span>
         <span id="val-gpu-dev" style="color:var(--warn-amber); font-size:10px;">CUDA / SIMD ACTIV</span>

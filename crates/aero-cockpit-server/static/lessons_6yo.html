@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AERO-SHIELD — Școala Micilor Piloți (6 Ani & Începători)</title>
+<style>
+  :root {
+    --bg-card: #0f172a;
+    --bg-panel: #1e293b;
+    --border-bright: #38bdf8;
+    --accent-gold: #fbbf24;
+    --accent-green: #22c55e;
+    --accent-red: #ef4444;
+    --accent-purple: #a855f7;
+    --text-main: #f8fafc;
+    --text-soft: #cbd5e1;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 12px;
+    background: radial-gradient(circle at top, #1e293b 0%, #090d16 100%);
+    color: var(--text-main);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    user-select: none;
+  }
+
+  .aero-6yo-widget {
+    max-width: 780px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(10, 15, 29, 0.99) 100%);
+    border: 2px solid rgba(56, 189, 248, 0.45);
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65), inset 0 0 24px rgba(56, 189, 248, 0.08);
+  }
+
+  /* Header & Stars Progress Bar */
+  .aero-6yo-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed rgba(148, 163, 184, 0.25);
+  }
+
+  .aero-6yo-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #38bdf8;
+    letter-spacing: 0.3px;
+  }
+
+  .aero-6yo-stars {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(15, 23, 42, 0.9);
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    font-size: 13px;
+    font-weight: 700;
+    color: #fde68a;
+  }
+
+  .star-item {
+    font-size: 16px;
+    filter: grayscale(1) opacity(0.35);
+    transition: transform 0.25s ease, filter 0.25s ease;
+    cursor: pointer;
+  }
+
+  .star-item.earned {
+    filter: grayscale(0) opacity(1);
+    transform: scale(1.18);
+  }
+
+  /* 6 Lesson Step Buttons */
+  .aero-6yo-steps {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 640px) {
+    .aero-6yo-steps {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .lesson-step-btn {
+    background: #1e293b;
+    color: #cbd5e1;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    padding: 7px 4px;
+    font-size: 12.5px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    text-align: center;
+  }
+
+  .lesson-step-btn .step-emoji {
+    font-size: 19px;
+    line-height: 1.1;
+  }
+
+  .lesson-step-btn:hover {
+    border-color: #38bdf8;
+    transform: translateY(-2px);
+    color: #fff;
+  }
+
+  .lesson-step-btn.active {
+    background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    color: #ffffff;
+    border-color: #fde047;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.55);
+    transform: translateY(-2px);
+  }
+
+  /* Title & Story Box */
+  .aero-6yo-header-box {
+    background: rgba(30, 41, 59, 0.75);
+    border-left: 5px solid #fbbf24;
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+  }
+
+  .aero-6yo-title {
+    margin: 0 0 4px 0;
+    font-size: 17px;
+    font-weight: 900;
+    color: #fef08a;
+  }
+
+  .aero-6yo-story {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: #f1f5f9;
+  }
+
+  /* Canvas Container */
+  .aero-6yo-canvas-wrap {
+    position: relative;
+    background: #060b16;
+    border: 2px solid #38bdf8;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+    margin-bottom: 10px;
+  }
+
+  #lessonInteractiveCanvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 270px;
+    cursor: pointer;
+  }
+
+  .canvas-badge-hint {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(251, 191, 36, 0.6);
+    color: #fde047;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 99px;
+    pointer-events: none;
+  }
+
+  /* Interactive Action Buttons Under Canvas */
+  #lessonActionButtons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .action-toy-btn {
+    flex: 1 1 170px;
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    color: #f8fafc;
+    border: 2px solid #475569;
+    border-radius: 12px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.16s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+  }
+
+  .action-toy-btn:hover {
+    transform: translateY(-2px);
+    border-color: #38bdf8;
+    background: #1e3a5f;
+  }
+
+  .action-toy-btn.active-toy {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    border-color: #fde047;
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(34, 197, 94, 0.55);
+  }
+
+  .action-toy-btn.danger-toy.active-toy {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+    border-color: #fca5a5;
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.6);
+  }
+
+  /* Kid Takeaway Bubble */
+  .aero-6yo-takeaway {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.45);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #d1fae5;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Footer Prev/Next Navigation */
+  .aero-6yo-nav-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .nav-big-btn {
+    background: #1e293b;
+    color: #e2e8f0;
+    border: 2px solid #475569;
+    border-radius: 12px;
+    padding: 8px 16px;
+    font-size: 13.5px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+
+  .nav-big-btn:hover:not(:disabled) {
+    background: #334155;
+    border-color: #38bdf8;
+    color: #fff;
+  }
+
+  .nav-big-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .nav-big-btn.next-primary {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #0f172a;
+    border-color: #fef08a;
+  }
+
+  .nav-big-btn.next-primary:hover:not(:disabled) {
+    filter: brightness(1.1);
+    transform: scale(1.03);
+  }
+</style>
+</head>
+<body>
+
+<div class="aero-6yo-widget" id="aeroLessons6YORoot">
+  <!-- Top Bar with Stars -->
+  <div class="aero-6yo-top">
+    <div class="aero-6yo-brand">
+      <span>🧑‍✈️ ACADEMIA MICULUI PILOT (6 ANI+)</span>
+    </div>
+    <div class="aero-6yo-stars" id="lessonStarsBar" title="Adună toate cele 6 steluțe!">
+      <span>Progres:</span>
+      <span class="star-item earned" data-star="0">⭐</span>
+      <span class="star-item" data-star="1">⭐</span>
+      <span class="star-item" data-star="2">⭐</span>
+      <span class="star-item" data-star="3">⭐</span>
+      <span class="star-item" data-star="4">⭐</span>
+      <span class="star-item" data-star="5">⭐</span>
+    </div>
+  </div>
+
+  <!-- 6 Lesson Buttons -->
+  <div class="aero-6yo-steps" id="lessonStepsBar">
+    <button class="lesson-step-btn active" data-lesson="0">
+      <span class="step-emoji">🎈</span>
+      <span>Lecția 1</span>
+    </button>
+    <button class="lesson-step-btn" data-lesson="1">
+      <span class="step-emoji">🔦</span>
+      <span>Lecția 2</span>
+    </button>
+    <button class="lesson-step-btn" data-lesson="2">
+      <span class="step-emoji">🚂</span>
+      <span>Lecția 3</span>
+    </button>
+    <button class="lesson-step-btn" data-lesson="3">
+      <span class="step-emoji">☁️</span>
+      <span>Lecția 4</span>
+    </button>
+    <button class="lesson-step-btn" data-lesson="4">
+      <span class="step-emoji">⚖️</span>
+      <span>Lecția 5</span>
+    </button>
+    <button class="lesson-step-btn" data-lesson="5">
+      <span class="step-emoji">🏆</span>
+      <span>Lecția 6</span>
+    </button>
+  </div>
+
+  <!-- Lesson Title & Kid-Friendly Explanation -->
+  <div class="aero-6yo-header-box">
+    <h2 class="aero-6yo-title" id="lesson6yoTitle">🎈 Lecția 1: Problema — Ceața și Hackerul Rău 👾</h2>
+    <p class="aero-6yo-story" id="lesson6yoStory">
+      Când e ceață groasă, pilotul nu mai vede pista pe geam! Iar un <b>Hacker Rău 👾</b> poate păcăli satelitul GPS cu o sfoară invizibilă ca să tragă avionul în copaci. Apasă butoanele de sub desen ca să vezi cum îl salvăm!
+    </p>
+  </div>
+
+  <!-- Interactive 60FPS HTML5 Canvas -->
+  <div class="aero-6yo-canvas-wrap">
+    <canvas id="lessonInteractiveCanvas" width="600" height="260"></canvas>
+    <div class="canvas-badge-hint" id="canvasHintBadge">👆 Apasă pe butoanele de jos!</div>
+  </div>
+
+  <!-- Interactive Toy Action Buttons -->
+  <div id="lessonActionButtons"></div>
+
+  <!-- Bottom Secret / Takeaway -->
+  <div class="aero-6yo-takeaway" id="lesson6yoTakeaway">
+    <span style="font-size:20px;">💡</span>
+    <span id="lesson6yoTakeawayText"><b>Regula de Aur:</b> AERO-SHIELD taie cu foarfeca ✂️ minciunile de pe internet/GPS și aterizează singur privind pista!</span>
+  </div>
+
+  <!-- Previous / Next Lesson Controls -->
+  <div class="aero-6yo-nav-footer">
+    <button class="nav-big-btn" id="btnPrevLesson6yo" disabled>⬅️ Lecția Anterioară</button>
+    <span id="lessonCounterLabel" style="font-size:12.5px; font-weight:800; color:#94a3b8;">Pasul 1 din 6</span>
+    <button class="nav-big-btn next-primary" id="btnNextLesson6yo">Lecția Următoare ➡️</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  const LESSONS_DATA = [
+    {
+      id: 0,
+      badge: 'Lecția 1 🎈',
+      title: '🎈 Lecția 1: Problema — Ceața și Hackerul Rău 👾',
+      story: 'Când e ceață groasă, pilotul nu vede pista pe geam! Și mai rău: un <b>Hacker Rău 👾</b> poate trimite un semnal GPS mincinos care trage avionul cu o sfoară spre copaci! Apasă pe butoane să vezi ce pățim și cum ne salvează <b>AERO-SHIELD 🛡️</b>!',
+      hint: '👆 Apasă butoanele de sub desen!',
+      takeaway: '<b>Secretul Lecției 1:</b> Cu AERO-SHIELD pornit, o foarfecă aurie ✂️ taie sfoara hackerului și avionul verde aterizează fix pe centrul pistei!',
+      actions: [
+        { key: 'fog', label: '🌫️ Pune Ceață', type: 'toggle' },
+        { key: 'hacker', label: '👾 Hacker GPS', type: 'danger' },
+        { key: 'shield', label: '🛡️ Pornește AERO-SHIELD', type: 'hero' }
+      ]
+    },
+    {
+      id: 1,
+      badge: 'Lecția 2 🔦',
+      title: '🔦 Lecția 2: Ochiul Magic care Vede prin Ceață și Fum 👀',
+      story: 'Lumina obișnuită se lovește de picăturile mici de apă din ceață 💧 și se întoarce înapoi ca o minge de perete. Dar <b>Ochiul Magic Infraroșu (SWIR) 🔦</b> are o rază mai lungă care trece printre picături și vede becurile calde ale pistei!',
+      hint: '🖱️ Mișcă mouse-ul pe desen ca o lanternă magică!',
+      takeaway: '<b>Secretul Lecției 2:</b> Chiar dacă afară e ceață albă sau fum negru de incendiu, prin Lupa Magică SWIR becurile pistei strălucesc ca stelele!',
+      actions: [
+        { key: 'fogMode', label: '🌫️ Ceață Albă / 🖤 Fum Negru', type: 'toggle' },
+        { key: 'swirOn', label: '🔦 Aprinde Ochiul Magic Infraroșu (SWIR)', type: 'hero' },
+        { key: 'autoSweep', label: '🔍 Plimbă Lupa Singură', type: 'toggle' }
+      ]
+    },
+    {
+      id: 2,
+      badge: 'Lecția 3 🚂',
+      title: '🚂 Lecția 3: Cum aflăm viteza fără GPS? (Numărăm becurile de pe jos!) 💡',
+      story: 'Când mergi cu trenul și te uiți pe geam în jos, dacă stâlpii trec încet știi că mergi încet. Dacă stâlpii țâșnesc repede în spate, mergi cu viteză! Camera avionului face <b>2 poze rapide 📸</b> și măsoară cu rigla câți metri au fugit becurile în spate!',
+      hint: '📏 Schimbă viteza și pune Rigla Camerei!',
+      takeaway: '<b>Secretul Lecției 3:</b> Nu avem nevoie de sateliți! Măsurăm cu rigla pe pământ câți metri s-au mutat becurile între Poza 1 și Poza 2!',
+      actions: [
+        { key: 'slow', label: '🐢 Zboară Încet (100 km/h)', type: 'toggle' },
+        { key: 'fast', label: '🚀 Zboară Repede (300 km/h)', type: 'hero' },
+        { key: 'ruler', label: '📏 Arată Rigla Camerei', type: 'toggle' }
+      ]
+    },
+    {
+      id: 3,
+      badge: 'Lecția 4 ☁️',
+      title: '☁️ Lecția 4: Capcana Norului Împins de Vânt și a Înclinării Avionului! 💨',
+      story: 'Atenție la 2 capcane! <b>1)</b> Norul de ceață se mișcă împins de vânt 💨 — dacă ne luăm după nor, credem greșit că se mișcă avionul! <b>2)</b> Când avionul își înclină aripile 🔄, camera se rotește. De aceea separăm <b>Norul (Sus)</b> de <b>Pământul bătut în cuie (Jos)</b>!',
+      hint: '💨 Suflă vântul în nor și separă straturile!',
+      takeaway: '<b>Secretul Lecției 4:</b> Norul de sus ne anunță prin megafon 📢 că vine o rafală de vânt peste 1 secundă, iar becurile de jos + bolobocul 🧭 ne dau viteza exactă!',
+      actions: [
+        { key: 'windGust', label: '💨 Suflă Vântul în Nor', type: 'danger' },
+        { key: 'rollTilt', label: '🔄 Înclină Avionul (Roll)', type: 'toggle' },
+        { key: 'splitLayers', label: '🧠 Separă Norul de Pământ', type: 'hero' }
+      ]
+    },
+    {
+      id: 4,
+      badge: 'Lecția 5 ⚖️',
+      title: '⚖️ Lecția 5: Cântarul Adevărului: Prindem Orice Minciună! ⚖️',
+      story: 'Cum știm sigur că GPS-ul minte? Punem pe un <b>Cântar Magic ⚖️</b> ce zice GPS-ul în stânga și ce văd Ochiul Magic + Aripile în dreapta! Iar pentru hackerii șireți care fură câte 1 centimetru pe furiș, avem <b>Paharul Minciunilor 🥛</b> care adună picătură cu picătură!',
+      hint: '🐍 Încearcă atât Minciuna Mare cât și Minciuna Lentă!',
+      takeaway: '<b>Secretul Lecției 5:</b> Nicio minciună nu scapă! Când Paharul Minciunilor (CUSUM) se umple până la linia roșie, sună alarma 🔔 și tăiem GPS-ul!',
+      actions: [
+        { key: 'honest', label: '✅ Zbor Cinstit (Echilibru)', type: 'toggle' },
+        { key: 'bigLie', label: '⚡ Minciună Mare (Salt 500m)', type: 'danger' },
+        { key: 'slowLie', label: '🐍 Minciună Lentă pe Furiș (Câte puțin)', type: 'danger' }
+      ]
+    },
+    {
+      id: 5,
+      badge: 'Lecția 6 🏆',
+      title: '🏆 Lecția 6: Acum ești Comandant! Săgeți Luminoase pe Ecranul Mare!',
+      story: 'Felicitări, Micul Comandant! Ai înțeles toate cele 5 secrete! Acum privește harta celor <b>3 Zone Mari</b> de pe ecranul simulatorului și apasă pe butonul magic ca să aprindem <b>Săgeți Luminoase ✨</b> direct peste panourile reale!',
+      hint: '✨ Apasă butonul să luminezi Simulatorul Mare!',
+      takeaway: '<b>Gata de Zbor!</b> Înțelegi tot ce se întâmplă în Parbrizul Magic (1️⃣), Cursa celor 4 Avioane (2️⃣) și Filmarea Reală din Avion (3️⃣)!',
+      actions: [
+        { key: 'spotlight', label: '✨ Arată-mi cu Săgeți Luminoase pe Ecranul Mare', type: 'hero' },
+        { key: 'realVideo', label: '🎬 Pornește Filmarea Reală din Avion', type: 'toggle' }
+      ]
+    }
+  ];
+
+  // State machine for lessons & interactive toys
+  const state = {
+    currentLesson: 0,
+    earnedStars: new Set([0]),
+    tick: 0,
+    mouseX: 300,
+    mouseY: 130,
+    mouseInside: false,
+
+    // Lesson 1 state
+    l1_fog: true,
+    l1_hacker: true,
+    l1_shield: false,
+    l1_cutAnim: 0,
+
+    // Lesson 2 state
+    l2_smokeBlack: false,
+    l2_swirOn: true,
+    l2_autoSweep: true,
+
+    // Lesson 3 state
+    l3_fast: false,
+    l3_ruler: true,
+    l3_scroll: 0,
+
+    // Lesson 4 state
+    l4_wind: true,
+    l4_roll: false,
+    l4_split: true,
+
+    // Lesson 5 state
+    l5_mode: 'slowLie', // 'honest' | 'bigLie' | 'slowLie'
+    l5_cupLevel: 0.25,
+    l5_drops: [],
+
+    // Lesson 6 state
+    l6_highlightZone: 0,
+    l6_realVideoActive: false
+  };
+
+  const canvas = document.getElementById('lessonInteractiveCanvas');
+  const ctx = canvas.getContext('2d');
+  const titleEl = document.getElementById('lesson6yoTitle');
+  const storyEl = document.getElementById('lesson6yoStory');
+  const takeawayEl = document.getElementById('lesson6yoTakeawayText');
+  const hintEl = document.getElementById('canvasHintBadge');
+  const actionButtonsContainer = document.getElementById('lessonActionButtons');
+  const btnPrev = document.getElementById('btnPrevLesson6yo');
+  const btnNext = document.getElementById('btnNextLesson6yo');
+  const counterLabel = document.getElementById('lessonCounterLabel');
+
+  // Mouse / Touch tracking on Canvas (especially fun for Lesson 2 & Lesson 6)
+  function updatePointerPos(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    state.mouseX = Math.max(40, Math.min(canvas.width - 40, (clientX - rect.left) * scaleX));
+    state.mouseY = Math.max(40, Math.min(canvas.height - 40, (clientY - rect.top) * scaleY));
+  }
+
+  canvas.addEventListener('mousemove', (e) => {
+    state.mouseInside = true;
+    state.l2_autoSweep = false;
+    updatePointerPos(e.clientX, e.clientY);
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    state.mouseInside = false;
+  });
+
+  canvas.addEventListener('touchmove', (e) => {
+    if (e.touches && e.touches[0]) {
+      state.mouseInside = true;
+      state.l2_autoSweep = false;
+      updatePointerPos(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: true });
+
+  canvas.addEventListener('click', (e) => {
+    updatePointerPos(e.clientX, e.clientY);
+    if (state.currentLesson === 5) {
+      // Clicking zones in Lesson 6
+      if (state.mouseX < 210) state.l6_highlightZone = 1;
+      else if (state.mouseX < 400) state.l6_highlightZone = 2;
+      else state.l6_highlightZone = 3;
+      triggerMainScreenSpotlight(state.l6_highlightZone);
+    }
+  });
+
+  function renderActionButtons() {
+    const lesson = LESSONS_DATA[state.currentLesson];
+    actionButtonsContainer.innerHTML = '';
+
+    lesson.actions.forEach((act) => {
+      const btn = document.createElement('button');
+      btn.className = 'action-toy-btn';
+      if (act.type === 'danger') btn.classList.add('danger-toy');
+      btn.innerHTML = act.label;
+
+      const isActive = checkActionActive(state.currentLesson, act.key);
+      if (isActive) btn.classList.add('active-toy');
+
+      btn.addEventListener('click', () => {
+        handleActionClick(state.currentLesson, act.key);
+        renderActionButtons();
+      });
+
+      actionButtonsContainer.appendChild(btn);
+    });
+  }
+
+  function checkActionActive(lessonIdx, key) {
+    if (lessonIdx === 0) {
+      if (key === 'fog') return state.l1_fog;
+      if (key === 'hacker') return state.l1_hacker;
+      if (key === 'shield') return state.l1_shield;
+    } else if (lessonIdx === 1) {
+      if (key === 'fogMode') return state.l2_smokeBlack;
+      if (key === 'swirOn') return state.l2_swirOn;
+      if (key === 'autoSweep') return state.l2_autoSweep;
+    } else if (lessonIdx === 2) {
+      if (key === 'slow') return !state.l3_fast;
+      if (key === 'fast') return state.l3_fast;
+      if (key === 'ruler') return state.l3_ruler;
+    } else if (lessonIdx === 3) {
+      if (key === 'windGust') return state.l4_wind;
+      if (key === 'rollTilt') return state.l4_roll;
+      if (key === 'splitLayers') return state.l4_split;
+    } else if (lessonIdx === 4) {
+      return state.l5_mode === key;
+    } else if (lessonIdx === 5) {
+      if (key === 'spotlight') return state.l6_highlightZone > 0;
+      if (key === 'realVideo') return state.l6_realVideoActive;
+    }
+    return false;
+  }
+
+  function handleActionClick(lessonIdx, key) {
+    if (lessonIdx === 0) {
+      if (key === 'fog') state.l1_fog = !state.l1_fog;
+      if (key === 'hacker') {
+        state.l1_hacker = !state.l1_hacker;
+        if (state.l1_hacker) state.l1_shield = false;
+      }
+      if (key === 'shield') {
+        state.l1_shield = !state.l1_shield;
+        if (state.l1_shield) {
+          state.l1_hacker = true;
+          state.l1_cutAnim = 1;
+        }
+      }
+    } else if (lessonIdx === 1) {
+      if (key === 'fogMode') state.l2_smokeBlack = !state.l2_smokeBlack;
+      if (key === 'swirOn') state.l2_swirOn = !state.l2_swirOn;
+      if (key === 'autoSweep') state.l2_autoSweep = !state.l2_autoSweep;
+    } else if (lessonIdx === 2) {
+      if (key === 'slow') state.l3_fast = false;
+      if (key === 'fast') state.l3_fast = true;
+      if (key === 'ruler') state.l3_ruler = !state.l3_ruler;
+    } else if (lessonIdx === 3) {
+      if (key === 'windGust') state.l4_wind = !state.l4_wind;
+      if (key === 'rollTilt') state.l4_roll = !state.l4_roll;
+      if (key === 'splitLayers') state.l4_split = !state.l4_split;
+    } else if (lessonIdx === 4) {
+      state.l5_mode = key;
+      if (key === 'honest') state.l5_cupLevel = 0.05;
+      if (key === 'bigLie') state.l5_cupLevel = 1.0;
+      if (key === 'slowLie') state.l5_cupLevel = 0.15;
+    } else if (lessonIdx === 5) {
+      if (key === 'spotlight') {
+        state.l6_highlightZone = (state.l6_highlightZone % 3) + 1;
+        triggerMainScreenSpotlight(0);
+      }
+      if (key === 'realVideo') {
+        state.l6_realVideoActive = !state.l6_realVideoActive;
+        triggerRealVideoDemo();
+      }
+    }
+  }
+
+  function selectLesson(idx) {
+    state.currentLesson = Math.max(0, Math.min(LESSONS_DATA.length - 1, idx));
+    state.earnedStars.add(state.currentLesson);
+
+    const lesson = LESSONS_DATA[state.currentLesson];
+    titleEl.innerHTML = lesson.title;
+    storyEl.innerHTML = lesson.story;
+    takeawayEl.innerHTML = lesson.takeaway;
+    hintEl.textContent = lesson.hint;
+    counterLabel.textContent = `Pasul ${state.currentLesson + 1} din ${LESSONS_DATA.length}`;
+
+    btnPrev.disabled = state.currentLesson === 0;
+    btnNext.disabled = state.currentLesson === LESSONS_DATA.length - 1;
+
+    document.querySelectorAll('.lesson-step-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', i === state.currentLesson);
+    });
+
+    document.querySelectorAll('#lessonStarsBar .star-item').forEach((star, i) => {
+      star.classList.toggle('earned', state.earnedStars.has(i));
+    });
+
+    renderActionButtons();
+  }
+
+  // Bind step buttons & Prev/Next
+  document.querySelectorAll('.lesson-step-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      selectLesson(parseInt(btn.getAttribute('data-lesson'), 10));
+    });
+  });
+
+  document.querySelectorAll('#lessonStarsBar .star-item').forEach((star) => {
+    star.addEventListener('click', () => {
+      selectLesson(parseInt(star.getAttribute('data-star'), 10));
+    });
+  });
+
+  btnPrev.addEventListener('click', () => selectLesson(state.currentLesson - 1));
+  btnNext.addEventListener('click', () => selectLesson(state.currentLesson + 1));
+
+  // Helper drawing functions
+  function drawRoundedRect(ctx, x, y, w, h, r, fill, stroke, lineW) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+    if (fill) {
+      ctx.fillStyle = fill;
+      ctx.fill();
+    }
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = lineW || 2;
+      ctx.stroke();
+    }
+  }
+
+  function drawCloud(ctx, cx, cy, scale, color) {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(scale, scale);
+    ctx.fillStyle = color || 'rgba(241, 245, 249, 0.9)';
+    ctx.beginPath();
+    ctx.arc(0, 0, 22, 0, Math.PI * 2);
+    ctx.arc(-20, 6, 16, 0, Math.PI * 2);
+    ctx.arc(20, 6, 17, 0, Math.PI * 2);
+    ctx.arc(-8, -10, 16, 0, Math.PI * 2);
+    ctx.arc(10, -8, 15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawCartoonPlane(ctx, x, y, angleRad, colorBody, label) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angleRad || 0);
+
+    // Wings
+    ctx.fillStyle = colorBody || '#38bdf8';
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(-12, -26, 16, 52, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    // Fuselage
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 26, 10, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Tail
+    ctx.beginPath();
+    ctx.moveTo(-20, 0);
+    ctx.lineTo(-30, -14);
+    ctx.lineTo(-24, 0);
+    ctx.closePath();
+    ctx.fill();
+
+    // Cockpit window
+    ctx.fillStyle = '#fef08a';
+    ctx.beginPath();
+    ctx.arc(14, -2, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    if (label) {
+      ctx.save();
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, x, y - 34);
+      ctx.restore();
+    }
+  }
+
+  // =========================================================================
+  // LESSON 1: Fog, Hacker GPS & AERO-SHIELD Scissors
+  // =========================================================================
+  function drawLesson1(t) {
+    // Grass background
+    ctx.fillStyle = '#064e3b';
+    ctx.fillRect(0, 0, 600, 260);
+
+    // Trees on top & bottom edges
+    for (let i = 0; i < 7; i++) {
+      const tx = 290 + i * 45;
+      // Top trees
+      ctx.fillStyle = '#15803d';
+      ctx.beginPath();
+      ctx.arc(tx, 30, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#166534';
+      ctx.beginPath();
+      ctx.arc(tx + 6, 26, 11, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Real Runway in middle-bottom
+    ctx.fillStyle = '#334155';
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 2;
+    ctx.fillRect(250, 130, 320, 74);
+    ctx.strokeRect(250, 130, 320, 74);
+
+    // Runway centerline dashes & edge bulbs
+    ctx.strokeStyle = '#f8fafc';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([16, 12]);
+    ctx.beginPath();
+    ctx.moveTo(265, 167);
+    ctx.lineTo(555, 167);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    for (let bx = 265; bx <= 555; bx += 32) {
+      ctx.fillStyle = '#fde047';
+      ctx.beginPath();
+      ctx.arc(bx, 135, 3.5, 0, Math.PI * 2);
+      ctx.arc(bx, 199, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.font = 'bold 13px sans-serif';
+    ctx.fillStyle = '#86efac';
+    ctx.fillText('🛬 PISTA ADEVĂRATĂ (SIGURĂ)', 325, 224);
+
+    // Hacker & Fake Runway in the trees
+    if (state.l1_hacker) {
+      // Fake ghost runway in trees
+      ctx.save();
+      ctx.strokeStyle = '#ef4444';
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.22)';
+      ctx.setLineDash([6, 6]);
+      ctx.fillRect(280, 18, 250, 52);
+      ctx.strokeRect(280, 18, 250, 52);
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#fca5a5';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText('👻 PISTĂ FALSĂ GPS (ÎN COPACI!)', 305, 48);
+      ctx.restore();
+
+      // Hacker icon & magnet
+      drawRoundedRect(ctx, 495, 6, 96, 68, 10, '#450a0a', '#ef4444', 2);
+      ctx.font = '24px sans-serif';
+      ctx.fillText('👾🧲', 515, 38);
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillStyle = '#fca5a5';
+      ctx.fillText('HACKER GPS', 506, 62);
+    }
+
+    // Plane position animation
+    const progress = (t * 0.008) % 1;
+    const planeX = 75 + progress * 240;
+    let planeY = 167;
+    let planeAngle = 0;
+    let planeColor = '#22c55e';
+    let planeLabel = '✈️ Avion Sigur';
+
+    if (state.l1_hacker && !state.l1_shield) {
+      // Pulled toward trees!
+      planeY = 167 - progress * 115;
+      planeAngle = -0.35;
+      planeColor = '#ef4444';
+      planeLabel = '😱 Traseu Păcălit de GPS!';
+
+      // Red rope from Hacker to Plane
+      ctx.save();
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([8, 6]);
+      ctx.beginPath();
+      ctx.moveTo(planeX + 20, planeY);
+      ctx.lineTo(500, 42);
+      ctx.stroke();
+      ctx.restore();
+    } else if (state.l1_shield) {
+      planeY = 167;
+      planeAngle = 0;
+      planeColor = '#22c55e';
+      planeLabel = '🛡️ AERO-SHIELD: Mergem pe Pistă!';
+
+      // Cut rope & Golden Scissors
+      if (state.l1_hacker) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.45)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(350, 95);
+        ctx.lineTo(500, 42);
+        ctx.stroke();
+        ctx.restore();
+
+        // Scissors cutting animation
+        const scY = 95 + Math.sin(t * 0.15) * 6;
+        drawRoundedRect(ctx, 260, scY - 22, 175, 34, 10, '#422006', '#fbbf24', 2);
+        ctx.font = 'bold 13px sans-serif';
+        ctx.fillStyle = '#fde047';
+        ctx.fillText('✂️ SFOARA GPS TĂIATĂ!', 272, scY);
+
+        // Big red X over Hacker
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(500, 12);
+        ctx.lineTo(585, 68);
+        ctx.moveTo(585, 12);
+        ctx.lineTo(500, 68);
+        ctx.stroke();
+      }
+
+      // Green optical camera beam looking at runway
+      ctx.save();
+      ctx.fillStyle = 'rgba(34, 197, 94, 0.24)';
+      ctx.beginPath();
+      ctx.moveTo(planeX + 22, planeY);
+      ctx.lineTo(planeX + 135, 134);
+      ctx.lineTo(planeX + 135, 200);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Fog Cloud covering the runway
+    if (state.l1_fog) {
+      const fogShift = Math.sin(t * 0.03) * 10;
+      drawCloud(ctx, 270 + fogShift, 150, 1.9, 'rgba(226, 232, 240, 0.92)');
+      drawCloud(ctx, 355 - fogShift, 175, 2.1, 'rgba(203, 213, 225, 0.92)');
+      drawCloud(ctx, 430 + fogShift, 152, 1.8, 'rgba(226, 232, 240, 0.90)');
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 13px sans-serif';
+      ctx.fillText('🌫️ CEAȚĂ GROASĂ (Nu se vede cu ochiul!)', 235, 168);
+    }
+
+    drawCartoonPlane(ctx, planeX, planeY, planeAngle, planeColor, planeLabel);
+  }
+
+  // =========================================================================
+  // LESSON 2: Magic SWIR Infrared Eye vs Fog & Smoke
+  // =========================================================================
+  function drawLesson2(t) {
+    // Compute flashlight position
+    let lensX = state.mouseX;
+    let lensY = state.mouseY;
+    if (state.l2_autoSweep || !state.mouseInside) {
+      lensX = 300 + Math.cos(t * 0.035) * 145;
+      lensY = 135 + Math.sin(t * 0.05) * 45;
+    }
+
+    // 1. Outside world: thick white fog or black smoke
+    if (state.l2_smokeBlack) {
+      ctx.fillStyle = '#18181b';
+      ctx.fillRect(0, 0, 600, 260);
+    } else {
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fillRect(0, 0, 600, 260);
+    }
+
+    // Draw water droplets / smoke particles outside & blue light bouncing back
+    for (let i = 0; i < 14; i++) {
+      const px = (i * 47 + t * 0.6) % 580 + 10;
+      const py = 35 + (i % 5) * 45;
+      ctx.fillStyle = state.l2_smokeBlack ? '#3f3f46' : '#64748b';
+      ctx.beginPath();
+      ctx.arc(px, py, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Top explanation banner for normal eye
+    drawRoundedRect(ctx, 14, 10, 572, 36, 8, 'rgba(15, 23, 42, 0.88)', '#475569', 1.5);
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = 'bold 12.5px sans-serif';
+    ctx.fillText(
+      state.l2_smokeBlack
+        ? '🖤 FUM NEGRU DE INCENDIU: Ochiul omului nu vede nimic! Dar Lupa SWIR vede prin fum!'
+        : '🌫️ CEAȚĂ ALBĂ: Lumina normală se lovește de picături 💧. Plimbă Lupa Magică SWIR!',
+      26, 33
+    );
+
+    // 2. Magic SWIR Flashlight Circle (Clipping Mask)
+    if (state.l2_swirOn) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(lensX, lensY, 88, 0, Math.PI * 2);
+      ctx.clip();
+
+      // Clear night-vision / SWIR thermal runway inside the circle!
+      ctx.fillStyle = '#06121e';
+      ctx.fillRect(0, 0, 600, 260);
+
+      // Perspective Runway inside SWIR
+      ctx.fillStyle = '#1e293b';
+      ctx.beginPath();
+      ctx.moveTo(255, 65);
+      ctx.lineTo(345, 65);
+      ctx.lineTo(520, 255);
+      ctx.lineTo(80, 255);
+      ctx.closePath();
+      ctx.fill();
+
+      // Runway glowing centerline
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 4;
+      ctx.setLineDash([14, 10]);
+      ctx.beginPath();
+      ctx.moveTo(300, 70);
+      ctx.lineTo(300, 250);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Bright glowing SWIR runway edge bulbs
+      for (let row = 0; row < 6; row++) {
+        const frac = row / 5;
+        const ry = 80 + frac * 160;
+        const halfW = 48 + frac * 155;
+
+        // Left & Right warm bulbs
+        [300 - halfW, 300 + halfW].forEach((bx) => {
+          ctx.fillStyle = '#fef08a';
+          ctx.beginPath();
+          ctx.arc(bx, ry, 6 + frac * 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#f59e0b';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        });
+      }
+
+      // Red long-wave SWIR rays passing straight through
+      ctx.strokeStyle = 'rgba(244, 63, 94, 0.75)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(lensX - 55, lensY - 40);
+      ctx.lineTo(lensX + 55, lensY - 40);
+      ctx.moveTo(lensX - 65, lensY + 35);
+      ctx.lineTo(lensX + 65, lensY + 35);
+      ctx.stroke();
+
+      ctx.restore();
+
+      // Glowing Golden Rim of the Magic Lens
+      ctx.save();
+      ctx.strokeStyle = '#fbbf24';
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.arc(lensX, lensY, 88, 0, Math.PI * 2);
+      ctx.stroke();
+
+      drawRoundedRect(ctx, lensX - 82, lensY + 62, 164, 26, 8, '#0f172a', '#fbbf24', 2);
+      ctx.fillStyle = '#fde047';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🔦 OCHIUL MAGIC SWIR', lensX, lensY + 79);
+      ctx.restore();
+    } else {
+      drawRoundedRect(ctx, 165, 115, 270, 44, 12, '#7f1d1d', '#ef4444', 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🙈 Ochiul Magic este stins! Aprinde-l!', 300, 142);
+      ctx.textAlign = 'left';
+    }
+  }
+
+  // =========================================================================
+  // LESSON 3: Counting Bulbs & Camera Ruler (Speed without GPS)
+  // =========================================================================
+  function drawLesson3(t) {
+    ctx.fillStyle = '#091122';
+    ctx.fillRect(0, 0, 600, 260);
+
+    const speedPx = state.l3_fast ? 6.0 : 2.0;
+    state.l3_scroll = (state.l3_scroll + speedPx) % 90;
+
+    // Ground road / railway at bottom
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(0, 175, 600, 85);
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, 175);
+    ctx.lineTo(600, 175);
+    ctx.stroke();
+
+    // Moving runway bulbs scrolling backwards like train sleepers
+    for (let x = -30; x < 660; x += 90) {
+      const bx = x - state.l3_scroll;
+      // Sleeper tie
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(bx - 12, 185, 24, 65);
+
+      // Bright bulb
+      ctx.fillStyle = '#fde047';
+      ctx.beginPath();
+      ctx.arc(bx, 200, 9, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('💡 Bec', bx, 232);
+    }
+    ctx.textAlign = 'left';
+
+    // Camera FOV cone from Airplane at top looking down
+    ctx.save();
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.16)';
+    ctx.beginPath();
+    ctx.moveTo(300, 62);
+    ctx.lineTo(155, 195);
+    ctx.lineTo(445, 195);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#38bdf8';
+    ctx.setLineDash([6, 6]);
+    ctx.stroke();
+    ctx.restore();
+
+    // Airplane at top
+    drawCartoonPlane(ctx, 300, 48, 0, '#0284c7', '');
+    drawRoundedRect(ctx, 18, 12, 185, 58, 10, '#0f172a', '#38bdf8', 2);
+    ctx.fillStyle = '#fde047';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.fillText(state.l3_fast ? '🚀 VITEZĂ: 300 km/h' : '🐢 VITEZĂ: 100 km/h', 30, 34);
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = '12px sans-serif';
+    ctx.fillText(state.l3_fast ? 'Becurile fug REPEDE!' : 'Becurile trec ÎNCET!', 30, 55);
+
+    // Camera Ruler between Photo 1 & Photo 2
+    if (state.l3_ruler) {
+      const distWidth = state.l3_fast ? 210 : 85;
+      const startX = 300 - distWidth / 2;
+      const endX = 300 + distWidth / 2;
+
+      // Yellow Ruler bar
+      drawRoundedRect(ctx, startX, 118, distWidth, 34, 6, '#facc15', '#713f12', 2);
+      // Ruler ticks
+      ctx.strokeStyle = '#713f12';
+      ctx.lineWidth = 2;
+      for (let rx = startX + 10; rx < endX - 5; rx += 15) {
+        ctx.beginPath();
+        ctx.moveTo(rx, 118);
+        ctx.lineTo(rx, 128);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 12.5px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(
+        state.l3_fast ? '📏 S-a mutat 83 metri / sec!' : '📏 S-a mutat 28 metri / sec!',
+        300,
+        141
+      );
+
+      // Photo 1 & Photo 2 markers
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText('📸 Poza 1', startX, 110);
+      ctx.fillStyle = '#4ade80';
+      ctx.fillText('📸 Poza 2', endX, 110);
+      ctx.textAlign = 'left';
+    }
+  }
+
+  // =========================================================================
+  // LESSON 4: Two Layers — Moving Wind Cloud (Top) vs Pinned Ground (Bottom)
+  // =========================================================================
+  function drawLesson4(t) {
+    // Top Layer: Purple Wind & Cloud Layer
+    ctx.fillStyle = '#1e1b4b';
+    ctx.fillRect(0, 0, 600, 128);
+
+    // Bottom Layer: Green Pinned Ground & Compass Layer
+    ctx.fillStyle = '#052e16';
+    ctx.fillRect(0, 132, 600, 128);
+
+    // Divider line
+    ctx.fillStyle = '#fbbf24';
+    ctx.fillRect(0, 126, 600, 6);
+
+    // Layer 1 Title (TOP)
+    drawRoundedRect(ctx, 12, 8, 265, 28, 6, 'rgba(88, 28, 135, 0.9)', '#c084fc', 1.5);
+    ctx.fillStyle = '#f3e8ff';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText('☁️ STRATUL 1 (SUS): Norul împins de vânt', 20, 26);
+
+    // Animated wind & cloud
+    const cloudSpeed = state.l4_wind ? (t * 2.8) % 360 : (t * 0.4) % 360;
+    const cloudX = 480 - cloudSpeed;
+    drawCloud(ctx, cloudX, 75, 1.35, 'rgba(216, 180, 254, 0.9)');
+
+    if (state.l4_wind) {
+      ctx.fillStyle = '#fde047';
+      ctx.font = 'bold 13px sans-serif';
+      ctx.fillText('💨💨 VÂNT PUTERNIC!', cloudX + 42, 72);
+
+      // Megaphone Early Warning Box
+      drawRoundedRect(ctx, 290, 8, 298, 42, 8, '#4c1d95', '#fde047', 2);
+      ctx.fillStyle = '#fef08a';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText('📢 MEGAFON: „Vine rafala în 1 secundă!”', 302, 26);
+      ctx.fillStyle = '#e9d5ff';
+      ctx.fillText('✈️ Avionul pregătește aripile din timp!', 302, 43);
+    }
+
+    // Layer 2 Title (BOTTOM)
+    drawRoundedRect(ctx, 12, 140, 290, 28, 6, 'rgba(6, 78, 59, 0.95)', '#4ade80', 1.5);
+    ctx.fillStyle = '#dcfce7';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText('🔩 STRATUL 2 (JOS): Becuri bătute în cuie!', 20, 158);
+
+    // Pinned bulbs on ground
+    for (let i = 0; i < 4; i++) {
+      const bx = 65 + i * 85;
+      ctx.fillStyle = '#fde047';
+      ctx.beginPath();
+      ctx.arc(bx, 212, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '14px sans-serif';
+      ctx.fillText('🔩', bx - 8, 242);
+    }
+
+    // Roll Tilt & Internal Level (Boloboc / IMU)
+    const tiltDeg = state.l4_roll ? Math.sin(t * 0.08) * 18 : 0;
+    drawRoundedRect(ctx, 365, 142, 222, 106, 12, '#0f172a', '#38bdf8', 2);
+
+    ctx.save();
+    ctx.translate(476, 188);
+    ctx.rotate((tiltDeg * Math.PI) / 180);
+    // Mini airplane wings showing roll
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(-45, 0);
+    ctx.lineTo(45, 0);
+    ctx.stroke();
+    ctx.fillStyle = '#fde047';
+    ctx.beginPath();
+    ctx.arc(0, 0, 9, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = 'bold 11.5px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(
+      state.l4_split
+        ? `🧭 Boloboc Activ: Scădem înclinarea (${tiltDeg.toFixed(0)}°)!`
+        : '⚠️ Fără separare: Norul ne păcălește!',
+      476,
+      236
+    );
+    ctx.textAlign = 'left';
+  }
+
+  // =========================================================================
+  // LESSON 5: Truth Scale & CUSUM Cup of Lies
+  // =========================================================================
+  function drawLesson5(t) {
+    ctx.fillStyle = '#0b1120';
+    ctx.fillRect(0, 0, 600, 260);
+
+    // Update Cup of Lies level
+    if (state.l5_mode === 'slowLie') {
+      state.l5_cupLevel = Math.min(1.0, state.l5_cupLevel + 0.0032);
+      if (state.l5_cupLevel >= 1.0 && t % 180 === 0) {
+        state.l5_cupLevel = 0.15; // loop animation so kids can watch it fill again
+      }
+    } else if (state.l5_mode === 'bigLie') {
+      state.l5_cupLevel = 1.0;
+    } else {
+      state.l5_cupLevel = Math.max(0.06, state.l5_cupLevel * 0.96);
+    }
+
+    const alarmTriggered = state.l5_cupLevel >= 0.85 || state.l5_mode === 'bigLie';
+
+    // 1. GOLDEN SCALE OF TRUTH (Left side of canvas)
+    const pivotX = 205;
+    const pivotY = 85;
+    let beamAngle = 0;
+    if (state.l5_mode === 'bigLie') beamAngle = -0.32;
+    else if (state.l5_mode === 'slowLie') beamAngle = -0.06 - state.l5_cupLevel * 0.22;
+
+    // Pillar
+    ctx.fillStyle = '#fbbf24';
+    ctx.fillRect(pivotX - 7, pivotY, 14, 130);
+    drawRoundedRect(ctx, pivotX - 55, 212, 110, 18, 6, '#d97706', '#fef08a', 2);
+
+    ctx.save();
+    ctx.translate(pivotX, pivotY);
+    ctx.rotate(beamAngle);
+
+    // Scale Beam
+    ctx.fillStyle = '#fde047';
+    ctx.fillRect(-130, -5, 260, 10);
+
+    // Left Pan: GPS / Internet Weather
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-115, 0);
+    ctx.lineTo(-145, 55);
+    ctx.moveTo(-115, 0);
+    ctx.lineTo(-85, 55);
+    ctx.stroke();
+    drawRoundedRect(ctx, -165, 55, 100, 42, 8, alarmTriggered ? '#7f1d1d' : '#1e293b', '#ef4444', 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('📡 Ce zice GPS', -115, 73);
+    ctx.fillStyle = '#fca5a5';
+    ctx.fillText(
+      state.l5_mode === 'honest' ? 'Adevăr (0m)' : state.l5_mode === 'bigLie' ? 'MINCIUNĂ +500m!' : 'Fură +2m/s 🐍',
+      -115,
+      90
+    );
+
+    // Right Pan: Magic Eye + Wings Physics
+    ctx.beginPath();
+    ctx.moveTo(115, 0);
+    ctx.lineTo(85, 55);
+    ctx.moveTo(115, 0);
+    ctx.lineTo(145, 55);
+    ctx.stroke();
+    drawRoundedRect(ctx, 65, 55, 100, 42, 8, '#064e3b', '#22c55e', 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('🔦 Ochi + Aripi', 115, 73);
+    ctx.fillStyle = '#86efac';
+    ctx.fillText('Adevărul Fizic!', 115, 90);
+
+    ctx.restore();
+
+    // 2. CUP OF LIES (CUSUM) on the Right Side
+    const cupX = 435;
+    const cupY = 62;
+    const cupW = 115;
+    const cupH = 145;
+
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🥛 PAHARUL MINCIUNILOR', cupX + cupW / 2, 32);
+
+    // Falling red drops when in slowLie mode
+    if (state.l5_mode === 'slowLie') {
+      const dropY = cupY - 18 + ((t * 3.5) % 45);
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(cupX + cupW / 2, dropY, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Cup liquid
+    const fillH = cupH * state.l5_cupLevel;
+    ctx.fillStyle = alarmTriggered ? '#ef4444' : '#f97316';
+    ctx.fillRect(cupX + 4, cupY + cupH - fillH, cupW - 8, fillH - 2);
+
+    // Cup glass outline
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(cupX, cupY, cupW, cupH);
+
+    // Red Alarm Threshold Line on Cup
+    const threshY = cupY + cupH * 0.18;
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.moveTo(cupX - 12, threshY);
+    ctx.lineTo(cupX + cupW + 12, threshY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = '#fca5a5';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.fillText('🚨 LINIA DE ALARMĂ', cupX + cupW / 2, threshY - 6);
+
+    // Alarm Banner at bottom
+    if (alarmTriggered) {
+      drawRoundedRect(ctx, 370, 216, 215, 34, 8, '#991b1b', '#fde047', 2);
+      ctx.fillStyle = '#fef08a';
+      ctx.font = 'bold 12.5px sans-serif';
+      ctx.fillText('🔔 MINCIUNĂ PRINSĂ! GPS TĂIAT!', 477, 238);
+    } else {
+      drawRoundedRect(ctx, 370, 216, 215, 34, 8, '#064e3b', '#22c55e', 2);
+      ctx.fillStyle = '#bbf7d0';
+      ctx.font = 'bold 12.5px sans-serif';
+      ctx.fillText('✅ CÂNTAR ÎN ECHILIBRU!', 477, 238);
+    }
+    ctx.textAlign = 'left';
+  }
+
+  // =========================================================================
+  // LESSON 6: Commander Map of the 3 Big Screen Zones + Spotlight Trigger
+  // =========================================================================
+  function drawLesson6(t) {
+    ctx.fillStyle = '#090d16';
+    ctx.fillRect(0, 0, 600, 260);
+
+    ctx.fillStyle = '#fde047';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🗺️ HARTA CELOR 3 ZONE DE PE ECRANUL MARE (Apasă pe ele!)', 300, 26);
+
+    const zones = [
+      {
+        id: 1,
+        x: 16,
+        w: 180,
+        num: '1️⃣',
+        title: 'PARBRIZUL MAGIC',
+        sub: 'Sus-Stânga pe Ecran',
+        desc: 'Vezi pista prin ceață și ținta verde de aterizare!',
+        color: '#0284c7'
+      },
+      {
+        id: 2,
+        x: 210,
+        w: 180,
+        num: '2️⃣',
+        title: 'CURSA CELOR 4 AVIOANE',
+        sub: 'Jos-Stânga pe Ecran',
+        desc: 'Avionul Verde câștigă; cel Roșu fuge în copaci!',
+        color: '#16a34a'
+      },
+      {
+        id: 3,
+        x: 404,
+        w: 180,
+        num: '3️⃣',
+        title: 'COMENZI & VIDEO REAL',
+        sub: 'Panoul din Dreapta',
+        desc: 'Butoane de Ceață, Hacker și Filmare Reală din Avion!',
+        color: '#9333ea'
+      }
+    ];
+
+    zones.forEach((z) => {
+      const isPulse = state.l6_highlightZone === z.id || state.l6_highlightZone === 0;
+      const bounce = isPulse ? Math.sin(t * 0.08 + z.id) * 4 : 0;
+
+      drawRoundedRect(
+        ctx,
+        z.x,
+        46 + bounce,
+        z.w,
+        162,
+        14,
+        '#1e293b',
+        isPulse ? '#fde047' : z.color,
+        isPulse ? 3 : 2
+      );
+
+      ctx.font = '28px sans-serif';
+      ctx.fillText(z.num, z.x + z.w / 2, 84 + bounce);
+
+      ctx.fillStyle = '#fef08a';
+      ctx.font = 'bold 13px sans-serif';
+      ctx.fillText(z.title, z.x + z.w / 2, 112 + bounce);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText(z.sub, z.x + z.w / 2, 132 + bounce);
+
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = '11.5px sans-serif';
+      const words = z.desc.split(' ');
+      let line1 = words.slice(0, 4).join(' ');
+      let line2 = words.slice(4).join(' ');
+      ctx.fillText(line1, z.x + z.w / 2, 158 + bounce);
+      ctx.fillText(line2, z.x + z.w / 2, 176 + bounce);
+    });
+
+    // Bottom status bar
+    drawRoundedRect(ctx, 40, 220, 520, 30, 8, '#0f172a', '#38bdf8', 1.5);
+    ctx.fillStyle = '#7dd3fc';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText('✨ Apasă pe butonul de mai jos ca să aprindem Săgeți Luminoase pe Simulator!', 300, 240);
+    ctx.textAlign = 'left';
+  }
+
+  // =========================================================================
+  // MAIN SCREEN SPOTLIGHT OVERLAY & REAL VIDEO TRIGGER
+  // =========================================================================
+  function triggerMainScreenSpotlight(specificZone) {
+    // 1. Notify parent or global handlers if present
+    try {
+      if (typeof window.triggerMainScreenSpotlight === 'function' && window.triggerMainScreenSpotlight !== triggerMainScreenSpotlight) {
+        window.triggerMainScreenSpotlight(specificZone);
+      }
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'AERO_SPOTLIGHT_TOUR', zone: specificZone || 0 }, '*');
+      }
+    } catch (_) {}
+
+    // 2. Inject glowing visual spotlight overlay into target document (parent or current)
+    let targetDoc = document;
+    try {
+      if (window.parent && window.parent.document && window.parent.document.body) {
+        targetDoc = window.parent.document;
+      }
+    } catch (_) {}
+
+    const existing = targetDoc.getElementById('aero6yoSpotlightOverlay');
+    if (existing) existing.remove();
+
+    const overlay = targetDoc.createElement('div');
+    overlay.id = 'aero6yoSpotlightOverlay';
+    overlay.style.cssText = [
+      'position:fixed',
+      'inset:0',
+      'z-index:99999',
+      'pointer-events:auto',
+      'background:rgba(2,6,23,0.68)',
+      'display:flex',
+      'flex-direction:column',
+      'justify-content:space-between',
+      'padding:24px',
+      'font-family:system-ui,sans-serif',
+      'cursor:pointer'
+    ].join(';');
+
+    overlay.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;">
+        <div style="background:#0f172a; border:4px solid #fde047; border-radius:18px; padding:16px 20px; max-width:360px; box-shadow:0 0 35px rgba(250,204,21,0.75);">
+          <div style="font-size:24px; font-weight:900; color:#fde047;">1️⃣ PARBRIZUL MAGIC (HUD)</div>
+          <p style="margin:6px 0 0; color:#f8fafc; font-size:14px; line-height:1.4;">
+            ⬅️ <b>Uită-te în Stânga-Sus!</b> Aici vezi prin ceață cu Ochiul Magic SWIR și urmărești cercul verde de aterizare!
+          </p>
+        </div>
+
+        <div style="background:#0f172a; border:4px solid #c084fc; border-radius:18px; padding:16px 20px; max-width:360px; box-shadow:0 0 35px rgba(192,132,252,0.75);">
+          <div style="font-size:24px; font-weight:900; color:#e9d5ff;">3️⃣ BUTOANE & FILMARE REALĂ ➡️</div>
+          <p style="margin:6px 0 0; color:#f8fafc; font-size:14px; line-height:1.4;">
+            <b>În Dreapta Ecranului</b> poți porni Hackerul GPS, Ceața Groasă sau <b>Filmarea Reală din Avion 🎬</b>!
+          </p>
+        </div>
+      </div>
+
+      <div style="align-self:center; background:#1e293b; border:3px solid #38bdf8; border-radius:999px; padding:10px 24px; color:#fff; font-weight:800; font-size:15px; box-shadow:0 0 25px rgba(56,189,248,0.6);">
+        👆 Apasă oriunde pe ecran ca să închizi Săgețile Luminoase!
+      </div>
+
+      <div style="display:flex; justify-content:flex-start;">
+        <div style="background:#0f172a; border:4px solid #4ade80; border-radius:18px; padding:16px 20px; max-width:420px; box-shadow:0 0 35px rgba(74,222,128,0.75);">
+          <div style="font-size:24px; font-weight:900; color:#86efac;">2️⃣ CURSA CELOR 4 AVIOANE ⬇️</div>
+          <p style="margin:6px 0 0; color:#f8fafc; font-size:14px; line-height:1.4;">
+            <b>Jos-Stânga:</b> Vezi de sus cum Avionul Roșu (GPS păcălit) fuge în iarbă, iar Avionul Verde (AERO-SHIELD) aterizează drept!
+          </p>
+        </div>
+      </div>
+    `;
+
+    overlay.addEventListener('click', () => overlay.remove());
+    setTimeout(() => {
+      if (overlay.parentNode) overlay.remove();
+    }, 8000);
+
+    targetDoc.body.appendChild(overlay);
+  }
+
+  function triggerRealVideoDemo() {
+    try {
+      let targetDoc = document;
+      if (window.parent && window.parent.document) {
+        targetDoc = window.parent.document;
+      }
+      const realBtn =
+        targetDoc.getElementById('realFlightDemoBtn') ||
+        targetDoc.querySelector('[data-action="real-video"]');
+      if (realBtn) realBtn.click();
+
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'AERO_START_REAL_VIDEO' }, '*');
+      }
+    } catch (_) {}
+  }
+
+  // =========================================================================
+  // 60 FPS Animation Loop
+  // =========================================================================
+  function animate() {
+    state.tick++;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    switch (state.currentLesson) {
+      case 0:
+        drawLesson1(state.tick);
+        break;
+      case 1:
+        drawLesson2(state.tick);
+        break;
+      case 2:
+        drawLesson3(state.tick);
+        break;
+      case 3:
+        drawLesson4(state.tick);
+        break;
+      case 4:
+        drawLesson5(state.tick);
+        break;
+      case 5:
+        drawLesson6(state.tick);
+        break;
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  // Initialize UI & Export Public API on window.AeroLessons6YO
+  selectLesson(0);
+  requestAnimationFrame(animate);
+
+  window.AeroLessons6YO = {
+    selectLesson,
+    getState: () => state,
+    triggerMainScreenSpotlight,
+    triggerRealVideoDemo,
+    LESSONS_DATA
+  };
+})();
+</script>
+</body>
+</html>

@@ -25,10 +25,14 @@ use crate::flightgear_synthetic_10::{
 };
 use crate::rt_loop_60hz::{LRCV_RWY09_LAT_DEG, LRCV_RWY09_LON_DEG};
 use crate::sim_commands::{sanitize_f64, SimCommand};
+use crate::ui_framework_rust::{
+    get_all_6_interactive_lessons, render_aero_shield_app_maud, InteractiveLesson6Yo,
+};
+use crate::ui_lessons_6yo::{render_lessons_6yo_component, render_lessons_6yo_standalone_page};
+use crate::ui_visual_engine::{
+    serve_visual_canvases_ssr_fragment, serve_visual_engine_js, serve_visual_engine_spec_json,
+};
 use crate::{LiveMeteoSnapshot, TelemetryFrameV2};
-
-/// HTML-ul static încapsulat în binar (`include_str!`) pentru funcționare 100% autonomă.
-pub const EMBEDDED_INDEX_HTML: &str = include_str!("../static/index.html");
 
 /// Starea partajată a serverului Axum.
 #[derive(Clone)]
@@ -57,12 +61,20 @@ pub struct CommandAckResponse {
     pub message: &'static str,
 }
 
-/// Construiește router-ul Axum complet pentru `aero-cockpit-server`.
+/// Construiește router-ul Axum complet pentru `aero-cockpit-server` folosind motorul Rust SSR `maud`.
 pub fn build_cockpit_router(state: CockpitServerState) -> Router {
     let real_videos_dir = if std::path::Path::new("real_videos").exists() {
         "real_videos"
     } else {
         "/home/petreleon/aero-shield-lrcv/real_videos"
+    };
+
+    let static_dir = if std::path::Path::new("crates/aero-cockpit-server/static").exists() {
+        "crates/aero-cockpit-server/static"
+    } else if std::path::Path::new("static").exists() {
+        "static"
+    } else {
+        "/home/petreleon/aero-shield-lrcv/crates/aero-cockpit-server/static"
     };
 
     Router::new()
@@ -71,14 +83,35 @@ pub fn build_cockpit_router(state: CockpitServerState) -> Router {
         .route("/ws/telemetry", get(ws_telemetry_handler))
         .route("/api/command", post(post_sim_command_handler))
         .route("/api/health", get(get_health_handler))
+        .route("/api/lessons-6yo", get(get_lessons_6yo_handler))
+        .route("/api/lessons-6yo/html", get(get_lessons_6yo_html_handler))
+        .route("/lessons-6yo", get(get_lessons_6yo_standalone_handler))
+        .route("/api/visual-engine-spec", get(serve_visual_engine_spec_json))
+        .route("/api/visual-engine/html", get(serve_visual_canvases_ssr_fragment))
+        .route("/visual_canvases_6yo.js", get(serve_visual_engine_js))
+        .route("/static/visual_canvases_6yo.js", get(serve_visual_engine_js))
         .route("/api/real-video-benchmark", get(get_real_video_benchmark_handler))
         .route(
             "/api/flightgear-tests",
             get(get_flightgear_tests_handler).post(get_flightgear_tests_handler),
         )
         .nest_service("/real_videos", ServeDir::new(real_videos_dir))
+        .nest_service("/static", ServeDir::new(static_dir))
+        .fallback_service(ServeDir::new(static_dir))
         .layer(CorsLayer::permissive())
         .with_state(state)
+}
+
+async fn get_lessons_6yo_handler() -> Json<Vec<InteractiveLesson6Yo>> {
+    Json(get_all_6_interactive_lessons())
+}
+
+async fn get_lessons_6yo_html_handler() -> Html<String> {
+    Html(render_lessons_6yo_component())
+}
+
+async fn get_lessons_6yo_standalone_handler() -> Html<String> {
+    Html(render_lessons_6yo_standalone_page())
 }
 
 async fn get_flightgear_tests_handler() -> Json<FlightGearTestSuiteReport> {
@@ -86,8 +119,9 @@ async fn get_flightgear_tests_handler() -> Json<FlightGearTestSuiteReport> {
     Json(report)
 }
 
-async fn serve_index_html() -> Html<&'static str> {
-    Html(EMBEDDED_INDEX_HTML)
+async fn serve_index_html(State(state): State<CockpitServerState>) -> Html<String> {
+    let markup = render_aero_shield_app_maud(&state);
+    Html(markup.into_string())
 }
 
 async fn get_health_handler(State(state): State<CockpitServerState>) -> Json<HealthResponse> {

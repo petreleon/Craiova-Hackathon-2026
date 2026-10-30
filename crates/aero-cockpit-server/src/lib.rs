@@ -10,6 +10,9 @@ pub mod director_scenarios;
 pub mod flightgear_synthetic_10;
 pub mod rt_loop_60hz;
 pub mod sim_commands;
+pub mod ui_framework_rust;
+pub mod ui_lessons_6yo;
+pub mod ui_visual_engine;
 pub mod ws_telemetry;
 
 pub use sim_commands::{sanitize_f64, SimCommand};
@@ -338,5 +341,29 @@ mod tests {
             .meteo_source_status
             .contains("REAL AVIATION FOG VIDEO"));
         assert!(frame.approach_phase.contains("REAL FOG VIDEO REPLAY"));
+    }
+
+    #[test]
+    fn test_maud_rust_ui_framework_and_6yo_lessons() {
+        let lessons = crate::ui_framework_rust::get_all_6_interactive_lessons();
+        assert_eq!(lessons.len(), 6);
+
+        let mut sim = make_test_sim();
+        let init_frame = Arc::new(sim.step_60hz(1.0 / 60.0));
+        let (cmd_tx, _cmd_rx) = crossbeam_channel::bounded::<SimCommand>(16);
+        let (_tel_tx, tel_rx) = tokio::sync::watch::channel(init_frame);
+        let state = crate::ws_telemetry::CockpitServerState {
+            cmd_tx,
+            telemetry_rx: tel_rx,
+            live_meteo: Arc::new(ArcSwap::from_pointee(LiveMeteoSnapshot::default())),
+        };
+
+        let html_str = crate::ui_framework_rust::render_aero_shield_app_maud(&state).into_string();
+        assert!(html_str.starts_with("<!DOCTYPE html>"));
+        assert!(html_str.contains("RUST MAUD SSR"));
+        assert!(html_str.contains("Lecția 1:"));
+        assert!(html_str.contains("Lecția 6:"));
+        assert!(html_str.contains("FG-01"));
+        assert!(html_str.contains("FG-10"));
     }
 }
