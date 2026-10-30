@@ -20,6 +20,9 @@ use tokio::sync::watch;
 use tower_http::cors::CorsLayer;
 use tower_http::services::ServeDir;
 
+use crate::flightgear_synthetic_10::{
+    run_all_10_flightgear_synthetic_tests, FlightGearTestSuiteReport,
+};
 use crate::rt_loop_60hz::{LRCV_RWY09_LAT_DEG, LRCV_RWY09_LON_DEG};
 use crate::sim_commands::{sanitize_f64, SimCommand};
 use crate::{LiveMeteoSnapshot, TelemetryFrameV2};
@@ -69,9 +72,18 @@ pub fn build_cockpit_router(state: CockpitServerState) -> Router {
         .route("/api/command", post(post_sim_command_handler))
         .route("/api/health", get(get_health_handler))
         .route("/api/real-video-benchmark", get(get_real_video_benchmark_handler))
+        .route(
+            "/api/flightgear-tests",
+            get(get_flightgear_tests_handler).post(get_flightgear_tests_handler),
+        )
         .nest_service("/real_videos", ServeDir::new(real_videos_dir))
         .layer(CorsLayer::permissive())
         .with_state(state)
+}
+
+async fn get_flightgear_tests_handler() -> Json<FlightGearTestSuiteReport> {
+    let report = run_all_10_flightgear_synthetic_tests();
+    Json(report)
 }
 
 async fn serve_index_html() -> Html<&'static str> {

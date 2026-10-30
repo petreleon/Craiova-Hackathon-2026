@@ -7,6 +7,7 @@
 
 pub mod cli_train;
 pub mod director_scenarios;
+pub mod flightgear_synthetic_10;
 pub mod rt_loop_60hz;
 pub mod sim_commands;
 pub mod ws_telemetry;
