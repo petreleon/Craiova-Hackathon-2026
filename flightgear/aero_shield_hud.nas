@@ -104,6 +104,19 @@ var LRCV_LAT = 44.31794400;
 var LRCV_LON = 23.87294400;
 var LRCV_ELEV_M = 191.0;
 var LRCV_RWY_HDG = 88.9314;
+var ACTIVE_APT_TAG = "LRCV RWY09";
+
+var detect_active_airport_rwy = func() {
+    var cur_lat = getprop("/position/latitude-deg") or 44.3179;
+    if (cur_lat < 40.0) {
+        # Catania-Fontanarossa (LICC) Pista 26 — Apropiere deasupra Marii Ionice (Golfo di Catania)
+        LRCV_LAT = 37.46793300;
+        LRCV_LON = 15.08010800;
+        LRCV_ELEV_M = 11.89;
+        LRCV_RWY_HDG = 263.9705;
+        ACTIVE_APT_TAG = "LICC RWY26 (CATANIA SEA)";
+    }
+};
 
 var clamp = func(v, lo, hi) {
     if (v < lo) return lo;
@@ -148,15 +161,30 @@ var spawn_3d_fog_tunnel = func() {
     setprop("/sim/hud/visibility[0]", 0);
     setprop("/sim/hud/visibility[1]", 0);
 
-    var apt = airportinfo("LRCV");
-    if (apt != nil and contains(apt, "runways") and contains(apt.runways, "09")) {
-        var r09 = apt.runways["09"];
-        if (r09 != nil and contains(r09, "lat") and contains(r09, "lon") and contains(r09, "heading")) {
-            LRCV_LAT = r09.lat;
-            LRCV_LON = r09.lon;
-            LRCV_RWY_HDG = r09.heading;
-            print(sprintf("[FG-BLACKBOX] Ancorat pe Pista 09 LRCV din apt.dat: lat=%.6f lon=%.6f true_hdg=%.4f deg",
-                LRCV_LAT, LRCV_LON, LRCV_RWY_HDG));
+    detect_active_airport_rwy();
+    if (LRCV_LAT < 40.0) {
+        var apt_licc = airportinfo("LICC");
+        if (apt_licc != nil and contains(apt_licc, "runways") and contains(apt_licc.runways, "26")) {
+            var r26 = apt_licc.runways["26"];
+            if (r26 != nil and contains(r26, "lat") and contains(r26, "lon") and contains(r26, "heading")) {
+                LRCV_LAT = r26.lat;
+                LRCV_LON = r26.lon;
+                LRCV_RWY_HDG = r26.heading;
+            }
+        }
+        print(sprintf("[FG-BLACKBOX] Ancorat pe Pista 26 LICC (Catania-Fontanarossa Sea Approach): lat=%.6f lon=%.6f true_hdg=%.4f deg",
+            LRCV_LAT, LRCV_LON, LRCV_RWY_HDG));
+    } else {
+        var apt = airportinfo("LRCV");
+        if (apt != nil and contains(apt, "runways") and contains(apt.runways, "09")) {
+            var r09 = apt.runways["09"];
+            if (r09 != nil and contains(r09, "lat") and contains(r09, "lon") and contains(r09, "heading")) {
+                LRCV_LAT = r09.lat;
+                LRCV_LON = r09.lon;
+                LRCV_RWY_HDG = r09.heading;
+                print(sprintf("[FG-BLACKBOX] Ancorat pe Pista 09 LRCV din apt.dat: lat=%.6f lon=%.6f true_hdg=%.4f deg",
+                    LRCV_LAT, LRCV_LON, LRCV_RWY_HDG));
+            }
         }
     }
 
@@ -758,6 +786,7 @@ var ensure_in_air_engine_and_trim = func(agl_m) {
 
 # 4. Calculeaza autonom reperele fata de Pista 09 Craiova (folosind aceeasi lege unificata C1 ca serverul Rust / FD == AP!)
 var compute_local_lrcv_guidance = func() {
+    detect_active_airport_rwy();
     var lat = getprop("/position/latitude-deg") or LRCV_LAT;
     var lon = getprop("/position/longitude-deg") or (LRCV_LON - 0.018);
     var agl_ft = getprop("/position/altitude-agl-ft") or 550.0;
@@ -779,16 +808,28 @@ var compute_local_lrcv_guidance = func() {
     var y_rwy = -d_north_m * sin_h + d_east_m * cos_h;
     var dist_m = math.sqrt(x_rwy * x_rwy + y_rwy * y_rwy);
 
+    # Agent-4 Coastline Cliff Baro-Inertial Step Compensator (pentru apropierea deasupra Marii Ionice in Catania LICC):
+    # Deasupra marii (0m MSL), altimetrul radar masoara inaltimea fata de apa (+11.89m peste planul pragului RWY 26).
+    if (LRCV_ELEV_M < 25.0 and x_rwy < -20.0) {
+        var msl_m = (getprop("/position/altitude-ft") or 450.0) * 0.3048;
+        var rwy_plane_agl = math.max(0.5, msl_m - LRCV_ELEV_M);
+        var radar_blend = smoothstep_c1(-140.0, -20.0, x_rwy);
+        agl_m = rwy_plane_agl * (1.0 - radar_blend) + agl_m * radar_blend;
+    }
+
     var vn_mps = vn_fps * 0.3048;
     var ve_mps = ve_fps * 0.3048;
     var vx_rwy = vn_mps * cos_h + ve_mps * sin_h;
     var vy_rwy = -vn_mps * sin_h + ve_mps * cos_h;
     var spd_mps = math.max(15.0, math.sqrt(vx_rwy * vx_rwy + vy_rwy * vy_rwy));
 
+    # Agent-3 Two-Regime Nonlinear L1 S-Turn Sea Intercept -> Wing-Low Forward-Slip
+    var s_turn_w = smoothstep_c1(18.0, 42.0, math.abs(y_rwy));
     var look_blend = smoothstep_c1(-220.0, -20.0, x_rwy);
-    var loc_look = 95.0 + 25.0 * look_blend;
+    var loc_look = (95.0 + 25.0 * look_blend) + 125.0 * s_turn_w;
     var lead_w = smoothstep_c1(1.5, 10.0, math.abs(y_rwy));
-    var dy_pred = -y_rwy - vy_rwy * (1.35 * lead_w);
+    var vy_lead_sec = 1.35 * lead_w + 2.15 * s_turn_w;
+    var dy_pred = -y_rwy - vy_rwy * vy_lead_sec;
     var tgt_rel_trk = clamp(math.atan2(dy_pred, loc_look) * 180.0 / math.pi, -28.0, 28.0);
     var act_rel_trk = math.atan2(vy_rwy, math.max(1.0, vx_rwy)) * 180.0 / math.pi;
     var rel_yaw = wrap180(hdg - LRCV_RWY_HDG);
@@ -1218,8 +1259,8 @@ var update_aero_shield_hud = func() {
     var cyber_tag = (quar > 0 or spoof_jam_active > 0) ? " | GPS CARANTINAT (CONFIDENTLY WRONG BLOCAT)" : "";
     hud_win.clear();
     hud_win.write(
-        sprintf("AERO-SHIELD LRCV RWY09 %s | X_RWY: %+.0fm | AGL: %.1fm (%.0fft) | CRAB: %+.1f deg%s",
-            mode_tag, local_g.x_rwy, agl_m, agl_ft, crab_deg, cyber_tag),
+        sprintf("AERO-SHIELD %s %s | X_RWY: %+.0fm | AGL: %.1fm (%.0fft) | CRAB: %+.1f deg%s",
+            ACTIVE_APT_TAG, mode_tag, local_g.x_rwy, agl_m, agl_ft, crab_deg, cyber_tag),
         0.22, 0.92, 0.98
     );
     hud_win.write(
