@@ -8,8 +8,8 @@ use std::time::{Duration, Instant};
 
 use arc_swap::ArcSwap;
 use axum::extract::ws::{Message, WebSocket, WebSocketUpgrade};
-use axum::extract::State;
-use axum::http::StatusCode;
+use axum::extract::{Path as AxumPath, Query, State};
+use axum::http::{header, StatusCode};
 use axum::response::{Html, IntoResponse};
 use axum::routing::{get, post};
 use axum::{Json, Router};
@@ -20,13 +20,24 @@ use tokio::sync::watch;
 use tower_http::cors::CorsLayer;
 use tower_http::services::ServeDir;
 
+use crate::flightgear_synthetic_10::{
+    run_all_10_flightgear_synthetic_tests, FlightGearTestSuiteReport,
+};
+use crate::long_range_zero_gps_test::{
+    run_long_range_100km_zero_gps_benchmark, LongRangeZeroGpsReport,
+};
 use crate::rt_loop_60hz::{LRCV_RWY09_LAT_DEG, LRCV_RWY09_LON_DEG};
 use crate::sim_commands::{sanitize_f64, SimCommand};
+use crate::ui_framework_rust::{
+    get_all_6_interactive_lessons, render_aero_shield_app_maud_page,
+    render_lessons_6yo_component, render_lessons_6yo_standalone_page, InteractiveLesson6Yo,
+};
+use crate::ui_pitch_5min::render_pitch_5min_page;
 use crate::{LiveMeteoSnapshot, TelemetryFrameV2};
 
 /// HTML-ul static încapsulat în binar (`include_str!`) pentru funcționare 100% autonomă.
 pub const EMBEDDED_INDEX_HTML: &str = include_str!("../static/index.html");
-pub const EMBEDDED_COMPLEX_HTML: &str = include_str!("../static/index_complex_backup.html");
+pub const EMBEDDED_COMPLEX_HTML: &str = include_str!("../static/index.html");
 
 /// Starea partajată a serverului Axum.
 #[derive(Clone)]
@@ -67,6 +78,15 @@ pub fn build_cockpit_router(state: CockpitServerState) -> Router {
         .route("/", get(serve_index_html))
         .route("/index.html", get(serve_index_html))
         .route("/complex", get(serve_complex_html))
+        .route("/pagina/:page_num", get(serve_concept_page_html))
+        .route("/prezentare", get(serve_pitch_5min_html))
+        .route("/5min", get(serve_pitch_5min_html))
+        .route("/ghid-pdf", get(ghid_pdf_handler))
+        .route("/lectii-6-ani", get(get_lessons_6yo_standalone_handler))
+        .route("/api/lessons-6yo", get(get_lessons_6yo_handler))
+        .route("/api/lessons-6yo-html", get(get_lessons_6yo_html_handler))
+        .route("/api/flightgear-tests", get(get_flightgear_tests_handler))
+        .route("/api/long-range-zero-gps", get(get_long_range_zero_gps_handler))
         .route("/ws/telemetry", get(ws_telemetry_handler))
         .route("/api/command", post(post_sim_command_handler))
         .route("/api/health", get(get_health_handler))
@@ -76,15 +96,114 @@ pub fn build_cockpit_router(state: CockpitServerState) -> Router {
         .with_state(state)
 }
 
-async fn serve_index_html() -> Html<String> {
+#[derive(Debug, Default, Deserialize)]
+struct PageQueryParams {
+    page: Option<u8>,
+}
+
+async fn serve_index_html(
+    State(state): State<CockpitServerState>,
+    Query(params): Query<PageQueryParams>,
+) -> Html<String> {
+    if let Some(page_num) = params.page {
+        let markup = render_aero_shield_app_maud_page(&state, page_num.clamp(1, 6));
+        return Html(markup.into_string());
+    }
     if let Ok(disk_html) = std::fs::read_to_string("crates/aero-cockpit-server/static/index.html") {
         return Html(disk_html);
     }
     Html(EMBEDDED_INDEX_HTML.to_string())
 }
 
+async fn serve_concept_page_html(
+    State(state): State<CockpitServerState>,
+    AxumPath(page_num): AxumPath<u8>,
+) -> Html<String> {
+    let markup = render_aero_shield_app_maud_page(&state, page_num.clamp(1, 6));
+    Html(markup.into_string())
+}
+
 async fn serve_complex_html() -> Html<&'static str> {
     Html(EMBEDDED_COMPLEX_HTML)
+}
+
+async fn get_lessons_6yo_handler() -> Json<Vec<InteractiveLesson6Yo>> {
+    Json(get_all_6_interactive_lessons())
+}
+
+async fn get_lessons_6yo_html_handler() -> Html<String> {
+    Html(render_lessons_6yo_component())
+}
+
+async fn get_lessons_6yo_standalone_handler() -> Html<String> {
+    Html(render_lessons_6yo_standalone_page())
+}
+
+async fn serve_pitch_5min_html() -> Html<String> {
+    Html(render_pitch_5min_page().into_string())
+}
+
+async fn get_flightgear_tests_handler() -> Json<FlightGearTestSuiteReport> {
+    let report = run_all_10_flightgear_synthetic_tests();
+    Json(report)
+}
+
+#[must_use]
+pub fn load_or_run_long_range_zero_gps_report() -> LongRangeZeroGpsReport {
+    let candidate_paths = [
+        "real_videos/long_range_zero_gps_report.json",
+        "/home/petreleon/aero-shield-lrcv/real_videos/long_range_zero_gps_report.json",
+    ];
+    for p_str in &candidate_paths {
+        let p = Path::new(p_str);
+        if let Ok(content) = std::fs::read_to_string(p) {
+            if let Ok(parsed) = serde_json::from_str::<LongRangeZeroGpsReport>(&content) {
+                return parsed;
+            }
+        }
+    }
+    run_long_range_100km_zero_gps_benchmark()
+}
+
+async fn get_long_range_zero_gps_handler() -> Json<LongRangeZeroGpsReport> {
+    Json(load_or_run_long_range_zero_gps_report())
+}
+
+async fn ghid_pdf_handler() -> impl IntoResponse {
+    let candidate_paths = [
+        "AERO_SHIELD_Ghid_Complet_Explicat_De_La_Zero.pdf",
+        "/home/petreleon/aero-shield-lrcv/AERO_SHIELD_Ghid_Complet_Explicat_De_La_Zero.pdf",
+        "/home/petreleon/code/Craiova Hackathon 2026/AERO_SHIELD_Ghid_Complet_Explicat_De_La_Zero.pdf",
+    ];
+    for p_str in &candidate_paths {
+        let p = Path::new(p_str);
+        if let Ok(bytes) = std::fs::read(p) {
+            return (
+                StatusCode::OK,
+                [
+                    (header::CONTENT_TYPE, "application/pdf"),
+                    (
+                        header::CONTENT_DISPOSITION,
+                        "inline; filename=\"AERO_SHIELD_Ghid_Complet_Explicat_De_La_Zero.pdf\"",
+                    ),
+                    (header::CACHE_CONTROL, "no-cache"),
+                ],
+                bytes,
+            );
+        }
+    }
+    (
+        StatusCode::NOT_FOUND,
+        [
+            (header::CONTENT_TYPE, "text/plain; charset=utf-8"),
+            (
+                header::CONTENT_DISPOSITION,
+                "inline; filename=\"AERO_SHIELD_Ghid_Complet_Explicat_De_La_Zero.pdf\"",
+            ),
+            (header::CACHE_CONTROL, "no-cache"),
+        ],
+        b"Ghidul PDF este in curs de generare.".to_vec(),
+    )
 }
 
 async fn get_health_handler(State(state): State<CockpitServerState>) -> Json<HealthResponse> {

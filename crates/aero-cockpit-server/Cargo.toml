@@ -22,6 +22,7 @@ cuda = ["candle-core/cuda", "candle-nn/cuda"]
 aero-math-6dof = { path = "../aero-math-6dof" }
 aero-vision-fog = { path = "../aero-vision-fog" }
 aero-meteo-cyber = { path = "../aero-meteo-cyber" }
+aero-ai-cuda = { path = "../aero-ai-cuda" }
 nalgebra = { workspace = true }
 simba = { workspace = true }
 statrs = { workspace = true }
@@ -44,3 +45,4 @@ crossbeam-channel = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 thiserror = { workspace = true }
+maud = { workspace = true }

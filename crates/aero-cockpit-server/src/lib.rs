@@ -8,8 +8,14 @@
 pub mod cli_train;
 pub mod director_scenarios;
 pub mod flightgear_bridge;
+pub mod flightgear_synthetic_10;
+pub mod long_range_zero_gps_test;
 pub mod rt_loop_60hz;
 pub mod sim_commands;
+pub mod ui_framework_rust;
+pub mod ui_lessons_6yo;
+pub mod ui_pitch_5min;
+pub mod ui_visual_engine;
 pub mod ws_telemetry;
 
 pub use sim_commands::{sanitize_f64, SimCommand};
