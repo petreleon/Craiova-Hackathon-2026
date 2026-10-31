@@ -222,7 +222,7 @@ pub fn render_header_bar(current_tick: u64, gpu_device: &str, active_page: u8) -
     }
 }
 
-/// Indicatorul Plutitor cu Săgeată Animată (`👇 UITE AICI CE SE SCHIMBĂ!`).
+/// Indicatorul Plutitor cu Săgeată Statică (`👇 UITE AICI CE SE SCHIMBĂ!`).
 #[must_use]
 pub fn render_floating_pointer() -> Markup {
     html! {
@@ -230,10 +230,10 @@ pub fn render_floating_pointer() -> Markup {
             div class="pointer-bubble" {
                 span class="pointer-arrow" { "👇" }
                 div {
-                    div id="pointer-title" style="font-weight:900; font-size:15px; color:#021019;" {
+                    div id="pointer-title" style="font-weight:900; font-size:15px; color:#FDE047;" {
                         "UITE AICI CE SE SCHIMBĂ ACUM!"
                     }
-                    div id="pointer-desc" style="font-size:13.5px; color:#1e293b;" {
+                    div id="pointer-desc" style="font-size:14px; font-weight:700; color:#FFFFFF;" {
                         "Observă cum avionul nostru verde rămâne pe pistă!"
                     }
                 }
@@ -337,10 +337,10 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                 div class="school-canvas-box" {
                     div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:stretch;" {
                         // Panoul Stâng: DOAR Animația Interactivă Pas-cu-Pas (100% curată, fără video suprapus!)
-                        div style="background:#040d1e; border:2px solid #1e4273; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px;" {
+                        div style="background:#070B14; border:2px solid #38BDF8; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px;" {
                             div style="display:flex; justify-content:space-between; align-items:center; gap:8px;" {
-                                strong id="lesson-canvas-caption" style="color:#00e5ff; font-size:15.5px;" {
-                                    "🎨 Animația Interactivă Pas-cu-Pas"
+                                strong id="lesson-canvas-caption" style="color:#FDE047; font-size:15.5px;" {
+                                    "🎨 Animația Interactivă Pas-cu-Pas (Texte 100% Statice)"
                                 }
                                 span class="live-pill" { "CANVAS 60 FPS SEPARAT" }
                             }
@@ -348,19 +348,19 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                                 id="maudSchoolCanvas"
                                 width="560"
                                 height="320"
-                                style="display:block; width:100%; height:320px; border-radius:14px; background:#040a14; border:2px solid #1e4273;"
+                                style="display:block; width:100%; height:320px; border-radius:14px; background:#070B14; border:2px solid #38BDF8;"
                             {}
                         }
 
                         // Panoul Drept: DOAR Filmarea Zborului Sintetic FlightGear (100% clară, opacity: 1.0, fără canvas suprapus!)
-                        div style="background:#040d1e; border:2px solid #00e5ff; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px;" {
+                        div style="background:#070B14; border:2px solid #00FF9D; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px;" {
                             div style="display:flex; justify-content:space-between; align-items:center; gap:8px;" {
-                                strong style="color:#00ff9d; font-size:15.5px;" {
+                                strong style="color:#00FF9D; font-size:15.5px;" {
                                     "🎬 Filmarea Zborului Sintetic FlightGear"
                                 }
                                 span class="live-pill" { "VIDEO 100% CLAR SEPARAT" }
                             }
-                            div id="maud-school-fg-caption" style="font-size:13.5px; font-weight:800; color:#bae6fd;" {
+                            div id="maud-school-fg-caption" style="font-size:14px; font-weight:800; color:#FFFFFF;" {
                                 "🎬 Zbor Sintetic FlightGear (FG-01/07): Ceață CAT IIIc + Atac Hacker GPS vs. Scutul AERO-SHIELD pe Pista 09 Craiova"
                             }
                             video
@@ -371,7 +371,7 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                                 muted
                                 playsinline
                                 controls
-                                style="display:block; width:100%; height:320px; object-fit:cover; border-radius:14px; opacity:1.0; background:#000; border:2px solid #00e5ff;"
+                                style="display:block; width:100%; height:320px; object-fit:cover; border-radius:14px; opacity:1.0; background:#000; border:2px solid #00FF9D;"
                             {}
                         }
                     }
@@ -388,7 +388,7 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                         button
                             id="btnSolveLessonGreen"
                             class="btn-big btn-big-green"
-                            style="background:linear-gradient(90deg, #059669 0%, #10b981 100%); border:3px solid #34d399; box-shadow:0 0 28px rgba(16,185,129,0.75); font-size:18px; font-weight:900; color:#ffffff;"
+                            style="background:#065F46; border:3px solid #00FF9D; font-size:18px; font-weight:900; color:#FFFFFF;"
                             onclick="triggerSchoolLessonState('solved')"
                         {
                             "🟢 APASĂ BUTONUL VERDE: Activează Scutul AERO-SHIELD în Zborul FlightGear!"
@@ -398,7 +398,7 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                     // Banner-ul de confirmare când utilizatorul apasă pe Butonul Verde
                     div
                         id="school-green-solved-banner"
-                        style="background:rgba(16, 185, 129, 0.16); border:2px solid #10b981; color:#ecfdf5; padding:12px 18px; border-radius:12px; font-size:15.5px; font-weight:800;"
+                        style="background:#070B14; border:2px solid #00FF9D; color:#FFFFFF; padding:12px 18px; border-radius:12px; font-size:15.5px; font-weight:800;"
                     {
                         "✅ BRAVO! Ai apăsat Butonul Verde: Uite în filmarea FlightGear din dreapta și în animația din stânga cum avionul verde rămâne pe Pista 09 Craiova!"
                     }
@@ -446,14 +446,14 @@ pub fn render_page_2_windshield_hud(is_active: bool) -> Markup {
                 // Grid side-by-side (2 panouri alăturate, 0 suprapunere!)
                 div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:stretch;" {
                     // Panoul Stâng: 🪟 Animația Parbrizului 3D & Vectorii AI (#hudCanvas)
-                    div style="background:#040d1e; border:2px solid #254f88; border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:12px;" {
+                    div style="background:#070B14; border:2px solid #38BDF8; border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:12px;" {
                         div style="display:flex; justify-content:space-between; align-items:center;" {
-                            strong style="font-size:16.5px; color:#00ff9d;" {
+                            strong style="font-size:16.5px; color:#00FF9D;" {
                                 "🪟 Animația Parbrizului 3D & Vectorii AI"
                             }
                             span class="live-pill" { "GRAFIC 3D SEPARAT" }
                         }
-                        div style="position:relative; width:100%; height:440px; border-radius:16px; overflow:hidden; background:#050c18; border:2px solid #1e4273;" {
+                        div style="position:relative; width:100%; height:440px; border-radius:16px; overflow:hidden; background:#070B14; border:2px solid #38BDF8;" {
                             div class="hud-callout-badge hud-callout-fog" {
                                 "☁️💨 NOR ÎMPINS DE VÂNT (Săgeți Mov)"
                             }
@@ -467,15 +467,15 @@ pub fn render_page_2_windshield_hud(is_active: bool) -> Markup {
                                 id="hudCanvas"
                                 width="600"
                                 height="440"
-                                style="display:block; width:100%; height:440px; border-radius:16px; background:#050c18;"
+                                style="display:block; width:100%; height:440px; border-radius:16px; background:#070B14;"
                             {}
                         }
                     }
 
                     // Panoul Drept: 🎥 Filmarea Video Reală din Cabina Piloților (#hudBgRealVideo)
-                    div style="background:#040d1e; border:2px solid #00e5ff; border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:12px;" {
+                    div style="background:#070B14; border:2px solid #00FF9D; border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:12px;" {
                         div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;" {
-                            strong style="font-size:16.5px; color:#00e5ff;" {
+                            strong style="font-size:16.5px; color:#FDE047;" {
                                 "🎥 Filmarea Video Reală din Cabina Piloților"
                             }
                             div style="display:flex; gap:6px; flex-wrap:wrap;" {
@@ -498,7 +498,7 @@ pub fn render_page_2_windshield_hud(is_active: bool) -> Markup {
                             muted
                             playsinline
                             controls
-                            style="display:block; width:100%; height:440px; object-fit:cover; border-radius:16px; opacity:1.0; background:#000; border:2px solid #00e5ff;"
+                            style="display:block; width:100%; height:440px; object-fit:cover; border-radius:16px; opacity:1.0; background:#000; border:2px solid #00FF9D;"
                         {}
                     }
                 }
@@ -820,10 +820,10 @@ pub fn render_page_4_shield_and_controls(is_active: bool) -> Markup {
                 div class="remote-control-spacious-box" id="zone-controls" {
                     div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;" {
                         div {
-                            h2 style="font-size:21px; color:#00e5ff;" {
+                            h2 style="font-size:21px; color:#FDE047;" {
                                 "🕹️ Telecomanda de Pilotat Avionul în 6 Direcții (6-DoF) + Placa Video AI"
                             }
-                            p style="font-size:15px; color:#9ec5eb; margin-top:4px;" {
+                            p style="font-size:15.5px; color:#FFFFFF; margin-top:4px;" {
                                 "Apasă pe butoane sau folosește tastele W, A, S, D, Q, E pentru a vira și înclina avionul!"
                             }
                         }
@@ -948,12 +948,12 @@ pub fn render_page_5_real_videos(bench_json: &serde_json::Value, is_active: bool
                             {}
 
                             div class="video-explain-box" {
-                                p style="font-size:15.5px; color:#e2f1ff; line-height:1.5; margin-bottom:8px;" {
-                                    strong style="color:#ffd600;" { "👁️ Ce se vede cu ochiul liber: " }
+                                p style="font-size:15.5px; color:#FFFFFF; line-height:1.5; margin-bottom:8px;" {
+                                    strong style="color:#FDE047;" { "👁️ Ce se vede cu ochiul liber: " }
                                     (eye_ro)
                                 }
-                                p style="font-size:15.5px; color:#d1fae5; line-height:1.5;" {
-                                    strong style="color:#00ff9d;" { "🤖 Ce a măsurat programul nostru: " }
+                                p style="font-size:15.5px; color:#FFFFFF; line-height:1.5;" {
+                                    strong style="color:#00FF9D;" { "🤖 Ce a măsurat programul nostru: " }
                                     (ai_ro)
                                 }
                             }
@@ -983,30 +983,30 @@ pub fn render_page_6_flightgear_tests(fg: &FlightGearTestSuiteReport, is_active:
             id="concept-page-6"
             class=(if is_active { "concept-page-view active-page" } else { "concept-page-view" })
         {
-            section class="spacious-card" id="zone-long-range-100km" style="margin-bottom:24px; border:2px solid #00ff9d;" {
+            section class="spacious-card" id="zone-long-range-100km" style="margin-bottom:24px; background:#0B1325; border:2px solid #00FF9D;" {
                 div class="page-hero-header" {
                     div {
-                        span class="concept-pill" style="background:rgba(0,255,157,0.16); color:#00ff9d; border:1px solid #00ff9d;" {
+                        span class="concept-pill" style="background:#070B14; color:#00FF9D; border:2px solid #00FF9D;" {
                             "CURSĂ SINTETICĂ LUNGĂ FĂRĂ GPS • 100 KM (25 MIN / 90.000 CADRE LA 60 HZ) • IDENTIFICAREA ERORII"
                         }
                         h1 class="page-main-title" {
                             "🧭 Cursă Sintetică Lungă 100 km Fără GPS (Slatina/Balș → Craiova RWY 09) — Identificarea & Descompunerea Erorii"
                         }
-                        p class="page-subtitle" {
+                        p class="page-subtitle" style="color:#FFFFFF;" {
                             "🧒 "
-                            strong style="color:#ffd600;" { "Explicat simplu (ca la 6 ani): " }
+                            strong style="color:#FDE047;" { "Explicat simplu (ca la 6 ani): " }
                             "Ce se întâmplă dacă zburăm "
-                            strong style="color:#00e5ff;" { (format!("{:.0} km", lr.total_distance_km)) }
+                            strong style="color:#67E8F9;" { (format!("{:.0} km", lr.total_distance_km)) }
                             " ("
-                            strong style="color:#00e5ff;" { (format!("{:.0} minute / {} cadre la 60 Hz", lr.total_duration_sec / 60.0, lr.total_frames_60hz)) }
+                            strong style="color:#67E8F9;" { (format!("{:.0} minute / {} cadre la 60 Hz", lr.total_duration_sec / 60.0, lr.total_frames_60hz)) }
                             ") cu "
-                            strong style="color:#ff2a5f;" { (format!("{:.1}% GPS", lr.gps_availability_pct)) }
+                            strong style="color:#FF2A5F;" { (format!("{:.1}% GPS", lr.gps_availability_pct)) }
                             " (sateliți complet opriți / bruiați)? Pe parcursul a 85 km fără niciun reper luminos la sol, chiar și sistemul nostru acumulează o eroare maximă de "
-                            strong style="color:#ffd600;" { (format!("{:.1} m", lr.peak_error_before_als_m)) }
+                            strong style="color:#FDE047;" { (format!("{:.1} m", lr.peak_error_before_als_m)) }
                             " (~0.36% din distanță), pe care o "
-                            strong style="color:#00ff9d;" { "identificăm exact pe 4 cauze fizice" }
+                            strong style="color:#00FF9D;" { "identificăm exact pe 4 cauze fizice" }
                             " și o "
-                            strong style="color:#00ff9d;" { "reducem la doar " (format!("{:.2} m", lr.final_touchdown_error_m)) }
+                            strong style="color:#00FF9D;" { "reducem la doar " (format!("{:.2} m", lr.final_touchdown_error_m)) }
                             " când camera vede becurile pistei (ALS) la aterizare!"
                         }
                     }
@@ -1014,78 +1014,78 @@ pub fn render_page_6_flightgear_tests(fg: &FlightGearTestSuiteReport, is_active:
 
                 // Sumar KPI pe 5 casete mari (Peak Error, Touchdown Error, Lateral, Longitudinal, Vertical & NaN status)
                 div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:14px; margin-bottom:20px;" {
-                    div style="background:#081a33; border:1.5px solid #ffd600; border-radius:14px; padding:14px;" {
-                        div style="font-size:13px; color:#fde047; font-weight:800;" { "⚠️ EROARE MAXIMĂ ÎNAINTE DE PISTĂ (KM 85)" }
-                        div style="font-size:28px; font-weight:900; color:#ffd600; margin:6px 0;" {
+                    div style="background:#070B14; border:2px solid #FDE047; border-radius:14px; padding:14px;" {
+                        div style="font-size:13.5px; color:#FDE047; font-weight:900;" { "⚠️ EROARE MAXIMĂ ÎNAINTE DE PISTĂ (KM 85)" }
+                        div style="font-size:28px; font-weight:900; color:#FDE047; margin:6px 0;" {
                             (format!("{:.1} m", lr.peak_error_before_als_m))
                         }
-                        div style="font-size:13px; color:#cbd5e1;" {
+                        div style="font-size:13.5px; color:#FFFFFF; font-weight:600;" {
                             "După 85 km de croazieră oarbă fără GPS și fără becuri ALS (~0.36% drift din distanță)"
                         }
                     }
-                    div style="background:#081a33; border:2px solid #00ff9d; border-radius:14px; padding:14px;" {
-                        div style="font-size:13px; color:#6ee7b7; font-weight:800;" { "🎯 EROARE FINALĂ LA ATERIZARE (KM 100)" }
-                        div style="font-size:28px; font-weight:900; color:#00ff9d; margin:6px 0;" {
+                    div style="background:#070B14; border:2px solid #00FF9D; border-radius:14px; padding:14px;" {
+                        div style="font-size:13.5px; color:#00FF9D; font-weight:900;" { "🎯 EROARE FINALĂ LA ATERIZARE (KM 100)" }
+                        div style="font-size:28px; font-weight:900; color:#00FF9D; margin:6px 0;" {
                             (format!("{:.2} m", lr.final_touchdown_error_m))
                         }
-                        div style="font-size:13px; color:#cbd5e1;" {
+                        div style="font-size:13.5px; color:#FFFFFF; font-weight:600;" {
                             "După ancorarea optică pe becurile pistei Craiova RWY 09 (CAT IIIc < 0.85 m)"
                         }
                     }
-                    div style="background:#081a33; border:1.5px solid #00e5ff; border-radius:14px; padding:14px;" {
-                        div style="font-size:13px; color:#7dd3fc; font-weight:800;" { "↔️ ABATERE LATERALĂ / LONGITUDINALĂ" }
-                        div style="font-size:22px; font-weight:900; color:#00e5ff; margin:6px 0;" {
+                    div style="background:#070B14; border:2px solid #38BDF8; border-radius:14px; padding:14px;" {
+                        div style="font-size:13.5px; color:#67E8F9; font-weight:900;" { "↔️ ABATERE LATERALĂ / LONGITUDINALĂ" }
+                        div style="font-size:22px; font-weight:900; color:#FFFFFF; margin:6px 0;" {
                             "Lat: " (format!("{:.2} m", lr.lateral_touchdown_error_m)) " | Long: " (format!("{:.2} m", lr.longitudinal_touchdown_error_m))
                         }
-                        div style="font-size:13px; color:#cbd5e1;" {
+                        div style="font-size:13.5px; color:#FFFFFF; font-weight:600;" {
                             "Abatere verticală (altitudine): "
-                            strong style="color:#00ff9d;" { (format!("{:.2} m", lr.vertical_touchdown_error_m)) }
+                            strong style="color:#00FF9D;" { (format!("{:.2} m", lr.vertical_touchdown_error_m)) }
                         }
                     }
-                    div style="background:#081a33; border:1.5px solid #38bdf8; border-radius:14px; padding:14px;" {
-                        div style="font-size:13px; color:#bae6fd; font-weight:800;" { "🛡️ STABILITATE NUMERICĂ (90.000 CADRE)" }
-                        div style="font-size:22px; font-weight:900; color:#00ff9d; margin:6px 0;" {
+                    div style="background:#070B14; border:2px solid #38BDF8; border-radius:14px; padding:14px;" {
+                        div style="font-size:13.5px; color:#FDE047; font-weight:900;" { "🛡️ STABILITATE NUMERICĂ (90.000 CADRE)" }
+                        div style="font-size:22px; font-weight:900; color:#00FF9D; margin:6px 0;" {
                             @if lr.zero_nan_or_inf_verified {
                                 "✅ 0 NaN / 0 Inf (100% Stabil)"
                             } @else {
                                 "⚠️ Verificare numerică"
                             }
                         }
-                        div style="font-size:13px; color:#cbd5e1;" {
+                        div style="font-size:13.5px; color:#FFFFFF; font-weight:600;" {
                             "GPS folosit pe toată cursa de 100 km: "
-                            strong style="color:#ff2a5f;" { (format!("{:.1}%", lr.gps_availability_pct)) }
+                            strong style="color:#FF2A5F;" { (format!("{:.1}%", lr.gps_availability_pct)) }
                         }
                     }
                 }
 
                 // Tabelul / Cardurile celor 4 Faze ale Cursei de 100 km Fără GPS
-                h2 style="color:#00e5ff; font-size:20px; margin:18px 0 12px 0;" {
+                h2 style="color:#FDE047; font-size:20px; margin:18px 0 12px 0;" {
                     "📍 Evoluția Erorii pe Cele 4 Faze ale Zborului Sintetic de 100 km (Fără GPS)"
                 }
                 div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px; margin-bottom:22px;" {
                     @for phase in &lr.phases {
-                        div style="background:#071529; border:1px solid #1e3a5f; border-radius:14px; padding:15px;" {
+                        div style="background:#070B14; border:2px solid #38BDF8; border-radius:14px; padding:15px;" {
                             div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;" {
                                 span class="fg-id-badge" {
                                     "FAZA " (phase.phase_index) " (" (format!("{:.0}–{:.0} km", phase.km_start, phase.km_end)) ")"
                                 }
-                                span style="font-size:13px; color:#7dd3fc; font-weight:700;" {
+                                span style="font-size:13.5px; color:#FDE047; font-weight:800;" {
                                     (format!("{:.0}s • {} cadre", phase.duration_sec, phase.frames_60hz))
                                 }
                             }
-                            div style="color:#ffffff; font-weight:800; font-size:16.5px; margin-bottom:8px;" {
+                            div style="color:#FFFFFF; font-weight:900; font-size:16.5px; margin-bottom:8px;" {
                                 (phase.phase_name)
                             }
-                            div style="font-size:14px; color:#cbd5e1; line-height:1.55;" {
+                            div style="font-size:14.5px; color:#FFFFFF; line-height:1.55;" {
                                 div {
                                     "🌫️ Vizibilitate MOR: "
-                                    strong style="color:#fde047;" { (format!("{:.0} m", phase.visibility_mor_m)) }
+                                    strong style="color:#FDE047;" { (format!("{:.0} m", phase.visibility_mor_m)) }
                                     " | 🧭 Eroare busolă E-PG: "
-                                    strong style="color:#00e5ff;" { (format!("{:.3}°", phase.epg_compass_error_deg)) }
+                                    strong style="color:#67E8F9;" { (format!("{:.3}°", phase.epg_compass_error_deg)) }
                                 }
                                 div style="margin-top:6px;" {
                                     "🟢 Eroare AERO-SHIELD (final / max): "
-                                    strong style="color:#00ff9d;" {
+                                    strong style="color:#00FF9D;" {
                                         (format!("{:.2} m", phase.aero_shield_pos_error_end_m))
                                         " / "
                                         (format!("{:.1} m", phase.aero_shield_pos_error_max_m))
@@ -1096,13 +1096,13 @@ pub fn render_page_6_flightgear_tests(fg: &FlightGearTestSuiteReport, is_active:
                                     (format!("{:.3} m/s", phase.aero_shield_vel_rmse_mps))
                                     ")"
                                 }
-                                div style="margin-top:6px; border-top:1px dashed #1e3a5f; padding-top:6px; font-size:13px;" {
+                                div style="margin-top:6px; border-top:1px solid #38BDF8; padding-top:6px; font-size:13.5px; color:#FFFFFF;" {
                                     "🟠 INS pur (fără cameră): "
-                                    strong style="color:#ff9100;" { (format!("{:.0} m", phase.pure_ins_pos_error_end_m)) }
+                                    strong style="color:#FF9100;" { (format!("{:.0} m", phase.pure_ins_pos_error_end_m)) }
                                     " | 🟡 Flux optic naiv: "
-                                    strong style="color:#ffd600;" { (format!("{:.0} m", phase.naive_flow_pos_error_end_m)) }
+                                    strong style="color:#FDE047;" { (format!("{:.0} m", phase.naive_flow_pos_error_end_m)) }
                                     " | 🔴 GPS falsificat: "
-                                    strong style="color:#ff2a5f;" { (format!("{:.0} m", phase.spoofed_gps_pos_error_end_m)) }
+                                    strong style="color:#FF2A5F;" { (format!("{:.0} m", phase.spoofed_gps_pos_error_end_m)) }
                                 }
                             }
                         }
@@ -1110,38 +1110,38 @@ pub fn render_page_6_flightgear_tests(fg: &FlightGearTestSuiteReport, is_active:
                 }
 
                 // SECȚIUNEA ESENȚIALĂ: Identificarea și Descompunerea celor 4 Surse Fizice de Eroare
-                div id="zone-error-sources-breakdown" style="background:#061326; border:2px solid #ffd600; border-radius:16px; padding:18px; margin-bottom:20px;" {
-                    h2 style="color:#ffd600; font-size:21px; margin-bottom:8px;" {
+                div id="zone-error-sources-breakdown" style="background:#070B14; border:2px solid #FDE047; border-radius:16px; padding:18px; margin-bottom:20px;" {
+                    h2 style="color:#FDE047; font-size:21px; margin-bottom:8px;" {
                         "🔍 De unde provine eroarea de " (format!("{:.1} m", lr.peak_error_before_als_m)) " înainte de pistă? (Cele 4 Surse Fizice Identificate)"
                     }
-                    p style="color:#e2f1ff; font-size:15px; margin-bottom:14px; line-height:1.5;" {
+                    p style="color:#FFFFFF; font-size:15.5px; margin-bottom:14px; line-height:1.5;" {
                         "Am izolat matematic în simulatorul Rust fiecare componentă care contribuie la deriva acumulată pe cei 85 km de zbor fără GPS și fără lumini de pistă:"
                     }
                     div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px;" {
                         @for (idx, src) in lr.identified_error_sources.iter().enumerate() {
-                            div style="background:#0b1e3b; border:1px solid #334155; border-radius:12px; padding:14px;" {
+                            div style="background:#0B1325; border:2px solid #38BDF8; border-radius:12px; padding:14px;" {
                                 div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;" {
-                                    span style="color:#ffd600; font-weight:900; font-size:15px;" {
+                                    span style="color:#FDE047; font-weight:900; font-size:15px;" {
                                         "SURSA #" (idx + 1) " • " (format!("{:.1}%", src.contribution_pct))
                                     }
-                                    span style="background:rgba(255,214,0,0.18); color:#fde047; font-weight:900; padding:3px 9px; border-radius:8px; font-size:14px;" {
+                                    span style="background:#070B14; border:1px solid #FDE047; color:#FDE047; font-weight:900; padding:3px 9px; border-radius:8px; font-size:14px;" {
                                         "+" (format!("{:.1} m", src.contribution_m))
                                     }
                                 }
-                                div style="color:#ffffff; font-weight:800; font-size:16px; margin-bottom:8px;" {
+                                div style="color:#FFFFFF; font-weight:900; font-size:16px; margin-bottom:8px;" {
                                     (src.source_name)
                                 }
                                 div class="progress-bar-outer" style="margin-bottom:10px; height:10px;" {
                                     div
                                         class="progress-bar-inner"
-                                        style=(format!("width:{:.1}%; background:linear-gradient(90deg, #ffd600, #ff9100);", src.contribution_pct.clamp(0.0, 100.0)))
+                                        style=(format!("width:{:.1}%; background:linear-gradient(90deg, #FDE047, #FF9100);", src.contribution_pct.clamp(0.0, 100.0)))
                                     {}
                                 }
-                                p style="color:#bae6fd; font-size:14px; line-height:1.5; margin-bottom:8px;" {
+                                p style="color:#FFFFFF; font-size:14.5px; line-height:1.5; margin-bottom:8px;" {
                                     "⚙️ " (src.physical_mechanism)
                                 }
-                                div style="font-size:12.5px; color:#94a3b8; border-top:1px dashed #1e3a5f; padding-top:6px;" {
-                                    " 📌 Activă în: " strong style="color:#7dd3fc;" { (src.active_in_phases) }
+                                div style="font-size:13px; color:#FFFFFF; border-top:1px solid #38BDF8; padding-top:6px;" {
+                                    " 📌 Activă în: " strong style="color:#FDE047;" { (src.active_in_phases) }
                                 }
                             }
                         }
@@ -1149,13 +1149,13 @@ pub fn render_page_6_flightgear_tests(fg: &FlightGearTestSuiteReport, is_active:
                 }
 
                 // SECȚIUNEA DE REMEDIERE: Cum corectăm fiecare sursă de eroare
-                div id="zone-error-remediation" style="background:#051c24; border:1.5px solid #00ff9d; border-radius:16px; padding:18px;" {
-                    h2 style="color:#00ff9d; font-size:20px; margin-bottom:10px;" {
+                div id="zone-error-remediation" style="background:#070B14; border:2px solid #00FF9D; border-radius:16px; padding:18px;" {
+                    h2 style="color:#00FF9D; font-size:20px; margin-bottom:10px;" {
                         "🛠️ Cum Remediem / Eliminăm Fiecare Sursă de Eroare în Arhitectura AERO-SHIELD"
                     }
                     div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px;" {
                         @for rec in &lr.engineering_remediation_recommendations {
-                            div style="background:#072630; border-left:4px solid #00ff9d; border-radius:10px; padding:12px 14px; color:#ecfdf5; font-size:14.5px; line-height:1.5;" {
+                            div style="background:#0B1325; border:1px solid #00FF9D; border-left:5px solid #00FF9D; border-radius:10px; padding:12px 14px; color:#FFFFFF; font-size:15px; font-weight:600; line-height:1.5;" {
                                 "✅ " (rec)
                             }
                         }
@@ -1172,11 +1172,11 @@ pub fn render_page_6_flightgear_tests(fg: &FlightGearTestSuiteReport, is_active:
                         }
                         p class="page-subtitle" {
                             "Simulator instalat pe mașina virtuală: "
-                            strong style="color:#00ff9d;" { (fg.fgfs_binary_version) }
+                            strong style="color:#00FF9D;" { (fg.fgfs_binary_version) }
                             " | Abatere medie AERO-SHIELD: "
-                            strong style="color:#00ff9d;" { (format!("{:.2} m", fg.mean_aero_shield_error_m)) }
+                            strong style="color:#00FF9D;" { (format!("{:.2} m", fg.mean_aero_shield_error_m)) }
                             " față de "
-                            strong style="color:#ff2a5f;" { (format!("{:.1} m", fg.mean_classic_estimator_error_m)) }
+                            strong style="color:#FF2A5F;" { (format!("{:.1} m", fg.mean_classic_estimator_error_m)) }
                             " la sistemele clasice."
                         }
                     }
@@ -1187,17 +1187,17 @@ pub fn render_page_6_flightgear_tests(fg: &FlightGearTestSuiteReport, is_active:
                         div class="fg-spacious-card" {
                             div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;" {
                                 span class="fg-id-badge" { (t.test_id) }
-                                span style="color:#00ff9d; font-weight:900; font-size:14px;" {
+                                span style="color:#00FF9D; font-weight:900; font-size:14px;" {
                                     "✅ PASS (" (format!("{:.2}m", t.aero_shield_touchdown_error_m)) " vs " (format!("{:.1}m", t.classic_gnss_or_flow_error_m)) ")"
                                 }
                             }
-                            div style="color:#ffffff; font-weight:800; font-size:17px; margin-bottom:6px;" {
+                            div style="color:#FFFFFF; font-weight:900; font-size:17px; margin-bottom:6px;" {
                                 (t.title_ro)
                             }
-                            p style="color:#bae6fd; font-size:15px; line-height:1.5; margin-bottom:8px;" {
+                            p style="color:#FFFFFF; font-size:15px; line-height:1.5; margin-bottom:8px;" {
                                 "🧒 " (t.simple_explanation_ro)
                             }
-                            div style="font-size:13.5px; color:#7dd3fc; border-top:1px dashed #1e3a5f; padding-top:8px;" {
+                            div style="font-size:14px; font-weight:700; color:#FDE047; border-top:1px solid #38BDF8; padding-top:8px;" {
                                 "📊 " (t.key_metric_verified)
                             }
                         }
@@ -1326,17 +1326,17 @@ pub fn render_aero_shield_app_maud_page(state: &CockpitServerState, initial_page
 
 const MAUD_COCKPIT_CSS: &str = r####"
 :root {
-  --bg-deep: #040914;
-  --bg-panel: #0a1428;
-  --bg-card: #0e1d38;
-  --border-cyan: #1e4273;
-  --hud-green: #00ff9d;
-  --hud-cyan: #00e5ff;
-  --fog-purple: #d946ef;
-  --alert-red: #ff2a5f;
-  --warn-amber: #ffb800;
-  --text-main: #f1f7ff;
-  --text-dim: #9ec5eb;
+  --bg-deep: #070B14;
+  --bg-panel: #0B1325;
+  --bg-card: #0B1325;
+  --border-cyan: #38BDF8;
+  --hud-green: #00FF9D;
+  --hud-cyan: #67E8F9;
+  --fog-purple: #F0ABFC;
+  --alert-red: #FF2A5F;
+  --warn-amber: #FDE047;
+  --text-main: #FFFFFF;
+  --text-dim: #F8FAFC;
 }
 * {
   box-sizing: border-box;
@@ -1345,7 +1345,7 @@ const MAUD_COCKPIT_CSS: &str = r####"
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
 }
 body {
-  background: radial-gradient(circle at 50% 0%, #0f2246 0%, var(--bg-deep) 75%);
+  background: #070B14;
   color: var(--text-main);
   min-height: 100vh;
   display: flex;
@@ -1354,10 +1354,10 @@ body {
   padding-bottom: 48px;
 }
 
-/* BARA DE NAVIGARE SUS (AERISITĂ, MARE, CLARĂ) */
+/* BARA DE NAVIGARE SUS (100% OPACĂ, CONTRAST WCAG AAA) */
 .topbar {
-  background: rgba(7, 15, 32, 0.96);
-  border-bottom: 2px solid var(--border-cyan);
+  background: #070B14;
+  border-bottom: 2px solid #38BDF8;
   padding: 18px 36px;
   display: flex;
   flex-direction: column;
@@ -1375,15 +1375,15 @@ body {
 }
 .brand { display: flex; align-items: center; gap: 14px; }
 .brand-badge {
-  background: linear-gradient(135deg, #00ff9d 0%, #00b8ff 100%);
-  color: #021019;
+  background: #00FF9D;
+  color: #070B14;
   font-weight: 900;
   font-size: 13px;
   padding: 6px 12px;
   border-radius: 8px;
 }
-.brand-title { font-size: 19px; font-weight: 900; color: var(--hud-cyan); }
-.brand-sub { font-size: 13.5px; color: var(--text-dim); margin-top: 2px; }
+.brand-title { font-size: 19px; font-weight: 900; color: #FDE047; }
+.brand-sub { font-size: 14px; font-weight: 700; color: #FFFFFF; margin-top: 2px; }
 
 .lang-and-status {
   display: flex;
@@ -1394,15 +1394,15 @@ body {
 .lang-switch {
   display: flex;
   gap: 6px;
-  background: #061022;
+  background: #0B1325;
   padding: 4px;
   border-radius: 10px;
-  border: 1px solid #1e4273;
+  border: 2px solid #38BDF8;
 }
 .lang-btn {
-  background: transparent;
-  color: var(--text-dim);
-  border: none;
+  background: #070B14;
+  color: #FFFFFF;
+  border: 1px solid transparent;
   padding: 7px 14px;
   border-radius: 7px;
   font-size: 14px;
@@ -1410,20 +1410,21 @@ body {
   cursor: pointer;
 }
 .lang-btn.active {
-  background: #163763;
-  color: #ffffff;
+  background: #FDE047;
+  color: #070B14;
+  font-weight: 900;
 }
 .phase-banner {
-  background: rgba(0, 255, 157, 0.12);
-  border: 1px solid var(--hud-green);
-  color: var(--hud-green);
+  background: #0B1325;
+  border: 2px solid #00FF9D;
+  color: #00FF9D;
   padding: 8px 16px;
   border-radius: 10px;
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 900;
 }
 
-/* CELE 6 BUTOANE MARI DE PAGINI (CÂTE UN CONCEPT PE PAGINĂ) */
+/* CELE 6 BUTOANE MARI DE PAGINI (FĂRĂ TEXT MIȘCĂTOR LA HOVER) */
 .pages-nav-bar {
   max-width: 1220px;
   width: 100%;
@@ -1433,28 +1434,26 @@ body {
   gap: 12px;
 }
 .nav-page-btn {
-  background: #0d1d3a;
-  color: #dbeafe;
-  border: 2px solid #23497d;
+  background: #0B1325;
+  color: #FFFFFF;
+  border: 2px solid #38BDF8;
   padding: 13px 14px;
   border-radius: 14px;
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
-  transition: all 0.16s ease;
   text-align: center;
 }
 .nav-page-btn:hover {
-  border-color: var(--hud-cyan);
-  background: #16305c;
-  transform: translateY(-2px);
+  border-color: #FDE047;
+  background: #132342;
+  color: #FDE047;
 }
 .nav-page-btn.active {
-  background: linear-gradient(90deg, #00ff9d 0%, #00d4ff 100%);
-  color: #021019;
-  border-color: #ffffff;
+  background: #00FF9D;
+  color: #070B14;
+  border-color: #FFFFFF;
   font-weight: 900;
-  box-shadow: 0 0 22px rgba(0, 255, 157, 0.45);
 }
 
 /* CONTAINERUL PRINCIPAL FOARTE AERISIT (MAX 1220px, PADDING GENEROS) */
@@ -1466,25 +1465,19 @@ body {
   flex: 1;
 }
 
-/* DOAR 1 PAGINĂ VIZIBILĂ LA ORICE MOMENT! */
+/* DOAR 1 PAGINĂ VIZIBILĂ LA ORICE MOMENT (FĂRĂ ANIMAȚIE CARE MIȘCĂ TEXTUL) */
 .concept-page-view {
   display: none !important;
 }
 .concept-page-view.active-page {
   display: block !important;
-  animation: fadeInPage 0.25s ease;
-}
-@keyframes fadeInPage {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .spacious-card {
-  background: rgba(11, 23, 46, 0.94);
-  border: 2px solid #21467a;
+  background: #0B1325;
+  border: 2px solid #38BDF8;
   border-radius: 24px;
   padding: 36px 44px;
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -1496,37 +1489,37 @@ body {
   align-items: flex-start;
   flex-wrap: wrap;
   gap: 20px;
-  border-bottom: 1px solid #1e3a66;
+  border-bottom: 2px solid #38BDF8;
   padding-bottom: 22px;
 }
 .concept-pill {
   display: inline-block;
-  background: rgba(0, 229, 255, 0.14);
-  color: var(--hud-cyan);
-  border: 1px solid rgba(0, 229, 255, 0.4);
-  padding: 5px 14px;
+  background: #070B14;
+  color: #FDE047;
+  border: 2px solid #FDE047;
+  padding: 6px 14px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 900;
   letter-spacing: 0.4px;
 }
 .page-main-title {
   font-size: 27px;
   font-weight: 900;
-  color: #ffffff;
+  color: #FFFFFF;
   margin-top: 8px;
 }
 .page-subtitle {
   font-size: 17.5px;
-  color: var(--text-dim);
+  color: #FFFFFF;
   line-height: 1.55;
   margin-top: 8px;
   max-width: 850px;
 }
 .stars-box {
-  background: #071329;
-  border: 2px solid #fbbf24;
-  color: #fde047;
+  background: #070B14;
+  border: 2px solid #FDE047;
+  color: #FDE047;
   padding: 12px 20px;
   border-radius: 14px;
   font-size: 17px;
@@ -1540,9 +1533,9 @@ body {
   gap: 12px;
 }
 .lesson-tab-big {
-  background: #08152c;
-  color: #cbd5e1;
-  border: 2px solid #214373;
+  background: #070B14;
+  color: #FFFFFF;
+  border: 2px solid #38BDF8;
   padding: 14px 12px;
   border-radius: 14px;
   font-size: 16px;
@@ -1552,40 +1545,39 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all 0.15s ease;
 }
 .lesson-tab-big:hover {
-  border-color: var(--hud-cyan);
-  color: #fff;
+  border-color: #FDE047;
+  color: #FDE047;
 }
 .lesson-tab-big.active {
-  background: linear-gradient(135deg, #f59e0b 0%, #eab308 100%);
-  color: #021019;
-  border-color: #fef08a;
+  background: #FDE047;
+  color: #070B14;
+  border-color: #FFFFFF;
   font-weight: 900;
-  box-shadow: 0 0 18px rgba(245, 158, 11, 0.45);
 }
 .lesson-pane-spacious {
   flex-direction: column;
   gap: 20px;
-  background: #071226;
-  border: 2px solid #1e3f6f;
+  background: #070B14;
+  border: 2px solid #38BDF8;
   border-radius: 18px;
   padding: 28px 32px;
 }
 .lesson-big-heading {
   font-size: 23px;
   font-weight: 900;
-  color: var(--hud-cyan);
+  color: #FDE047;
 }
 .lesson-big-story {
   font-size: 20px;
   line-height: 1.65;
-  color: #f8fafc;
-  background: #040c1a;
+  color: #FFFFFF;
+  background: #0B1325;
   padding: 22px 26px;
   border-radius: 14px;
-  border-left: 6px solid var(--warn-amber);
+  border: 2px solid #38BDF8;
+  border-left: 6px solid #FDE047;
 }
 .lesson-action-row {
   display: flex;
@@ -1595,16 +1587,16 @@ body {
 }
 .lesson-takeaway-banner {
   font-size: 16.5px;
-  color: var(--hud-green);
-  font-weight: 800;
-  background: rgba(0, 255, 157, 0.08);
+  color: #00FF9D;
+  font-weight: 900;
+  background: #0B1325;
   padding: 12px 18px;
   border-radius: 10px;
-  border: 1px solid rgba(0, 255, 157, 0.3);
+  border: 2px solid #00FF9D;
 }
 .school-canvas-box {
-  background: #061124;
-  border: 2px solid #21487a;
+  background: #070B14;
+  border: 2px solid #38BDF8;
   border-radius: 18px;
   padding: 22px 26px;
   display: flex;
@@ -1616,64 +1608,64 @@ body {
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
-  color: #bae6fd;
+  color: #FFFFFF;
 }
 .live-pill {
-  background: rgba(0, 255, 157, 0.16);
-  color: var(--hud-green);
+  background: #070B14;
+  border: 2px solid #00FF9D;
+  color: #00FF9D;
   padding: 5px 12px;
   border-radius: 999px;
   font-size: 13px;
   font-weight: 900;
 }
 
-/* BUTOANE MARI PENTRU TOATE PAGINILE */
+/* BUTOANE MARI PENTRU TOATE PAGINILE (FĂRĂ TRANSFORM/MIȘCARE LA HOVER) */
 .btn-big {
-  background: #13284c;
-  color: #ffffff;
-  border: 2px solid #2b548e;
+  background: #070B14;
+  color: #FFFFFF;
+  border: 2px solid #38BDF8;
   padding: 14px 22px;
   border-radius: 14px;
   font-size: 16px;
   font-weight: 800;
   cursor: pointer;
-  transition: all 0.15s ease;
 }
 .btn-big:hover {
-  transform: translateY(-2px);
-  border-color: var(--hud-cyan);
-  background: #1b3869;
+  border-color: #FDE047;
+  background: #132342;
 }
 .btn-big-green {
-  background: linear-gradient(90deg, #059669 0%, #10b981 100%);
-  border-color: #6ee7b7;
-  color: #ffffff;
+  background: #065F46;
+  border-color: #00FF9D;
+  color: #FFFFFF;
 }
 .btn-big-cyan {
-  background: linear-gradient(90deg, #0284c7 0%, #06b6d4 100%);
-  border-color: #bae6fd;
-  color: #ffffff;
+  background: #075985;
+  border-color: #67E8F9;
+  color: #FFFFFF;
 }
 .btn-big-amber {
-  background: linear-gradient(90deg, #d97706 0%, #f59e0b 100%);
-  border-color: #fde68a;
-  color: #021019;
+  background: #FDE047;
+  border-color: #FFFFFF;
+  color: #070B14;
+  font-weight: 900;
 }
 .btn-big-purple {
-  background: linear-gradient(90deg, #7e22ce 0%, #c026d3 100%);
-  border-color: #f0abfc;
-  color: #ffffff;
+  background: #581C87;
+  border-color: #F0ABFC;
+  color: #FFFFFF;
 }
 .btn-big-red {
-  background: linear-gradient(90deg, #be123c 0%, #e11d48 100%);
-  border-color: #fda4af;
-  color: #ffffff;
+  background: #9F1239;
+  border-color: #FDA4AF;
+  color: #FFFFFF;
 }
 
-/* PAGINA 2: PARBRIZUL AVIONULUI & FILMAREA 50% */
+/* PAGINA 2: PARBRIZUL AVIONULUI & FILMAREA SEPARATĂ */
 .storyteller-bar {
-  background: linear-gradient(90deg, rgba(6, 36, 52, 0.96) 0%, rgba(14, 28, 56, 0.96) 100%);
-  border: 2px solid var(--hud-green);
+  background: #0B1325;
+  border: 2px solid #00FF9D;
   border-radius: 20px;
   padding: 20px 28px;
   margin-bottom: 24px;
@@ -1683,16 +1675,16 @@ body {
   flex-wrap: wrap;
 }
 .story-icon { font-size: 34px; }
-.story-headline { font-size: 19px; font-weight: 900; color: #ffffff; }
-.story-subtext { font-size: 15.5px; color: #bae6fd; margin-top: 4px; }
+.story-headline { font-size: 19px; font-weight: 900; color: #FFFFFF; }
+.story-subtext { font-size: 15.5px; font-weight: 700; color: #FDE047; margin-top: 4px; }
 .hud-summary-badge {
-  background: #051329;
-  border: 1px solid var(--hud-cyan);
-  color: var(--hud-green);
+  background: #070B14;
+  border: 2px solid #00FF9D;
+  color: #00FF9D;
   padding: 10px 16px;
   border-radius: 12px;
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 900;
 }
 .windshield-top-controls {
   display: flex;
@@ -1705,17 +1697,17 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #071429;
+  background: #070B14;
   padding: 12px 20px;
   border-radius: 14px;
-  border: 1px solid #23497d;
+  border: 2px solid #38BDF8;
 }
 .windshield-stage-480 {
   position: relative;
   width: 100%;
   height: 480px;
-  background: #02060d;
-  border: 2px solid #254f88;
+  background: #070B14;
+  border: 2px solid #38BDF8;
   border-radius: 18px;
   overflow: hidden;
 }
@@ -1731,29 +1723,30 @@ body {
 .hud-callout-fog {
   top: 16px;
   left: 18px;
-  background: rgba(88, 28, 135, 0.88);
-  border: 1px solid #f0abfc;
-  color: #fae8ff;
+  background: #070B14;
+  border: 2px solid #F0ABFC;
+  color: #FFFFFF;
 }
 .hud-callout-als {
   bottom: 16px;
   right: 18px;
-  background: rgba(6, 78, 59, 0.88);
-  border: 1px solid #00ff9d;
-  color: #d1fae5;
+  background: #070B14;
+  border: 2px solid #00FF9D;
+  color: #FFFFFF;
 }
 .gust-alert-overlay {
   position: absolute;
   top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(225, 29, 72, 0.94);
-  border: 2px solid #fde047;
-  color: #ffffff;
+  left: 18px;
+  right: 18px;
+  background: #070B14;
+  border: 2px solid #FDE047;
+  color: #FDE047;
   padding: 10px 22px;
   border-radius: 12px;
   font-size: 15px;
   font-weight: 900;
+  text-align: center;
   display: none;
 }
 .three-legend-boxes {
@@ -1762,16 +1755,16 @@ body {
   gap: 18px;
 }
 .legend-card {
-  background: #071326;
+  background: #070B14;
   border-radius: 16px;
   padding: 20px 22px;
-  border: 2px solid #1e3f6f;
+  border: 2px solid #38BDF8;
 }
-.legend-green { border-left: 6px solid #00ff9d; }
-.legend-purple { border-left: 6px solid #d946ef; }
-.legend-amber { border-left: 6px solid #ffb800; }
-.legend-title { font-size: 17px; font-weight: 900; color: #ffffff; margin-bottom: 8px; }
-.legend-desc { font-size: 15px; color: #cbd5e1; line-height: 1.5; }
+.legend-green { border-left: 6px solid #00FF9D; }
+.legend-purple { border-left: 6px solid #F0ABFC; }
+.legend-amber { border-left: 6px solid #FDE047; }
+.legend-title { font-size: 17px; font-weight: 900; color: #FDE047; margin-bottom: 8px; }
+.legend-desc { font-size: 15.5px; color: #FFFFFF; line-height: 1.5; }
 
 .four-quick-buttons-bar {
   display: grid;
@@ -1784,20 +1777,24 @@ body {
   position: relative;
   width: 100%;
   height: 440px;
-  background: #030914;
-  border: 2px solid #254f88;
+  background: #070B14;
+  border: 2px solid #38BDF8;
   border-radius: 18px;
   overflow: hidden;
 }
 .btn-mode-toggle {
-  background: #0f2447;
-  color: #e0f2fe;
-  border: 1px solid #38bdf8;
+  background: #070B14;
+  color: #FFFFFF;
+  border: 2px solid #38BDF8;
   padding: 9px 14px;
   border-radius: 10px;
   font-size: 14px;
   font-weight: 800;
   cursor: pointer;
+}
+.btn-mode-toggle:hover {
+  border-color: #FDE047;
+  color: #FDE047;
 }
 .four-planes-cards-grid {
   display: grid;
@@ -1805,22 +1802,22 @@ body {
   gap: 18px;
 }
 .plane-explain-card {
-  background: #071326;
+  background: #070B14;
   border-radius: 16px;
   padding: 22px 24px;
-  border: 2px solid #1e3f6f;
+  border: 2px solid #38BDF8;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-.plane-card-green { border-left: 7px solid #00ff9d; background: rgba(6, 42, 34, 0.55); }
-.plane-card-red { border-left: 7px solid #ff2a5f; }
-.plane-card-yellow { border-left: 7px solid #ffd600; }
-.plane-card-orange { border-left: 7px solid #ff9100; }
+.plane-card-green { border-left: 7px solid #00FF9D; background: #070B14; }
+.plane-card-red { border-left: 7px solid #FF2A5F; background: #070B14; }
+.plane-card-yellow { border-left: 7px solid #FDE047; background: #070B14; }
+.plane-card-orange { border-left: 7px solid #FF9100; background: #070B14; }
 .plane-card-header { display: flex; align-items: center; gap: 10px; }
 .plane-emoji { font-size: 26px; }
 .plane-err-val { font-size: 16px; font-weight: 900; }
-.plane-kid-text { font-size: 15px; color: #dbeafe; line-height: 1.5; }
+.plane-kid-text { font-size: 15.5px; color: #FFFFFF; line-height: 1.5; }
 .three-race-buttons-bar {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1835,13 +1832,13 @@ body {
   margin-top: 12px;
 }
 .drosophila-bio-pill {
-  background: rgba(0, 255, 157, 0.12);
-  border: 1px solid #00ff9d;
-  color: #d1fae5;
+  background: #070B14;
+  border: 2px solid #00FF9D;
+  color: #FFFFFF;
   padding: 6px 14px;
   border-radius: 999px;
-  font-size: 13.5px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 900;
 }
 .drosophila-4-stages-grid {
   display: grid;
@@ -1849,9 +1846,9 @@ body {
   gap: 14px;
 }
 .drosophila-stage-card {
-  background: linear-gradient(145deg, #07162c 0%, #091d3a 100%);
-  border: 2px solid #00e5ff;
-  border-left: 5px solid #00ff9d;
+  background: #070B14;
+  border: 2px solid #38BDF8;
+  border-left: 5px solid #00FF9D;
   border-radius: 14px;
   padding: 16px 18px;
   display: flex;
@@ -1861,11 +1858,11 @@ body {
 .drosophila-stage-title {
   font-size: 15.5px;
   font-weight: 900;
-  color: #00ff9d;
+  color: #FDE047;
 }
 .drosophila-stage-desc {
-  font-size: 13.5px;
-  color: #dbeafe;
+  font-size: 14px;
+  color: #FFFFFF;
   line-height: 1.45;
 }
 .three-shields-grid {
@@ -1874,8 +1871,8 @@ body {
   gap: 20px;
 }
 .shield-big-card {
-  background: #071326;
-  border: 2px solid #21467a;
+  background: #070B14;
+  border: 2px solid #38BDF8;
   border-radius: 18px;
   padding: 24px 26px;
   display: flex;
@@ -1883,10 +1880,11 @@ body {
   justify-content: space-between;
   gap: 14px;
 }
-.shield-card-title { font-size: 19px; font-weight: 900; color: var(--hud-cyan); }
-.shield-card-story { font-size: 15.5px; color: #cbd5e1; line-height: 1.55; }
+.shield-card-title { font-size: 19px; font-weight: 900; color: #FDE047; }
+.shield-card-story { font-size: 15.5px; color: #FFFFFF; line-height: 1.55; }
 .shield-metrics-box {
-  background: #040c1a;
+  background: #0B1325;
+  border: 1px solid #38BDF8;
   border-radius: 12px;
   padding: 14px 16px;
   display: flex;
@@ -1897,11 +1895,12 @@ body {
   display: flex;
   justify-content: space-between;
   font-size: 14.5px;
-  color: #9ec5eb;
+  font-weight: 700;
+  color: #FFFFFF;
 }
 .remote-control-spacious-box {
-  background: #071326;
-  border: 2px solid #21467a;
+  background: #070B14;
+  border: 2px solid #38BDF8;
   border-radius: 18px;
   padding: 26px 30px;
 }
@@ -1917,17 +1916,18 @@ body {
   margin-top: 18px;
 }
 .tel-pill {
-  background: #040c1a;
-  border: 1px solid #1e3f6f;
+  background: #0B1325;
+  border: 2px solid #38BDF8;
   border-radius: 10px;
   padding: 10px 14px;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  font-size: 13px;
-  color: #9ec5eb;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #FFFFFF;
 }
-.tel-pill strong { font-size: 15px; color: #00ff9d; }
+.tel-pill strong { font-size: 15px; color: #00FF9D; }
 
 /* PAGINA 5: CELE 3 FILMĂRI REALE */
 .videos-3-spacious-grid {
@@ -1936,8 +1936,8 @@ body {
   gap: 22px;
 }
 .video-spacious-card {
-  background: #071326;
-  border: 2px solid #21467a;
+  background: #070B14;
+  border: 2px solid #38BDF8;
   border-radius: 18px;
   padding: 24px 26px;
   display: flex;
@@ -1945,7 +1945,8 @@ body {
   justify-content: space-between;
 }
 .video-explain-box {
-  background: #040c1a;
+  background: #0B1325;
+  border: 1px solid #38BDF8;
   border-radius: 12px;
   padding: 16px;
   margin-top: 14px;
@@ -1958,28 +1959,28 @@ body {
   gap: 18px;
 }
 .fg-spacious-card {
-  background: #071326;
-  border: 2px solid #21467a;
+  background: #070B14;
+  border: 2px solid #38BDF8;
   border-radius: 16px;
   padding: 22px 26px;
 }
 .fg-id-badge {
-  background: var(--hud-cyan);
-  color: #021019;
+  background: #FDE047;
+  color: #070B14;
   font-weight: 900;
   font-size: 13.5px;
   padding: 4px 10px;
   border-radius: 6px;
 }
 
-/* BARA MARE DE NAVIGARE JOS */
+/* BARA MARE DE NAVIGARE JOS (100% OPACĂ) */
 .bottom-concept-nav {
   max-width: 1220px;
   width: 100%;
   margin: 12px auto 0 auto;
   padding: 20px 28px;
-  background: rgba(8, 18, 38, 0.96);
-  border: 2px solid #23497d;
+  background: #070B14;
+  border: 2px solid #38BDF8;
   border-radius: 20px;
   display: flex;
   justify-content: space-between;
@@ -1990,14 +1991,13 @@ body {
 .bottom-page-indicator {
   font-size: 18px;
   font-weight: 900;
-  color: var(--hud-green);
+  color: #FDE047;
   text-align: center;
 }
 
-/* SPOTLIGHT & POINTER */
+/* SPOTLIGHT & POINTER (100% OPAC, CONTRAST MAXIM) */
 .visual-spotlight-active {
-  outline: 4px solid #fde047 !important;
-  box-shadow: 0 0 35px rgba(253, 224, 71, 0.65) !important;
+  outline: 4px solid #FDE047 !important;
 }
 #floating-visual-pointer {
   position: fixed;
@@ -2005,27 +2005,27 @@ body {
   pointer-events: none;
 }
 .pointer-bubble {
-  background: #fde047;
-  border: 3px solid #ffffff;
+  background: #070B14;
+  border: 3px solid #FDE047;
   border-radius: 14px;
   padding: 12px 18px;
   display: flex;
   align-items: center;
   gap: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
 }
 .pointer-arrow { font-size: 28px; }
 .progress-bar-outer {
   width: 100%;
   height: 12px;
-  background: #040c1a;
+  background: #070B14;
+  border: 1px solid #38BDF8;
   border-radius: 999px;
   overflow: hidden;
 }
 .progress-bar-inner {
   width: 0%;
   height: 100%;
-  background: linear-gradient(90deg, #00ff9d, #00e5ff);
+  background: linear-gradient(90deg, #00FF9D, #67E8F9);
 }
 
 @media (max-width: 1024px) {
@@ -2297,9 +2297,9 @@ function triggerSchoolLessonState(mode) {
 
   if (window.schoolLessonMode === "danger") {
     if (bannerEl) {
-      bannerEl.style.background = "rgba(225, 29, 72, 0.22)";
-      bannerEl.style.borderColor = "#fb7185";
-      bannerEl.style.color = "#ffe4e6";
+      bannerEl.style.background = "#070B14";
+      bannerEl.style.borderColor = "#FF2A5F";
+      bannerEl.style.color = "#FFFFFF";
       bannerEl.textContent = "⚠️ PERICOL ACTIV ÎN LECȚIE! Apasă acum pe BUTONUL VERDE MARE (#btnSolveLessonGreen) de mai sus ca să activezi Scutul AERO-SHIELD în zborul FlightGear!";
     }
     highlightVisualZone("btnSolveLessonGreen", "Apasă pe acest BUTON VERDE MARE ca să rezolvi pericolul în zborul sintetic FlightGear!");
@@ -2312,9 +2312,9 @@ function triggerSchoolLessonState(mode) {
     }
     lessonPlayAction(currentLessonNum);
     if (bannerEl) {
-      bannerEl.style.background = "rgba(16, 185, 129, 0.18)";
-      bannerEl.style.borderColor = "#10b981";
-      bannerEl.style.color = "#ecfdf5";
+      bannerEl.style.background = "#070B14";
+      bannerEl.style.borderColor = "#00FF9D";
+      bannerEl.style.color = "#FFFFFF";
       bannerEl.textContent = "✅ BRAVO! Ai apăsat Butonul Verde: Uite în filmarea FlightGear cum avionul verde rezolvă problema și rămâne pe Pista 09 Craiova!";
     }
   }
@@ -2360,9 +2360,9 @@ function selectLesson6Yo(num) {
 
   const bannerEl = document.getElementById("school-green-solved-banner");
   if (bannerEl && lessonMeta) {
-    bannerEl.style.background = "rgba(16, 185, 129, 0.16)";
-    bannerEl.style.borderColor = "#10b981";
-    bannerEl.style.color = "#ecfdf5";
+    bannerEl.style.background = "#070B14";
+    bannerEl.style.borderColor = "#00FF9D";
+    bannerEl.style.color = "#FFFFFF";
     bannerEl.textContent = `✅ Lecția ${clamped} pregătită! Apasă pe Butonul Verde strălucitor ca să vezi rezolvarea în zborul FlightGear!`;
   }
 
@@ -2425,160 +2425,250 @@ function renderLessonMiniCanvas() {
   const h = canvas.height;
   lessonAnimTick += 1;
 
+  // Fundal 100% opac WCAG AAA
   ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = window.schoolLessonMode === "danger" ? "#1e0712" : "#040c1c";
+  ctx.fillStyle = "#070B14";
   ctx.fillRect(0, 0, w, h);
 
+  // Caseta superioară 100% STATICĂ și OPACĂ (#070B14) pentru starea scutului
+  ctx.fillStyle = "#0B1325";
+  ctx.strokeStyle = window.schoolLessonMode === "danger" ? "#FF2A5F" : "#00FF9D";
+  ctx.lineWidth = 2;
+  ctx.fillRect(14, 8, w - 28, 28);
+  ctx.strokeRect(14, 8, w - 28, 28);
+
   if (window.schoolLessonMode === "danger") {
-    ctx.fillStyle = "#ff2a5f";
-    ctx.font = "bold 14px sans-serif";
-    ctx.fillText("⚠️ MOD PERICOL ACTIV — APASĂ PE BUTONUL VERDE DE SUB ECRAN PENTRU A ACTIVA SCUTUL!", 175, 22);
-  } else {
-    ctx.fillStyle = "#00ff9d";
+    ctx.fillStyle = "#FDE047";
     ctx.font = "bold 13.5px sans-serif";
-    ctx.fillText("✅ SCUTUL AERO-SHIELD & ZBORUL FLIGHTGEAR REZOLVAT ACTIV!", 175, 22);
+    ctx.fillText("⚠️ MOD PERICOL ACTIV — APASĂ PE BUTONUL VERDE DE SUB ECRAN PENTRU A ACTIVA SCUTUL!", 24, 27);
+  } else {
+    ctx.fillStyle = "#00FF9D";
+    ctx.font = "bold 13.5px sans-serif";
+    ctx.fillText("✅ SCUTUL AERO-SHIELD & ZBORUL FLIGHTGEAR REZOLVAT ACTIV!", 24, 27);
   }
 
-  // Desenăm pista din Craiova în dreapta
-  ctx.fillStyle = "#0b243b";
-  ctx.strokeStyle = "#00ff9d";
+  // Desenăm pista din Craiova în dreapta (poziție 100% FIXĂ)
+  ctx.fillStyle = "#0B1325";
+  ctx.strokeStyle = "#00FF9D";
   ctx.lineWidth = 3;
-  ctx.fillRect(w - 190, 45, 160, h - 90);
-  ctx.strokeRect(w - 190, 45, 160, h - 90);
-  ctx.fillStyle = "#00ff9d";
-  ctx.font = "bold 14px sans-serif";
-  ctx.fillText("🎯 PISTA CRAIOVA 09", w - 182, 34);
+  ctx.fillRect(w - 175, 76, 155, h - 118);
+  ctx.strokeRect(w - 175, 76, 155, h - 118);
 
-  // Desenăm Inelul-Busolă cu 16 Neuroni (🧭 E-PG Ring Attractor) în stânga-sus / centru-dreapta
-  const ringCx = currentLessonNum >= 4 ? w - 310 : 88;
-  const ringCy = currentLessonNum >= 4 ? h / 2 - 10 : 78;
-  const ringR = currentLessonNum >= 4 ? 54 : 36;
+  // Etichetă 100% STATICĂ pentru Pistă în casetă opacă
+  ctx.fillStyle = "#070B14";
+  ctx.strokeStyle = "#00FF9D";
+  ctx.lineWidth = 1.5;
+  ctx.fillRect(w - 175, 44, 155, 26);
+  ctx.strokeRect(w - 175, 44, 155, 26);
+  ctx.fillStyle = "#00FF9D";
+  ctx.font = "bold 12.5px sans-serif";
+  ctx.fillText("🎯 PISTA CRAIOVA 09", w - 168, 61);
+
+  // Desenăm Inelul-Busolă cu 16 Neuroni (🧭 E-PG Ring Attractor) în poziție FIXĂ stânga-jos
+  const ringCx = 78;
+  const ringCy = h - 92;
+  const ringR = 32;
 
   ctx.save();
-  ctx.strokeStyle = currentLessonNum >= 4 ? "#00e5ff" : "rgba(0, 229, 255, 0.55)";
-  ctx.lineWidth = currentLessonNum >= 4 ? 2.5 : 1.8;
+  ctx.fillStyle = "#0B1325";
+  ctx.strokeStyle = "#38BDF8";
+  ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.arc(ringCx, ringCy, ringR, 0, Math.PI * 2);
+  ctx.arc(ringCx, ringCy, ringR + 8, 0, Math.PI * 2);
+  ctx.fill();
   ctx.stroke();
 
-  // Cei 16 neuroni E-PG în inel (neuronul 0 orientat spre Pista 09 Craiova strălucește #00ff9d)
   for (let n = 0; n < 16; n++) {
     const ang = (n / 16) * Math.PI * 2;
     const nx = ringCx + Math.cos(ang) * ringR;
     const ny = ringCy + Math.sin(ang) * ringR;
     const isTargetRwy09 = n === 0 || n === 15 || n === 1;
     ctx.beginPath();
-    ctx.arc(nx, ny, n === 0 ? 6.5 : 3.8, 0, Math.PI * 2);
-    ctx.fillStyle = n === 0 ? "#00ff9d" : (isTargetRwy09 ? "#38bdf8" : "#334155");
+    ctx.arc(nx, ny, n === 0 ? 5.5 : 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = n === 0 ? "#00FF9D" : (isTargetRwy09 ? "#67E8F9" : "#475569");
     ctx.fill();
-    if (n === 0) {
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-    }
   }
-  // Vectorul luminos din centrul inelului E-PG direct spre Pista 09 Craiova
-  ctx.strokeStyle = "#00ff9d";
+  ctx.strokeStyle = "#00FF9D";
   ctx.lineWidth = 2.5;
   ctx.beginPath();
   ctx.moveTo(ringCx, ringCy);
   ctx.lineTo(ringCx + ringR - 4, ringCy);
   ctx.stroke();
-  ctx.fillStyle = "#00ff9d";
-  ctx.font = "bold 12px sans-serif";
-  ctx.fillText("🧭 E-PG Busola în Inel 16-Neuroni", ringCx - 74, ringCy + ringR + 18);
   ctx.restore();
 
-  // Bara cu cele 4 circuite biologice Google Drosophila în partea de jos a canvas-ului
-  ctx.fillStyle = "rgba(7, 20, 42, 0.90)";
-  ctx.fillRect(14, h - 28, w - 28, 22);
-  ctx.fillStyle = "#bae6fd";
+  // Eticheta E-PG 100% STATICĂ
+  ctx.fillStyle = "#070B14";
+  ctx.strokeStyle = "#38BDF8";
+  ctx.lineWidth = 1.5;
+  ctx.fillRect(14, h - 52, 210, 20);
+  ctx.strokeRect(14, h - 52, 210, 20);
+  ctx.fillStyle = "#FDE047";
   ctx.font = "bold 11.5px sans-serif";
+  ctx.fillText("🧭 E-PG Busola în Inel 16-Neuroni", 20, h - 38);
+
+  // Bara cu cele 4 circuite biologice Google Drosophila în partea de jos (100% STATICĂ și OPACĂ)
+  ctx.fillStyle = "#0B1325";
+  ctx.strokeStyle = "#38BDF8";
+  ctx.lineWidth = 1.5;
+  ctx.fillRect(14, h - 28, w - 28, 22);
+  ctx.strokeRect(14, h - 28, w - 28, 22);
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "bold 11px sans-serif";
   ctx.fillText(
     "🪰 GOOGLE DROSOPHILA:  👁️ T4/T5 Ochiul Anticeață  |  🔄 HS/VS Stabilizatorul de Viraje 6-DoF  |  🧭 E-PG Busola în Inel 16-Neuroni  |  💨 PFNd Simțul Vântului în Ceață",
-    22,
+    20,
     h - 13
   );
 
+  // DOAR formele geometrice / cercurile / săgețile se mișcă cu `t`!
+  // TOATE textele explicative sunt desenate în caseta STATICĂ și 100% OPACĂ de la (14, 44)!
   const t = (lessonAnimTick % 180) / 180;
 
   if (currentLessonNum === 1) {
-    ctx.fillStyle = "rgba(203, 213, 225, 0.20)";
-    ctx.fillRect(175, 30, 320, h - 70);
-    ctx.fillStyle = "#e2e8f0";
-    ctx.font = "bold 15px sans-serif";
-    ctx.fillText("☁️ CEAȚĂ GROASĂ CA LAPTELE + HACKER GPS 👾", 185, 56);
+    // Forme geometrice în mișcare (fără niciun text mișcător!)
+    const xRed = 155 + t * (w - 355);
+    const yRed = h / 2 + 10 - Math.sin(t * 3.14) * 55;
+    ctx.fillStyle = "#FF2A5F";
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(xRed, yRed, 9, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
 
-    const xRed = 150 + t * (w - 370);
-    const yRed = h / 2 - Math.sin(t * 3.14) * 85;
-    ctx.fillStyle = "#ff2a5f";
-    ctx.font = "bold 15px sans-serif";
-    ctx.fillText("✈️🔴 GPS Păcălit (în iarbă!)", xRed, yRed);
+    const xGrn = 155 + t * (w - 340);
+    const yGrn = h / 2 + 28;
+    ctx.fillStyle = "#00FF9D";
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(xGrn, yGrn, 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
 
-    const xGrn = 150 + t * (w - 350);
-    ctx.fillStyle = "#00ff9d";
-    ctx.fillText("✈️🟢 Creierul Drosophila (Drept pe pistă!)", xGrn, h / 2 + 24);
+    // Casetă de text 100% STATICĂ și 100% OPACĂ (#070B14)
+    ctx.fillStyle = "#070B14";
+    ctx.strokeStyle = "#FDE047";
+    ctx.lineWidth = 2;
+    ctx.fillRect(14, 44, w - 198, 74);
+    ctx.strokeRect(14, 44, w - 198, 74);
+    ctx.fillStyle = "#FDE047";
+    ctx.font = "bold 13.5px sans-serif";
+    ctx.fillText("☁️ CEAȚĂ GROASĂ CA LAPTELE + HACKER GPS 👾", 24, 64);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 13px sans-serif";
+    ctx.fillText("✈️🔴 GPS Păcălit (în iarbă!) — Cercul Roșu deviază", 24, 86);
+    ctx.fillStyle = "#00FF9D";
+    ctx.fillText("✈️🟢 Creierul Drosophila (Drept pe pistă!) — Cercul Verde", 24, 108);
   } else if (currentLessonNum === 2) {
+    // Becurile pistei (forme geometrice)
     for (let i = 0; i < 6; i++) {
-      ctx.fillStyle = "#ffd600";
+      ctx.fillStyle = "#FDE047";
       ctx.beginPath();
-      ctx.arc(w - 175 + i * 24, h / 2, 7, 0, Math.PI * 2);
+      ctx.arc(w - 162 + i * 24, h / 2 + 18, 7, 0, Math.PI * 2);
       ctx.fill();
     }
-    ctx.strokeStyle = "#00e5ff";
-    ctx.lineWidth = 2.5;
-    ctx.strokeRect(w / 2 - 120, 40, 270, h - 85);
-    ctx.fillStyle = "#00e5ff";
-    ctx.font = "bold 15px sans-serif";
-    ctx.fillText("👁️ T4/T5 Ochiul Anticeață + SWIR: Văd 12 becuri prin ceață!", w / 2 - 170, 30);
-    ctx.fillStyle = "#00ff9d";
-    ctx.fillText("✈️🟢", 160 + t * (w - 370), h / 2 + 6);
+    // Cerc avion verde în mișcare (fără text mișcător!)
+    const xGrn = 155 + t * (w - 345);
+    ctx.fillStyle = "#00FF9D";
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(xGrn, h / 2 + 18, 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Casetă de text 100% STATICĂ și OPACĂ
+    ctx.fillStyle = "#070B14";
+    ctx.strokeStyle = "#38BDF8";
+    ctx.lineWidth = 2;
+    ctx.fillRect(14, 44, w - 198, 60);
+    ctx.strokeRect(14, 44, w - 198, 60);
+    ctx.fillStyle = "#FDE047";
+    ctx.font = "bold 13.5px sans-serif";
+    ctx.fillText("👁️ T4/T5 Ochiul Anticeață + SWIR: Văd 12 becuri prin ceață!", 24, 68);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 13px sans-serif";
+    ctx.fillText("✈️🟢 Cercul Verde urmărește becurile aurii ALS până pe pistă", 24, 92);
   } else if (currentLessonNum === 3) {
-    ctx.fillStyle = "#0c1e3e";
-    ctx.fillRect(160, 0, w - 360, h / 2);
-    ctx.fillStyle = "#00ff9d";
-    ctx.font = "bold 15px sans-serif";
-    ctx.fillText("🔄 HS/VS Stabilizatorul de Viraje 6-DoF | Cer ρ_ground = 0.000000", 170, 48);
-    for (let i = 0; i < 7; i++) {
-      const bx = 170 + ((w - 380 - (lessonAnimTick * 4 + i * 85) % (w - 380)));
-      ctx.fillStyle = "#00ff9d";
-      ctx.fillText("🟢⬅️", bx, h - 48);
-    }
-    ctx.fillText("✈️🟢 Măsurăm viteza peste becuri fără blocaj la orizont!", 170, h / 2 + 36);
-  } else if (currentLessonNum === 4) {
+    // Forme geometrice (cercuri verzi) care trec pe sub avion (fără text mișcător!)
     for (let i = 0; i < 6; i++) {
-      const fy = (lessonAnimTick * 2 + i * 36) % (h - 65) + 20;
-      ctx.fillStyle = "#d946ef";
-      ctx.font = "bold 14.5px sans-serif";
-      ctx.fillText("🟣⬇️ Vânt în Ceață (18 m/s)", 80, fy);
+      const bx = 150 + ((w - 340 - (lessonAnimTick * 3 + i * 75) % (w - 340)));
+      ctx.fillStyle = "#00FF9D";
+      ctx.beginPath();
+      ctx.arc(bx, h / 2 + 34, 6, 0, Math.PI * 2);
+      ctx.fill();
     }
-    ctx.fillStyle = "#00ff9d";
-    ctx.font = "bold 15px sans-serif";
-    ctx.fillText("💨 PFNd Simțul Vântului în Ceață + 🧭 E-PG Busola în Inel 16-Neuroni (0.85s înainte!)", 50, h - 42);
+    // Casetă de text 100% STATICĂ și OPACĂ
+    ctx.fillStyle = "#070B14";
+    ctx.strokeStyle = "#00FF9D";
+    ctx.lineWidth = 2;
+    ctx.fillRect(14, 44, w - 198, 62);
+    ctx.strokeRect(14, 44, w - 198, 62);
+    ctx.fillStyle = "#00FF9D";
+    ctx.font = "bold 13.5px sans-serif";
+    ctx.fillText("🔄 HS/VS Stabilizatorul de Viraje 6-DoF | Cer ρ_ground = 0.000000", 24, 68);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 13px sans-serif";
+    ctx.fillText("✈️🟢 Măsurăm viteza peste becuri fără blocaj la orizont!", 24, 92);
+  } else if (currentLessonNum === 4) {
+    // Particule geometrice mov de vânt în mișcare (fără text mișcător!)
+    for (let i = 0; i < 6; i++) {
+      const fy = 115 + ((lessonAnimTick * 2 + i * 26) % (h - 175));
+      const fx = 165 + i * 34;
+      ctx.fillStyle = "#F0ABFC";
+      ctx.beginPath();
+      ctx.arc(fx, fy, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Casetă de text 100% STATICĂ și OPACĂ
+    ctx.fillStyle = "#070B14";
+    ctx.strokeStyle = "#F0ABFC";
+    ctx.lineWidth = 2;
+    ctx.fillRect(14, 44, w - 198, 62);
+    ctx.strokeRect(14, 44, w - 198, 62);
+    ctx.fillStyle = "#FDE047";
+    ctx.font = "bold 13.5px sans-serif";
+    ctx.fillText("🟣⬇️ Vânt în Ceață (18 m/s) — Izolat de Pământul Fix", 24, 68);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 12.5px sans-serif";
+    ctx.fillText("💨 PFNd Simțul Vântului în Ceață + 🧭 E-PG Busola în Inel 16-Neuroni (0.85s înainte!)", 24, 92);
   } else if (currentLessonNum === 5) {
-    const fillH = Math.min(140, (lessonAnimTick % 160) * 1.1);
-    ctx.strokeStyle = "#00e5ff";
-    ctx.lineWidth = 3;
-    ctx.strokeRect(70, 50, 80, 145);
-    ctx.fillStyle = fillH > 105 ? "#ff2a5f" : "#ffb800";
-    ctx.fillRect(73, 50 + (145 - fillH), 74, fillH);
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 15px sans-serif";
-    ctx.fillText("🥤 PAHARUL CUSUM", 55, 38);
-    ctx.fillText(
-      fillH > 105
-        ? "🚨 HACKER PRINS ÎN 2.8s! 🧭 E-PG 16-Neuroni ține direcția RWY 09!"
-        : "🕵️ Adunăm minciunile GPS + 🧭 E-PG păstrează busola în orbire!",
-      175,
-      115
-    );
+    // Paharul CUSUM (doar nivelul lichidului se mișcă, textul este 100% STATIC!)
+    const fillH = Math.min(95, (lessonAnimTick % 160) * 0.75);
+    ctx.fillStyle = "#0B1325";
+    ctx.strokeStyle = "#38BDF8";
+    ctx.lineWidth = 2.5;
+    ctx.fillRect(145, 114, 58, 100);
+    ctx.strokeRect(145, 114, 58, 100);
+    ctx.fillStyle = fillH > 70 ? "#FF2A5F" : "#FDE047";
+    ctx.fillRect(148, 114 + (100 - fillH), 52, fillH);
+
+    // Casetă de text 100% STATICĂ și OPACĂ
+    ctx.fillStyle = "#070B14";
+    ctx.strokeStyle = "#FDE047";
+    ctx.lineWidth = 2;
+    ctx.fillRect(14, 44, w - 198, 62);
+    ctx.strokeRect(14, 44, w - 198, 62);
+    ctx.fillStyle = "#FDE047";
+    ctx.font = "bold 13.5px sans-serif";
+    ctx.fillText("🥤 PAHARUL CUSUM — Detectare Stealth Spoofing în < 2.9s", 24, 68);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 12.5px sans-serif";
+    ctx.fillText("🚨 HACKER PRINS ÎN 2.8s! 🧭 E-PG 16-Neuroni ține direcția RWY 09!", 24, 92);
   } else {
-    ctx.fillStyle = "#00ff9d";
-    ctx.font = "bold 16.5px sans-serif";
-    ctx.fillText("🏆 COMANDANT DROSOPHILA: Aterizare Perfectă pe Craiova RWY 09 (< 0.4m)!", 40, h / 2 - 22);
-    ctx.fillStyle = "#fde047";
-    ctx.font = "bold 15px sans-serif";
-    ctx.fillText("👉 👁️ T4/T5 + 🔄 HS/VS + 🧭 E-PG 16-Neuroni + 💨 PFNd active la 60 Hz!", 40, h / 2 + 16);
+    // Casetă de text 100% STATICĂ și OPACĂ pentru Lecția 6
+    ctx.fillStyle = "#070B14";
+    ctx.strokeStyle = "#00FF9D";
+    ctx.lineWidth = 2;
+    ctx.fillRect(14, 44, w - 198, 66);
+    ctx.strokeRect(14, 44, w - 198, 66);
+    ctx.fillStyle = "#00FF9D";
+    ctx.font = "bold 14px sans-serif";
+    ctx.fillText("🏆 COMANDANT DROSOPHILA: Aterizare Perfectă pe Craiova RWY 09 (< 0.4m)!", 24, 68);
+    ctx.fillStyle = "#FDE047";
+    ctx.font = "bold 13px sans-serif";
+    ctx.fillText("👉 👁️ T4/T5 + 🔄 HS/VS + 🧭 E-PG 16-Neuroni + 💨 PFNd active la 60 Hz!", 24, 94);
   }
 }
 
@@ -2908,14 +2998,14 @@ function renderRadarCanvas() {
   const w = canvas.width;
   const h = canvas.height;
   ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = "#030914";
+  ctx.fillStyle = "#070B14";
   ctx.fillRect(0, 0, w, h);
 
   const mapX = (xNed) => ((xNed + 950) / 1150) * (w - 110) + 40;
   const mapY = (yNed) => h / 2 + (yNed / 150) * (h * 0.40);
 
   // Grila
-  ctx.strokeStyle = "rgba(0, 229, 255, 0.14)";
+  ctx.strokeStyle = "#1E293B";
   ctx.lineWidth = 1;
   for (let x = -900; x <= 100; x += 200) {
     const cx = mapX(x);
@@ -2926,7 +3016,7 @@ function renderRadarCanvas() {
   }
 
   // Linia centrală spre pista din Craiova
-  ctx.strokeStyle = "rgba(0, 255, 157, 0.5)";
+  ctx.strokeStyle = "#00FF9D";
   ctx.setLineDash([8, 8]);
   ctx.beginPath();
   ctx.moveTo(mapX(-950), mapY(0));
@@ -2934,17 +3024,40 @@ function renderRadarCanvas() {
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // Pista Craiova RWY 09
+  // Pista Craiova RWY 09 (100% opacă, cu etichetă STATICĂ)
   const rwyX0 = mapX(0);
   const rwyX1 = mapX(150);
-  ctx.fillStyle = "rgba(0, 255, 157, 0.25)";
-  ctx.strokeStyle = "#00ff9d";
+  ctx.fillStyle = "#0B1325";
+  ctx.strokeStyle = "#00FF9D";
   ctx.lineWidth = 3;
   ctx.fillRect(rwyX0, mapY(-22), rwyX1 - rwyX0, mapY(22) - mapY(-22));
   ctx.strokeRect(rwyX0, mapY(-22), rwyX1 - rwyX0, mapY(22) - mapY(-22));
-  ctx.fillStyle = "#00ff9d";
-  ctx.font = "bold 14px sans-serif";
-  ctx.fillText("🎯 PISTA CRAIOVA 09", rwyX0 - 50, mapY(-30));
+
+  ctx.fillStyle = "#070B14";
+  ctx.strokeStyle = "#00FF9D";
+  ctx.lineWidth = 1.5;
+  ctx.fillRect(rwyX0 - 65, mapY(-22) - 32, 165, 24);
+  ctx.strokeRect(rwyX0 - 65, mapY(-22) - 32, 165, 24);
+  ctx.fillStyle = "#00FF9D";
+  ctx.font = "bold 13px sans-serif";
+  ctx.fillText("🎯 PISTA CRAIOVA 09", rwyX0 - 56, mapY(-22) - 15);
+
+  // Panou / Legendă 100% FIXĂ și OPACĂ (#070B14) în colțul stânga-sus (NICIUN TEXT MIȘCĂTOR PE TRAIECTORII!)
+  ctx.fillStyle = "#070B14";
+  ctx.strokeStyle = "#38BDF8";
+  ctx.lineWidth = 2;
+  ctx.fillRect(16, 14, 290, 108);
+  ctx.strokeRect(16, 14, 290, 108);
+
+  ctx.font = "bold 13px sans-serif";
+  ctx.fillStyle = "#00FF9D";
+  ctx.fillText("✈️🟢 Avionul Nostru (PE PISTĂ!)", 28, 36);
+  ctx.fillStyle = "#FF2A5F";
+  ctx.fillText("✈️🔴 GPS Păcălit", 28, 58);
+  ctx.fillStyle = "#FDE047";
+  ctx.fillText("✈️🟡 Păcălit de Ceață", 28, 80);
+  ctx.fillStyle = "#FF9100";
+  ctx.fillText("✈️🟠 Fără Cameră (INS)", 28, 102);
 
   if (!latestFrame) return;
 
@@ -2962,27 +3075,29 @@ function renderRadarCanvas() {
     ctx.stroke();
   };
 
-  drawTrail(trailHistory.ins, "#ff9100", 2.5);
-  drawTrail(trailHistory.gnss, "#ff2a5f", 2.5);
-  drawTrail(trailHistory.naive, "#ffd600", 2.8);
-  drawTrail(trailHistory.shield, "#00ff9d", 4.0);
+  drawTrail(trailHistory.ins, "#FF9100", 2.5);
+  drawTrail(trailHistory.gnss, "#FF2A5F", 2.5);
+  drawTrail(trailHistory.naive, "#FDE047", 2.8);
+  drawTrail(trailHistory.shield, "#00FF9D", 4.0);
 
-  const drawPlaneLabel = (pos, color, labelTxt, yOff) => {
+  // Desenăm pe traiectorii DOAR punctele/cercurile colorate ale avioanelor (fără fillText mișcător!)
+  const drawPlaneDot = (pos, color, radius) => {
     const px = mapX(pos[0]);
     const py = mapY(pos[1]);
     ctx.fillStyle = color;
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(px, py, 6.5, 0, Math.PI * 2);
+    ctx.arc(px, py, radius, 0, Math.PI * 2);
     ctx.fill();
-    ctx.font = "bold 13.5px sans-serif";
-    ctx.fillText(labelTxt, px - 22, py + yOff);
+    ctx.stroke();
   };
 
   const e = latestFrame.estimators_arena;
-  drawPlaneLabel(e.pure_ins_pos_ned, "#ff9100", "✈️🟠 Fără Cameră (INS)", -14);
-  drawPlaneLabel(e.raw_gnss_pos_ned, "#ff2a5f", "✈️🔴 GPS Păcălit", -28);
-  drawPlaneLabel(e.naive_flow_pos_ned, "#ffd600", "✈️🟡 Păcălit de Ceață", 22);
-  drawPlaneLabel(e.aero_shield_pos_ned, "#00ff9d", "✈️🟢 Avionul Nostru (PE PISTĂ!)", -12);
+  drawPlaneDot(e.pure_ins_pos_ned, "#FF9100", 7.0);
+  drawPlaneDot(e.raw_gnss_pos_ned, "#FF2A5F", 7.0);
+  drawPlaneDot(e.naive_flow_pos_ned, "#FDE047", 7.0);
+  drawPlaneDot(e.aero_shield_pos_ned, "#00FF9D", 8.5);
 }
 
 function animationLoop() {

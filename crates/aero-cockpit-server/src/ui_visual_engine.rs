@@ -1,15 +1,19 @@
 //! Motorul vizual aerisit pe înțelesul unui copil de 6 ani pentru panourile `#hudCanvas` (Pagina 2)
 //! și `#radarCanvas` (Pagina 3).
 //!
-//! Respectă principiul UX: **„Interfață aerisită — câte un singur concept pe pagină, fără texte
-//! suprapuse sau înghesuite!”**
-//! - **Pagina 2 (Parbrizul Avionului — `#hudCanvas`, `900x460px`)**: 3 baloane explicative scurte,
-//!   poziționate strict în colțuri (`fog_cloud` stânga-sus, `ground_als` stânga-jos, `our_plane` dreapta-sus),
-//!   lăsând centrul pistei și avionul 100% libere și vizibile.
-//! - **Pagina 3 (Cursa celor 4 Avioane — `#radarCanvas`, `900x440px`)**: toată lățimea de `900px` este
-//!   liberă pentru zborul celor 4 avioane (`✈️🟢 AERO-SHIELD`, `✈️🔴 GPS PĂCĂLIT`, `✈️🟡 CEAȚĂ SIMPLĂ`,
-//!   `✈️🟠 FĂRĂ CAMERĂ`), cu separare verticală generoasă, anti-coliziune între etichete și clasament
-//!   într-o bară orizontală aerisită.
+//! Respectă regulile UX critice:
+//! 1. **ZERO TEXTE MIȘCĂTOARE PE `#hudCanvas` ȘI `#radarCanvas`**:
+//!    - Pe `#radarCanvas`: etichetele cu numele avioanelor NU se mișcă după avioane! Pe pistă se
+//!      mișcă DOAR siluetele avioanelor purtând un cerc mic cu numărul fix (`1`, `2`, `3`, `4` scris
+//!      cu `#FFFFFF` pe fond opac `#050811`). Numele și explicațiile celor 4 avioane (`[1] ✈️🟢 AERO-SHIELD`,
+//!      `[2] ✈️🔴 GPS PĂCĂLIT`, `[3] ✈️🟡 CEAȚĂ SIMPLĂ`, `[4] ✈️🟠 FĂRĂ CAMERĂ`) sunt afișate într-un panou
+//!      100% FIX, STATIC în stânga pe canvas și în bara orizontală `#fourPlanesHorizontalScoreboard`.
+//!    - Pe `#hudCanvas`: zero `Math.sin`/pulsație/scalare sau texte rotite; toate casetele de text
+//!      stau 100% FIXE și NEMIȘCATE în colțuri.
+//! 2. **CONTRAST MAXIM (FUNDAL 100% OPAC `#050811`, TEXT ALB PUR `#FFFFFF` ȘI GALBEN `#FEF08A`)**:
+//!    - Toate casetele de text, baloanele explicative, butoanele și panourile folosesc fundal 100%
+//!      opac `#050811`, bordură luminoasă groasă de `2px` (`#00ff9d`, `#00e5ff`, `#f0abfc`, `#ffb800`,
+//!      `#ff2a5f`) și text `#FFFFFF` (titluri/valori) + `#FEF08A` (subtitluri/explicații).
 
 use axum::{
     http::{header, StatusCode},
@@ -18,14 +22,14 @@ use axum::{
 };
 use serde::Serialize;
 
-/// Specificație tipizată pentru un balon explicativ (callout) afișat în colțurile `#hudCanvas`.
+/// Specificație tipizată pentru un balon explicativ (callout) afișat FIX în colțurile `#hudCanvas`.
 #[derive(Debug, Clone, Serialize, PartialEq)]
 pub struct VisualCalloutSpec {
     /// Identificator unic: `"fog_cloud"`, `"ground_als"`, `"our_plane"`.
     pub id: &'static str,
     /// Pictogramă emoji ilustrativă.
     pub icon: &'static str,
-    /// Culoarea tematică în format hexazecimal.
+    /// Culoarea bordurii de contrast maxim în format hexazecimal.
     pub color_hex: &'static str,
     /// Titlu scurt și aerisit pe înțelesul unui copil de 6 ani (Română).
     pub title_ro: &'static str,
@@ -39,7 +43,7 @@ pub struct VisualCalloutSpec {
     pub alert_badge_ro: Option<&'static str>,
     /// Insignă compactă opțională (Engleză).
     pub alert_badge_en: Option<&'static str>,
-    /// Coordonate normalizate `[x_frac, y_frac, w_frac, h_frac]` strict în colțuri (`0.0..=1.0`).
+    /// Coordonate normalizate fixe `[x_frac, y_frac, w_frac, h_frac]` strict în colțuri (`0.0..=1.0`).
     pub box_norm: [f64; 4],
     /// Punctul țintă `[tx_frac, ty_frac]` spre care indică săgeata fină a balonului explicativ.
     pub target_norm: [f64; 2],
@@ -52,7 +56,7 @@ pub struct PlaneVisualSpec {
     pub key: &'static str,
     /// Insigna emoji a avionului (`"✈️🟢"`, `"✈️🔴"`, `"✈️🟡"`, `"✈️🟠"`).
     pub emoji_badge: &'static str,
-    /// Culoarea asociată avionului și traseului său (hex).
+    /// Culoarea asociată avionului și bordurii sale (hex).
     pub color_hex: &'static str,
     /// Etichetă scurtă și aerisită a avionului (Română).
     pub label_ro: &'static str,
@@ -113,7 +117,7 @@ pub struct FourPlanesArenaConfig {
 /// Specificația completă a motorului vizual pentru `#hudCanvas` (Pagina 2) și `#radarCanvas` (Pagina 3).
 #[derive(Debug, Clone, Serialize, PartialEq)]
 pub struct VisualCanvasEngineSpec {
-    /// Cele 3 baloane explicative poziționate strict în colțurile `#hudCanvas`.
+    /// Cele 3 baloane explicative poziționate strict FIX în colțurile `#hudCanvas`.
     pub hud_callouts: [VisualCalloutSpec; 3],
     /// Configurația arenei aerisite cu 4 avioane și momeala hackerului pe `#radarCanvas`.
     pub arena_config: FourPlanesArenaConfig,
@@ -129,7 +133,7 @@ pub const fn build_default_visual_engine_spec() -> VisualCanvasEngineSpec {
             VisualCalloutSpec {
                 id: "fog_cloud",
                 icon: "☁️💨",
-                color_hex: "#e879f9",
+                color_hex: "#f0abfc",
                 title_ro: "☁️💨 VÂNT ÎN CEAȚĂ",
                 title_en: "☁️💨 FOG WIND",
                 subtitle_ro: "Săgețile mov arată vântul din nor",
@@ -190,7 +194,7 @@ pub const fn build_default_visual_engine_spec() -> VisualCanvasEngineSpec {
                 PlaneVisualSpec {
                     key: "gnss",
                     emoji_badge: "✈️🔴",
-                    color_hex: "#ff3355",
+                    color_hex: "#ff2a5f",
                     label_ro: "✈️🔴 GPS PĂCĂLIT",
                     label_en: "✈️🔴 HACKED GPS",
                     story_ro: "Ascultă orbește de momeala hackerului 👾 și iese în iarbă!",
@@ -199,7 +203,7 @@ pub const fn build_default_visual_engine_spec() -> VisualCanvasEngineSpec {
                 PlaneVisualSpec {
                     key: "naive",
                     emoji_badge: "✈️🟡",
-                    color_hex: "#eab308",
+                    color_hex: "#ffb800",
                     label_ro: "✈️🟡 CEAȚĂ SIMPLĂ",
                     label_en: "✈️🟡 NAIVE FOG",
                     story_ro: "Se lasă împins de vântul din ceață în afara pistei!",
@@ -208,7 +212,7 @@ pub const fn build_default_visual_engine_spec() -> VisualCanvasEngineSpec {
                 PlaneVisualSpec {
                     key: "ins",
                     emoji_badge: "✈️🟠",
-                    color_hex: "#f97316",
+                    color_hex: "#ff9100",
                     label_ro: "✈️🟠 FĂRĂ CAMERĂ",
                     label_en: "✈️🟠 NO CAMERA",
                     story_ro: "Zboară legat la ochi și amețește treptat fără repere vizuale!",
@@ -232,8 +236,8 @@ pub const fn build_default_visual_engine_spec() -> VisualCanvasEngineSpec {
                 pointer_badge_en: "👇 LOOK HERE!",
                 target_canvas_id: "radarCanvas",
                 focus_callout_id: "hacker_decoy",
-                explanation_6yo_ro: "Pasul 2: Hackerul 👾 aruncă o momeală GPS falsă în iarbă și trage avionul roșu ✈️🔴 afară de pe pistă!",
-                explanation_6yo_en: "Step 2: The hacker 👾 drops a fake GPS decoy in the grass and pulls the red plane ✈️🔴 off the runway!",
+                explanation_6yo_ro: "Pasul 2: Hackerul 👾 pune o momeală GPS falsă în iarbă și trage avionul [2] ✈️🔴 afară de pe pistă!",
+                explanation_6yo_en: "Step 2: The hacker 👾 drops a fake GPS decoy in the grass and pulls plane [2] ✈️🔴 off the runway!",
             },
             SpotlightPointerSpec {
                 step_number: 3,
@@ -250,8 +254,8 @@ pub const fn build_default_visual_engine_spec() -> VisualCanvasEngineSpec {
                 pointer_badge_en: "👇 LOOK HERE!",
                 target_canvas_id: "radarCanvas",
                 focus_callout_id: "shield_plane",
-                explanation_6yo_ro: "Pasul 4: Avionul verde ✈️🟢 AERO-SHIELD rămâne singurul pe mijlocul pistei (< 0.8m)!",
-                explanation_6yo_en: "Step 4: The green ✈️🟢 AERO-SHIELD plane stays safely on the runway centerline (< 0.8m)!",
+                explanation_6yo_ro: "Pasul 4: Avionul [1] ✈️🟢 AERO-SHIELD rămâne singurul pe mijlocul pistei (< 0.8m)!",
+                explanation_6yo_en: "Step 4: Plane [1] ✈️🟢 AERO-SHIELD stays safely on the runway centerline (< 0.8m)!",
             },
             SpotlightPointerSpec {
                 step_number: 5,
@@ -268,9 +272,8 @@ pub const fn build_default_visual_engine_spec() -> VisualCanvasEngineSpec {
 
 /// Generează **Pagina 2 dedicată exclusiv Parbrizului Avionului (`#hudCanvas`, dimensiune mare `900x460px`)**.
 ///
-/// Respectă regula „câte un singur concept pe pagină, fără texte suprapuse sau înghesuite”:
-/// elimină benzile laterale înghesuite și lasă tot parbrizul `900x460px` larg, curat și aerisit,
-/// cu cele 3 baloane explicative plasate strict în colțuri.
+/// Toate casetele și etichetele folosesc fundal 100% opac `#050811`, bordură `2px` și text `#FFFFFF` / `#FEF08A`,
+/// fiind complet fixe și nemișcate.
 #[must_use]
 pub fn render_page2_hud_canvas_html() -> String {
     let spec = build_default_visual_engine_spec();
@@ -279,20 +282,20 @@ pub fn render_page2_hud_canvas_html() -> String {
     let c2 = &spec.hud_callouts[2];
 
     format!(
-        r#"<section id="page2HudWindshieldSection" class="spacious-canvas-page" data-page-concept="hud-windshield" style="max-width:940px;margin:0 auto;padding:14px 18px;border-radius:14px;background:rgba(7,15,28,0.92);border:1px solid rgba(0,229,255,0.28);box-shadow:0 12px 32px rgba(0,0,0,0.45);">
-  <header style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+        r#"<section id="page2HudWindshieldSection" class="spacious-canvas-page" data-page-concept="hud-windshield" style="max-width:940px;margin:0 auto;padding:14px 18px;border-radius:14px;background:#050811;border:2px solid #00e5ff;box-shadow:0 12px 32px rgba(0,0,0,0.65);">
+  <header style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;background:#050811;">
     <div>
-      <span style="display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(0,229,255,0.14);border:1px solid #00e5ff;color:#00e5ff;font-size:11px;font-weight:800;letter-spacing:0.5px;">PAGINA 2 • PARBRIZUL AVIONULUI ÎN CEAȚĂ</span>
-      <h2 style="margin:6px 0 0 0;font-size:18px;color:#f8fafc;font-weight:800;">🔦 Ce Vede Camera Infraroșu (SWIR) prin Ceață — Pista Liberă pe Centru</h2>
+      <span style="display:inline-block;padding:4px 11px;border-radius:999px;background:#050811;border:2px solid #00e5ff;color:#FFFFFF;font-size:11.5px;font-weight:900;letter-spacing:0.5px;">PAGINA 2 • PARBRIZUL AVIONULUI ÎN CEAȚĂ</span>
+      <h2 style="margin:6px 0 0 0;font-size:18px;color:#FFFFFF;font-weight:900;">🔦 Ce Vede Camera Infraroșu (SWIR) prin Ceață — Texte 100% Fixe în Colțuri</h2>
     </div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11.5px;">
-      <span style="padding:4px 10px;border-radius:8px;background:rgba(232,121,249,0.12);border:1px solid {c0_col};color:{c0_col};font-weight:700;">{c0_title}</span>
-      <span style="padding:4px 10px;border-radius:8px;background:rgba(0,255,157,0.12);border:1px solid {c1_col};color:{c1_col};font-weight:700;">{c1_title}</span>
-      <span style="padding:4px 10px;border-radius:8px;background:rgba(0,229,255,0.12);border:1px solid {c2_col};color:{c2_col};font-weight:700;">{c2_title}</span>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:12px;">
+      <span style="padding:5px 11px;border-radius:8px;background:#050811;border:2px solid {c0_col};color:#FFFFFF;font-weight:800;">{c0_title}</span>
+      <span style="padding:5px 11px;border-radius:8px;background:#050811;border:2px solid {c1_col};color:#FFFFFF;font-weight:800;">{c1_title}</span>
+      <span style="padding:5px 11px;border-radius:8px;background:#050811;border:2px solid {c2_col};color:#FFFFFF;font-weight:800;">{c2_title}</span>
     </div>
   </header>
 
-  <div class="hud-canvas-wide-frame" style="position:relative;width:100%;max-width:900px;margin:0 auto;border-radius:12px;overflow:hidden;border:1.5px solid #1e293b;background:#040a12;">
+  <div class="hud-canvas-wide-frame" style="position:relative;width:100%;max-width:900px;margin:0 auto;border-radius:12px;overflow:hidden;border:2px solid #00e5ff;background:#050811;">
     <canvas id="hudCanvas" width="900" height="460" style="display:block;width:100%;height:460px;"></canvas>
   </div>
 </section>"#,
@@ -307,9 +310,9 @@ pub fn render_page2_hud_canvas_html() -> String {
 
 /// Generează **Pagina 3 dedicată exclusiv Cursei celor 4 Avioane (`#radarCanvas`, dimensiune mare `900x440px`)**.
 ///
-/// Mută clasamentul într-o bară orizontală aerisită deasupra pistei ca să lase toată lățimea de `900px`
-/// liberă pentru zborul celor 4 avioane (`✈️🟢 AERO-SHIELD`, `✈️🔴 GPS PĂCĂLIT`, `✈️🟡 CEAȚĂ SIMPLĂ`,
-/// `✈️🟠 FĂRĂ CAMERĂ`) fără coliziuni între etichete.
+/// Etichetele cu numele avioanelor (`[1] ✈️🟢 AERO-SHIELD`, `[2] ✈️🔴 GPS PĂCĂLIT`, `[3] ✈️🟡 CEAȚĂ SIMPLĂ`,
+/// `[4] ✈️🟠 FĂRĂ CAMERĂ`) sunt 100% STATICE și FIXE pe fond opac `#050811` cu text `#FFFFFF` / `#FEF08A`,
+/// iar pe pistă se mișcă doar siluetele avioanelor cu numerele `1`, `2`, `3`, `4`.
 #[must_use]
 pub fn render_page3_radar_canvas_html() -> String {
     let spec = build_default_visual_engine_spec();
@@ -319,43 +322,43 @@ pub fn render_page3_radar_canvas_html() -> String {
     let p3 = &spec.arena_config.planes[3];
 
     format!(
-        r#"<section id="page3RadarRaceSection" class="spacious-canvas-page" data-page-concept="radar-4planes-race" style="max-width:940px;margin:0 auto;padding:14px 18px;border-radius:14px;background:rgba(7,15,28,0.92);border:1px solid rgba(0,255,157,0.28);box-shadow:0 12px 32px rgba(0,0,0,0.45);">
-  <header style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;">
+        r#"<section id="page3RadarRaceSection" class="spacious-canvas-page" data-page-concept="radar-4planes-race" style="max-width:940px;margin:0 auto;padding:14px 18px;border-radius:14px;background:#050811;border:2px solid #00ff9d;box-shadow:0 12px 32px rgba(0,0,0,0.65);">
+  <header style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;background:#050811;">
     <div>
-      <span style="display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(0,255,157,0.14);border:1px solid #00ff9d;color:#00ff9d;font-size:11px;font-weight:800;letter-spacing:0.5px;">PAGINA 3 • CURSA CELOR 4 AVIOANE VĂZUTĂ DE SUS</span>
-      <h2 style="margin:6px 0 0 0;font-size:18px;color:#f8fafc;font-weight:800;">🏁 Cine Rămâne pe Pista 09 Craiova și Cine Iese în Iarbă?</h2>
+      <span style="display:inline-block;padding:4px 11px;border-radius:999px;background:#050811;border:2px solid #00ff9d;color:#FFFFFF;font-size:11.5px;font-weight:900;letter-spacing:0.5px;">PAGINA 3 • CURSA CELOR 4 AVIOANE VĂZUTĂ DE SUS</span>
+      <h2 style="margin:6px 0 0 0;font-size:18px;color:#FFFFFF;font-weight:900;">🏁 Cine Rămâne pe Pista 09 Craiova? (Etichete 100% Fixe, Numere 1–4 pe Avioane)</h2>
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
-      <button type="button" id="btnRadarModeGame" onclick="window.setRadarMode6yo && window.setRadarMode6yo('game')" style="cursor:pointer;padding:6px 13px;border-radius:8px;border:1.5px solid #00ff9d;background:rgba(0,255,157,0.18);color:#00ff9d;font-weight:800;font-size:12px;">
+      <button type="button" id="btnRadarModeGame" onclick="window.setRadarMode6yo && window.setRadarMode6yo('game')" style="cursor:pointer;padding:6px 13px;border-radius:8px;border:2px solid #00ff9d;background:#050811;color:#FFFFFF;font-weight:900;font-size:12px;">
         {mode_game_ro}
       </button>
-      <button type="button" id="btnRadarModeChart" onclick="window.setRadarMode6yo && window.setRadarMode6yo('chart')" style="cursor:pointer;padding:6px 13px;border-radius:8px;border:1.5px solid #334155;background:rgba(30,41,59,0.75);color:#cbd5e1;font-weight:700;font-size:12px;">
+      <button type="button" id="btnRadarModeChart" onclick="window.setRadarMode6yo && window.setRadarMode6yo('chart')" style="cursor:pointer;padding:6px 13px;border-radius:8px;border:2px solid #00e5ff;background:#050811;color:#FEF08A;font-weight:800;font-size:12px;">
         {mode_chart_ro}
       </button>
     </div>
   </header>
 
-  <!-- Bară orizontală aerisită cu clasamentul celor 4 avioane (lasă toți cei 900px liberi pe #radarCanvas) -->
-  <div id="fourPlanesHorizontalScoreboard" class="four-planes-horizontal-bar" style="display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:10px;padding:8px 12px;margin-bottom:10px;border-radius:10px;background:rgba(15,23,42,0.88);border:1px solid #1e293b;">
-    <div title="{p0_story}" style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:8px;background:rgba(0,255,157,0.12);border:1px solid {p0_col};color:{p0_col};font-weight:800;font-size:12px;">
-      <span>{p0_label}</span>
-      <span id="scorePillShield">0.3m ✅</span>
+  <!-- Bară orizontală 100% FIXĂ și OPACĂ (#050811) cu numele celor 4 avioane [1]..[4] -->
+  <div id="fourPlanesHorizontalScoreboard" class="four-planes-horizontal-bar" style="display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:10px;padding:8px 12px;margin-bottom:10px;border-radius:10px;background:#050811;border:2px solid #00e5ff;">
+    <div title="{p0_story}" style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:8px;background:#050811;border:2px solid {p0_col};color:#FFFFFF;font-weight:900;font-size:12px;">
+      <span>[1] {p0_label}</span>
+      <span id="scorePillShield" style="color:#FEF08A;">0.3m ✅</span>
     </div>
-    <div title="{p1_story}" style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:8px;background:rgba(255,51,85,0.12);border:1px solid {p1_col};color:{p1_col};font-weight:800;font-size:12px;">
-      <span>{p1_label}</span>
-      <span id="scorePillGnss">GPS</span>
+    <div title="{p1_story}" style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:8px;background:#050811;border:2px solid {p1_col};color:#FFFFFF;font-weight:900;font-size:12px;">
+      <span>[2] {p1_label}</span>
+      <span id="scorePillGnss" style="color:#FEF08A;">GPS</span>
     </div>
-    <div title="{p2_story}" style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:8px;background:rgba(234,179,8,0.12);border:1px solid {p2_col};color:{p2_col};font-weight:800;font-size:12px;">
-      <span>{p2_label}</span>
-      <span id="scorePillNaive">FLOW</span>
+    <div title="{p2_story}" style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:8px;background:#050811;border:2px solid {p2_col};color:#FFFFFF;font-weight:900;font-size:12px;">
+      <span>[3] {p2_label}</span>
+      <span id="scorePillNaive" style="color:#FEF08A;">FLOW</span>
     </div>
-    <div title="{p3_story}" style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:8px;background:rgba(249,115,22,0.12);border:1px solid {p3_col};color:{p3_col};font-weight:800;font-size:12px;">
-      <span>{p3_label}</span>
-      <span id="scorePillIns">INS</span>
+    <div title="{p3_story}" style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:8px;background:#050811;border:2px solid {p3_col};color:#FFFFFF;font-weight:900;font-size:12px;">
+      <span>[4] {p3_label}</span>
+      <span id="scorePillIns" style="color:#FEF08A;">INS</span>
     </div>
   </div>
 
-  <div class="radar-canvas-wide-frame" style="position:relative;width:100%;max-width:900px;margin:0 auto;border-radius:12px;overflow:hidden;border:1.5px solid #1e293b;background:#040a12;">
+  <div class="radar-canvas-wide-frame" style="position:relative;width:100%;max-width:900px;margin:0 auto;border-radius:12px;overflow:hidden;border:2px solid #00ff9d;background:#050811;">
     <canvas id="radarCanvas" width="900" height="440" style="display:block;width:100%;height:440px;"></canvas>
   </div>
 </section>"#,
@@ -378,7 +381,7 @@ pub fn render_page3_radar_canvas_html() -> String {
 
 /// Generează componenta SSR aerisită care afișează câte o singură pagină vizuală activă o dată
 /// (Pagina 2: Parbrizul `#hudCanvas` `900x460px` sau Pagina 3: Cursa celor 4 Avioane `#radarCanvas` `900x440px`),
-/// fără să le înghesuie una sub alta.
+/// cu contrast maxim (`#050811` opac, text `#FFFFFF` și `#FEF08A`).
 #[must_use]
 pub fn render_visual_canvases_component_html() -> String {
     let spec = build_default_visual_engine_spec();
@@ -388,17 +391,17 @@ pub fn render_visual_canvases_component_html() -> String {
 
     format!(
         r#"<div id="aeroVisualEngineRoot" class="visual-engine-root" data-active-step="1" data-active-page="page2" data-radar-mode="game" style="max-width:960px;margin:0 auto;">
-  <!-- Insigna luminoasă pas-cu-pas 👇 UITE AICI! + Comutator Pagina 2 vs Pagina 3 (câte un singur concept pe pagină) -->
-  <div id="spotlightBanner6yo" class="spotlight-banner-6yo" role="status" aria-live="polite" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;margin-bottom:12px;border-radius:12px;background:linear-gradient(90deg,rgba(0,255,157,0.14),rgba(56,189,248,0.12));border:1px solid rgba(0,255,157,0.42);color:#f8fafc;font-size:13px;font-weight:700;">
+  <!-- Insigna pas-cu-pas 👇 UITE AICI! (100% FIXĂ, FĂRĂ PULSAȚIE, CONTRAST MAXIM #050811) -->
+  <div id="spotlightBanner6yo" class="spotlight-banner-6yo" role="status" aria-live="polite" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;margin-bottom:12px;border-radius:12px;background:#050811;border:2px solid #00ff9d;color:#FFFFFF;font-size:13px;font-weight:800;">
     <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:260px;">
-      <span id="spotlightBadgeText" class="spotlight-badge-pill" style="background:#eab308;color:#0f172a;padding:4px 10px;border-radius:999px;font-weight:900;letter-spacing:0.4px;">{pointer_ro}</span>
-      <span id="spotlightStepExplanation" style="flex:1;">{exp_ro}</span>
+      <span id="spotlightBadgeText" class="spotlight-badge-pill" style="background:#050811;border:2px solid #ffb800;color:#FEF08A;padding:4px 10px;border-radius:999px;font-weight:900;letter-spacing:0.4px;">{pointer_ro}</span>
+      <span id="spotlightStepExplanation" style="flex:1;color:#FEF08A;">{exp_ro}</span>
     </div>
     <div id="visualPageSwitcherTabs" style="display:flex;align-items:center;gap:8px;">
-      <button type="button" id="btnSwitchPage2Hud" onclick="window.setVisualEnginePage6yo && window.setVisualEnginePage6yo('page2')" style="cursor:pointer;padding:6px 12px;border-radius:8px;border:1.5px solid #00e5ff;background:rgba(0,229,255,0.18);color:#00e5ff;font-weight:800;font-size:12px;">
+      <button type="button" id="btnSwitchPage2Hud" onclick="window.setVisualEnginePage6yo && window.setVisualEnginePage6yo('page2')" style="cursor:pointer;padding:6px 12px;border-radius:8px;border:2px solid #00e5ff;background:#050811;color:#FFFFFF;font-weight:900;font-size:12px;">
         🔦 Pagina 2: Parbriz (900×460)
       </button>
-      <button type="button" id="btnSwitchPage3Radar" onclick="window.setVisualEnginePage6yo && window.setVisualEnginePage6yo('page3')" style="cursor:pointer;padding:6px 12px;border-radius:8px;border:1.5px solid #334155;background:rgba(15,23,42,0.75);color:#cbd5e1;font-weight:700;font-size:12px;">
+      <button type="button" id="btnSwitchPage3Radar" onclick="window.setVisualEnginePage6yo && window.setVisualEnginePage6yo('page3')" style="cursor:pointer;padding:6px 12px;border-radius:8px;border:2px solid #00ff9d;background:#050811;color:#FEF08A;font-weight:800;font-size:12px;">
         🏁 Pagina 3: Cursa 4 Avioane (900×440)
       </button>
     </div>
@@ -422,19 +425,15 @@ pub fn render_visual_canvases_component_html() -> String {
 }
 
 /// Generează scriptul JavaScript complet (60 FPS Canvas 2D) pentru `#hudCanvas` (`900x460px`)
-/// și `#radarCanvas` (`900x440px`), serializând direct `VisualCanvasEngineSpec` din Rust și expunând:
-/// - `window.renderHudCanvas6yo(ctx, canvas, state, history)`
-/// - `window.renderRadarCanvas6yo(ctx, canvas, state, history)`
-/// - `window.setRadarMode6yo(mode)`
-/// - `window.setVisualEnginePage6yo(pageKey)`
-/// - `window.setSpotlightLessonStep(stepNumber)`
+/// și `#radarCanvas` (`900x440px`), cu **ZERO texte mișcătoare** și **contrast maxim (`#050811` opac,
+/// text `#FFFFFF` / `#FEF08A`)**.
 #[must_use]
 pub fn render_visual_canvases_script() -> String {
     let spec = build_default_visual_engine_spec();
     let spec_json = serde_json::to_string(&spec).unwrap_or_else(|_| "{}".to_string());
 
     format!(
-        r#"// === AERO-SHIELD V2.0 - MOTOR VIZUAL AERISIT 60 FPS (PAGINA 2 PARBRIZ 900x460 & PAGINA 3 CURSA 900x440) ===
+        r#"// === AERO-SHIELD V2.0 - MOTOR VIZUAL 60 FPS CU ZERO TEXTE MIȘCĂTOARE & CONTRAST MAXIM (#050811 / #FFFFFF / #FEF08A) ===
 (function() {{
   'use strict';
 
@@ -443,6 +442,10 @@ pub fn render_visual_canvases_script() -> String {
   window.aeroRadarMode6yo = window.aeroRadarMode6yo || 'game'; // 'game' | 'chart'
   window.aeroSpotlightStep6yo = window.aeroSpotlightStep6yo || 1; // 1..5
   window.aeroActiveVisualPage6yo = window.aeroActiveVisualPage6yo || 'page2'; // 'page2' | 'page3'
+
+  const SOLID_BG_DARK = '#050811';
+  const TEXT_PURE_WHITE = '#FFFFFF';
+  const TEXT_BRIGHT_YELLOW = '#FEF08A';
 
   function currentLang() {{
     if (typeof window.currentLang === 'string') return window.currentLang;
@@ -454,6 +457,7 @@ pub fn render_visual_canvases_script() -> String {
     return currentLang() === 'en' ? (enText || roText) : (roText || enText);
   }}
 
+  // Toate casetele de text folosesc fond 100% OPAC #050811 și bordură de 2px
   function drawRoundedBox(ctx, x, y, w, h, r, fillStyle, strokeStyle, lineWidth) {{
     ctx.save();
     ctx.beginPath();
@@ -468,19 +472,17 @@ pub fn render_visual_canvases_script() -> String {
     ctx.lineTo(x, y + radius);
     ctx.quadraticCurveTo(x, y, x + radius, y);
     ctx.closePath();
-    if (fillStyle) {{
-      ctx.fillStyle = fillStyle;
-      ctx.fill();
-    }}
+    ctx.fillStyle = fillStyle || SOLID_BG_DARK;
+    ctx.fill();
     if (strokeStyle) {{
       ctx.strokeStyle = strokeStyle;
-      ctx.lineWidth = lineWidth || 1.5;
+      ctx.lineWidth = lineWidth || 2.0;
       ctx.stroke();
     }}
     ctx.restore();
   }}
 
-  // Comută aerisit între Pagina 2 (#hudCanvas 900x460) și Pagina 3 (#radarCanvas 900x440)
+  // Comută între Pagina 2 (#hudCanvas 900x460) și Pagina 3 (#radarCanvas 900x440) cu contrast maxim
   window.setVisualEnginePage6yo = function(pageKey) {{
     const isPage3 = pageKey === 'page3' || pageKey === 'radarCanvas';
     window.aeroActiveVisualPage6yo = isPage3 ? 'page3' : 'page2';
@@ -497,12 +499,12 @@ pub fn render_visual_canvases_script() -> String {
     const b2 = document.getElementById('btnSwitchPage2Hud');
     const b3 = document.getElementById('btnSwitchPage3Radar');
     if (b2 && b3) {{
-      b2.style.borderColor = !isPage3 ? '#00e5ff' : '#334155';
-      b2.style.background = !isPage3 ? 'rgba(0,229,255,0.18)' : 'rgba(15,23,42,0.75)';
-      b2.style.color = !isPage3 ? '#00e5ff' : '#cbd5e1';
-      b3.style.borderColor = isPage3 ? '#00ff9d' : '#334155';
-      b3.style.background = isPage3 ? 'rgba(0,255,157,0.18)' : 'rgba(15,23,42,0.75)';
-      b3.style.color = isPage3 ? '#00ff9d' : '#cbd5e1';
+      b2.style.borderColor = !isPage3 ? '#00e5ff' : '#ffb800';
+      b2.style.background = SOLID_BG_DARK;
+      b2.style.color = !isPage3 ? TEXT_PURE_WHITE : TEXT_BRIGHT_YELLOW;
+      b3.style.borderColor = isPage3 ? '#00ff9d' : '#ffb800';
+      b3.style.background = SOLID_BG_DARK;
+      b3.style.color = isPage3 ? TEXT_PURE_WHITE : TEXT_BRIGHT_YELLOW;
     }}
   }};
 
@@ -514,12 +516,12 @@ pub fn render_visual_canvases_script() -> String {
     const btnChart = document.getElementById('btnRadarModeChart');
     if (btnGame && btnChart) {{
       const isGame = window.aeroRadarMode6yo === 'game';
-      btnGame.style.borderColor = isGame ? '#00ff9d' : '#334155';
-      btnGame.style.background = isGame ? 'rgba(0,255,157,0.18)' : 'rgba(30,41,59,0.75)';
-      btnGame.style.color = isGame ? '#00ff9d' : '#cbd5e1';
-      btnChart.style.borderColor = !isGame ? '#38bdf8' : '#334155';
-      btnChart.style.background = !isGame ? 'rgba(56,189,248,0.18)' : 'rgba(30,41,59,0.75)';
-      btnChart.style.color = !isGame ? '#38bdf8' : '#cbd5e1';
+      btnGame.style.borderColor = isGame ? '#00ff9d' : '#ffb800';
+      btnGame.style.background = SOLID_BG_DARK;
+      btnGame.style.color = isGame ? TEXT_PURE_WHITE : TEXT_BRIGHT_YELLOW;
+      btnChart.style.borderColor = !isGame ? '#00e5ff' : '#ffb800';
+      btnChart.style.background = SOLID_BG_DARK;
+      btnChart.style.color = !isGame ? TEXT_PURE_WHITE : TEXT_BRIGHT_YELLOW;
     }}
   }};
 
@@ -542,24 +544,17 @@ pub fn render_visual_canvases_script() -> String {
     }}
   }};
 
-  // Anti-coliziune pe axa Y pentru etichetele celor 4 avioane (garantează distanța minimă minGapPx)
+  // Păstrat pentru compatibilitate; în noua arhitectură etichetele stau 100% FIXE în panoul din stânga
   function resolveLabelCollisionsY(items, minY, maxY, minGapPx) {{
-    const sorted = items.slice().sort((a, b) => a.labelY - b.labelY);
-    for (let pass = 0; pass < 4; pass++) {{
-      for (let i = 1; i < sorted.length; i++) {{
-        const prev = sorted[i - 1];
-        const curr = sorted[i];
-        if (curr.labelY - prev.labelY < minGapPx) {{
-          const mid = 0.5 * (prev.labelY + curr.labelY);
-          prev.labelY = Math.max(minY, mid - 0.5 * minGapPx);
-          curr.labelY = Math.min(maxY, prev.labelY + minGapPx);
-        }}
-      }}
+    const sorted = items.slice();
+    for (let i = 0; i < sorted.length; i++) {{
+      sorted[i].labelY = minY + i * minGapPx;
+      if (sorted[i].labelY > maxY) sorted[i].labelY = maxY;
     }}
     return sorted;
   }}
 
-  // === 1. PAGINA 2: RANDARE PARBRIZ #hudCanvas (900x460px, BALOANE STRICT ÎN COLȚURI, CENTRU 100% LIBER) ===
+  // === 1. PAGINA 2: RANDARE PARBRIZ #hudCanvas (900x460px, ZERO TEXTE MIȘCĂTOARE, CASETE 100% OPACE #050811 ÎN COLȚURI) ===
   window.renderHudCanvas6yo = function(ctx, canvas, s) {{
     if (!ctx || !canvas || !s) return;
     const w = canvas.width || 900;
@@ -567,36 +562,27 @@ pub fn render_visual_canvases_script() -> String {
     const cx = w / 2;
     const cy = h / 2;
     const nowMs = Date.now();
-    const pulse = 0.5 + 0.5 * Math.sin(nowMs * 0.006);
 
-    // Fundal aerisit de parbriz termic SWIR (fără benzi laterale care să înghesuie imaginea)
+    // Fundal parbriz termic SWIR (închis și curat)
+    ctx.fillStyle = SOLID_BG_DARK;
+    ctx.fillRect(0, 0, w, h);
+
     const grad = ctx.createLinearGradient(0, 0, 0, h);
-    grad.addColorStop(0, '#05101a');
-    grad.addColorStop(0.47, '#0b2232');
-    grad.addColorStop(0.50, '#0d2b22');
-    grad.addColorStop(1, '#040a0e');
+    grad.addColorStop(0, '#050811');
+    grad.addColorStop(0.48, '#081826');
+    grad.addColorStop(0.52, '#071f18');
+    grad.addColorStop(1, '#050811');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    // Nori diafani de ceață în treimea superioară + săgeți mov de vânt
+    // Săgeți mov pentru vântul din ceață (doar grafică, FĂRĂ TEXT MIȘCĂTOR)
     ctx.save();
-    ctx.fillStyle = 'rgba(232, 121, 249, 0.08)';
-    for (let i = 0; i < 4; i++) {{
-      const cloudX = ((nowMs * 0.018 + i * 220) % (w + 240)) - 120;
-      const cloudY = h * (0.22 + (i % 2) * 0.06);
-      ctx.beginPath();
-      ctx.ellipse(cloudX, cloudY, 90, 20, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }}
-    ctx.restore();
-
-    // Săgeți mov pentru vântul din ceață (în zona superioară-centrală)
-    ctx.save();
-    ctx.strokeStyle = '#e879f9';
-    ctx.fillStyle = '#e879f9';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#f0abfc';
+    ctx.fillStyle = '#f0abfc';
+    ctx.lineWidth = 2.2;
+    const windAnimShift = ((nowMs * 0.02) % 60) - 30;
     for (let k = -1; k <= 1; k++) {{
-      const ax = cx + k * 95 - 18;
+      const ax = cx + k * 95 - 18 + windAnimShift * 0.4;
       const ay = h * 0.25 + (k === 0 ? -8 : 6);
       ctx.beginPath();
       ctx.moveTo(ax, ay);
@@ -611,22 +597,38 @@ pub fn render_visual_canvases_script() -> String {
     }}
     ctx.restore();
 
-    // Linia orizontului
-    ctx.strokeStyle = 'rgba(0, 255, 157, 0.38)';
-    ctx.lineWidth = 1.4;
+    // Linia orizontului și linii de ghidaj (FĂRĂ TEXT CARE SE ÎNVÂRTE SAU SE MIȘCĂ)
+    ctx.strokeStyle = '#00ff9d';
+    ctx.lineWidth = 1.8;
     ctx.beginPath();
     ctx.moveTo(0, cy);
     ctx.lineTo(w, cy);
     ctx.stroke();
 
-    // Perspectiva Pistei 09 Craiova complet liberă pe centru
-    const rwyShift = Math.max(-w * 0.22, Math.min(w * 0.22, -(s.shield_err_m || 0) * 5.5));
+    // Liniile scalei de pitch (strict linii grafice, FĂRĂ TEXT ROTIT)
+    ctx.save();
+    ctx.strokeStyle = '#00e5ff';
+    ctx.lineWidth = 1.6;
+    for (let step = -2; step <= 2; step++) {{
+      if (step === 0) continue;
+      const py = cy + step * 32;
+      ctx.beginPath();
+      ctx.moveTo(cx - 42, py);
+      ctx.lineTo(cx - 18, py);
+      ctx.moveTo(cx + 18, py);
+      ctx.lineTo(cx + 42, py);
+      ctx.stroke();
+    }}
+    ctx.restore();
+
+    // Perspectiva Pistei 09 Craiova pe centru
+    const rwyShift = Math.max(-w * 0.20, Math.min(w * 0.20, -(s.shield_err_m || 0) * 5.0));
     const topW = Math.max(36, (1400 - Math.min(1250, s.dist_to_threshold_m || 0)) * 0.045);
     const botW = topW * 5.0;
     const rwyTopY = cy + 14;
     const rwyBotY = h - 16;
 
-    ctx.fillStyle = 'rgba(0, 255, 157, 0.08)';
+    ctx.fillStyle = '#0b192c';
     ctx.beginPath();
     ctx.moveTo(cx + rwyShift - topW, rwyTopY);
     ctx.lineTo(cx + rwyShift + topW, rwyTopY);
@@ -636,12 +638,12 @@ pub fn render_visual_canvases_script() -> String {
     ctx.fill();
 
     ctx.strokeStyle = '#00ff9d';
-    ctx.lineWidth = 2.2;
+    ctx.lineWidth = 2.4;
     ctx.stroke();
 
     // Axul central al pistei
     ctx.save();
-    ctx.strokeStyle = '#ffffff';
+    ctx.strokeStyle = TEXT_PURE_WHITE;
     ctx.lineWidth = 2.2;
     ctx.setLineDash([12, 9]);
     ctx.beginPath();
@@ -650,13 +652,13 @@ pub fn render_visual_canvases_script() -> String {
     ctx.stroke();
     ctx.restore();
 
-    // 💡 Becurile calde ALS de pe pistă
+    // 💡 Becurile calde ALS de pe pistă (doar cercuri luminoase, fără texte mișcătoare)
     const rows = 7;
     for (let r = 1; r <= rows; r++) {{
       const frac = r / rows;
       const ly = rwyTopY + (rwyBotY - rwyTopY) * frac;
       const halfSpan = topW + (botW - topW) * frac;
-      const glowRadius = 2.4 + frac * 3.2;
+      const glowRadius = 2.6 + frac * 3.2;
       const lampPositions = [
         cx + rwyShift - halfSpan,
         cx + rwyShift + halfSpan,
@@ -664,16 +666,16 @@ pub fn render_visual_canvases_script() -> String {
       ];
       lampPositions.forEach((lx, idx) => {{
         ctx.beginPath();
-        ctx.fillStyle = idx === 2 ? '#fde047' : '#00ff9d';
+        ctx.fillStyle = idx === 2 ? TEXT_BRIGHT_YELLOW : '#00ff9d';
         ctx.arc(lx, ly, glowRadius, 0, Math.PI * 2);
         ctx.fill();
       }});
     }}
 
-    // ✈️ Reticulul avionului nostru în centru (fără niciun text suprapus peste centru!)
+    // ✈️ Reticulul fix al avionului nostru în centru
     ctx.save();
     ctx.strokeStyle = '#00e5ff';
-    ctx.lineWidth = 2.6;
+    ctx.lineWidth = 2.8;
     ctx.beginPath();
     ctx.moveTo(cx - 28, cy);
     ctx.lineTo(cx - 8, cy);
@@ -684,29 +686,29 @@ pub fn render_visual_canvases_script() -> String {
     ctx.stroke();
     ctx.restore();
 
-    // Cele 3 baloane explicative poziționate STRICT ÎN COLȚURI (fără să atingă centrul pistei)
+    // Cele 3 baloane explicative 100% FIXE ȘI NEMIȘCATE ÎN COLȚURI (Fundal 100% opac #050811, bordură 2px, text #FFFFFF și #FEF08A)
     const callouts = VISUAL_ENGINE_SPEC.hud_callouts || [];
     const spotlights = VISUAL_ENGINE_SPEC.spotlights || [];
     const activeSpotlight = spotlights.find(sp => sp.step_number === window.aeroSpotlightStep6yo);
 
     callouts.forEach(c => {{
-      const bx = c.box_norm[0] * w;
-      const by = c.box_norm[1] * h;
-      const bw = c.box_norm[2] * w;
-      const bh = c.box_norm[3] * h;
-      const tx = c.target_norm[0] * w;
-      const ty = c.target_norm[1] * h;
+      const bx = Math.round(c.box_norm[0] * w);
+      const by = Math.round(c.box_norm[1] * h);
+      const bw = Math.round(c.box_norm[2] * w);
+      const bh = Math.round(c.box_norm[3] * h);
+      const tx = Math.round(c.target_norm[0] * w);
+      const ty = Math.round(c.target_norm[1] * h);
 
       const isFocused = activeSpotlight &&
         activeSpotlight.target_canvas_id === 'hudCanvas' &&
         activeSpotlight.focus_callout_id === c.id;
 
-      // Săgeată fină punctată de la colț spre elementul indicat
+      // Săgeată statică de la colț spre punctul fix de explicație
       const startX = bx < cx ? (bx + bw) : bx;
       const startY = by < cy ? (by + bh * 0.7) : (by + bh * 0.3);
       ctx.save();
       ctx.strokeStyle = c.color_hex;
-      ctx.lineWidth = isFocused ? 2.2 : 1.3;
+      ctx.lineWidth = 2.0;
       ctx.setLineDash([4, 4]);
       ctx.beginPath();
       ctx.moveTo(startX, startY);
@@ -714,54 +716,51 @@ pub fn render_visual_canvases_script() -> String {
       ctx.stroke();
       ctx.fillStyle = c.color_hex;
       ctx.beginPath();
-      ctx.arc(tx, ty, 3.5, 0, Math.PI * 2);
+      ctx.arc(tx, ty, 4.0, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
 
-      // Cutia aerisită din colț
-      const borderCol = isFocused ? '#fde047' : c.color_hex;
-      const borderWidth = isFocused ? (2.2 + pulse * 1.2) : 1.5;
-      drawRoundedBox(ctx, bx, by, bw, bh, 9, 'rgba(7, 15, 28, 0.90)', borderCol, borderWidth);
+      // Cutie 100% OPACĂ #050811 cu bordură groasă de 2px (fără pulsație Math.sin!)
+      const borderCol = isFocused ? '#ffb800' : c.color_hex;
+      drawRoundedBox(ctx, bx, by, bw, bh, 9, SOLID_BG_DARK, borderCol, 2.2);
 
       ctx.save();
       ctx.textAlign = 'left';
-      ctx.fillStyle = c.color_hex;
-      ctx.font = 'bold 12px sans-serif';
+      ctx.fillStyle = TEXT_PURE_WHITE;
+      ctx.font = 'bold 12.5px sans-serif';
       ctx.fillText(pickText(c.title_ro, c.title_en), bx + 10, by + 21);
 
-      ctx.fillStyle = '#e2e8f0';
-      ctx.font = '11px sans-serif';
+      ctx.fillStyle = TEXT_BRIGHT_YELLOW;
+      ctx.font = 'bold 11px sans-serif';
       ctx.fillText(pickText(c.subtitle_ro, c.subtitle_en), bx + 10, by + 39);
 
       const badgeText = pickText(c.alert_badge_ro, c.alert_badge_en);
       if (badgeText) {{
-        ctx.fillStyle = '#fde047';
-        ctx.font = 'bold 10px sans-serif';
-        ctx.fillText(badgeText, bx + 10, by + 55);
+        ctx.fillStyle = TEXT_PURE_WHITE;
+        ctx.font = 'bold 10.5px sans-serif';
+        ctx.fillText(badgeText, bx + 10, by + 56);
       }}
 
       if (isFocused && activeSpotlight) {{
         const ptrText = pickText(activeSpotlight.pointer_badge_ro, activeSpotlight.pointer_badge_en);
-        drawRoundedBox(ctx, bx + bw - 96, by + 4, 90, 18, 9, '#fde047', '#0f172a', 1.2);
-        ctx.fillStyle = '#0f172a';
-        ctx.font = 'bold 9.5px sans-serif';
+        drawRoundedBox(ctx, bx + bw - 102, by + 4, 96, 20, 9, SOLID_BG_DARK, '#ffb800', 2.0);
+        ctx.fillStyle = TEXT_BRIGHT_YELLOW;
+        ctx.font = 'bold 10px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(ptrText, bx + bw - 51, by + 16);
+        ctx.fillText(ptrText, bx + bw - 54, by + 17);
       }}
       ctx.restore();
     }});
   }};
 
-  // === 2. PAGINA 3: RANDARE CURSA CELOR 4 AVIOANE #radarCanvas (900x440px, TOATĂ LĂȚIMEA LIBERĂ, ANTI-COLIZIUNE) ===
+  // === 2. PAGINA 3: RANDARE CURSA CELOR 4 AVIOANE #radarCanvas (900x440px, PANOU TEXT 100% FIX ÎN STÂNGA, DOAR AVIOANELE CU NUMERELE 1-4 SE MIȘCĂ) ===
   window.renderRadarCanvas6yo = function(ctx, canvas, s, history) {{
     if (!ctx || !canvas || !s) return;
     const w = canvas.width || 900;
     const h = canvas.height || 440;
     const arena = VISUAL_ENGINE_SPEC.arena_config;
-    const nowMs = Date.now();
-    const pulse = 0.5 + 0.5 * Math.sin(nowMs * 0.007);
 
-    ctx.fillStyle = '#050c15';
+    ctx.fillStyle = SOLID_BG_DARK;
     ctx.fillRect(0, 0, w, h);
 
     if (window.aeroRadarMode6yo === 'chart') {{
@@ -769,13 +768,14 @@ pub fn render_visual_canvases_script() -> String {
       return;
     }}
 
-    // Actualizăm și bara orizontală de clasament de deasupra canvas-ului (dacă există în DOM)
     const planeErrors = {{
       shield: Number(s.shield_err_m) || 0,
-      ins: Number(s.ins_err_m) || 0,
+      gnss: Number(s.gnss_err_m) || 0,
       naive: Number(s.naive_ekf_err_m) || 0,
-      gnss: Number(s.gnss_err_m) || 0
+      ins: Number(s.ins_err_m) || 0
     }};
+
+    // Actualizare bară orizontală fixă din DOM
     const pillShield = document.getElementById('scorePillShield');
     const pillGnss = document.getElementById('scorePillGnss');
     const pillNaive = document.getElementById('scorePillNaive');
@@ -785,185 +785,226 @@ pub fn render_visual_canvases_script() -> String {
     if (pillNaive) pillNaive.textContent = planeErrors.naive.toFixed(1) + 'm';
     if (pillIns) pillIns.textContent = planeErrors.ins.toFixed(1) + 'm';
 
-    // Toți cei 900px lățime sunt dedicați pistei și zborului celor 4 avioane!
-    const rwyCenterY = h * 0.42;
+    // Coloană statică 100% FIXĂ în stânga (235px) pentru numele avioanelor [1]..[4] + Pistă în dreapta (245..w-12)
+    const staticPanelW = 236;
+    const trackLeftX = staticPanelW + 14;
+    const trackRightX = w - 16;
+    const rwyCenterY = h * 0.46;
     const rwyHalfHeight = h * 0.16;
 
-    // 1. Zonele de IARBĂ sus și jos
-    ctx.fillStyle = 'rgba(20, 83, 45, 0.34)';
-    ctx.fillRect(0, 0, w, rwyCenterY - rwyHalfHeight);
-    ctx.fillRect(0, rwyCenterY + rwyHalfHeight, w, h - (rwyCenterY + rwyHalfHeight));
+    // 1. Zonele de IARBĂ sus și jos în zona pistei
+    ctx.fillStyle = '#092214';
+    ctx.fillRect(trackLeftX, 0, w - trackLeftX, rwyCenterY - rwyHalfHeight);
+    ctx.fillRect(trackLeftX, rwyCenterY + rwyHalfHeight, w - trackLeftX, h - (rwyCenterY + rwyHalfHeight));
 
-    ctx.fillStyle = '#86efac';
+    // Etichete 100% FIXE și OPACE #050811 pentru zona de iarbă
+    drawRoundedBox(ctx, trackLeftX + 8, 8, 340, 24, 6, SOLID_BG_DARK, '#00ff9d', 2.0);
+    ctx.fillStyle = TEXT_BRIGHT_YELLOW;
     ctx.font = 'bold 11px sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText(pickText(arena.grass_danger_ro, arena.grass_danger_en), 16, 20);
-    ctx.fillText(pickText(arena.grass_danger_ro, arena.grass_danger_en), 16, h - 12);
+    ctx.fillText(pickText(arena.grass_danger_ro, arena.grass_danger_en), trackLeftX + 16, 24);
 
-    // 2. Pista 09 Craiova pe toată lățimea (16..w-16)
+    drawRoundedBox(ctx, trackLeftX + 8, h - 32, 340, 24, 6, SOLID_BG_DARK, '#00ff9d', 2.0);
+    ctx.fillStyle = TEXT_BRIGHT_YELLOW;
+    ctx.fillText(pickText(arena.grass_danger_ro, arena.grass_danger_en), trackLeftX + 16, h - 16);
+
+    // 2. Pista 09 Craiova
     drawRoundedBox(
       ctx,
-      14,
+      trackLeftX,
       rwyCenterY - rwyHalfHeight,
-      w - 28,
+      trackRightX - trackLeftX,
       rwyHalfHeight * 2,
       8,
-      'rgba(30, 41, 59, 0.94)',
+      '#111c2d',
       '#00ff9d',
-      2.0
+      2.2
     );
 
-    // Linia centrală punctată a pistei
     ctx.save();
-    ctx.strokeStyle = '#e2e8f0';
+    ctx.strokeStyle = TEXT_PURE_WHITE;
     ctx.lineWidth = 2.2;
     ctx.setLineDash([16, 12]);
     ctx.beginPath();
-    ctx.moveTo(28, rwyCenterY);
-    ctx.lineTo(w - 28, rwyCenterY);
+    ctx.moveTo(trackLeftX + 14, rwyCenterY);
+    ctx.lineTo(trackRightX - 14, rwyCenterY);
     ctx.stroke();
     ctx.restore();
 
-    ctx.fillStyle = '#00ff9d';
+    // Caseta fixă de titlu a pistei
+    drawRoundedBox(ctx, trackLeftX + 10, rwyCenterY - rwyHalfHeight + 6, 330, 22, 6, SOLID_BG_DARK, '#00ff9d', 2.0);
+    ctx.fillStyle = TEXT_PURE_WHITE;
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(pickText(arena.runway_title_ro, arena.runway_title_en), trackLeftX + 18, rwyCenterY - rwyHalfHeight + 21);
+
+    // 3. PANOU LATERAL STÂNGA 100% FIX ȘI STATIC CU NUMELE CELOR 4 AVIOANE [1]..[4] (ZERO TEXT MIȘCĂTOR!)
+    drawRoundedBox(ctx, 8, 8, staticPanelW - 4, h - 16, 10, SOLID_BG_DARK, '#00e5ff', 2.2);
+    ctx.fillStyle = TEXT_PURE_WHITE;
     ctx.font = 'bold 12px sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText(pickText(arena.runway_title_ro, arena.runway_title_en), 24, rwyCenterY - rwyHalfHeight + 18);
+    ctx.fillText(
+      pickText('🏁 AVIOANE ÎN CURSĂ (FIX):', '🏁 PLANES IN RACE (FIXED):'),
+      18,
+      30
+    );
 
-    // Offset-uri vizuale distincte pe axa Y (lane separation) ca cele 4 avioane să aibă spațiu generos între ele
+    const planeNumMap = {{
+      shield: '1',
+      gnss: '2',
+      naive: '3',
+      ins: '4'
+    }};
+
+    (arena.planes || []).forEach((p, idx) => {{
+      const cardX = 16;
+      const cardY = 44 + idx * 92;
+      const cardW = staticPanelW - 20;
+      const cardH = 82;
+      const numStr = planeNumMap[p.key] || String(idx + 1);
+      const errVal = planeErrors[p.key] || 0;
+
+      drawRoundedBox(ctx, cardX, cardY, cardW, cardH, 8, SOLID_BG_DARK, p.color_hex, 2.2);
+
+      // Titlu ALB PUR #FFFFFF cu numărul [1]..[4]
+      ctx.fillStyle = TEXT_PURE_WHITE;
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('[' + numStr + '] ' + pickText(p.label_ro, p.label_en), cardX + 10, cardY + 22);
+
+      // Eroare în GALBEN STRĂLUCITOR #FEF08A
+      ctx.fillStyle = TEXT_BRIGHT_YELLOW;
+      ctx.font = 'bold 11.5px sans-serif';
+      const statusText = p.key === 'shield'
+        ? pickText('Abatere: ', 'Error: ') + errVal.toFixed(1) + 'm (PE PISTĂ ✅)'
+        : pickText('Abatere: ', 'Error: ') + errVal.toFixed(1) + 'm';
+      ctx.fillText(statusText, cardX + 10, cardY + 44);
+
+      // Scurtă explicație fixă în ALB PUR
+      ctx.fillStyle = TEXT_PURE_WHITE;
+      ctx.font = '10px sans-serif';
+      const shortRole = p.key === 'shield'
+        ? pickText('Scut activ • Centrul pistei', 'Shield active • Centerline')
+        : p.key === 'gnss'
+          ? pickText('Tras de GPS fals în iarbă', 'Pulled by fake GPS to grass')
+          : p.key === 'naive'
+            ? pickText('Împins de vântul din ceață', 'Pushed by fog crosswind')
+            : pickText('Derivă lentă fără cameră', 'Slow drift without camera');
+      ctx.fillText(shortRole, cardX + 10, cardY + 66);
+    }});
+
+    // 4. POZIȚIILE SILUETELOR AVIOANELOR PE PISTĂ (SE MIȘCĂ DOAR AVIOANELE CU NUMĂRUL 1..4, FĂRĂ TEXT MIȘCĂTOR!)
     const laneOffsetY = {{
       shield: 0,
-      ins: -46,
-      naive: 48,
-      gnss: 98
+      ins: -52,
+      naive: 52,
+      gnss: 96
     }};
 
     function mapPlaneToArenaY(key, errMeters) {{
       const clamped = Math.max(0, Math.min(230, Number(errMeters) || 0));
       if (key === 'shield') {{
-        return rwyCenterY + Math.min(10, clamped * 2.0);
+        return rwyCenterY + Math.min(8, clamped * 1.8);
       }}
       if (key === 'ins') {{
-        // Zboară în jumătatea superioară (deasupra axului pistei, spre iarba de sus)
-        const upShift = Math.min(rwyCenterY - 36, 26 + (clamped / 120.0) * (rwyCenterY - 50));
+        const upShift = Math.min(rwyCenterY - 46, 30 + (clamped / 120.0) * (rwyCenterY - 60));
         return rwyCenterY - upShift;
       }}
-      const baseDown = rwyCenterY + laneOffsetY[key] + (clamped / 210.0) * (h - rwyCenterY - 95);
-      return Math.max(36, Math.min(h - 34, baseDown));
+      const baseDown = rwyCenterY + laneOffsetY[key] + (clamped / 210.0) * (h - rwyCenterY - 110);
+      return Math.max(46, Math.min(h - 46, baseDown));
     }}
 
     const progress = 1.0 - Math.max(0, Math.min(1, (s.dist_to_threshold_m || 0) / 1400.0));
-    const planeBaseX = 90 + progress * (w - 290);
+    const planeBaseX = trackLeftX + 55 + progress * (trackRightX - trackLeftX - 130);
 
     const xOffsets = {{
-      shield: 36,
+      shield: 28,
       ins: 8,
-      naive: -18,
-      gnss: -44
+      naive: -12,
+      gnss: -32
     }};
 
-    // 3. Momeala Hackerului 👾 în iarbă (jos-dreapta)
+    // Momeala Hackerului 👾 — Casetă de text 100% FIXĂ în colțul dreapta-jos al pistei (fără mișcare, fără Math.sin!)
     const spoofMeters = Number(s.spoof_offset_m) || 0;
     const gnssY = mapPlaneToArenaY('gnss', planeErrors.gnss);
-    const gnssX = Math.max(50, Math.min(w - 210, planeBaseX + xOffsets.gnss));
-    const decoyX = Math.min(w - 125, gnssX + 95);
-    const decoyY = Math.min(h - 32, gnssY + 26);
+    const gnssX = Math.max(trackLeftX + 30, Math.min(trackRightX - 40, planeBaseX + xOffsets.gnss));
+    const fixedDecoyBoxX = trackRightX - 246;
+    const fixedDecoyBoxY = h - 68;
 
     if (spoofMeters > 2.0) {{
       ctx.save();
-      ctx.strokeStyle = '#ff3355';
+      ctx.strokeStyle = '#ff2a5f';
       ctx.lineWidth = 2.2;
       ctx.setLineDash([5, 5]);
       ctx.beginPath();
       ctx.moveTo(gnssX, gnssY);
-      ctx.lineTo(decoyX, decoyY);
+      ctx.lineTo(fixedDecoyBoxX + 120, fixedDecoyBoxY);
       ctx.stroke();
       ctx.restore();
 
-      drawRoundedBox(ctx, decoyX - 88, decoyY - 14, 176, 26, 8, 'rgba(127, 29, 29, 0.92)', '#ff3355', 1.8);
-      ctx.fillStyle = '#fecdd3';
-      ctx.font = 'bold 10.5px sans-serif';
+      drawRoundedBox(ctx, fixedDecoyBoxX, fixedDecoyBoxY, 238, 28, 8, SOLID_BG_DARK, '#ff2a5f', 2.2);
+      ctx.fillStyle = TEXT_PURE_WHITE;
+      ctx.font = 'bold 11px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(pickText(arena.hacker_decoy_ro, arena.hacker_decoy_en), decoyX, decoyY + 3);
+      ctx.fillText(pickText(arena.hacker_decoy_ro, arena.hacker_decoy_en), fixedDecoyBoxX + 119, fixedDecoyBoxY + 18);
     }}
 
-    // 4. Calculăm pozițiile și rezolvăm anti-coliziunea etichetelor celor 4 avioane
-    const rawPlaneItems = (arena.planes || []).map(p => {{
+    // Desenăm traseele și siluetele avioanelor + cercul mic cu numărul fix 1, 2, 3, 4 (#FFFFFF pe #050811)
+    (arena.planes || []).forEach((p, idx) => {{
       const errM = planeErrors[p.key] || 0;
       const py = mapPlaneToArenaY(p.key, errM);
-      const px = Math.max(50, Math.min(w - 210, planeBaseX + (xOffsets[p.key] || 0)));
-      return {{
-        spec: p,
-        errM: errM,
-        px: px,
-        py: py,
-        labelY: py
-      }};
-    }});
+      const px = Math.max(trackLeftX + 30, Math.min(trackRightX - 36, planeBaseX + (xOffsets[p.key] || 0)));
+      const numStr = planeNumMap[p.key] || String(idx + 1);
 
-    const safeItems = resolveLabelCollisionsY(rawPlaneItems, 34, h - 34, 34);
-
-    safeItems.forEach(item => {{
-      const p = item.spec;
-      const px = item.px;
-      const py = item.py;
-      const ly = item.labelY;
-
-      // Traseul neted al avionului
+      // Traseul avionului
       ctx.save();
       ctx.strokeStyle = p.color_hex;
-      ctx.lineWidth = p.key === 'shield' ? 3.2 : 2.0;
+      ctx.lineWidth = p.key === 'shield' ? 3.2 : 2.2;
       if (p.key === 'ins') ctx.setLineDash([6, 5]);
       ctx.beginPath();
-      ctx.moveTo(28, rwyCenterY);
-      ctx.quadraticCurveTo(px * 0.55, (rwyCenterY + py) * 0.5, px, py);
+      ctx.moveTo(trackLeftX + 14, rwyCenterY);
+      ctx.quadraticCurveTo((trackLeftX + px) * 0.5, (rwyCenterY + py) * 0.5, px, py);
       ctx.stroke();
       ctx.restore();
 
-      // Punctul avionului pe traiectorie
+      // Cerc opac #050811 cu bordură groasă de 2.2px și numărul fix (1, 2, 3, 4) scris cu #FFFFFF
       ctx.save();
-      ctx.fillStyle = p.color_hex;
       ctx.beginPath();
-      ctx.arc(px, py, p.key === 'shield' ? 6 : 4.5, 0, Math.PI * 2);
+      ctx.fillStyle = SOLID_BG_DARK;
+      ctx.strokeStyle = p.color_hex;
+      ctx.lineWidth = 2.4;
+      ctx.arc(px, py, 13, 0, Math.PI * 2);
       ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = TEXT_PURE_WHITE;
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(numStr, px, py + 4);
       ctx.restore();
-
-      // Etichetă scurtă și aerisită garantat fără suprapunere
-      const shortLabel = pickText(p.label_ro, p.label_en) + ' (' + item.errM.toFixed(1) + 'm)';
-      const boxW = 176;
-      const boxH = 24;
-      const boxX = Math.min(w - boxW - 14, px + 12);
-      const boxY = ly - boxH / 2;
-
-      drawRoundedBox(ctx, boxX, boxY, boxW, boxH, 7, 'rgba(7, 15, 28, 0.92)', p.color_hex, p.key === 'shield' ? 2.2 : 1.5);
-      ctx.fillStyle = p.color_hex;
-      ctx.font = 'bold 11px sans-serif';
-      ctx.textAlign = 'left';
-      ctx.fillText(shortLabel, boxX + 8, boxY + 16);
     }});
 
-    // 5. Insigna 👇 UITE AICI! pe #radarCanvas
+    // 5. Insigna 👇 UITE AICI! pe #radarCanvas la coordonate 100% FIXE (fără mișcare și fără pulsație)
     const spotlights = VISUAL_ENGINE_SPEC.spotlights || [];
     const activeSpotlight = spotlights.find(sp => sp.step_number === window.aeroSpotlightStep6yo);
     if (activeSpotlight && activeSpotlight.target_canvas_id === 'radarCanvas') {{
-      const shieldItem = safeItems.find(it => it.spec.key === 'shield') || safeItems[0];
-      const focusY = activeSpotlight.focus_callout_id === 'shield_plane'
-        ? Math.max(28, shieldItem.labelY - 28)
-        : Math.max(28, decoyY - 32);
-      const focusX = activeSpotlight.focus_callout_id === 'shield_plane'
-        ? Math.min(w - 130, shieldItem.px + 60)
-        : Math.max(80, decoyX);
+      const fixedSpotX = trackRightX - 135;
+      const fixedSpotY = 8;
       const ptrText = pickText(activeSpotlight.pointer_badge_ro, activeSpotlight.pointer_badge_en);
-      drawRoundedBox(ctx, focusX - 54, focusY - 11, 108, 22, 10, '#fde047', '#0f172a', 1.8 + pulse);
-      ctx.fillStyle = '#0f172a';
-      ctx.font = 'bold 10px sans-serif';
+      drawRoundedBox(ctx, fixedSpotX, fixedSpotY, 126, 24, 8, SOLID_BG_DARK, '#ffb800', 2.2);
+      ctx.fillStyle = TEXT_BRIGHT_YELLOW;
+      ctx.font = 'bold 11px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(ptrText, focusX, focusY + 4);
+      ctx.fillText(ptrText, fixedSpotX + 63, fixedSpotY + 16);
     }}
   }};
 
   function renderTechnicalChartMode(ctx, w, h, s, history, arena) {{
+    ctx.fillStyle = SOLID_BG_DARK;
+    ctx.fillRect(0, 0, w, h);
+
     ctx.strokeStyle = '#1e293b';
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 1.2;
     for (let i = 1; i < 4; i++) {{
       const gy = (h / 4) * i;
       ctx.beginPath();
@@ -975,21 +1016,23 @@ pub fn render_visual_canvases_script() -> String {
     function mapLogY(errMeters) {{
       const v = Math.max(0, Number(errMeters) || 0);
       const norm = Math.log10(1 + v) / Math.log10(251);
-      return h - 22 - norm * (h - 48);
+      return h - 22 - norm * (h - 64);
     }}
 
     const cat3Y = mapLogY(2.0);
     ctx.save();
-    ctx.strokeStyle = 'rgba(0, 255, 157, 0.5)';
+    ctx.strokeStyle = '#00ff9d';
+    ctx.lineWidth = 2.0;
     ctx.setLineDash([6, 4]);
     ctx.beginPath();
     ctx.moveTo(0, cat3Y);
     ctx.lineTo(w, cat3Y);
     ctx.stroke();
-    ctx.fillStyle = '#00ff9d';
+    drawRoundedBox(ctx, 12, cat3Y - 26, 245, 22, 6, SOLID_BG_DARK, '#00ff9d', 2.0);
+    ctx.fillStyle = TEXT_PURE_WHITE;
     ctx.font = 'bold 11px sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText('CAT IIIb MAX SAFE LIMIT (2.0m)', 14, cat3Y - 6);
+    ctx.fillText('CAT IIIb MAX SAFE LIMIT (2.0m)', 20, cat3Y - 11);
     ctx.restore();
 
     function drawCurve(field, colorHex, widthPx) {{
@@ -1006,24 +1049,26 @@ pub fn render_visual_canvases_script() -> String {
       ctx.stroke();
     }}
 
-    drawCurve('gnss_err_m', '#ff3355', 2.2);
-    drawCurve('naive_ekf_err_m', '#eab308', 2.2);
-    drawCurve('ins_err_m', '#f97316', 2.2);
+    drawCurve('gnss_err_m', '#ff2a5f', 2.2);
+    drawCurve('naive_ekf_err_m', '#ffb800', 2.2);
+    drawCurve('ins_err_m', '#ff9100', 2.2);
     drawCurve('shield_err_m', '#00ff9d', 3.4);
 
-    // Legendă orizontală aerisită sus în modul grafic
+    // Legendă orizontală 100% FIXĂ și OPACĂ sus în modul grafic
     (arena.planes || []).forEach((p, idx) => {{
       const val = p.key === 'shield' ? s.shield_err_m
         : p.key === 'gnss' ? s.gnss_err_m
         : p.key === 'naive' ? s.naive_ekf_err_m
         : s.ins_err_m;
-      ctx.fillStyle = p.color_hex;
+      const bx = 12 + idx * 218;
+      drawRoundedBox(ctx, bx, 8, 210, 26, 6, SOLID_BG_DARK, p.color_hex, 2.0);
+      ctx.fillStyle = TEXT_PURE_WHITE;
       ctx.font = 'bold 11px sans-serif';
       ctx.textAlign = 'left';
       ctx.fillText(
-        pickText(p.label_ro, p.label_en) + ': ' + Number(val || 0).toFixed(2) + 'm',
-        16 + idx * 210,
-        22
+        '[' + (idx + 1) + '] ' + pickText(p.label_ro, p.label_en) + ': ' + Number(val || 0).toFixed(2) + 'm',
+        bx + 8,
+        25
       );
     }});
   }}
@@ -1103,10 +1148,12 @@ mod tests {
     }
 
     #[test]
-    fn test_render_page2_and_page3_dedicated_canvases_and_anti_collision() {
+    fn test_render_page2_and_page3_static_high_contrast_no_moving_text() {
         let page2 = render_page2_hud_canvas_html();
         assert!(page2.contains("id=\"hudCanvas\""));
         assert!(page2.contains("width=\"900\" height=\"460\""));
+        assert!(page2.contains("#050811"));
+        assert!(page2.contains("#FFFFFF"));
         assert!(page2.contains("☁️💨 VÂNT ÎN CEAȚĂ"));
         assert!(page2.contains("💡 BECURILE PISTEI (VITEZA SOL)"));
         assert!(page2.contains("✈️ AVIONUL NOSTRU (PE CENTRU)"));
@@ -1114,11 +1161,13 @@ mod tests {
         let page3 = render_page3_radar_canvas_html();
         assert!(page3.contains("id=\"radarCanvas\""));
         assert!(page3.contains("width=\"900\" height=\"440\""));
+        assert!(page3.contains("#050811"));
+        assert!(page3.contains("#FEF08A"));
         assert!(page3.contains("fourPlanesHorizontalScoreboard"));
-        assert!(page3.contains("✈️🟢 AERO-SHIELD"));
-        assert!(page3.contains("✈️🔴 GPS PĂCĂLIT"));
-        assert!(page3.contains("✈️🟡 CEAȚĂ SIMPLĂ"));
-        assert!(page3.contains("✈️🟠 FĂRĂ CAMERĂ"));
+        assert!(page3.contains("[1] ✈️🟢 AERO-SHIELD"));
+        assert!(page3.contains("[2] ✈️🔴 GPS PĂCĂLIT"));
+        assert!(page3.contains("[3] ✈️🟡 CEAȚĂ SIMPLĂ"));
+        assert!(page3.contains("[4] ✈️🟠 FĂRĂ CAMERĂ"));
 
         let html = render_visual_canvases_component_html();
         assert!(html.contains("spotlightBanner6yo"));
@@ -1131,6 +1180,9 @@ mod tests {
         assert!(js.contains("window.renderRadarCanvas6yo"));
         assert!(js.contains("window.setRadarMode6yo"));
         assert!(js.contains("window.setVisualEnginePage6yo"));
-        assert!(js.contains("resolveLabelCollisionsY"));
+        assert!(js.contains("SOLID_BG_DARK = '#050811'"));
+        assert!(js.contains("TEXT_PURE_WHITE = '#FFFFFF'"));
+        assert!(js.contains("TEXT_BRIGHT_YELLOW = '#FEF08A'"));
+        assert!(!js.contains("Math.sin"));
     }
 }

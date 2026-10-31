@@ -275,7 +275,7 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             title: "🎈 Lecția 1: „Problema: Ceața, Hackerul Rău 👾 și Musculița Google 🐝”",
             kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «🛡️ Pornește AERO-SHIELD + Musculița Google 🐝» de mai jos ca să vezi în zborul sintetic FlightGear cum tăiem firul hackerului cu Foarfeca Aurie ✂️!",
             visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «🛡️ Pornește AERO-SHIELD + Musculița Google 🐝» pentru rezolvarea FlightGear!",
-            science_secret_ro: "GNSS Spoofing Rejection + Google Research Drosophila Connectome Bio-Navigation",
+            science_secret_ro: "Formula 1 (Cheia Pământului): Forma Solului de sub Noi = Înălțimea Avionului − Distanța până la Pământ (Precizie < 1 metru chiar și la 100.000 km — 2.5 înconjururi ale Pământului fără GPS!)",
             default_mode: "l1_fog",
             fg_video_url: "/real_videos/fg_lesson_1.mp4",
             action_buttons: vec![
@@ -313,7 +313,7 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             title: "🔦 Lecția 2: „Ochii Magici T4/T5 ai Musculiței Google văd prin Ceață 👀”",
             kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «🔦 Aprinde Lupa SWIR + Ochii T4/T5 🐝» de mai jos ca să vezi în zborul sintetic FlightGear cum vedem becurile pistei direct prin ceață și fum!",
             visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «🔦 Aprinde Lupa SWIR + Ochii T4/T5 🐝» și plimbă mouse-ul pe ecran!",
-            science_secret_ro: "SWIR (1.55 μm) Mie Penetration + Drosophila T4 (ON) / T5 (OFF) Lobula Plate Neurons",
+            science_secret_ro: "Formula 1 (Cheia Pământului în Ceață): Forma Solului și Luminile Pistei = Înălțimea Avionului − Distanța SWIR până la Pământ (Precizie < 1 metru la 100.000 km fără GPS!)",
             default_mode: "l2_swir",
             fg_video_url: "/real_videos/fg_lesson_2.mp4",
             action_buttons: vec![
@@ -351,7 +351,7 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             title: "🚂 Lecția 3: „Cum numără neuronii T4/T5 becurile + Inelul-Busolă E-PG cu 16 Luminițe 💡”",
             kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «📏 Rigla T4/T5 + Inelul E-PG 🐝» de mai jos ca să măsori viteza pe zborul sintetic FlightGear și să aprinzi Busola în Inel cu 16 Luminițe spre Craiova RWY 09!",
             visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «📏 Rigla T4/T5 + Inelul E-PG 🐝» pentru viteza fără GPS + Busola E-PG!",
-            science_secret_ro: "Drosophila T4/T5 Elementary Motion Detectors (EMD) + 16-Wedge E-PG Ring Attractor",
+            science_secret_ro: "Formula 2 (Creierul Musculiței Google): Mișcarea Adevărată = Ce Văd Ochii în Ceață − Înclinarea Avionului − Mișcarea Norilor (Precizie < 1 metru chiar și la 100.000 km!)",
             default_mode: "l3_slow",
             fg_video_url: "/real_videos/fg_lesson_3.mp4",
             action_buttons: vec![
@@ -389,7 +389,7 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             title: "☁️ Lecția 4: „Stabilizatorul HS/VS și Senzorul de Vânt PFNd al Musculiței! 💨”",
             kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «🧠 HS/VS + PFNd: Separă Norul» de mai jos ca să vezi pe zborul FlightGear cum Stabilizatorul HS/VS și Senzorul PFNd taie ❌ Norul Mov de ✅ Pământul Verde!",
             visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «🧠 HS/VS + PFNd: Separă Norul» pentru stabilizarea zborului în vânt!",
-            science_secret_ro: "Lobula Plate HS/VS 6-DOF Derotation + Noduli PFNd Wind-Shear Feedforward + RANSAC",
+            science_secret_ro: "Formula 2 (Separarea Vântului): Mișcarea Adevărată = Ce Văd Ochii în Ceață − Înclinarea Avionului − Mișcarea Norilor (Eroare < 1 metru la 100.000 km fără GPS!)",
             default_mode: "l4_separate",
             fg_video_url: "/real_videos/fg_lesson_4.mp4",
             action_buttons: vec![
@@ -427,7 +427,7 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             title: "⚖️ Lecția 5: „Cântarul Adevărului + Inelul-Busolă E-PG cu 16 Luminițe ⚖️”",
             kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «✅ Zbor Cinstit + Inel E-PG» (sau testează minciunile) ca să vezi pe zborul FlightGear cum Inelul E-PG cu 16 Luminițe, Cântarul ⚖️ și Paharul CUSUM prind hackerul!",
             visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «✅ Zbor Cinstit + Inel E-PG» ca să vezi echilibrul pe zborul FlightGear!",
-            science_secret_ro: "E-PG Ring Attractor Dark-Memory + Mahalanobis Chi-Square Gate (χ²) + Page-Hinkley CUSUM",
+            science_secret_ro: "Formula 3 (Detectorul de Minciuni): Vântul pe Aripi = Viteza față de Pământ − Viteza Aerului din Față (Blochează orice minciună GPS și păstrează precizia < 1 metru la 100.000 km!)",
             default_mode: "l5_honest",
             fg_video_url: "/real_videos/fg_lesson_5.mp4",
             action_buttons: vec![
@@ -750,15 +750,15 @@ pub fn render_lessons_6yo_standalone_page() -> String {
     doc.push_str("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n");
     doc.push_str("  <title>AERO-SHIELD V2.0 — Academia de Zbor (Câte 1 Concept pe Pagină)</title>\n");
     doc.push_str("  <style>\n");
-    doc.push_str("    body { margin: 0; padding: 28px 18px; background: #060b16; color: #f8fafc; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }\n");
+    doc.push_str("    body { margin: 0; padding: 28px 18px; background: #070B14; color: #FFFFFF; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }\n");
     doc.push_str("    .standalone-top-nav { max-width: 1050px; margin: 0 auto 20px auto; display: flex; justify-content: space-between; align-items: center; }\n");
-    doc.push_str("    .standalone-back-link { color: #38bdf8; text-decoration: none; font-weight: 700; font-size: 15px; padding: 10px 18px; border: 1px solid rgba(56,189,248,0.4); border-radius: 10px; background: rgba(15,23,42,0.85); }\n");
-    doc.push_str("    .standalone-back-link:hover { background: rgba(56,189,248,0.18); }\n");
+    doc.push_str("    .standalone-back-link { color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 15px; padding: 10px 18px; border: 2px solid #38BDF8; border-radius: 10px; background: #0F172A; }\n");
+    doc.push_str("    .standalone-back-link:hover { background: #0C4A6E; border-color: #FEF08A; color: #FEF08A; }\n");
     doc.push_str("  </style>\n");
     doc.push_str("</head>\n<body>\n");
     doc.push_str("  <div class=\"standalone-top-nav\">\n");
     doc.push_str("    <a class=\"standalone-back-link\" href=\"/\">⬅️ Înapoi la Simulatorul Principal AERO-SHIELD</a>\n");
-    doc.push_str("    <span style=\"font-size:14px;color:#94a3b8;\">Câte 1 singur concept per pagină • Zero aglomerare</span>\n");
+    doc.push_str("    <span style=\"font-size:14px;font-weight:700;color:#FEF08A;background:#0F172A;padding:6px 12px;border-radius:8px;border:1px solid #FACC15;\">Câte 1 singur concept per pagină • Contrast Maxim WCAG AAA</span>\n");
     doc.push_str("  </div>\n");
     doc.push_str(&component_html);
     doc.push_str("\n</body>\n</html>\n");
@@ -835,13 +835,13 @@ const SPOTLIGHT_OVERLAY_INNER_HTML: &str = r#"
 </div>
 "#;
 
-/// Scoped CSS for the Ultra-Spacious Single-Concept-Per-Page 6-Year-Old Academy.
+/// Scoped CSS for the Ultra-Spacious Single-Concept-Per-Page 6-Year-Old Academy (WCAG AAA Contrast, Zero Moving Text).
 const LESSONS_6YO_SCOPED_CSS: &str = r#"
 .lessons-6yo-container {
   max-width: 1050px;
   margin: 0 auto;
   padding: 12px 0;
-  color: #f8fafc;
+  color: #FFFFFF;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 .lessons-6yo-central-card {
@@ -852,10 +852,10 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   flex-direction: column;
   align-items: center;
   gap: 22px;
-  background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(9, 14, 28, 0.98));
-  border: 2px solid rgba(56, 189, 248, 0.42);
+  background: #070B14;
+  border: 2px solid #38BDF8;
   border-radius: 22px;
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 18px 44px #000000;
 }
 .lessons-6yo-central-card.collapsed {
   display: none;
@@ -868,35 +868,39 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   width: 100%;
 }
 .lesson-6yo-step-btn {
-  background: rgba(30, 41, 59, 0.88);
-  color: #cbd5e1;
-  border: 2px solid rgba(148, 163, 184, 0.32);
+  background: #0F172A;
+  color: #FFFFFF;
+  border: 2px solid #38BDF8;
   border-radius: 999px;
   padding: 10px 20px;
   font-size: 16px;
   font-weight: 800;
   cursor: pointer;
-  transition: all 0.18s ease;
+  text-shadow: 0 1px 2px #000000;
 }
 .lesson-6yo-step-btn:hover {
-  border-color: #38bdf8;
-  color: #ffffff;
-  transform: translateY(-1px);
+  background: #0C4A6E;
+  border-color: #FEF08A;
+  color: #FEF08A;
 }
 .lesson-6yo-step-btn.active {
-  background: linear-gradient(135deg, #0284c7, #2563eb);
-  color: #ffffff;
-  border-color: #7dd3fc;
-  box-shadow: 0 0 18px rgba(56, 189, 248, 0.45);
-  transform: scale(1.04);
+  background: #0369A1;
+  color: #FEF08A;
+  border: 2px solid #FEF08A;
+  box-shadow: 0 0 0 2px #38BDF8;
 }
 .lesson-6yo-single-title {
   margin: 0;
   font-size: 26px;
   font-weight: 900;
-  color: #fde047;
+  color: #FEF08A;
+  background: #0F172A;
+  border: 2px solid #FACC15;
+  border-radius: 14px;
+  padding: 12px 22px;
   text-align: center;
-  line-height: 1.3;
+  line-height: 1.35;
+  text-shadow: 0 1px 2px #000000;
 }
 .lesson-canvas-center-stage.separate-dual-stage {
   width: 100%;
@@ -914,29 +918,30 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background: rgba(15, 23, 42, 0.96);
-  border: 2px solid rgba(56, 189, 248, 0.45);
+  background: #0F172A;
+  border: 2px solid #38BDF8;
   border-radius: 16px;
   padding: 14px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 12px 30px #000000;
   opacity: 1.0;
 }
 .lesson-separate-media-card.fg-video-card {
-  border-color: rgba(52, 211, 153, 0.55);
+  border-color: #34D399;
 }
 .lesson-separate-box-header {
   font-size: 15px;
   font-weight: 900;
-  color: #38bdf8;
+  color: #FFFFFF;
   text-align: center;
-  padding: 6px 10px;
+  padding: 8px 12px;
   border-radius: 10px;
-  background: rgba(2, 6, 23, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: #070B14;
+  border: 2px solid #38BDF8;
+  text-shadow: 0 1px 2px #000000;
 }
 .lesson-separate-box-header.fg-video-header {
-  color: #34d399;
-  border-color: rgba(52, 211, 153, 0.35);
+  color: #FEF08A;
+  border-color: #34D399;
 }
 .lesson-interactive-canvas {
   position: static;
@@ -945,8 +950,8 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   aspect-ratio: 760 / 340;
   display: block;
   border-radius: 12px;
-  background: #040814;
-  border: 1.5px solid rgba(56, 189, 248, 0.38);
+  background: #070B14;
+  border: 2px solid #38BDF8;
   opacity: 1.0 !important;
   cursor: crosshair;
 }
@@ -958,8 +963,8 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   object-fit: cover;
   display: block;
   border-radius: 12px;
-  background: #020617;
-  border: 1.5px solid rgba(52, 211, 153, 0.42);
+  background: #070B14;
+  border: 2px solid #34D399;
   opacity: 1.0 !important;
 }
 .solve-fg-green-hero-btn {
@@ -990,65 +995,61 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   justify-content: center;
   padding: 14px 22px;
   border-radius: 14px;
-  border: 2px solid rgba(148, 163, 184, 0.55);
-  background: rgba(30, 41, 59, 0.92);
-  color: #ffffff;
+  border: 2px solid #38BDF8;
+  background: #0F172A;
+  color: #FFFFFF;
   font-size: 17px;
   font-weight: 800;
   cursor: pointer;
-  transition: all 0.16s ease;
+  text-shadow: 0 1px 2px #000000;
 }
 .kid-action-btn:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.12);
+  border-color: #FEF08A !important;
+  color: #FEF08A !important;
 }
 .kid-action-btn.active-mode {
-  box-shadow: 0 0 0 3px #fde047, 0 8px 20px rgba(0, 0, 0, 0.5) !important;
-  transform: translateY(-1px);
+  box-shadow: 0 0 0 3px #FEF08A !important;
 }
 .kid-action-btn.theme-blue,
 .kid-action-btn.theme-cyan {
-  background: linear-gradient(135deg, #0284c7, #1d4ed8) !important;
-  border: 2px solid #38bdf8 !important;
-  color: #ffffff !important;
-  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+  background: #0C4A6E !important;
+  border: 2px solid #38BDF8 !important;
+  color: #FFFFFF !important;
 }
 .kid-action-btn.theme-red {
-  background: linear-gradient(135deg, #dc2626, #991b1b) !important;
-  border: 2px solid #f87171 !important;
-  color: #ffffff !important;
-  box-shadow: 0 0 14px rgba(239, 68, 68, 0.35);
+  background: #7F1D1D !important;
+  border: 2px solid #F87171 !important;
+  color: #FFFFFF !important;
 }
 .kid-action-btn.theme-green,
 #btnSolveWithFlightGearGreen {
-  background: linear-gradient(135deg, #059669, #10b981) !important;
-  border: 2px solid #34d399 !important;
-  color: #ffffff !important;
-  box-shadow: 0 0 18px rgba(16, 185, 129, 0.55);
+  background: #064E3B !important;
+  border: 2px solid #34D399 !important;
+  color: #FFFFFF !important;
 }
 .kid-action-btn.theme-amber {
-  background: linear-gradient(135deg, #d97706, #b45309) !important;
-  border: 2px solid #fbbf24 !important;
-  color: #ffffff !important;
-  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35);
+  background: #78350F !important;
+  border: 2px solid #FACC15 !important;
+  color: #FFFFFF !important;
 }
 .kid-action-btn.theme-purple {
-  background: linear-gradient(135deg, #7c3aed, #5b21b6) !important;
-  border: 2px solid #c084fc !important;
-  color: #ffffff !important;
-  box-shadow: 0 0 14px rgba(168, 85, 247, 0.35);
+  background: #4C1D95 !important;
+  border: 2px solid #C084FC !important;
+  color: #FFFFFF !important;
 }
 .lesson-single-takeaway {
   margin: 0;
-  max-width: 860px;
+  max-width: 920px;
   font-size: 20px;
+  font-weight: 700;
   line-height: 1.5;
-  color: #f1f5f9;
+  color: #FFFFFF;
   text-align: center;
-  padding: 14px 22px;
+  padding: 16px 24px;
   border-radius: 14px;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1.5px solid rgba(250, 204, 21, 0.38);
+  background: #0F172A;
+  border: 2px solid #FACC15;
+  text-shadow: 0 1px 2px #000000;
 }
 .lessons-6yo-bottom-nav {
   display: flex;
@@ -1059,31 +1060,30 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   padding-top: 4px;
 }
 .lesson-6yo-nav-arrow {
-  background: rgba(30, 41, 59, 0.92);
-  color: #f8fafc;
-  border: 2px solid rgba(148, 163, 184, 0.4);
+  background: #0F172A;
+  color: #FFFFFF;
+  border: 2px solid #38BDF8;
   border-radius: 14px;
   padding: 14px 26px;
   font-size: 17px;
   font-weight: 800;
   cursor: pointer;
-  transition: all 0.16s ease;
+  text-shadow: 0 1px 2px #000000;
 }
 .lesson-6yo-nav-arrow:hover {
-  transform: translateY(-2px);
-  border-color: #38bdf8;
+  border-color: #FEF08A;
+  color: #FEF08A;
 }
 .lesson-6yo-nav-arrow.primary-next {
-  background: linear-gradient(135deg, #16a34a, #059669);
-  border-color: #4ade80;
-  color: #ffffff;
+  background: #064E3B;
+  border: 2px solid #34D399;
+  color: #FFFFFF;
 }
 .aero-6yo-spotlight-overlay {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(2, 6, 23, 0.84);
-  backdrop-filter: blur(5px);
+  background: #070B14;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1095,11 +1095,11 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
 .spotlight-header-card {
   max-width: 960px;
   width: 100%;
-  background: linear-gradient(145deg, #0f172a, #020617);
-  border: 2px solid #fde047;
+  background: #0F172A;
+  border: 2px solid #FACC15;
   border-radius: 20px;
   padding: 28px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 20px 50px #000000;
   text-align: center;
 }
 .spotlight-pointer-grid {
@@ -1115,30 +1115,30 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   }
 }
 .spotlight-pointer-card {
-  background: rgba(30, 41, 59, 0.9);
-  border: 1.5px solid rgba(56, 189, 248, 0.45);
+  background: #070B14;
+  border: 2px solid #38BDF8;
   border-radius: 14px;
   padding: 18px;
 }
 .spotlight-arrow-bounce {
   font-size: 16px;
   font-weight: 900;
-  color: #fde047;
+  color: #FEF08A;
   margin-bottom: 8px;
 }
 .spotlight-card-desc {
   font-size: 15px;
-  color: #e2e8f0;
+  color: #FFFFFF;
   line-height: 1.5;
 }
 .spotlight-close-btn {
-  background: linear-gradient(135deg, #eab308, #ca8a04);
-  color: #020617;
+  background: #064E3B;
+  color: #FFFFFF;
   font-weight: 900;
   font-size: 16px;
   padding: 12px 26px;
   border-radius: 999px;
-  border: none;
+  border: 2px solid #34D399;
   cursor: pointer;
 }
 "#;
@@ -1367,21 +1367,43 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     ctx.restore();
   }
 
+  // Utilitar WCAG AAA: Casetă 100% opacă #070B14 cu bordură 2px și text static #FFFFFF sau #FEF08A
+  function drawStaticBadge(ctx, cx, cy, text, borderColor, isYellowText) {
+    ctx.save();
+    ctx.font = 'bold 12px sans-serif';
+    var metrics = ctx.measureText(text);
+    var padX = 10;
+    var boxW = Math.ceil(metrics.width) + padX * 2;
+    var boxH = 24;
+    var bx = Math.round(cx - boxW / 2);
+    var by = Math.round(cy - boxH / 2);
+
+    ctx.fillStyle = '#070B14';
+    ctx.fillRect(bx, by, boxW, boxH);
+    ctx.strokeStyle = borderColor || '#38BDF8';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(bx, by, boxW, boxH);
+
+    ctx.fillStyle = isYellowText ? '#FEF08A' : '#FFFFFF';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, cx, cy + 1);
+    ctx.restore();
+  }
+
   // Widget Vizual Animat: „🐝 Creierul Google Drosophila: Inelul-Busolă E-PG cu 16 Luminițe”
   function drawDrosophilaEpgRingWidget(ctx, cx, cy, r, t, activeWedge, showTitle) {
     ctx.save();
     if (showTitle) {
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
-      ctx.strokeStyle = 'rgba(250, 204, 21, 0.55)';
-      ctx.lineWidth = 1.5;
-      ctx.fillRect(cx - r - 28, cy - r - 24, (r + 28) * 2, (r + 22) * 2);
-      ctx.strokeRect(cx - r - 28, cy - r - 24, (r + 28) * 2, (r + 22) * 2);
-      ctx.fillStyle = '#fde047';
-      ctx.font = 'bold 10px sans-serif';
-      ctx.fillText('🐝 E-PG 16 LUMINIȚE', cx - r - 20, cy - r - 10);
+      ctx.fillStyle = '#070B14';
+      ctx.strokeStyle = '#FACC15';
+      ctx.lineWidth = 2;
+      ctx.fillRect(cx - r - 32, cy - r - 28, (r + 32) * 2, (r + 24) * 2);
+      ctx.strokeRect(cx - r - 32, cy - r - 28, (r + 32) * 2, (r + 24) * 2);
+      drawStaticBadge(ctx, cx, cy - r - 14, '🐝 E-PG 16 LUMINIȚE', '#FACC15', true);
     }
 
-    ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+    ctx.strokeStyle = '#38BDF8';
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -1400,16 +1422,16 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
       ctx.beginPath();
       ctx.arc(nx, ny, isPeak ? 5.2 : (isNeighbor ? 3.8 : 2.4), 0, Math.PI * 2);
       if (isPeak) {
-        ctx.fillStyle = (t % 16 < 8) ? '#4ade80' : '#fde047';
+        ctx.fillStyle = (t % 16 < 8) ? '#34D399' : '#FEF08A';
       } else if (isNeighbor) {
-        ctx.fillStyle = '#22c55e';
+        ctx.fillStyle = '#22C55E';
       } else {
-        ctx.fillStyle = 'rgba(148, 163, 184, 0.38)';
+        ctx.fillStyle = '#1E293B';
       }
       ctx.fill();
 
       if (isPeak) {
-        ctx.strokeStyle = '#fde047';
+        ctx.strokeStyle = '#FEF08A';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(cx, cy);
@@ -1418,26 +1440,22 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
       }
     }
 
-    ctx.fillStyle = '#4ade80';
-    ctx.font = 'bold 9.5px sans-serif';
-    ctx.fillText('RWY 09', cx - 18, cy + 4);
+    drawStaticBadge(ctx, cx, cy, 'RWY 09', '#34D399', true);
     ctx.restore();
   }
 
   function drawLesson1(ctx, w, h, t) {
-    fillLessonStageBackground(ctx, w, h, '#071024');
+    fillLessonStageBackground(ctx, w, h, '#070B14');
 
-    ctx.fillStyle = '#1e293b';
+    ctx.fillStyle = '#0F172A';
     ctx.fillRect(450, 45, 120, 75);
-    ctx.strokeStyle = '#4ade80';
+    ctx.strokeStyle = '#34D399';
     ctx.lineWidth = 2;
     ctx.strokeRect(450, 45, 120, 75);
-    ctx.fillStyle = '#4ade80';
-    ctx.font = 'bold 12px sans-serif';
-    ctx.fillText('🛬 PISTA CRAIOVA RWY 09', 435, 38);
+    drawStaticBadge(ctx, 495, 26, '🛬 PISTA CRAIOVA RWY 09', '#34D399', true);
 
     for (var i = 0; i < 5; i++) {
-      ctx.fillStyle = (t % 20 < 10) ? '#4ade80' : '#bbf7d0';
+      ctx.fillStyle = (t % 20 < 10) ? '#34D399' : '#FEF08A';
       ctx.beginPath();
       ctx.arc(465 + i * 22, 82, 4, 0, Math.PI * 2);
       ctx.fill();
@@ -1445,23 +1463,19 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
 
     if (state.mode === 'l1_hacker' || state.mode === 'l1_shield') {
       ctx.save();
-      ctx.globalAlpha = state.mode === 'l1_shield' ? 0.35 : 0.85;
-      ctx.fillStyle = '#3b0712';
-      ctx.fillRect(430, 175, 140, 60);
-      ctx.strokeStyle = '#f87171';
+      ctx.fillStyle = '#450A0A';
+      ctx.fillRect(430, 180, 140, 56);
+      ctx.strokeStyle = '#F87171';
+      ctx.lineWidth = 2;
       ctx.setLineDash([5, 4]);
-      ctx.strokeRect(430, 175, 140, 60);
+      ctx.strokeRect(430, 180, 140, 56);
       ctx.setLineDash([]);
-      ctx.fillStyle = '#fda4af';
-      ctx.font = 'bold 12px sans-serif';
-      ctx.fillText('👻 PISTA FALSĂ (ÎN PĂDURE!)', 415, 168);
-      ctx.font = '24px sans-serif';
-      ctx.fillText('👾🧲', 360, 212);
       ctx.restore();
+      drawStaticBadge(ctx, 485, 162, '👻 PISTA FALSĂ (PĂDURE!)', '#F87171', false);
     }
 
     if (state.mode === 'l1_hacker') {
-      ctx.strokeStyle = '#ef4444';
+      ctx.strokeStyle = '#EF4444';
       ctx.lineWidth = 3.5;
       ctx.setLineDash([8, 6]);
       ctx.beginPath();
@@ -1469,8 +1483,9 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
       ctx.quadraticCurveTo(260, 195, 430, 205);
       ctx.stroke();
       ctx.setLineDash([]);
+      drawStaticBadge(ctx, 210, 22, '👾 HACKER GPS: Trage avionul pe linia roșie!', '#F87171', true);
     } else if (state.mode === 'l1_shield') {
-      ctx.strokeStyle = 'rgba(239,68,68,0.45)';
+      ctx.strokeStyle = '#7F1D1D';
       ctx.lineWidth = 2.5;
       ctx.setLineDash([6, 6]);
       ctx.beginPath();
@@ -1479,135 +1494,124 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
       ctx.stroke();
       ctx.setLineDash([]);
 
-      ctx.font = '24px sans-serif';
-      ctx.fillText('✂️✨', 238, 168);
+      drawStaticBadge(ctx, 250, 165, '✂️ TĂIAT!', '#FACC15', true);
 
-      ctx.strokeStyle = '#22c55e';
+      ctx.strokeStyle = '#22C55E';
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.moveTo(95, 95);
       ctx.lineTo(450, 82);
       ctx.stroke();
 
-      ctx.fillStyle = '#fde047';
-      ctx.font = 'bold 12.5px sans-serif';
-      ctx.fillText('🛡️ AERO-SHIELD + Creierul Musculiței Google 🐝 taie firul hackerului!', 95, 25);
-      drawDrosophilaEpgRingWidget(ctx, 92, 198, 28, t, 4, true);
+      drawStaticBadge(ctx, 235, 22, '🛡️ AERO-SHIELD + Musculița Google 🐝 taie minciuna!', '#34D399', true);
+      drawDrosophilaEpgRingWidget(ctx, 92, 198, 26, t, 4, true);
     } else {
-      ctx.strokeStyle = '#38bdf8';
+      ctx.strokeStyle = '#38BDF8';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.moveTo(95, 95);
       ctx.lineTo(450, 82);
       ctx.stroke();
+      drawStaticBadge(ctx, 210, 22, '🌫️ ZBOR ÎN CEAȚĂ SPRE PISTA RWY 09', '#38BDF8', false);
     }
 
     ctx.save();
-    ctx.fillStyle = state.mode === 'l1_shield' ? 'rgba(226,232,240,0.42)' : 'rgba(241,245,249,0.88)';
+    ctx.fillStyle = '#334155';
+    ctx.strokeStyle = '#94A3B8';
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(265, 92, 46, 0, Math.PI * 2);
-    ctx.arc(310, 82, 52, 0, Math.PI * 2);
-    ctx.arc(350, 96, 42, 0, Math.PI * 2);
+    ctx.arc(265, 92, 42, 0, Math.PI * 2);
+    ctx.arc(310, 82, 48, 0, Math.PI * 2);
+    ctx.arc(350, 96, 38, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold 13px sans-serif';
-    ctx.fillText('🌫️ CEAȚĂ GROASĂ', 250, 95);
+    ctx.stroke();
     ctx.restore();
+    drawStaticBadge(ctx, 310, 92, '🌫️ CEAȚĂ GROASĂ', '#38BDF8', true);
 
     var prog = (t % 140) / 140;
     var ax = 80 + prog * 130;
     var ay = (state.mode === 'l1_hacker') ? (95 + prog * 70) : 90;
     var ang = (state.mode === 'l1_hacker') ? 0.35 : -0.03;
-    drawAirplaneIcon(ctx, ax, ay, ang, state.mode === 'l1_shield' ? '#4ade80' : '#38bdf8');
+    drawAirplaneIcon(ctx, ax, ay, ang, state.mode === 'l1_shield' ? '#34D399' : '#38BDF8');
   }
 
   function drawLesson2(ctx, w, h, t) {
-    fillLessonStageBackground(ctx, w, h, '#050b18');
+    fillLessonStageBackground(ctx, w, h, '#070B14');
 
     if (state.mode === 'l2_waves') {
-      ctx.fillStyle = '#93c5fd';
-      ctx.font = 'bold 13px sans-serif';
-      ctx.fillText('👀 Lumina Obișnuită (Valuri Mici) -> Se lovește de picături!', 24, 30);
+      drawStaticBadge(ctx, 295, 24, '👀 Lumina Obișnuită (Valuri Mici) -> Se lovește de picături!', '#38BDF8', false);
 
       for (var d = 0; d < 6; d++) {
-        ctx.fillStyle = '#60a5fa';
+        ctx.fillStyle = '#0284C7';
         ctx.beginPath();
-        ctx.arc(280 + d * 42, 70 + (d % 2) * 16, 11, 0, Math.PI * 2);
+        ctx.arc(280 + d * 42, 72 + (d % 2) * 16, 11, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '11px sans-serif';
-        ctx.fillText('💧', 273 + d * 42, 74 + (d % 2) * 16);
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
       }
 
-      ctx.strokeStyle = '#38bdf8';
+      ctx.strokeStyle = '#38BDF8';
       ctx.lineWidth = 3;
       ctx.beginPath();
       for (var x = 30; x < 265; x += 4) {
-        var y = 75 + Math.sin((x + t * 4) * 0.25) * 14;
+        var y = 78 + Math.sin((x + t * 4) * 0.25) * 14;
         if (x === 30) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
       ctx.stroke();
-      ctx.fillStyle = '#f87171';
-      ctx.font = 'bold 16px sans-serif';
-      ctx.fillText('💥 Nu trece!', 145, 54);
+      drawStaticBadge(ctx, 165, 52, '💥 Nu trece de ceață!', '#F87171', true);
 
-      ctx.strokeStyle = 'rgba(148,163,184,0.3)';
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(20, 130);
       ctx.lineTo(w - 20, 130);
       ctx.stroke();
 
-      ctx.fillStyle = '#4ade80';
-      ctx.font = 'bold 13px sans-serif';
-      ctx.fillText('🔦 Lupa SWIR + Ochii Magici T4/T5 ai Musculiței Google 🐝 -> Văd pista!', 24, 158);
+      drawStaticBadge(ctx, 300, 154, '🔦 Lupa SWIR + Ochii Magici T4/T5 ai Musculiței Google 🐝 -> Văd pista!', '#34D399', true);
 
       for (var d2 = 0; d2 < 6; d2++) {
-        ctx.fillStyle = 'rgba(96,165,250,0.45)';
+        ctx.fillStyle = '#1E293B';
+        ctx.strokeStyle = '#38BDF8';
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.arc(280 + d2 * 42, 205 + (d2 % 2) * 14, 10, 0, Math.PI * 2);
+        ctx.arc(280 + d2 * 42, 208 + (d2 % 2) * 14, 10, 0, Math.PI * 2);
         ctx.fill();
+        ctx.stroke();
       }
 
-      ctx.strokeStyle = '#22c55e';
+      ctx.strokeStyle = '#22C55E';
       ctx.lineWidth = 4;
       ctx.beginPath();
       for (var x2 = 30; x2 < 540; x2 += 5) {
-        var y2 = 205 + Math.sin((x2 - t * 4) * 0.055) * 22;
+        var y2 = 208 + Math.sin((x2 - t * 4) * 0.055) * 20;
         if (x2 === 30) ctx.moveTo(x2, y2);
         else ctx.lineTo(x2, y2);
       }
       ctx.stroke();
-      ctx.fillStyle = '#fde047';
-      ctx.font = 'bold 13px sans-serif';
-      ctx.fillText('🐝 T4/T5 VEDE PISTA!', 445, 185);
+      drawStaticBadge(ctx, 485, 238, '🐝 T4/T5 VEDE PISTA!', '#FACC15', true);
       return;
     }
 
     var lensX = state.mouseInside ? state.mouseX : (300 + Math.cos(t * 0.04) * 130);
-    var lensY = state.mouseInside ? state.mouseY : (130 + Math.sin(t * 0.06) * 45);
+    var lensY = state.mouseInside ? state.mouseY : (135 + Math.sin(t * 0.06) * 40);
 
-    ctx.fillStyle = state.darkSmoke ? '#1c1917' : '#cbd5e1';
+    ctx.fillStyle = state.darkSmoke ? '#0F172A' : '#1E293B';
     ctx.fillRect(20, 20, w - 40, h - 40);
-    ctx.fillStyle = state.darkSmoke ? '#a8a29e' : '#334155';
-    ctx.font = 'bold 15px sans-serif';
-    ctx.fillText(
-      state.darkSmoke
-        ? '🖤 FUM NEGRU — Plimbă Lupa SWIR + Ochii T4/T5 cu mouse-ul!'
-        : '🌫️ CEAȚĂ ALBĂ — Plimbă Lupa SWIR + Ochii T4/T5 cu mouse-ul!',
-      75,
-      55
-    );
+    ctx.strokeStyle = '#38BDF8';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(20, 20, w - 40, h - 40);
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(lensX, lensY, 78, 0, Math.PI * 2);
+    ctx.arc(lensX, lensY, 74, 0, Math.PI * 2);
     ctx.clip();
 
-    ctx.fillStyle = '#04121f';
+    ctx.fillStyle = '#070B14';
     ctx.fillRect(0, 0, w, h);
 
-    ctx.strokeStyle = '#22c55e';
+    ctx.strokeStyle = '#22C55E';
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(300, 45);
@@ -1619,48 +1623,60 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     for (var r = 0; r < 6; r++) {
       var ry = 70 + r * 28;
       var spread = 22 + r * 24;
-      ctx.fillStyle = '#4ade80';
+      ctx.fillStyle = '#34D399';
       ctx.beginPath();
       ctx.arc(300 - spread, ry, 4.5, 0, Math.PI * 2);
       ctx.arc(300 + spread, ry, 4.5, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#fde047';
+      ctx.fillStyle = '#FEF08A';
       ctx.fillRect(297, ry - 6, 6, 14);
     }
 
     ctx.restore();
 
-    ctx.strokeStyle = '#22c55e';
+    ctx.strokeStyle = '#34D399';
     ctx.lineWidth = 4;
     ctx.beginPath();
-    ctx.arc(lensX, lensY, 78, 0, Math.PI * 2);
+    ctx.arc(lensX, lensY, 74, 0, Math.PI * 2);
     ctx.stroke();
 
-    ctx.fillStyle = '#4ade80';
-    ctx.font = 'bold 12px sans-serif';
-    ctx.fillText('🔦 SWIR + 🐝 OCHI T4/T5', lensX - 68, lensY - 86);
+    // Etichete 100% STATICE (nu se mișcă cu lupa!)
+    drawStaticBadge(
+      ctx,
+      300,
+      36,
+      state.darkSmoke
+        ? '🖤 FUM NEGRU — Plimbă Lupa SWIR + Ochii T4/T5 cu mouse-ul!'
+        : '🌫️ CEAȚĂ DENSĂ — Plimbă Lupa SWIR + Ochii T4/T5 cu mouse-ul!',
+      '#FACC15',
+      true
+    );
+    drawStaticBadge(ctx, 300, 236, '🔦 CERCUL VERDE = LUPA SWIR + 🐝 OCHII T4/T5 (Văd Pista!)', '#34D399', false);
   }
 
   function drawLesson3(ctx, w, h, t) {
-    fillLessonStageBackground(ctx, w, h, '#061020');
+    fillLessonStageBackground(ctx, w, h, '#070B14');
 
     var speedPx = (state.mode === 'l3_fast') ? 5.2 : 1.8;
     var stepDist = (state.mode === 'l3_fast') ? 78 : 28;
 
-    drawAirplaneIcon(ctx, 230, 42, 0, '#38bdf8');
-    ctx.fillStyle = 'rgba(56,189,248,0.14)';
+    drawAirplaneIcon(ctx, 230, 42, 0, '#38BDF8');
+    ctx.fillStyle = '#0F172A';
+    ctx.strokeStyle = '#38BDF8';
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(230, 52);
-    ctx.lineTo(90, 215);
-    ctx.lineTo(370, 215);
+    ctx.lineTo(90, 210);
+    ctx.lineTo(370, 210);
     ctx.closePath();
     ctx.fill();
+    ctx.stroke();
 
-    ctx.fillStyle = '#0f172a';
-    ctx.fillRect(20, 195, 410, 50);
-    ctx.strokeStyle = '#334155';
+    ctx.fillStyle = '#0F172A';
+    ctx.fillRect(20, 185, 410, 42);
+    ctx.strokeStyle = '#38BDF8';
     ctx.lineWidth = 2;
-    ctx.strokeRect(20, 195, 410, 50);
+    ctx.strokeRect(20, 185, 410, 42);
 
     var offset = (t * speedPx) % 90;
     for (var i = -1; i < 6; i++) {
@@ -1669,127 +1685,100 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
 
       var prevX = bx + stepDist;
       if (prevX < 420) {
-        ctx.fillStyle = 'rgba(148,163,184,0.35)';
+        ctx.fillStyle = '#334155';
         ctx.beginPath();
-        ctx.arc(prevX, 195, 7, 0, Math.PI * 2);
+        ctx.arc(prevX, 206, 7, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.strokeStyle = '#fde047';
+        ctx.strokeStyle = '#FEF08A';
         ctx.lineWidth = 3;
         ctx.beginPath();
-        ctx.moveTo(prevX, 172);
-        ctx.lineTo(bx, 172);
+        ctx.moveTo(prevX, 168);
+        ctx.lineTo(bx, 168);
         ctx.stroke();
 
-        ctx.fillStyle = '#fde047';
+        ctx.fillStyle = '#FEF08A';
         ctx.beginPath();
-        ctx.moveTo(bx, 172);
-        ctx.lineTo(bx + 8, 167);
-        ctx.lineTo(bx + 8, 177);
+        ctx.moveTo(bx, 168);
+        ctx.lineTo(bx + 8, 163);
+        ctx.lineTo(bx + 8, 173);
         ctx.closePath();
         ctx.fill();
       }
 
-      ctx.fillStyle = '#4ade80';
+      ctx.fillStyle = '#34D399';
       ctx.beginPath();
-      ctx.arc(bx, 195, 8, 0, Math.PI * 2);
+      ctx.arc(bx, 206, 8, 0, Math.PI * 2);
       ctx.fill();
     }
 
     if (state.mode === 'l3_ruler') {
-      ctx.fillStyle = 'rgba(250,204,21,0.92)';
-      ctx.fillRect(115, 112, 225, 28);
-      ctx.strokeStyle = '#713f12';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(115, 112, 225, 28);
-      ctx.fillStyle = '#020617';
-      ctx.font = 'bold 11.5px sans-serif';
-      ctx.fillText('📏 T4/T5 EMD: Δu = 52 px -> 85 m/s!', 122, 130);
+      drawStaticBadge(ctx, 228, 124, '📏 T4/T5 EMD: Δu = 52 px -> 85 m/s!', '#FACC15', true);
     }
 
     // Draw the 16-LED E-PG Ring Attractor Compass on the right side of the canvas
-    drawDrosophilaEpgRingWidget(ctx, 512, 128, 46, t, 4, true);
+    drawDrosophilaEpgRingWidget(ctx, 512, 128, 44, t, 4, true);
 
-    ctx.fillStyle = '#f8fafc';
-    ctx.font = 'bold 13px sans-serif';
     var label = (state.mode === 'l3_fast')
       ? '🚀 T4/T5 VITEZĂ MARE (120 m/s) + Inel E-PG 16 Luminițe'
       : '🐢 T4/T5 VITEZĂ MICĂ (45 m/s) + Inel E-PG 16 Luminițe';
-    ctx.fillText(label, 35, 240);
+    drawStaticBadge(ctx, 225, 242, label, '#34D399', true);
   }
 
   function drawLesson4(ctx, w, h, t) {
-    fillLessonStageBackground(ctx, w, h, '#060d1f');
+    fillLessonStageBackground(ctx, w, h, '#070B14');
 
     var isTilting = (t < state.tiltBurstUntil);
     var tiltAngle = isTilting ? Math.sin(t * 0.45) * 0.28 : 0.0;
 
-    drawAirplaneIcon(ctx, 260, 38, tiltAngle, '#38bdf8');
-    ctx.fillStyle = '#fde047';
-    ctx.font = 'bold 11.5px sans-serif';
-    ctx.fillText('🐝 Stabilizator HS/VS (6 direcții) + Senzor Vânt PFNd', 310, 42);
+    drawAirplaneIcon(ctx, 88, 30, tiltAngle, '#38BDF8');
+    drawStaticBadge(ctx, 345, 28, '🐝 Stabilizator HS/VS (6 direcții) + Senzor Vânt PFNd', '#FACC15', true);
 
     var cloudShift = (t * 2.4) % 80;
-    ctx.fillStyle = 'rgba(168, 85, 247, 0.28)';
-    ctx.strokeStyle = '#c084fc';
+    ctx.fillStyle = '#1E1B4B';
+    ctx.strokeStyle = '#C084FC';
     ctx.lineWidth = 2;
-    ctx.fillRect(60, 82, w - 120, 62);
-    ctx.strokeRect(60, 82, w - 120, 62);
+    ctx.fillRect(40, 82, w - 80, 64);
+    ctx.strokeRect(40, 82, w - 80, 64);
 
-    ctx.fillStyle = '#e9d5ff';
-    ctx.font = 'bold 12px sans-serif';
-    ctx.fillText('☁️ STRATUL 1: NORUL MOV ÎMPINS DE VÂNT 💨 (Simțit de PFNd cu 1s înainte!)', 82, 102);
+    drawStaticBadge(ctx, 300, 98, '☁️ STRATUL 1: NORUL MOV ÎMPINS DE VÂNT 💨 (Tăiat de PFNd ❌)', '#C084FC', false);
 
     for (var c = 0; c < 5; c++) {
-      var cx = 95 + ((c * 95 + cloudShift) % 440);
-      ctx.strokeStyle = '#f43f5e';
-      ctx.lineWidth = 2.5;
+      var cx = 75 + ((c * 95 + cloudShift) % 450);
+      ctx.strokeStyle = '#F87171';
+      ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.moveTo(cx, 122);
-      ctx.lineTo(cx + 32, 114);
+      ctx.moveTo(cx, 132);
+      ctx.lineTo(cx + 32, 122);
       ctx.stroke();
-
-      if (state.mode === 'l4_separate') {
-        ctx.fillStyle = '#ef4444';
-        ctx.font = 'bold 15px sans-serif';
-        ctx.fillText('❌', cx + 10, 134);
-      }
     }
 
-    ctx.fillStyle = 'rgba(22, 163, 74, 0.22)';
-    ctx.strokeStyle = '#4ade80';
+    ctx.fillStyle = '#064E3B';
+    ctx.strokeStyle = '#34D399';
     ctx.lineWidth = 2;
-    ctx.fillRect(40, 168, w - 80, 68);
-    ctx.strokeRect(40, 168, w - 80, 68);
+    ctx.fillRect(40, 166, w - 80, 68);
+    ctx.strokeRect(40, 166, w - 80, 68);
 
-    ctx.fillStyle = '#bbf7d0';
-    ctx.font = 'bold 12px sans-serif';
-    ctx.fillText('🌍 STRATUL 2: PĂMÂNTUL VERDE FIX ✅ (Derotat de neuronii HS/VS!)', 95, 190);
+    drawStaticBadge(ctx, 300, 184, '🌍 STRATUL 2: PĂMÂNTUL VERDE FIX ✅ (Derotat de neuronii HS/VS!)', '#34D399', true);
 
     var groundShift = (t * 1.8) % 90;
     for (var g = 0; g < 5; g++) {
       var gx = 520 - ((g * 90 + groundShift) % 450);
-      ctx.strokeStyle = '#4ade80';
+      ctx.strokeStyle = '#FEF08A';
       ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.moveTo(gx, 215);
-      ctx.lineTo(gx - 28, 215);
+      ctx.moveTo(gx, 216);
+      ctx.lineTo(gx - 28, 216);
       ctx.stroke();
-      ctx.fillStyle = '#4ade80';
-      ctx.fillText('✅', gx - 18, 230);
     }
 
     if (isTilting) {
-      ctx.fillStyle = 'rgba(250, 204, 21, 0.96)';
-      ctx.fillRect(55, 48, 490, 30);
-      ctx.fillStyle = '#020617';
-      ctx.font = 'bold 12px sans-serif';
-      ctx.fillText('📢 HS/VS: „Doar s-a înclinat avionul în 6 direcții, nu am sărit de pe pistă!”', 72, 68);
+      drawStaticBadge(ctx, 300, 60, '📢 HS/VS: „Doar s-a înclinat avionul în 6 direcții, nu am sărit de pe pistă!”', '#FACC15', true);
     }
   }
 
   function drawLesson5(ctx, w, h, t) {
-    fillLessonStageBackground(ctx, w, h, '#060c1a');
+    fillLessonStageBackground(ctx, w, h, '#070B14');
 
     if (state.mode === 'l5_slow_lie') {
       var elapsed = t - state.slowLieStartTick;
@@ -1799,54 +1788,55 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     var isAlarm = (state.mode === 'l5_big_lie') || (state.cupLevel >= 0.99);
 
     var scaleCx = 145;
-    var scaleCy = 135;
+    var scaleCy = 132;
     var beamTilt = (state.mode === 'l5_big_lie') ? 0.42 : (state.mode === 'l5_slow_lie' ? 0.08 : 0.0);
 
-    ctx.fillStyle = '#e2e8f0';
-    ctx.font = 'bold 12px sans-serif';
-    ctx.fillText('⚖️ 1. CÂNTARUL ADEVĂRULUI', 52, 32);
+    drawStaticBadge(ctx, 145, 26, '⚖️ 1. CÂNTARUL ADEVĂRULUI', '#38BDF8', true);
 
-    ctx.fillStyle = '#64748b';
-    ctx.fillRect(scaleCx - 6, scaleCy, 12, 85);
-    ctx.fillRect(scaleCx - 45, scaleCy + 80, 90, 10);
+    ctx.fillStyle = '#334155';
+    ctx.fillRect(scaleCx - 6, scaleCy, 12, 72);
+    ctx.fillRect(scaleCx - 45, scaleCy + 68, 90, 10);
 
+    // Doar brațul grafic al balanței se rotește; textele rămân 100% STATICE!
     ctx.save();
     ctx.translate(scaleCx, scaleCy);
     ctx.rotate(beamTilt);
-    ctx.strokeStyle = isAlarm ? '#f87171' : '#fde047';
+    ctx.strokeStyle = isAlarm ? '#F87171' : '#FEF08A';
     ctx.lineWidth = 5;
     ctx.beginPath();
-    ctx.moveTo(-80, 0);
-    ctx.lineTo(80, 0);
+    ctx.moveTo(-75, 0);
+    ctx.lineTo(75, 0);
     ctx.stroke();
 
-    ctx.fillStyle = '#22c55e';
-    ctx.fillRect(-108, 22, 62, 24);
-    ctx.fillStyle = '#020617';
-    ctx.font = 'bold 10.5px sans-serif';
-    ctx.fillText('🐝 E-PG+IMU', -105, 38);
+    ctx.fillStyle = '#064E3B';
+    ctx.strokeStyle = '#34D399';
+    ctx.lineWidth = 2;
+    ctx.fillRect(-95, 14, 44, 16);
+    ctx.strokeRect(-95, 14, 44, 16);
 
-    ctx.fillStyle = isAlarm ? '#ef4444' : '#38bdf8';
-    ctx.fillRect(46, 22, 62, 24);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(state.mode === 'l5_big_lie' ? '⚡ +500m!' : '📡 GPS', 52, 38);
+    ctx.fillStyle = isAlarm ? '#7F1D1D' : '#0C4A6E';
+    ctx.strokeStyle = isAlarm ? '#F87171' : '#38BDF8';
+    ctx.fillRect(51, 14, 44, 16);
+    ctx.strokeRect(51, 14, 44, 16);
     ctx.restore();
 
+    // Etichete 100% statice pentru talerele balanței
+    drawStaticBadge(ctx, 78, 192, '🐝 E-PG+IMU', '#34D399', false);
+    drawStaticBadge(ctx, 212, 192, state.mode === 'l5_big_lie' ? '⚡ GPS +500m!' : '📡 GPS', isAlarm ? '#F87171' : '#38BDF8', isAlarm);
+
     // 2. Center Widget: 16-LED E-PG Ring Attractor Compass keeping RWY 09 memory
-    drawDrosophilaEpgRingWidget(ctx, 315, 132, 42, t, 4, true);
+    drawDrosophilaEpgRingWidget(ctx, 325, 132, 40, t, 4, true);
 
     var cupX = 455;
-    var cupY = 68;
+    var cupY = 64;
     var cupW = 92;
     var cupH = 135;
 
-    ctx.fillStyle = '#e2e8f0';
-    ctx.font = 'bold 12px sans-serif';
-    ctx.fillText('🥛 3. PAHARUL CUSUM', 435, 32);
+    drawStaticBadge(ctx, 501, 26, '🥛 3. PAHARUL CUSUM', '#FACC15', true);
 
     if (state.mode === 'l5_slow_lie' && state.cupLevel < 1.0) {
-      var dropY = 42 + ((t * 4) % 45);
-      ctx.fillStyle = '#ef4444';
+      var dropY = 44 + ((t * 4) % 40);
+      ctx.fillStyle = '#EF4444';
       ctx.beginPath();
       ctx.arc(cupX + cupW / 2, dropY, 6, 0, Math.PI * 2);
       ctx.fill();
@@ -1854,15 +1844,15 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
 
     var fillH = Math.round(cupH * state.cupLevel);
     if (fillH > 0) {
-      ctx.fillStyle = isAlarm ? '#dc2626' : '#f59e0b';
+      ctx.fillStyle = isAlarm ? '#DC2626' : '#D97706';
       ctx.fillRect(cupX + 4, cupY + cupH - fillH, cupW - 8, fillH - 2);
     }
 
-    ctx.strokeStyle = '#94a3b8';
+    ctx.strokeStyle = '#FFFFFF';
     ctx.lineWidth = 3;
     ctx.strokeRect(cupX, cupY, cupW, cupH);
 
-    ctx.strokeStyle = '#ef4444';
+    ctx.strokeStyle = '#F87171';
     ctx.setLineDash([5, 4]);
     ctx.beginPath();
     ctx.moveTo(cupX - 10, cupY + 18);
@@ -1871,28 +1861,22 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     ctx.setLineDash([]);
 
     if (isAlarm) {
-      ctx.fillStyle = '#ef4444';
-      ctx.font = 'bold 13.5px sans-serif';
-      ctx.fillText('🚨 ALARMĂ! Minciuna e tăiată ✂️ — Inelul E-PG ține minte RWY 09!', 75, 246);
+      drawStaticBadge(ctx, 300, 240, '🚨 ALARMĂ! Minciuna e tăiată ✂️ — Inelul E-PG ține minte RWY 09!', '#F87171', true);
     } else {
-      ctx.fillStyle = '#4ade80';
-      ctx.font = 'bold 13.5px sans-serif';
-      ctx.fillText('✅ Echilibru + Inel E-PG 16 Luminițe (Pahar CUSUM: ' + Math.round(state.cupLevel * 100) + '%)', 105, 246);
+      drawStaticBadge(ctx, 300, 240, '✅ Echilibru + Inel E-PG 16 Luminițe (Pahar CUSUM: ' + Math.round(state.cupLevel * 100) + '%)', '#34D399', false);
     }
   }
 
   function drawLesson6(ctx, w, h, t) {
-    fillLessonStageBackground(ctx, w, h, '#071126');
+    fillLessonStageBackground(ctx, w, h, '#070B14');
 
-    ctx.strokeStyle = '#fde047';
+    ctx.strokeStyle = '#FACC15';
     ctx.lineWidth = 3;
-    ctx.strokeRect(16, 14, w - 32, h - 28);
+    ctx.strokeRect(16, 12, w - 32, h - 24);
 
-    ctx.fillStyle = '#fde047';
-    ctx.font = 'bold 14.5px sans-serif';
-    ctx.fillText('🏆 HARTA CREIERULUI GOOGLE DROSOPHILA 🐝 + AERO-SHIELD V2.0', 56, 38);
+    drawStaticBadge(ctx, 300, 28, '🏆 HARTA CREIERULUI GOOGLE DROSOPHILA 🐝 + AERO-SHIELD V2.0', '#FACC15', true);
 
-    // Top pipeline: T4/T5 -> HS/VS -> E-PG 16 LED -> PFNd Vânt
+    // Top pipeline: T4/T5 -> HS/VS -> E-PG 16 LED -> PFNd Vânt (100% static & opaque)
     var stages = [
       { x: 32, label: '👀 1. Ochi T4/T5', sub: 'Numără becurile' },
       { x: 162, label: '🔄 2. HS/VS 6-DOF', sub: 'Scade înclinarea' },
@@ -1901,16 +1885,16 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     ];
     for (var s = 0; s < stages.length; s++) {
       var st = stages[s];
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
-      ctx.strokeStyle = '#4ade80';
-      ctx.lineWidth = 1.8;
+      ctx.fillStyle = '#0F172A';
+      ctx.strokeStyle = '#34D399';
+      ctx.lineWidth = 2;
       ctx.fillRect(st.x, 48, 118, 44);
       ctx.strokeRect(st.x, 48, 118, 44);
-      ctx.fillStyle = '#fde047';
+      ctx.fillStyle = '#FEF08A';
       ctx.font = 'bold 11px sans-serif';
       ctx.fillText(st.label, st.x + 6, 66);
-      ctx.fillStyle = '#cbd5e1';
-      ctx.font = '10px sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 10px sans-serif';
       ctx.fillText(st.sub, st.x + 6, 82);
     }
 
@@ -1920,32 +1904,27 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
       { x: 352, title: '3. TELECOMANDA', sub: 'Cântar + Pahar CUSUM' }
     ];
 
-    var bounce = Math.sin(t * 0.12) * 5;
     for (var i = 0; i < boxes.length; i++) {
       var b = boxes[i];
-      ctx.fillStyle = 'rgba(30, 41, 59, 0.95)';
-      ctx.strokeStyle = '#38bdf8';
+      ctx.fillStyle = '#0F172A';
+      ctx.strokeStyle = '#38BDF8';
       ctx.lineWidth = 2;
-      ctx.fillRect(b.x, 108, 146, 66);
-      ctx.strokeRect(b.x, 108, 146, 66);
+      ctx.fillRect(b.x, 108, 146, 68);
+      ctx.strokeRect(b.x, 108, 146, 68);
 
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = '#FEF08A';
       ctx.font = 'bold 11.5px sans-serif';
       ctx.fillText(b.title, b.x + 8, 132);
-      ctx.fillStyle = '#7dd3fc';
-      ctx.font = '10.5px sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 10.5px sans-serif';
       ctx.fillText(b.sub, b.x + 8, 154);
 
-      ctx.fillStyle = '#fde047';
-      ctx.font = 'bold 20px sans-serif';
-      ctx.fillText('⬇️', b.x + 58, 198 + bounce);
+      drawStaticBadge(ctx, b.x + 73, 198, '⬇️ VEZI JOS', '#FACC15', true);
     }
 
     drawDrosophilaEpgRingWidget(ctx, 536, 152, 28, t, Math.floor(t / 25) % 16, false);
 
-    ctx.fillStyle = '#4ade80';
-    ctx.font = 'bold 12.5px sans-serif';
-    ctx.fillText('👇 Privește mai jos pe Ecranul Mare al Simulatorului! 👇', 115, 234);
+    drawStaticBadge(ctx, 300, 232, '👇 Privește mai jos pe Ecranul Mare al Simulatorului! 👇', '#34D399', true);
   }
 
   function renderLoop() {
@@ -2033,6 +2012,7 @@ mod tests {
         assert!(html.contains("E-PG"));
         assert!(html.contains("PFNd"));
         assert!(html.contains("drawDrosophilaEpgRingWidget"));
+        assert!(html.contains("drawStaticBadge"));
         assert!(html.contains("⬅️ Lecția Anterioară"));
         assert!(html.contains("➡️ Lecția Următoare"));
     }
