@@ -27,6 +27,7 @@
 
 #![forbid(unsafe_code)]
 
+pub mod drosophila_connectome;
 pub mod frozen_inference;
 pub mod model_v2;
 pub mod pinn_loss;
@@ -37,6 +38,7 @@ use candle_core::{DType, Device};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
+pub use drosophila_connectome::*;
 pub use frozen_inference::{
     FrozenFogNavModel, FrozenFogNavNetV2, InferenceTimingStats, SharedFrozenInferenceEngine,
 };

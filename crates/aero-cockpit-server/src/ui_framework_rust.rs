@@ -1,10 +1,10 @@
 //! # Motorul de Randare SSR 100% Rust cu Framework-ul `maud` (`maud::html!`)
 //!
 //! Arhitectură Aerisită în **6 Pagini Separate (Câte 1 Singur Concept pe Ecran — Fără Scroll Lung!)**:
-//! - **Pagina 1 (`#concept-page-1`)**: `1️⃣ Lecții Interactive (Explicate de la Zero, Pas cu Pas)`
+//! - **Pagina 1 (`#concept-page-1`)**: `1️⃣ Lecții Interactive — Creierul de Zbor Google Drosophila`
 //! - **Pagina 2 (`#concept-page-2`)**: `2️⃣ Parbrizul Avionului & Filmarea Reală 50% (Ce vede camera prin ceață?)`
 //! - **Pagina 3 (`#concept-page-3`)**: `3️⃣ Cursa celor 4 Avioane (De ce noi rămânem pe pistă?)`
-//! - **Pagina 4 (`#concept-page-4`)**: `4️⃣ Scutul Anti-Hacker & Telecomanda Completă de Zbor`
+//! - **Pagina 4 (`#concept-page-4`)**: `4️⃣ Creierul Google Drosophila & Scutul Anti-Hacker`
 //! - **Pagina 5 (`#concept-page-5`)**: `5️⃣ Cele 3 Filmări Video Reale din Cabina Piloților`
 //! - **Pagina 6 (`#concept-page-6`)**: `6️⃣ Cele 10 Teste Sintetice FlightGear (Pe VM-ul GPU)`
 
@@ -44,7 +44,7 @@ pub const SIX_CONCEPT_PAGES: [ConceptPageMeta; 6] = [
     ConceptPageMeta {
         page_num: 1,
         nav_badge_ro: "1️⃣ Lecții Interactive",
-        full_title_ro: "Lecții Interactive (Explicate de la Zero, Pas cu Pas)",
+        full_title_ro: "Lecții Interactive — Creierul de Zbor Google Drosophila",
     },
     ConceptPageMeta {
         page_num: 2,
@@ -58,8 +58,8 @@ pub const SIX_CONCEPT_PAGES: [ConceptPageMeta; 6] = [
     },
     ConceptPageMeta {
         page_num: 4,
-        nav_badge_ro: "4️⃣ Scutul & Telecomanda",
-        full_title_ro: "Scutul Anti-Hacker & Telecomanda Completă de Zbor",
+        nav_badge_ro: "4️⃣ Creierul Drosophila & Scutul",
+        full_title_ro: "Creierul Google Drosophila & Scutul Anti-Hacker",
     },
     ConceptPageMeta {
         page_num: 5,
@@ -80,74 +80,74 @@ pub fn get_all_6_interactive_lessons() -> Vec<InteractiveLesson6Yo> {
         InteractiveLesson6Yo {
             lesson_num: 1,
             icon: "🧸",
-            title_ro: "Lecția 1: Ceața Groasă ca Laptele și Hackerul Răutăcios",
-            title_en: "Lesson 1: Thick Milk Fog & The Naughty GPS Hacker",
-            child_story_ro: "Imaginează-ți că mergi cu bicicleta prin ceață groasă ca laptele și nu vezi nici măcar vârful ghidonului! Dacă întrebi un străin răutăcios (Hackerul GPS 🔴) pe unde e drumul, el îți pune o hartă falsă ca să cazi în iarbă. Iar dacă închizi ochii și doar numeri pașii (Senzorii Interni 🟠), după câțiva metri amețești și te rătăcești!",
-            child_story_en: "Imagine riding a bike in fog as thick as milk! A naughty GPS hacker gives you a fake map, and walking with your eyes closed makes you dizzy.",
-            interactive_action_label_ro: "🔴 Apasă Aici: Pornește Hackerul GPS în Desenul Animat!",
+            title_ro: "Lecția 1: Ceața Groasă ca Laptele, Hackerul GPS și Musculița Google Drosophila",
+            title_en: "Lesson 1: Thick Milk Fog, The GPS Hacker & The Google Drosophila Fly Brain",
+            child_story_ro: "Imaginează-ți că mergi cu bicicleta prin ceață groasă ca laptele! Dacă întrebi un străin răutăcios (Hackerul GPS 🔴), el îți dă o hartă falsă ca să cazi în iarbă. Iar dacă închizi ochii (Senzorii Interni 🟠), amețești rapid! De aceea noi am copiat creierul de zbor Open-Source Google Research al musculiței Drosophila 🪰 (cu 🧭 E-PG Ring Attractor cu 16 Neuroni) — cel mai bun pilot fără GPS din natură!",
+            child_story_en: "Imagine riding a bike in thick fog! A GPS hacker gives a fake map, and closing your eyes makes you dizzy. That's why we use the Google Research Drosophila fly connectome (🧭 E-PG 16-Neuron Ring Attractor)!",
+            interactive_action_label_ro: "🔴 Apasă Aici: Pornește Hackerul GPS și Vezi Busola Drosophila!",
             interactive_action_js: "lessonPlayAction(1)",
             visual_highlight_zone: "maudSchoolCanvas",
-            takeaway_badge_ro: "⭐ Ai învățat de ce avionul roșu 🔴 și portocaliu 🟠 greșesc drumul, dar avionul verde 🟢 rămâne pe pistă!",
+            takeaway_badge_ro: "⭐ Ai învățat de ce avionul roșu 🔴 și portocaliu 🟠 greșesc drumul, dar creierul Drosophila 🟢 rămâne pe pistă!",
         },
         InteractiveLesson6Yo {
             lesson_num: 2,
             icon: "🔦",
-            title_ro: "Lecția 2: Ochiul Magic Infraroșu cu Lupă Anticeață (SWIR + ALS)",
-            title_en: "Lesson 2: Magic Infrared Eye Seeing Runway Lights Through Fog",
-            child_story_ro: "Când aprinzi o lanternă normală în ceață, lumina se lovește de picăturile de apă și îți face un nor alb în față. Dar avionul nostru are Ochelari Magici Infraroșii (SWIR 1550nm)! Cu ei, ceața devine transparentă și vedem clar șirul de becuri strălucitoare (ALS 💡) de la capătul pistei din Craiova!",
-            child_story_en: "Normal headlights bounce off fog droplets, creating glare. Our Magic Infrared Goggles (SWIR) cut through fog to see the bright runway lights!",
-            interactive_action_label_ro: "🔦 Apasă Aici: Pune Ochelarii Magici Infraroșu peste Ceață!",
+            title_ro: "Lecția 2: Ochiul Anticeață T4/T5 și Ochelarii Magici Infraroșu (SWIR + ALS)",
+            title_en: "Lesson 2: T4/T5 Anti-Fog Optic Lobe & Magic Infrared Goggles (SWIR + ALS)",
+            child_story_ro: "Când aprinzi o lanternă normală în ceață, lumina se lovește de picăturile de apă și face un perete alb. Dar avionul nostru folosește Ochelarii Infraroșii (SWIR 1550nm) împreună cu 👁️ T4/T5 Ochiul Anticeață din creierul Google Drosophila! Neuronii T4/T5 separă instantaneu becurile strălucitoare (ALS 💡) ale pistei din Craiova de laptele alb al ceții!",
+            child_story_en: "Our SWIR Infrared Goggles and the Google Drosophila 👁️ T4/T5 Anti-Fog Optic Lobe cut through fog glare to lock onto bright runway lights (ALS)!",
+            interactive_action_label_ro: "🔦 Apasă Aici: Activează Ochiul Anticeață 👁️ T4/T5 peste Ceață!",
             interactive_action_js: "lessonPlayAction(2)",
             visual_highlight_zone: "maudSchoolCanvas",
-            takeaway_badge_ro: "⭐ Ai descoperit cum vedem becurile pistei Craiova RWY 09 prin ceață!",
+            takeaway_badge_ro: "⭐ Ai descoperit cum 👁️ T4/T5 Ochiul Anticeață vede becurile pistei Craiova RWY 09!",
         },
         InteractiveLesson6Yo {
             lesson_num: 3,
             icon: "💡",
-            title_ro: "Lecția 3: Cum Măsurăm Viteza Numărând Becurile (și Cerul Fără Blocaj!)",
-            title_en: "Lesson 3: Counting Passing Lights & Looking at the Sky Safely",
-            child_story_ro: "Când mergi cu mașina noaptea, stâlpii de lumină de lângă tine trec repede: ZUUM! Așa știe avionul cât de repede zboară peste pământ (Săgețile Verzi 🟢). Dar sus pe cer nu există stâlpi (distanța e infinită)! Calculatoarele vechi împărțeau la zero și înghețau (NaN). Noi folosim o formulă isteață care pune simplu numărul ZERO la cer — fără să se blocheze niciodată!",
-            child_story_en: "We measure ground speed by watching runway lights pass underneath (Green Arrows), while looking at the sky outputs a safe 0.000000 with zero crashes!",
-            interactive_action_label_ro: "🚀 Apasă Aici: Ridică Botul Avionului spre Cer (Verifică Zero-Blocaj)!",
+            title_ro: "Lecția 3: Stabilizatorul HS/VS de Viraje 6-DoF (și Cerul Fără Blocaj!)",
+            title_en: "Lesson 3: HS/VS 6-DoF Rotation Stabilizer & Safe Horizon Sky",
+            child_story_ro: "Când o musculiță sau un avion dă din aripi și virează, toată lumea pare că se învârte! În creierul Google Drosophila, neuronii 🔄 HS/VS (Stabilizatorul de Viraje 6-DoF) scad automat rotația capului ca să măsurăm viteza adevărată peste becurile verzi 🟢. Iar când privim sus spre cer, punem simplu ZERO (0.000000) — fără împărțire la zero și fără blocaj!",
+            child_story_en: "Google Drosophila 🔄 HS/VS neurons subtract 6-DoF aircraft rotations immediately, while looking at the sky outputs a safe 0.000000 with zero crashes!",
+            interactive_action_label_ro: "🚀 Apasă Aici: Testează Stabilizatorul 🔄 HS/VS și Ridică Botul spre Cer!",
             interactive_action_js: "lessonPlayAction(3)",
             visual_highlight_zone: "maudSchoolCanvas",
-            takeaway_badge_ro: "⭐ Ai văzut de ce calculatorul avionului nu îngheață niciodată la orizont!",
+            takeaway_badge_ro: "⭐ Ai văzut cum 🔄 HS/VS stabilizează virajele 6-DoF și păstrează orizontul 100% sigur!",
         },
         InteractiveLesson6Yo {
             lesson_num: 4,
             icon: "☁️",
-            title_ro: "Lecția 4: Norul Împins de Vânt (Mov) vs. Pământul Fix (Verde)",
-            title_en: "Lesson 4: Purple Fog Blown by Wind vs. Solid Green Ground",
-            child_story_ro: "Uite secretul cel mai mare! Când bate vântul dintr-o parte, el împinge norul de ceață spre dreapta (Săgețile Mov 🟣). O cameră obișnuită (Avionul Galben 🟡) se sperie și crede că avionul a alunecat la stânga, așa că virează greșit în câmp! Avionul nostru Verde 🟢 separă norul mov de pământul verde și vede rafala cu 0.85 secunde ÎNAINTE să lovească aripile!",
-            child_story_en: "Wind blows the fog sideways (Purple Arrows). Naive cameras get tricked, but our Green Plane separates the moving fog from the solid ground 0.85s ahead!",
-            interactive_action_label_ro: "🌪️ Apasă Aici: Suflă un Vânt Puternic în Ceață (18 m/s)!",
+            title_ro: "Lecția 4: Neuroni PFNd — Norul Împins de Vânt (Mov) vs. Pământul Fix (Verde)",
+            title_en: "Lesson 4: PFNd Wind-Vision Neurons — Purple Fog Wind vs. Solid Green Ground",
+            child_story_ro: "Uite secretul cel mai mare! Când bate vântul lateral, el împinge norul de ceață (Săgețile Mov 🟣). O cameră obișnuită (Avionul Galben 🟡) se păcălește și virează în câmp! Dar în creierul Google Drosophila, neuronii 💨 PFNd (Simțul Vântului în Ceață) și 🧭 E-PG Ring Attractor cu 16 Neuroni separă norul mov de pământul verde 🟢 cu 0.85 secunde ÎNAINTE ca rafala să lovească aripile!",
+            child_story_en: "Google Drosophila 💨 PFNd neurons and the 🧭 E-PG 16-Neuron Ring Attractor separate moving purple fog from solid green ground 0.85s ahead of impact!",
+            interactive_action_label_ro: "🌪️ Apasă Aici: Suflă Vântul în Ceață (18 m/s) și Privește Neuronii 💨 PFNd!",
             interactive_action_js: "lessonPlayAction(4)",
             visual_highlight_zone: "maudSchoolCanvas",
-            takeaway_badge_ro: "⭐ Ai înțeles cum separăm vântul din ceață (Mov) de pistă (Verde)!",
+            takeaway_badge_ro: "⭐ Ai înțeles cum 💨 PFNd și 🧭 E-PG separă vântul din ceață (Mov) de pistă (Verde)!",
         },
         InteractiveLesson6Yo {
             lesson_num: 5,
             icon: "⚖️",
-            title_ro: "Lecția 5: Paharul care Adună Minciunile Hackerului (CUSUM < 2.9s)",
-            title_en: "Lesson 5: The Cup That Catches Tiny Hacker Lies (CUSUM)",
-            child_story_ro: "Dacă hackerul e șiret, nu mută harta dintr-odată, ci o trage câte un milimetru pe secundă (Stealth Spoof 🕵️). Dar noi avem un Pahar Magic (numit CUSUM): fiecare milimetru de minciună e o picătură în pahar! În mai puțin de 3 secunde (2.9s), paharul se umple, sună alarma 🚨 și aruncăm harta falsă a hackerului la coș!",
-            child_story_en: "A sneaky hacker nudges the GPS map millimeter by millimeter. Our Magic Cup (CUSUM) collects every tiny lie drop and sounds the alarm in under 2.9 seconds!",
-            interactive_action_label_ro: "🕵️ Apasă Aici: Testează Paharul de Prins Minciuni (Atac Furișat)!",
+            title_ro: "Lecția 5: Busola în Inel E-PG (16 Neuroni) + Paharul Anti-Hacker (CUSUM < 2.9s)",
+            title_en: "Lesson 5: 16-Neuron E-PG Ring Compass + The CUSUM Anti-Hacker Cup",
+            child_story_ro: "Dacă hackerul e șiret și trage harta GPS câte un milimetru pe secundă (Stealth Spoof 🕵️), Paharul nostru Magic CUSUM adună fiecare picătură de minciună și oprește GPS-ul fals în sub 2.9 secunde! Chiar și cu GPS-ul tăiat și în orbire totală, 🧭 E-PG Ring Attractor cu 16 Neuroni ține minte direcția exactă către Pista 09 Craiova!",
+            child_story_en: "Our CUSUM Magic Cup catches sneaky GPS hackers in under 2.9s, while the 🧭 E-PG 16-Neuron Ring Attractor holds the exact heading to Craiova RWY 09 in total blindness!",
+            interactive_action_label_ro: "🕵️ Apasă Aici: Prinde Hackerul cu Paharul CUSUM + Busola 🧭 E-PG 16-Neuroni!",
             interactive_action_js: "lessonPlayAction(5)",
             visual_highlight_zone: "maudSchoolCanvas",
-            takeaway_badge_ro: "⭐ Ai prins hackerul furișat în mai puțin de 2.9 secunde!",
+            takeaway_badge_ro: "⭐ Ai prins hackerul în < 2.9s, iar inelul cu 16 neuroni 🧭 E-PG a păstrat direcția pistei!",
         },
         InteractiveLesson6Yo {
             lesson_num: 6,
             icon: "🎓",
-            title_ro: "Lecția 6: Ești Comandant de Zbor! Aterizează în Asediu Complet!",
-            title_en: "Lesson 6: You Are the Captain! Land in Full Cyber-Siege!",
-            child_story_ro: "Felicitări! Acum știi toate secretele: 1) Ochelarii Infraroșu văd becurile prin ceață, 2) Separăm norul mov de pământul verde, și 3) Paharul CUSUM oprește hackerii! Apasă butonul de mai jos ca să pornești Misiunea Finală (Actul 3) sau treci la Pagina 2 ca să vezi Parbrizul Mare al Avionului!",
-            child_story_en: "Congratulations! Launch the Final Act 3 Mission and watch our Green Plane land right on the Craiova RWY 09 centerline under full cyber-siege!",
-            interactive_action_label_ro: "🎬 Apasă Aici: Pornește Misiunea Finală de Aterizare (Actul 3)!",
+            title_ro: "Lecția 6: Comandant de Zbor cu Creierul Google Drosophila în Asediu Complet!",
+            title_en: "Lesson 6: Flight Captain with the Google Drosophila Brain in Full Cyber-Siege!",
+            child_story_ro: "Felicitări! Acum cunoști toate cele 4 etaje din creierul de zbor Google Research Drosophila: 1) 👁️ T4/T5 vede becurile prin ceață, 2) 🔄 HS/VS stabilizează virajele, 3) 🧭 E-PG Ring Attractor cu 16 Neuroni păstrează busola pistei, și 4) 💨 PFNd separă norul mov de pământul verde! Apasă butonul de mai jos pentru Misiunea Finală (Actul 3)!",
+            child_story_en: "Congratulations! All 4 Google Drosophila stages (👁️ T4/T5, 🔄 HS/VS, 🧭 E-PG 16-Neuron Ring Attractor, 💨 PFNd) work together to land on Craiova RWY 09!",
+            interactive_action_label_ro: "🎬 Apasă Aici: Pornește Misiunea Finală Drosophila (Actul 3)!",
             interactive_action_js: "lessonPlayAction(6)",
             visual_highlight_zone: "maudSchoolCanvas",
-            takeaway_badge_ro: "🏆 DIPLOMĂ DE COMANDANT AERO-SHIELD LRCV V2.0 OBȚINUTĂ!",
+            takeaway_badge_ro: "🏆 DIPLOMĂ DE COMANDANT AERO-SHIELD & GOOGLE DROSOPHILA CONNECTOME OBȚINUTĂ!",
         },
     ]
 }
@@ -221,7 +221,7 @@ pub fn render_floating_pointer() -> Markup {
     }
 }
 
-/// PAGINA 1 (`#concept-page-1`): `1️⃣ Lecții Interactive (Explicate de la Zero, Pas cu Pas)`.
+/// PAGINA 1 (`#concept-page-1`): `1️⃣ Lecții Interactive — Creierul de Zbor Google Drosophila`.
 /// Un singur card mare, extrem de aerisit, cu 1 singur Canvas animat mare (`#maudSchoolCanvas`, `height: 300px`).
 #[must_use]
 pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_active: bool) -> Markup {
@@ -233,12 +233,18 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
             section class="spacious-card" id="school-panel" {
                 div class="page-hero-header" {
                     div {
-                        span class="concept-pill" { "CONCEPTUL 1 DIN 6 • ACADEMIA MICULUI PILOT (6 ANI+)" }
+                        span class="concept-pill" { "CONCEPTUL 1 DIN 6 • ACADEMIA MICULUI PILOT & CREIERUL GOOGLE DROSOPHILA" }
                         h1 class="page-main-title" {
-                            "🎓 Învață Pas cu Pas în 6 Lecții Scurte și Interactive"
+                            "🎓 Lecții Interactive — Creierul de Zbor Google Drosophila"
                         }
                         p class="page-subtitle" {
-                            "Fără formule complicate! Alege o lecție de mai jos, citește povestea și apasă butonul mare de joacă pentru a vedea desenul animat."
+                            "🪰 De ce nu avem nevoie să inventăm formule complicate? Pentru că folosim harta Open-Source Google Research a creierului musculiței Drosophila (Male Drosophila CNS & Optic Lobe Connectome) — cel mai bun pilot fără GPS din natură!"
+                        }
+                        div class="drosophila-pills-bar" {
+                            span class="drosophila-bio-pill" { "👁️ T4/T5 Ochiul Anticeață" }
+                            span class="drosophila-bio-pill" { "🔄 HS/VS Stabilizatorul de Viraje 6-DoF" }
+                            span class="drosophila-bio-pill" { "🧭 E-PG Busola în Inel 16-Neuroni" }
+                            span class="drosophila-bio-pill" { "💨 PFNd Simțul Vântului în Ceață" }
                         }
                     }
                     div class="stars-box" id="school-stars-progress" {
@@ -562,7 +568,7 @@ pub fn render_page_3_four_planes_race(is_active: bool) -> Markup {
     }
 }
 
-/// PAGINA 4 (`#concept-page-4`): `4️⃣ Scutul Anti-Hacker & Telecomanda Completă de Zbor`.
+/// PAGINA 4 (`#concept-page-4`): `4️⃣ Creierul Google Drosophila & Scutul Anti-Hacker`.
 #[must_use]
 pub fn render_page_4_shield_and_controls(is_active: bool) -> Markup {
     html! {
@@ -573,12 +579,12 @@ pub fn render_page_4_shield_and_controls(is_active: bool) -> Markup {
             section class="spacious-card" {
                 div class="page-hero-header" {
                     div {
-                        span class="concept-pill" { "CONCEPTUL 4 DIN 6 • SCUTUL DE SIGURANȚĂ & TELECOMANDA 6-DoF" }
+                        span class="concept-pill" { "CONCEPTUL 4 DIN 6 • CREIERUL GOOGLE DROSOPHILA & SCUTUL ANTI-HACKER" }
                         h1 class="page-main-title" {
-                            "🛡️ Scutul Anti-Hacker & Telecomanda Completă de Zbor"
+                            "🧠🛡️ Creierul Google Drosophila & Scutul Anti-Hacker"
                         }
                         p class="page-subtitle" {
-                            "Testează cele 3 scuturi inteligente de protecție și pilotează avionul în timp real la 60 Hz!"
+                            "Arhitectura conectomică Open-Source Google Research (Male Drosophila CNS & Optic Lobe Connectome) în 4 etaje biologice + cele 3 scuturi anti-hacker și telecomanda 6-DoF la 60 Hz!"
                         }
                     }
                     div style="display:flex; gap:10px; flex-wrap:wrap;" {
@@ -590,6 +596,42 @@ pub fn render_page_4_shield_and_controls(is_active: bool) -> Markup {
                         }
                         button class="btn-big btn-big-red" onclick="triggerScenarioWithHighlight(3)" {
                             "🎬 Scenariul 3: Asediu Cyber"
+                        }
+                    }
+                }
+
+                // Partea 0: Panoul Vizual cu cele 4 Etaje ale Modelului Conectomic Open-Source Google Research Drosophila
+                div class="drosophila-4-stages-grid" id="zone-drosophila-connectome" {
+                    div class="drosophila-stage-card" {
+                        div class="drosophila-stage-title" {
+                            "👁️ Etajul 1: T4 / T5 (Lobul Optic Anticeață)"
+                        }
+                        p class="drosophila-stage-desc" {
+                            "Separă reperele luminoase de pe sol (ALS) de ceața lăptoasă, exact cum vede musculița în zbor."
+                        }
+                    }
+                    div class="drosophila-stage-card" {
+                        div class="drosophila-stage-title" {
+                            "🔄 Etajul 2: HS / VS (Stabilizatorul 6-DoF de Rotație)"
+                        }
+                        p class="drosophila-stage-desc" {
+                            "Scade instantaneu virajele avionului (Dreapta/Stânga/Sus/Jos/Înclinare) din imaginea camerei."
+                        }
+                    }
+                    div class="drosophila-stage-card" {
+                        div class="drosophila-stage-title" {
+                            "🧭 Etajul 3: E-PG Ring Attractor (Busola în Inel cu 16 Neuroni)"
+                        }
+                        p class="drosophila-stage-desc" {
+                            "Menține direcția exactă către Pista 09 Craiova chiar și în orbire totală (0m vizibilitate)."
+                        }
+                    }
+                    div class="drosophila-stage-card" {
+                        div class="drosophila-stage-title" {
+                            "💨 Etajul 4: PFNd (Fuziunea Vânt-Vedere & Anticiparea Rafalei)"
+                        }
+                        p class="drosophila-stage-desc" {
+                            "Separă norul de ceață împins de vânt (săgețile mov) de pământul fix (săgețile verzi) cu 0.85s înainte de impact!"
                         }
                     }
                 }
@@ -703,7 +745,7 @@ pub fn render_page_4_shield_and_controls(is_active: bool) -> Markup {
                             }
                         }
                         button class="btn-big btn-big-green" onclick="startLiveCudaTrainingWithHighlight()" {
-                            "🔥 Antrenare AI pe Placa Video (15s)"
+                            "🔥 Antrenare Fină Connectome Drosophila pe Placa Video CUDA (15s)"
                         }
                     }
 
@@ -1481,7 +1523,47 @@ body {
   gap: 16px;
 }
 
-/* PAGINA 4: SCUTUL ANTI-HACKER & TELECOMANDA */
+/* PAGINA 4: CREIERUL GOOGLE DROSOPHILA, SCUTUL ANTI-HACKER & TELECOMANDA */
+.drosophila-pills-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+.drosophila-bio-pill {
+  background: rgba(0, 255, 157, 0.12);
+  border: 1px solid #00ff9d;
+  color: #d1fae5;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 800;
+}
+.drosophila-4-stages-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.drosophila-stage-card {
+  background: linear-gradient(145deg, #07162c 0%, #091d3a 100%);
+  border: 2px solid #00e5ff;
+  border-left: 5px solid #00ff9d;
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.drosophila-stage-title {
+  font-size: 15.5px;
+  font-weight: 900;
+  color: #00ff9d;
+}
+.drosophila-stage-desc {
+  font-size: 13.5px;
+  color: #dbeafe;
+  line-height: 1.45;
+}
 .three-shields-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1644,7 +1726,7 @@ body {
 
 @media (max-width: 1024px) {
   .pages-nav-bar, .lesson-tabs-spacious { grid-template-columns: repeat(3, 1fr); }
-  .three-legend-boxes, .three-shields-grid, .videos-3-spacious-grid { grid-template-columns: 1fr; }
+  .three-legend-boxes, .three-shields-grid, .videos-3-spacious-grid, .drosophila-4-stages-grid { grid-template-columns: 1fr; }
   .four-planes-cards-grid, .fg-10-spacious-grid, .four-quick-buttons-bar { grid-template-columns: 1fr; }
 }
 "####;
@@ -1667,10 +1749,10 @@ let cyberState = {
 };
 
 const CONCEPT_PAGE_TITLES_RO = {
-  1: "Lecții Interactive (Explicate de la Zero, Pas cu Pas)",
+  1: "Lecții Interactive — Creierul de Zbor Google Drosophila",
   2: "Parbrizul Avionului & Filmarea Reală (Ce vede camera prin ceață?)",
   3: "Cursa celor 4 Avioane (De ce noi rămânem pe pistă?)",
-  4: "Scutul Anti-Hacker & Telecomanda Completă de Zbor",
+  4: "Creierul Google Drosophila & Scutul Anti-Hacker",
   5: "Cele 3 Filmări Video Reale din Cabina Piloților",
   6: "Cele 10 Teste Sintetice FlightGear (Pe VM-ul GPU)"
 };
@@ -1899,24 +1981,75 @@ function renderLessonMiniCanvas() {
   ctx.font = "bold 14px sans-serif";
   ctx.fillText("🎯 PISTA CRAIOVA 09", w - 182, 34);
 
+  // Desenăm Inelul-Busolă cu 16 Neuroni (🧭 E-PG Ring Attractor) în stânga-sus / centru-dreapta
+  const ringCx = currentLessonNum >= 4 ? w - 310 : 88;
+  const ringCy = currentLessonNum >= 4 ? h / 2 - 10 : 78;
+  const ringR = currentLessonNum >= 4 ? 54 : 36;
+
+  ctx.save();
+  ctx.strokeStyle = currentLessonNum >= 4 ? "#00e5ff" : "rgba(0, 229, 255, 0.55)";
+  ctx.lineWidth = currentLessonNum >= 4 ? 2.5 : 1.8;
+  ctx.beginPath();
+  ctx.arc(ringCx, ringCy, ringR, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Cei 16 neuroni E-PG în inel (neuronul 0 orientat spre Pista 09 Craiova strălucește #00ff9d)
+  for (let n = 0; n < 16; n++) {
+    const ang = (n / 16) * Math.PI * 2;
+    const nx = ringCx + Math.cos(ang) * ringR;
+    const ny = ringCy + Math.sin(ang) * ringR;
+    const isTargetRwy09 = n === 0 || n === 15 || n === 1;
+    ctx.beginPath();
+    ctx.arc(nx, ny, n === 0 ? 6.5 : 3.8, 0, Math.PI * 2);
+    ctx.fillStyle = n === 0 ? "#00ff9d" : (isTargetRwy09 ? "#38bdf8" : "#334155");
+    ctx.fill();
+    if (n === 0) {
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+  }
+  // Vectorul luminos din centrul inelului E-PG direct spre Pista 09 Craiova
+  ctx.strokeStyle = "#00ff9d";
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(ringCx, ringCy);
+  ctx.lineTo(ringCx + ringR - 4, ringCy);
+  ctx.stroke();
+  ctx.fillStyle = "#00ff9d";
+  ctx.font = "bold 12px sans-serif";
+  ctx.fillText("🧭 E-PG Busola în Inel 16-Neuroni", ringCx - 74, ringCy + ringR + 18);
+  ctx.restore();
+
+  // Bara cu cele 4 circuite biologice Google Drosophila în partea de jos a canvas-ului
+  ctx.fillStyle = "rgba(7, 20, 42, 0.90)";
+  ctx.fillRect(14, h - 28, w - 28, 22);
+  ctx.fillStyle = "#bae6fd";
+  ctx.font = "bold 11.5px sans-serif";
+  ctx.fillText(
+    "🪰 GOOGLE DROSOPHILA:  👁️ T4/T5 Ochiul Anticeață  |  🔄 HS/VS Stabilizatorul de Viraje 6-DoF  |  🧭 E-PG Busola în Inel 16-Neuroni  |  💨 PFNd Simțul Vântului în Ceață",
+    22,
+    h - 13
+  );
+
   const t = (lessonAnimTick % 180) / 180;
 
   if (currentLessonNum === 1) {
     ctx.fillStyle = "rgba(203, 213, 225, 0.20)";
-    ctx.fillRect(150, 30, 340, h - 60);
+    ctx.fillRect(175, 30, 320, h - 70);
     ctx.fillStyle = "#e2e8f0";
     ctx.font = "bold 15px sans-serif";
-    ctx.fillText("☁️ CEAȚĂ GROASĂ CA LAPTELE + HACKER GPS 👾", 170, 56);
+    ctx.fillText("☁️ CEAȚĂ GROASĂ CA LAPTELE + HACKER GPS 👾", 185, 56);
 
-    const xRed = 60 + t * (w - 280);
-    const yRed = h / 2 - Math.sin(t * 3.14) * 95;
+    const xRed = 150 + t * (w - 370);
+    const yRed = h / 2 - Math.sin(t * 3.14) * 85;
     ctx.fillStyle = "#ff2a5f";
-    ctx.font = "bold 16px sans-serif";
+    ctx.font = "bold 15px sans-serif";
     ctx.fillText("✈️🔴 GPS Păcălit (în iarbă!)", xRed, yRed);
 
-    const xGrn = 60 + t * (w - 260);
+    const xGrn = 150 + t * (w - 350);
     ctx.fillStyle = "#00ff9d";
-    ctx.fillText("✈️🟢 AERO-SHIELD (Drept pe pistă!)", xGrn, h / 2 + 24);
+    ctx.fillText("✈️🟢 Creierul Drosophila (Drept pe pistă!)", xGrn, h / 2 + 24);
   } else if (currentLessonNum === 2) {
     for (let i = 0; i < 6; i++) {
       ctx.fillStyle = "#ffd600";
@@ -1926,52 +2059,58 @@ function renderLessonMiniCanvas() {
     }
     ctx.strokeStyle = "#00e5ff";
     ctx.lineWidth = 2.5;
-    ctx.strokeRect(w / 2 - 140, 40, 280, h - 80);
+    ctx.strokeRect(w / 2 - 120, 40, 270, h - 85);
     ctx.fillStyle = "#00e5ff";
-    ctx.font = "bold 16px sans-serif";
-    ctx.fillText("🔦 OCHELARI INFRAROȘU SWIR: Văd 12 becuri prin ceață!", w / 2 - 190, 30);
+    ctx.font = "bold 15px sans-serif";
+    ctx.fillText("👁️ T4/T5 Ochiul Anticeață + SWIR: Văd 12 becuri prin ceață!", w / 2 - 170, 30);
     ctx.fillStyle = "#00ff9d";
-    ctx.fillText("✈️🟢", 90 + t * (w - 300), h / 2 + 6);
+    ctx.fillText("✈️🟢", 160 + t * (w - 370), h / 2 + 6);
   } else if (currentLessonNum === 3) {
     ctx.fillStyle = "#0c1e3e";
-    ctx.fillRect(0, 0, w, h / 2);
+    ctx.fillRect(160, 0, w - 360, h / 2);
     ctx.fillStyle = "#00ff9d";
-    ctx.font = "bold 16px sans-serif";
-    ctx.fillText("🌌 CERUL LA ORIZONT: ρ_ground = 0.000000 (FĂRĂ ÎMPĂRȚIRE LA ZERO!)", 80, 55);
-    for (let i = 0; i < 9; i++) {
-      const bx = ((w - (lessonAnimTick * 4 + i * 100) % w));
+    ctx.font = "bold 15px sans-serif";
+    ctx.fillText("🔄 HS/VS Stabilizatorul de Viraje 6-DoF | Cer ρ_ground = 0.000000", 170, 48);
+    for (let i = 0; i < 7; i++) {
+      const bx = 170 + ((w - 380 - (lessonAnimTick * 4 + i * 85) % (w - 380)));
       ctx.fillStyle = "#00ff9d";
-      ctx.fillText("🟢⬅️", bx, h - 45);
+      ctx.fillText("🟢⬅️", bx, h - 48);
     }
-    ctx.fillText("✈️🟢 Numărăm becurile de jos pentru viteză!", 110, h / 2 + 40);
+    ctx.fillText("✈️🟢 Măsurăm viteza peste becuri fără blocaj la orizont!", 170, h / 2 + 36);
   } else if (currentLessonNum === 4) {
-    for (let i = 0; i < 8; i++) {
-      const fy = (lessonAnimTick * 2 + i * 36) % (h - 40) + 20;
+    for (let i = 0; i < 6; i++) {
+      const fy = (lessonAnimTick * 2 + i * 36) % (h - 65) + 20;
       ctx.fillStyle = "#d946ef";
-      ctx.font = "bold 15px sans-serif";
-      ctx.fillText("🟣⬇️ Vânt în Ceață (18 m/s)", w / 2 - 90, fy);
+      ctx.font = "bold 14.5px sans-serif";
+      ctx.fillText("🟣⬇️ Vânt în Ceață (18 m/s)", 80, fy);
     }
     ctx.fillStyle = "#00ff9d";
-    ctx.font = "bold 16px sans-serif";
-    ctx.fillText("🟢⬅️ Pământul rămâne fix! Vedem rafala cu 0.85s înainte!", 70, h - 25);
+    ctx.font = "bold 15px sans-serif";
+    ctx.fillText("💨 PFNd Simțul Vântului în Ceață + 🧭 E-PG Busola în Inel 16-Neuroni (0.85s înainte!)", 50, h - 42);
   } else if (currentLessonNum === 5) {
-    const fillH = Math.min(160, (lessonAnimTick % 160) * 1.2);
+    const fillH = Math.min(140, (lessonAnimTick % 160) * 1.1);
     ctx.strokeStyle = "#00e5ff";
     ctx.lineWidth = 3;
-    ctx.strokeRect(180, 55, 90, 170);
-    ctx.fillStyle = fillH > 120 ? "#ff2a5f" : "#ffb800";
-    ctx.fillRect(183, 55 + (170 - fillH), 84, fillH);
+    ctx.strokeRect(70, 50, 80, 145);
+    ctx.fillStyle = fillH > 105 ? "#ff2a5f" : "#ffb800";
+    ctx.fillRect(73, 50 + (145 - fillH), 74, fillH);
     ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 16px sans-serif";
-    ctx.fillText("🥤 PAHARUL CUSUM", 160, 42);
-    ctx.fillText(fillH > 120 ? "🚨 HACKER PRINS ÎN 2.8s! GPS BLOCAT!" : "🕵️ Adunăm micile minciuni ale hackerului...", 310, 135);
+    ctx.font = "bold 15px sans-serif";
+    ctx.fillText("🥤 PAHARUL CUSUM", 55, 38);
+    ctx.fillText(
+      fillH > 105
+        ? "🚨 HACKER PRINS ÎN 2.8s! 🧭 E-PG 16-Neuroni ține direcția RWY 09!"
+        : "🕵️ Adunăm minciunile GPS + 🧭 E-PG păstrează busola în orbire!",
+      175,
+      115
+    );
   } else {
     ctx.fillStyle = "#00ff9d";
-    ctx.font = "bold 18px sans-serif";
-    ctx.fillText("🏆 COMANDANT AERO-SHIELD: Aterizare Perfectă pe Craiova RWY 09 (< 0.4m)!", 80, h / 2 - 10);
+    ctx.font = "bold 16.5px sans-serif";
+    ctx.fillText("🏆 COMANDANT DROSOPHILA: Aterizare Perfectă pe Craiova RWY 09 (< 0.4m)!", 40, h / 2 - 22);
     ctx.fillStyle = "#fde047";
-    ctx.font = "bold 16px sans-serif";
-    ctx.fillText("👉 Apasă pe butonul albastru ca să treci la Pagina 2 (Parbrizul Mare)!", 130, h / 2 + 35);
+    ctx.font = "bold 15px sans-serif";
+    ctx.fillText("👉 👁️ T4/T5 + 🔄 HS/VS + 🧭 E-PG 16-Neuroni + 💨 PFNd active la 60 Hz!", 40, h / 2 + 16);
   }
 }
 

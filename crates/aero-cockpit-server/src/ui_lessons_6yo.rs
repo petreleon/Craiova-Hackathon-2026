@@ -270,10 +270,10 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             step_number: 1,
             badge_emoji: "🎈",
             tab_label: "Lecția 1 🎈",
-            title: "🎈 Lecția 1: „Problema: Ceața și Hackerul Rău 👾”",
-            kid_story_ro: "Ceața albă ascunde pista, iar Hackerul trage avionul în pădure — dar Scutul AERO-SHIELD taie minciuna cu Foarfeca Aurie ✂️!",
-            visual_rule_ro: "🔴 Linia Roșie = Minciuna Hackerului | 🟢 Raza Verde = Drumul Adevărat AERO-SHIELD",
-            science_secret_ro: "GNSS Spoofing Rejection + Cat IIIc Zero-Visibility Navigation",
+            title: "🎈 Lecția 1: „Problema: Ceața, Hackerul Rău 👾 și Musculița Google 🐝”",
+            kid_story_ro: "Ceața albă ascunde pista, iar Hackerul trage avionul în pădure — dar 🛡️ AERO-SHIELD + Creierul Musculiței Google (Drosophila 🐝) taie firul hackerului cu Foarfeca Aurie ✂️!",
+            visual_rule_ro: "🔴 Linia Roșie = Minciuna Hackerului | 🟢 Raza Verde = Drumul Adevărat AERO-SHIELD + Drosophila 🐝",
+            science_secret_ro: "GNSS Spoofing Rejection + Google Research Drosophila Connectome Bio-Navigation",
             default_mode: "l1_fog",
             action_buttons: vec![
                 LessonActionButton {
@@ -295,8 +295,8 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
                 LessonActionButton {
                     id: "btn-l1-shield",
                     emoji: "🛡️",
-                    label: "🛡️ Pornește AERO-SHIELD",
-                    subtitle: "Foarfeca aurie taie minciuna și salvează avionul!",
+                    label: "🛡️ AERO-SHIELD + Musculița 🐝",
+                    subtitle: "Creierul Musculiței Google + Foarfeca Aurie ✂️ taie minciuna!",
                     color_theme: "green",
                     action_code: "l1_shield",
                 },
@@ -307,10 +307,10 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             step_number: 2,
             badge_emoji: "🔦",
             tab_label: "Lecția 2 🔦",
-            title: "🔦 Lecția 2: „Ochiul Magic care Vede prin Ceață și Fum 👀”",
-            kid_story_ro: "Mișcă mouse-ul pe desen: Ochiul Infraroșu (SWIR) are unde lungi care pășesc peste picăturile de ceață și văd pista curată!",
-            visual_rule_ro: "🖱️ Plimbă Lupa Magică Infraroșie peste ceață ca să descoperi luminile verzi ale pistei!",
-            science_secret_ro: "SWIR (1.55 μm) & LWIR (10 μm) Mie Scattering Penetration",
+            title: "🔦 Lecția 2: „Ochii Magici T4/T5 ai Musculiței Google văd prin Ceață 👀”",
+            kid_story_ro: "Mișcă mouse-ul pe desen: Lupa Infraroșie (SWIR) și Ochii Magici T4/T5 ai Musculiței Google (Drosophila) văd becurile calde ale pistei direct prin ceață și fum!",
+            visual_rule_ro: "🖱️ Plimbă Lupa Infraroșie SWIR + Neuronii T4/T5 peste ceață ca să descoperi pista!",
+            science_secret_ro: "SWIR (1.55 μm) Mie Penetration + Drosophila T4 (ON) / T5 (OFF) Lobula Plate Neurons",
             default_mode: "l2_swir",
             action_buttons: vec![
                 LessonActionButton {
@@ -324,16 +324,16 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
                 LessonActionButton {
                     id: "btn-l2-swir",
                     emoji: "🔦",
-                    label: "🔦 Aprinde Ochiul Infraroșu (SWIR)",
-                    subtitle: "Activează Lupa Magică (mișcă mouse-ul pe ecran!)",
+                    label: "🔦 Lupa SWIR + Ochii T4/T5 🐝",
+                    subtitle: "Activează Lupa Magică SWIR și neuronii T4/T5 (mișcă mouse-ul!)",
                     color_theme: "green",
                     action_code: "l2_swir",
                 },
                 LessonActionButton {
                     id: "btn-l2-waves",
                     emoji: "💧",
-                    label: "💧 Arată Razele vs. Picăturile",
-                    subtitle: "Vezi cum unda mică se lovește, iar unda mare trece!",
+                    label: "💧 Razele SWIR vs. Picăturile",
+                    subtitle: "Vezi cum unda mică se lovește, iar unda mare SWIR trece spre T4/T5!",
                     color_theme: "purple",
                     action_code: "l2_waves",
                 },
@@ -344,33 +344,33 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             step_number: 3,
             badge_emoji: "🚂",
             tab_label: "Lecția 3 🚂",
-            title: "🚂 Lecția 3: „Cum aflăm viteza fără GPS? (Numărăm becurile de pe jos!) 💡”",
-            kid_story_ro: "Ca într-un tren în mișcare, camera măsoară cu Rigla Galbenă 📏 cât s-au mutat becurile de pe pământ între două poze!",
-            visual_rule_ro: "🐢 Săgeți Scurte = Viteză Mică (45 m/s) | 🚀 Săgeți Lungi = Viteză Mare (120 m/s)",
-            science_secret_ro: "Lucas-Kanade Optical Flow & Radar Altimeter Scaling",
+            title: "🚂 Lecția 3: „Cum numără neuronii T4/T5 becurile + Inelul-Busolă E-PG cu 16 Luminițe 💡”",
+            kid_story_ro: "Neuronii T4/T5 măsoară cu Rigla Galbenă 📏 cât s-au mutat becurile de pe jos, iar Busola în Inel E-PG cu 16 Luminițe 🐝 arată mereu drumul spre pista Craiova RWY 09!",
+            visual_rule_ro: "🐢 Săgeți Scurte = 45 m/s | 🚀 Săgeți Lungi = 120 m/s | 🧭 Inelul E-PG cu 16 LED-uri = Busola vie",
+            science_secret_ro: "Drosophila T4/T5 Elementary Motion Detectors (EMD) + 16-Wedge E-PG Ring Attractor",
             default_mode: "l3_slow",
             action_buttons: vec![
                 LessonActionButton {
                     id: "btn-l3-slow",
                     emoji: "🐢",
-                    label: "🐢 Zboară Încet",
-                    subtitle: "Becurile se mișcă puțin între două poze (45 m/s)",
+                    label: "🐢 Zboară Încet (T4/T5)",
+                    subtitle: "Neuronii T4/T5 numără săgeți scurte între două poze (45 m/s)",
                     color_theme: "blue",
                     action_code: "l3_slow",
                 },
                 LessonActionButton {
                     id: "btn-l3-fast",
                     emoji: "🚀",
-                    label: "🚀 Zboară Repede",
-                    subtitle: "Becurile fac un salt mare între două poze (120 m/s)",
+                    label: "🚀 Zboară Repede (T4/T5)",
+                    subtitle: "Neuronii T4/T5 văd un salt mare între două poze (120 m/s)",
                     color_theme: "amber",
                     action_code: "l3_fast",
                 },
                 LessonActionButton {
                     id: "btn-l3-ruler",
                     emoji: "📏",
-                    label: "📏 Arată Rigla dintre Poze",
-                    subtitle: "Pune Rigla Galbenă între Poza 1 și Poza 2!",
+                    label: "📏 Rigla T4/T5 + Inelul E-PG 🐝",
+                    subtitle: "Măsoară viteza cu Rigla Galbenă și aprinde Inelul-Busolă cu 16 Luminițe!",
                     color_theme: "green",
                     action_code: "l3_ruler",
                 },
@@ -381,33 +381,33 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             step_number: 4,
             badge_emoji: "☁️",
             tab_label: "Lecția 4 ☁️",
-            title: "☁️ Lecția 4: „Capcana Norului Împins de Vânt și a Înclinării Avionului! 💨”",
-            kid_story_ro: "AERO-SHIELD taie cu ❌ Norul Mov suflat de vânt și păstrează doar ✅ Pământul Verde nemișcat, scăzând clătinatul aripilor!",
-            visual_rule_ro: "📢 La înclinare: „Stai liniștit, doar s-a înclinat avionul, nu ne-am mutat de pe pistă!”",
-            science_secret_ro: "Two-Layer RANSAC Homography + IMU Gyro Derotation (ω × r)",
+            title: "☁️ Lecția 4: „Stabilizatorul HS/VS și Senzorul de Vânt PFNd al Musculiței! 💨”",
+            kid_story_ro: "Stabilizatorul HS/VS scade virajele în 6 direcții, iar Senzorul de Vânt PFNd simte rafala pe aripi cu 1 secundă înainte și taie ❌ Norul Mov de ✅ Pământul Verde!",
+            visual_rule_ro: "📢 HS/VS + PFNd: „Stai liniștit, doar s-a înclinat avionul în vânt, nu am sărit de pe pistă!”",
+            science_secret_ro: "Lobula Plate HS/VS 6-DOF Derotation + Noduli PFNd Wind-Shear Feedforward + RANSAC",
             default_mode: "l4_separate",
             action_buttons: vec![
                 LessonActionButton {
                     id: "btn-l4-wind",
                     emoji: "💨",
-                    label: "💨 Suflă Vântul în Nor",
-                    subtitle: "Vântul împinge norul mov cu săgeți strâmbe!",
+                    label: "💨 Vânt în Nor (Senzor PFNd)",
+                    subtitle: "Senzorul PFNd simte vântul pe antene/aripi cu 1 secundă înainte!",
                     color_theme: "amber",
                     action_code: "l4_wind",
                 },
                 LessonActionButton {
                     id: "btn-l4-tilt",
                     emoji: "🔄",
-                    label: "🔄 Înclină Avionul",
-                    subtitle: "Rafală de 1 secundă: clatină aripile și ascultă explicația!",
+                    label: "🔄 Înclină Avionul (HS/VS)",
+                    subtitle: "Stabilizatorul HS/VS scade rotația aripilor în 6 direcții!",
                     color_theme: "blue",
                     action_code: "l4_tilt",
                 },
                 LessonActionButton {
                     id: "btn-l4-separate",
                     emoji: "🧠",
-                    label: "🧠 Separă Norul Mov de Pământul Verde",
-                    subtitle: "Ignoră norul mincinos (❌) și citește doar solul fix (✅)!",
+                    label: "🧠 HS/VS + PFNd: Separă Norul",
+                    subtitle: "Taie norul mincinos (❌) și citește doar solul verde fix (✅)!",
                     color_theme: "green",
                     action_code: "l4_separate",
                 },
@@ -418,17 +418,17 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             step_number: 5,
             badge_emoji: "⚖️",
             tab_label: "Lecția 5 ⚖️",
-            title: "⚖️ Lecția 5: „Cântarul Adevărului: Cum prindem orice minciună? ⚖️”",
-            kid_story_ro: "Minciuna mare răstoarnă pe loc Cântarul Adevărului ⚖️, iar minciuna lentă umple picătură cu picătură Paharul de Minciuni 🥛 în 3 secunde!",
-            visual_rule_ro: "🚨 Nicio minciună GPS nu scapă: nici saltul brusc, nici furtul lent!",
-            science_secret_ro: "Mahalanobis Chi-Square Gate (χ²) + Page-Hinkley CUSUM Drift Detector",
+            title: "⚖️ Lecția 5: „Cântarul Adevărului + Inelul-Busolă E-PG cu 16 Luminițe ⚖️”",
+            kid_story_ro: "Inelul-Busolă E-PG cu 16 Luminițe ține minte drumul spre pistă chiar și cu ochii închiși, răstoarnă Cântarul ⚖️ la minciuna mare și umple Paharul de Minciuni (CUSUM) în 3 secunde!",
+            visual_rule_ro: "🚨 Inelul E-PG + Cântarul Chi-Pătrat + Paharul CUSUM prind orice minciună GPS!",
+            science_secret_ro: "E-PG Ring Attractor Dark-Memory + Mahalanobis Chi-Square Gate (χ²) + Page-Hinkley CUSUM",
             default_mode: "l5_honest",
             action_buttons: vec![
                 LessonActionButton {
                     id: "btn-l5-honest",
                     emoji: "✅",
-                    label: "✅ Zbor Cinstit (Echilibru)",
-                    subtitle: "Cântarul stă drept și Paharul de Minciuni este gol",
+                    label: "✅ Zbor Cinstit + Inel E-PG",
+                    subtitle: "Inelul E-PG cu 16 luminițe și Cântarul arată RWY 09 în echilibru",
                     color_theme: "green",
                     action_code: "l5_honest",
                 },
@@ -436,15 +436,15 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
                     id: "btn-l5-big-lie",
                     emoji: "⚡",
                     label: "⚡ Minciună Mare (Salt 500m)",
-                    subtitle: "Talerul GPS cade brusc și sună alarma Chi-Pătrat!",
+                    subtitle: "Talerul GPS cade brusc, dar Inelul E-PG păstrează direcția adevărată!",
                     color_theme: "red",
                     action_code: "l5_big_lie",
                 },
                 LessonActionButton {
                     id: "btn-l5-slow-lie",
                     emoji: "🐍",
-                    label: "🐍 Trimite Minciună Lentă (Paharul de Minciuni)",
-                    subtitle: "Picăturile roșii umplu paharul în 3 secunde -> ALARMĂ!",
+                    label: "🐍 Minciună Lentă (Pahar CUSUM)",
+                    subtitle: "Picăturile roșii umplu Paharul de Minciuni în 3 secunde -> ALARMĂ!",
                     color_theme: "amber",
                     action_code: "l5_slow_lie",
                 },
@@ -455,16 +455,16 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             step_number: 6,
             badge_emoji: "🏆",
             tab_label: "Lecția 6 🏆",
-            title: "🏆 Lecția 6: „Acum ești Comandant! Testează pe Simulatorul Mare și pe Filmarea Reală!”",
-            kid_story_ro: "Felicitări, Comandante! Apasă pe butoanele de mai jos ca să aprindem Săgețile Luminoase pe Simulatorul Mare sau să pornim Filmarea Reală!",
-            visual_rule_ro: "✨ Cele 3 zone mari: 1. Parbrizul Magic (Stânga) • 2. Cursa celor 4 Avioane (Mijloc) • 3. Telecomanda (Dreapta)",
-            science_secret_ro: "Full 60Hz 4-Estimator Arena + Real-World Cockpit Video Telemetry",
+            title: "🏆 Lecția 6: „Acum ești Comandantul Avionului Bio-Inspirat Drosophila + AERO-SHIELD!”",
+            kid_story_ro: "Felicitări, Comandante! Ai stăpânit harta completă a Creierului Google Drosophila (T4/T5 → HS/VS → Inelul E-PG cu 16 Luminițe → PFNd Vânt) și Scutul AERO-SHIELD!",
+            visual_rule_ro: "✨ Harta Creierului Google Drosophila + Cele 3 zone mari pe Ecranul Principal al Simulatorului!",
+            science_secret_ro: "Google Research HHMI Janelia Drosophila Connectome (T4/T5 -> HS/VS -> E-PG -> PFNd) + ESKF",
             default_mode: "l6_commander",
             action_buttons: vec![
                 LessonActionButton {
                     id: "btn-l6-spotlight",
                     emoji: "✨",
-                    label: "✨ Arată-mi cu Săgeți Luminoase pe Ecranul Mare",
+                    label: "✨ Săgeți Luminoase pe Ecranul Mare",
                     subtitle: "Aprinde ghidul luminos peste Parbriz, Cursa celor 4 Avioane și Telecomandă!",
                     color_theme: "amber",
                     action_code: "l6_spotlight",
@@ -473,15 +473,15 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
                     id: "btn-l6-real-video",
                     emoji: "🎬",
                     label: "🎬 Pornește Filmarea Reală din Cockpit",
-                    subtitle: "Comută în modul Demonstrație pe Filmare Reală & Telemetrie",
+                    subtitle: "Comută în modul Demonstrație pe Filmare Reală & Telemetrie Drosophila",
                     color_theme: "blue",
                     action_code: "l6_real_video",
                 },
                 LessonActionButton {
                     id: "btn-l6-diploma",
                     emoji: "🏅",
-                    label: "🏅 Diplomă de Comandant",
-                    subtitle: "Afișează Diploma Oficială de Tânăr Inginer AERO-SHIELD!",
+                    label: "🏅 Harta Drosophila & Diplomă",
+                    subtitle: "Vezi harta completă T4/T5 → HS/VS → E-PG → PFNd și Diploma de Comandant!",
                     color_theme: "green",
                     action_code: "l6_diploma",
                 },
@@ -1090,49 +1090,49 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     }
 
     if (actionCode === 'l1_fog') {
-      setMegaphone('🌫️ Norul de ceață acoperă pista — ochiul obișnuit nu mai vede unde să aterizeze.');
+      setMegaphone('🌫️ Norul de ceață acoperă pista — dar Musculița Google (Drosophila 🐝) și AERO-SHIELD știu drumul!');
     } else if (actionCode === 'l1_hacker') {
       setMegaphone('👾 Hackerul trimite un semnal GPS mincinos și trage avionul pe linia roșie spre pădure!');
     } else if (actionCode === 'l1_shield') {
-      setMegaphone('🛡️ Scutul AERO-SHIELD taie minciuna cu Foarfeca Aurie ✂️ și duce avionul pe raza verde!');
+      setMegaphone('🛡️ AERO-SHIELD + Creierul Musculiței Google 🐝 taie firul hackerului cu Foarfeca Aurie ✂️!');
     } else if (actionCode === 'l2_fog_smoke') {
       state.darkSmoke = !state.darkSmoke;
       setMegaphone(state.darkSmoke
-        ? '🖤 Fum negru dens: lumina normală se oprește, dar Ochiul Infraroșu vede direct prin el!'
-        : '🌫️ Ceață albă groasă: mișcă mouse-ul pe desen ca să privești prin Lupa Magică Infraroșie!');
+        ? '🖤 Fum negru dens: lumina normală se oprește, dar Lupa SWIR și Ochii Magici T4/T5 văd direct prin el!'
+        : '🌫️ Ceață albă groasă: mișcă mouse-ul pe desen ca să privești prin Lupa Infraroșie SWIR + T4/T5!');
     } else if (actionCode === 'l2_swir') {
-      setMegaphone('🔦 Mișcă mouse-ul pe desen: în interiorul Lupei Infraroșii (SWIR) se văd clar luminile pistei!');
+      setMegaphone('🔦 Mișcă mouse-ul: Ochii Magici T4/T5 ai Musculiței Google văd becurile calde prin Lupa SWIR!');
     } else if (actionCode === 'l2_waves') {
-      setMegaphone('💧 Unda mică albastră se lovește de picături, dar unda lungă infraroșie pășește direct peste ele!');
+      setMegaphone('💧 Unda mică se lovește de picături, dar unda lungă SWIR pășește peste ele direct spre neuronii T4/T5!');
     } else if (actionCode === 'l3_slow') {
-      setMegaphone('🐢 Zbor încet (45 m/s): becurile de pe pământ se mută puțin între două poze (săgeți scurte).');
+      setMegaphone('🐢 Zbor încet (45 m/s): neuronii T4/T5 numără săgeți scurte, iar Inelul-Busolă E-PG cu 16 Luminițe stă pe RWY 09!');
     } else if (actionCode === 'l3_fast') {
-      setMegaphone('🚀 Zbor rapid (120 m/s): becurile fac un salt mare între două poze (săgeți galbene lungi).');
+      setMegaphone('🚀 Zbor rapid (120 m/s): neuronii T4/T5 numără săgeți galbene lungi fără niciun satelit GPS!');
     } else if (actionCode === 'l3_ruler') {
-      setMegaphone('📏 Rigla Galbenă măsoară distanța dintre Poza 1 și Poza 2 ca să afle viteza fără GPS!');
+      setMegaphone('📏 Rigla T4/T5 măsoară viteza, iar Busola în Inel E-PG cu 16 Luminițe 🐝 arată direcția spre Craiova RWY 09!');
     } else if (actionCode === 'l4_wind') {
-      setMegaphone('💨 Vântul împinge norul mov într-o parte — dacă ne luăm după nor, greșim drumul!');
+      setMegaphone('💨 Senzorul de Vânt PFNd simte rafala pe aripi/antene cu 1 secundă înainte să împingă avionul!');
     } else if (actionCode === 'l4_tilt') {
       state.tiltBurstUntil = state.tick + 65;
-      setMegaphone('📢 „Stai liniștit, doar s-a înclinat avionul timp de o secundă, nu ne-am mutat de pe pistă!”');
+      setMegaphone('📢 Stabilizatorul HS/VS (6 direcții): „Doar s-a înclinat avionul, nu ne-am mutat de pe pistă!”');
     } else if (actionCode === 'l4_separate') {
-      setMegaphone('🧠 AERO-SHIELD taie cu ❌ Norul Mov mincinos și citește doar ✅ Pământul Verde nemișcat!');
+      setMegaphone('🧠 Stabilizatorul HS/VS + Senzorul de Vânt PFNd taie ❌ Norul Mov și păstrează doar ✅ Pământul Verde!');
     } else if (actionCode === 'l5_honest') {
       state.cupLevel = 0.0;
-      setMegaphone('✅ Zbor cinstit: Cântarul Adevărului stă drept și Paharul de Minciuni este gol!');
+      setMegaphone('✅ Zbor cinstit: Inelul-Busolă E-PG cu 16 Luminițe 🐝 și Cântarul Adevărului țin direcția RWY 09!');
     } else if (actionCode === 'l5_big_lie') {
       state.cupLevel = 1.0;
-      setMegaphone('⚡ Minciuna mare (+500m) răstoarnă pe loc Cântarul Adevărului și pornește alarma!');
+      setMegaphone('⚡ Minciuna mare (+500m) răstoarnă Cântarul, dar Inelul E-PG cu 16 Luminițe ține minte drumul și cu ochii închiși!');
     } else if (actionCode === 'l5_slow_lie') {
       state.slowLieStartTick = state.tick;
       state.cupLevel = 0.05;
-      setMegaphone('🐍 Minciuna lentă picură în Paharul de Minciuni până îl umple în 3 secunde -> ALARMĂ!');
+      setMegaphone('🐍 Minciuna lentă umple Paharul de Minciuni (CUSUM) în 3 secunde — Inelul E-PG prinde hoțul -> ALARMĂ!');
     } else if (actionCode === 'l6_spotlight') {
       var ov = document.getElementById('aero-6yo-spotlight-overlay');
       if (ov) ov.classList.remove('hidden');
-      setMegaphone('✨ Privește ghidul simplu cu cele 3 zone ale simulatorului mare!');
+      setMegaphone('✨ Privește Săgețile Galbene pe Ecranul Mare și Harta Creierului Google Drosophila!');
     } else if (actionCode === 'l6_real_video') {
-      setMegaphone('🎬 Am pornit demonstrația cu Filmarea Reală din Cockpit pe simulatorul mare!');
+      setMegaphone('🎬 Am pornit demonstrația cu Filmarea Reală din Cockpit și Creierul Drosophila pe simulatorul mare!');
       if (typeof window.startRealFootageDemo === 'function') {
         window.startRealFootageDemo();
       } else {
@@ -1140,7 +1140,7 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
         if (realBtn && typeof realBtn.click === 'function') realBtn.click();
       }
     } else if (actionCode === 'l6_diploma') {
-      setMegaphone('🏅 Felicitări, Comandante! Ai absolvit Academia AERO-SHIELD cu nota 10!');
+      setMegaphone('🏅 Felicitări, Comandante! Stăpânești Harta Google Drosophila (T4/T5 → HS/VS → E-PG 16 LED → PFNd)!');
     }
   };
 
@@ -1185,6 +1185,63 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     ctx.restore();
   }
 
+  // Widget Vizual Animat: „🐝 Creierul Google Drosophila: Inelul-Busolă E-PG cu 16 Luminițe”
+  function drawDrosophilaEpgRingWidget(ctx, cx, cy, r, t, activeWedge, showTitle) {
+    ctx.save();
+    if (showTitle) {
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+      ctx.strokeStyle = 'rgba(250, 204, 21, 0.55)';
+      ctx.lineWidth = 1.5;
+      ctx.fillRect(cx - r - 28, cy - r - 24, (r + 28) * 2, (r + 22) * 2);
+      ctx.strokeRect(cx - r - 28, cy - r - 24, (r + 28) * 2, (r + 22) * 2);
+      ctx.fillStyle = '#fde047';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.fillText('🐝 E-PG 16 LUMINIȚE', cx - r - 20, cy - r - 10);
+    }
+
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+
+    var targetIdx = ((activeWedge % 16) + 16) % 16;
+    for (var i = 0; i < 16; i++) {
+      var ang = (i / 16) * Math.PI * 2 - Math.PI / 2;
+      var nx = cx + Math.cos(ang) * r;
+      var ny = cy + Math.sin(ang) * r;
+      var dist = Math.abs(i - targetIdx);
+      if (dist > 8) dist = 16 - dist;
+
+      var isPeak = (dist === 0);
+      var isNeighbor = (dist === 1);
+      ctx.beginPath();
+      ctx.arc(nx, ny, isPeak ? 5.2 : (isNeighbor ? 3.8 : 2.4), 0, Math.PI * 2);
+      if (isPeak) {
+        ctx.fillStyle = (t % 16 < 8) ? '#4ade80' : '#fde047';
+      } else if (isNeighbor) {
+        ctx.fillStyle = '#22c55e';
+      } else {
+        ctx.fillStyle = 'rgba(148, 163, 184, 0.38)';
+      }
+      ctx.fill();
+
+      if (isPeak) {
+        ctx.strokeStyle = '#fde047';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(nx, ny);
+        ctx.stroke();
+      }
+    }
+
+    ctx.fillStyle = '#4ade80';
+    ctx.font = 'bold 9.5px sans-serif';
+    ctx.fillText('RWY 09', cx - 18, cy + 4);
+    ctx.restore();
+  }
+
   function drawLesson1(ctx, w, h, t) {
     ctx.fillStyle = '#071024';
     ctx.fillRect(0, 0, w, h);
@@ -1196,7 +1253,7 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     ctx.strokeRect(450, 45, 120, 75);
     ctx.fillStyle = '#4ade80';
     ctx.font = 'bold 12px sans-serif';
-    ctx.fillText('🛬 PISTA ADEVĂRATĂ', 454, 38);
+    ctx.fillText('🛬 PISTA CRAIOVA RWY 09', 435, 38);
 
     for (var i = 0; i < 5; i++) {
       ctx.fillStyle = (t % 20 < 10) ? '#4ade80' : '#bbf7d0';
@@ -1252,8 +1309,9 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
       ctx.stroke();
 
       ctx.fillStyle = '#fde047';
-      ctx.font = 'bold 13px sans-serif';
-      ctx.fillText('🛡️ SCUT ACTIV: Minciuna GPS este tăiată!', 155, 60);
+      ctx.font = 'bold 12.5px sans-serif';
+      ctx.fillText('🛡️ AERO-SHIELD + Creierul Musculiței Google 🐝 taie firul hackerului!', 95, 25);
+      drawDrosophilaEpgRingWidget(ctx, 92, 198, 28, t, 4, true);
     } else {
       ctx.strokeStyle = '#38bdf8';
       ctx.lineWidth = 2.5;
@@ -1322,7 +1380,7 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
 
       ctx.fillStyle = '#4ade80';
       ctx.font = 'bold 13px sans-serif';
-      ctx.fillText('🔦 Ochiul Magic Infraroșu SWIR (Valuri Lungi) -> Pășește peste picături!', 24, 158);
+      ctx.fillText('🔦 Lupa SWIR + Ochii Magici T4/T5 ai Musculiței Google 🐝 -> Văd pista!', 24, 158);
 
       for (var d2 = 0; d2 < 6; d2++) {
         ctx.fillStyle = 'rgba(96,165,250,0.45)';
@@ -1341,8 +1399,8 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
       }
       ctx.stroke();
       ctx.fillStyle = '#fde047';
-      ctx.font = 'bold 14px sans-serif';
-      ctx.fillText('🛬 VEDE PISTA!', 475, 185);
+      ctx.font = 'bold 13px sans-serif';
+      ctx.fillText('🐝 T4/T5 VEDE PISTA!', 445, 185);
       return;
     }
 
@@ -1352,12 +1410,12 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     ctx.fillStyle = state.darkSmoke ? '#1c1917' : '#cbd5e1';
     ctx.fillRect(20, 20, w - 40, h - 40);
     ctx.fillStyle = state.darkSmoke ? '#a8a29e' : '#334155';
-    ctx.font = 'bold 16px sans-serif';
+    ctx.font = 'bold 15px sans-serif';
     ctx.fillText(
       state.darkSmoke
-        ? '🖤 FUM NEGRU — Plimbă Lupa Infraroșie cu mouse-ul!'
-        : '🌫️ CEAȚĂ ALBĂ — Plimbă Lupa Infraroșie cu mouse-ul!',
-      85,
+        ? '🖤 FUM NEGRU — Plimbă Lupa SWIR + Ochii T4/T5 cu mouse-ul!'
+        : '🌫️ CEAȚĂ ALBĂ — Plimbă Lupa SWIR + Ochii T4/T5 cu mouse-ul!',
+      75,
       55
     );
 
@@ -1400,7 +1458,7 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
 
     ctx.fillStyle = '#4ade80';
     ctx.font = 'bold 12px sans-serif';
-    ctx.fillText('🔦 LUPA SWIR', lensX - 42, lensY - 86);
+    ctx.fillText('🔦 SWIR + 🐝 OCHI T4/T5', lensX - 68, lensY - 86);
   }
 
   function drawLesson3(ctx, w, h, t) {
@@ -1410,28 +1468,28 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     var speedPx = (state.mode === 'l3_fast') ? 5.2 : 1.8;
     var stepDist = (state.mode === 'l3_fast') ? 78 : 28;
 
-    drawAirplaneIcon(ctx, 300, 42, 0, '#38bdf8');
+    drawAirplaneIcon(ctx, 230, 42, 0, '#38bdf8');
     ctx.fillStyle = 'rgba(56,189,248,0.14)';
     ctx.beginPath();
-    ctx.moveTo(300, 52);
-    ctx.lineTo(140, 215);
-    ctx.lineTo(460, 215);
+    ctx.moveTo(230, 52);
+    ctx.lineTo(90, 215);
+    ctx.lineTo(370, 215);
     ctx.closePath();
     ctx.fill();
 
     ctx.fillStyle = '#0f172a';
-    ctx.fillRect(20, 195, w - 40, 50);
+    ctx.fillRect(20, 195, 410, 50);
     ctx.strokeStyle = '#334155';
     ctx.lineWidth = 2;
-    ctx.strokeRect(20, 195, w - 40, 50);
+    ctx.strokeRect(20, 195, 410, 50);
 
     var offset = (t * speedPx) % 90;
-    for (var i = -1; i < 8; i++) {
-      var bx = 560 - (i * 90 + offset);
-      if (bx < 30 || bx > 570) continue;
+    for (var i = -1; i < 6; i++) {
+      var bx = 410 - (i * 80 + offset);
+      if (bx < 30 || bx > 415) continue;
 
       var prevX = bx + stepDist;
-      if (prevX < 565) {
+      if (prevX < 420) {
         ctx.fillStyle = 'rgba(148,163,184,0.35)';
         ctx.beginPath();
         ctx.arc(prevX, 195, 7, 0, Math.PI * 2);
@@ -1461,21 +1519,24 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
 
     if (state.mode === 'l3_ruler') {
       ctx.fillStyle = 'rgba(250,204,21,0.92)';
-      ctx.fillRect(205, 112, 190, 28);
+      ctx.fillRect(115, 112, 225, 28);
       ctx.strokeStyle = '#713f12';
       ctx.lineWidth = 2;
-      ctx.strokeRect(205, 112, 190, 28);
+      ctx.strokeRect(115, 112, 225, 28);
       ctx.fillStyle = '#020617';
-      ctx.font = 'bold 12px sans-serif';
-      ctx.fillText('📏 RIGLA: Δu = 52 pixeli -> 85 m/s!', 212, 130);
+      ctx.font = 'bold 11.5px sans-serif';
+      ctx.fillText('📏 T4/T5 EMD: Δu = 52 px -> 85 m/s!', 122, 130);
     }
 
+    // Draw the 16-LED E-PG Ring Attractor Compass on the right side of the canvas
+    drawDrosophilaEpgRingWidget(ctx, 512, 128, 46, t, 4, true);
+
     ctx.fillStyle = '#f8fafc';
-    ctx.font = 'bold 14px sans-serif';
+    ctx.font = 'bold 13px sans-serif';
     var label = (state.mode === 'l3_fast')
-      ? '🚀 VITEZĂ MARE (120 m/s): Săgeți Galbene LUNGI!'
-      : '🐢 VITEZĂ MICĂ (45 m/s): Săgeți Galbene SCURTE!';
-    ctx.fillText(label, 125, 240);
+      ? '🚀 T4/T5 VITEZĂ MARE (120 m/s) + Inel E-PG 16 Luminițe'
+      : '🐢 T4/T5 VITEZĂ MICĂ (45 m/s) + Inel E-PG 16 Luminițe';
+    ctx.fillText(label, 35, 240);
   }
 
   function drawLesson4(ctx, w, h, t) {
@@ -1485,7 +1546,10 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     var isTilting = (t < state.tiltBurstUntil);
     var tiltAngle = isTilting ? Math.sin(t * 0.45) * 0.28 : 0.0;
 
-    drawAirplaneIcon(ctx, 300, 38, tiltAngle, '#38bdf8');
+    drawAirplaneIcon(ctx, 260, 38, tiltAngle, '#38bdf8');
+    ctx.fillStyle = '#fde047';
+    ctx.font = 'bold 11.5px sans-serif';
+    ctx.fillText('🐝 Stabilizator HS/VS (6 direcții) + Senzor Vânt PFNd', 310, 42);
 
     var cloudShift = (t * 2.4) % 80;
     ctx.fillStyle = 'rgba(168, 85, 247, 0.28)';
@@ -1495,8 +1559,8 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     ctx.strokeRect(60, 82, w - 120, 62);
 
     ctx.fillStyle = '#e9d5ff';
-    ctx.font = 'bold 12.5px sans-serif';
-    ctx.fillText('☁️ STRATUL 1: NORUL MOV ÎMPINS DE VÂNT 💨', 135, 102);
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText('☁️ STRATUL 1: NORUL MOV ÎMPINS DE VÂNT 💨 (Simțit de PFNd cu 1s înainte!)', 82, 102);
 
     for (var c = 0; c < 5; c++) {
       var cx = 95 + ((c * 95 + cloudShift) % 440);
@@ -1521,8 +1585,8 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     ctx.strokeRect(40, 168, w - 80, 68);
 
     ctx.fillStyle = '#bbf7d0';
-    ctx.font = 'bold 12.5px sans-serif';
-    ctx.fillText('🌍 STRATUL 2: PĂMÂNTUL VERDE FIX ✅ (Adevărul!)', 135, 190);
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText('🌍 STRATUL 2: PĂMÂNTUL VERDE FIX ✅ (Derotat de neuronii HS/VS!)', 95, 190);
 
     var groundShift = (t * 1.8) % 90;
     for (var g = 0; g < 5; g++) {
@@ -1539,10 +1603,10 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
 
     if (isTilting) {
       ctx.fillStyle = 'rgba(250, 204, 21, 0.96)';
-      ctx.fillRect(65, 48, 470, 30);
+      ctx.fillRect(55, 48, 490, 30);
       ctx.fillStyle = '#020617';
-      ctx.font = 'bold 12.5px sans-serif';
-      ctx.fillText('📢 „Doar s-a înclinat avionul, nu am sărit de pe pistă!”', 120, 68);
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText('📢 HS/VS: „Doar s-a înclinat avionul în 6 direcții, nu am sărit de pe pistă!”', 72, 68);
     }
   }
 
@@ -1557,13 +1621,13 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
 
     var isAlarm = (state.mode === 'l5_big_lie') || (state.cupLevel >= 0.99);
 
-    var scaleCx = 195;
+    var scaleCx = 145;
     var scaleCy = 135;
     var beamTilt = (state.mode === 'l5_big_lie') ? 0.42 : (state.mode === 'l5_slow_lie' ? 0.08 : 0.0);
 
     ctx.fillStyle = '#e2e8f0';
-    ctx.font = 'bold 13px sans-serif';
-    ctx.fillText('⚖️ 1. CÂNTARUL ADEVĂRULUI', 95, 32);
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText('⚖️ 1. CÂNTARUL ADEVĂRULUI', 52, 32);
 
     ctx.fillStyle = '#64748b';
     ctx.fillRect(scaleCx - 6, scaleCy, 12, 85);
@@ -1575,30 +1639,33 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     ctx.strokeStyle = isAlarm ? '#f87171' : '#fde047';
     ctx.lineWidth = 5;
     ctx.beginPath();
-    ctx.moveTo(-95, 0);
-    ctx.lineTo(95, 0);
+    ctx.moveTo(-80, 0);
+    ctx.lineTo(80, 0);
     ctx.stroke();
 
     ctx.fillStyle = '#22c55e';
-    ctx.fillRect(-125, 22, 65, 24);
+    ctx.fillRect(-108, 22, 62, 24);
     ctx.fillStyle = '#020617';
-    ctx.font = 'bold 11px sans-serif';
-    ctx.fillText('👀 Ochi+IMU', -122, 38);
+    ctx.font = 'bold 10.5px sans-serif';
+    ctx.fillText('🐝 E-PG+IMU', -105, 38);
 
     ctx.fillStyle = isAlarm ? '#ef4444' : '#38bdf8';
-    ctx.fillRect(60, 22, 65, 24);
+    ctx.fillRect(46, 22, 62, 24);
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(state.mode === 'l5_big_lie' ? '⚡ +500m!' : '📡 GPS', 66, 38);
+    ctx.fillText(state.mode === 'l5_big_lie' ? '⚡ +500m!' : '📡 GPS', 52, 38);
     ctx.restore();
 
-    var cupX = 430;
+    // 2. Center Widget: 16-LED E-PG Ring Attractor Compass keeping RWY 09 memory
+    drawDrosophilaEpgRingWidget(ctx, 315, 132, 42, t, 4, true);
+
+    var cupX = 455;
     var cupY = 68;
-    var cupW = 96;
+    var cupW = 92;
     var cupH = 135;
 
     ctx.fillStyle = '#e2e8f0';
-    ctx.font = 'bold 13px sans-serif';
-    ctx.fillText('🥛 2. PAHARUL DE MINCIUNI', 385, 32);
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText('🥛 3. PAHARUL CUSUM', 435, 32);
 
     if (state.mode === 'l5_slow_lie' && state.cupLevel < 1.0) {
       var dropY = 42 + ((t * 4) % 45);
@@ -1628,12 +1695,12 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
 
     if (isAlarm) {
       ctx.fillStyle = '#ef4444';
-      ctx.font = 'bold 15px sans-serif';
-      ctx.fillText('🚨 ALARMĂ! MINCIUNA GPS A FOST PRINSĂ ȘI TĂIATĂ! ✂️', 95, 246);
+      ctx.font = 'bold 13.5px sans-serif';
+      ctx.fillText('🚨 ALARMĂ! Minciuna e tăiată ✂️ — Inelul E-PG ține minte RWY 09!', 75, 246);
     } else {
       ctx.fillStyle = '#4ade80';
-      ctx.font = 'bold 14px sans-serif';
-      ctx.fillText('✅ Zbor cinstit (Nivel Pahar: ' + Math.round(state.cupLevel * 100) + '%)', 165, 246);
+      ctx.font = 'bold 13.5px sans-serif';
+      ctx.fillText('✅ Echilibru + Inel E-PG 16 Luminițe (Pahar CUSUM: ' + Math.round(state.cupLevel * 100) + '%)', 105, 246);
     }
   }
 
@@ -1643,42 +1710,66 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
 
     ctx.strokeStyle = '#fde047';
     ctx.lineWidth = 3;
-    ctx.strokeRect(20, 18, w - 40, h - 36);
+    ctx.strokeRect(16, 14, w - 32, h - 28);
 
     ctx.fillStyle = '#fde047';
-    ctx.font = 'bold 17px sans-serif';
-    ctx.fillText('🏅 DIPLOMĂ DE COMANDANT AERO-SHIELD V2.0 👩‍✈️👨‍✈️', 88, 52);
+    ctx.font = 'bold 14.5px sans-serif';
+    ctx.fillText('🏆 HARTA CREIERULUI GOOGLE DROSOPHILA 🐝 + AERO-SHIELD V2.0', 56, 38);
+
+    // Top pipeline: T4/T5 -> HS/VS -> E-PG 16 LED -> PFNd Vânt
+    var stages = [
+      { x: 32, label: '👀 1. Ochi T4/T5', sub: 'Numără becurile' },
+      { x: 162, label: '🔄 2. HS/VS 6-DOF', sub: 'Scade înclinarea' },
+      { x: 292, label: '🧭 3. Inel E-PG (16)', sub: 'Busola cu memorie' },
+      { x: 422, label: '💨 4. Senzor PFNd', sub: 'Simte vântul (-1s)' }
+    ];
+    for (var s = 0; s < stages.length; s++) {
+      var st = stages[s];
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
+      ctx.strokeStyle = '#4ade80';
+      ctx.lineWidth = 1.8;
+      ctx.fillRect(st.x, 48, 118, 44);
+      ctx.strokeRect(st.x, 48, 118, 44);
+      ctx.fillStyle = '#fde047';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText(st.label, st.x + 6, 66);
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '10px sans-serif';
+      ctx.fillText(st.sub, st.x + 6, 82);
+    }
 
     var boxes = [
-      { x: 45, title: '1. PARBRIZUL MAGIC', sub: 'SWIR + Flux Optic' },
-      { x: 225, title: '2. CURSA 4 AVIOANE', sub: 'Verde vs. Hacker Roșu' },
-      { x: 405, title: '3. TELECOMANDA', sub: 'Cântarul + Film Real' }
+      { x: 32, title: '1. PARBRIZUL MAGIC', sub: 'SWIR + Neuronii T4/T5' },
+      { x: 192, title: '2. CURSA 4 AVIOANE', sub: 'Drosophila vs. Hacker' },
+      { x: 352, title: '3. TELECOMANDA', sub: 'Cântar + Pahar CUSUM' }
     ];
 
-    var bounce = Math.sin(t * 0.12) * 6;
+    var bounce = Math.sin(t * 0.12) * 5;
     for (var i = 0; i < boxes.length; i++) {
       var b = boxes[i];
       ctx.fillStyle = 'rgba(30, 41, 59, 0.95)';
       ctx.strokeStyle = '#38bdf8';
       ctx.lineWidth = 2;
-      ctx.fillRect(b.x, 86, 150, 74);
-      ctx.strokeRect(b.x, 86, 150, 74);
+      ctx.fillRect(b.x, 108, 146, 66);
+      ctx.strokeRect(b.x, 108, 146, 66);
 
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 12px sans-serif';
-      ctx.fillText(b.title, b.x + 10, 114);
+      ctx.font = 'bold 11.5px sans-serif';
+      ctx.fillText(b.title, b.x + 8, 132);
       ctx.fillStyle = '#7dd3fc';
-      ctx.font = '11.5px sans-serif';
-      ctx.fillText(b.sub, b.x + 10, 137);
+      ctx.font = '10.5px sans-serif';
+      ctx.fillText(b.sub, b.x + 8, 154);
 
       ctx.fillStyle = '#fde047';
-      ctx.font = 'bold 24px sans-serif';
-      ctx.fillText('⬇️', b.x + 62, 198 + bounce);
+      ctx.font = 'bold 20px sans-serif';
+      ctx.fillText('⬇️', b.x + 58, 198 + bounce);
     }
 
+    drawDrosophilaEpgRingWidget(ctx, 536, 152, 28, t, Math.floor(t / 25) % 16, false);
+
     ctx.fillStyle = '#4ade80';
-    ctx.font = 'bold 13px sans-serif';
-    ctx.fillText('👇 Privește mai jos pe Ecranul Mare al Simulatorului! 👇', 120, 232);
+    ctx.font = 'bold 12.5px sans-serif';
+    ctx.fillText('👇 Privește mai jos pe Ecranul Mare al Simulatorului! 👇', 115, 234);
   }
 
   function renderLoop() {
@@ -1740,12 +1831,17 @@ mod tests {
         assert!(html.contains("width=\"760\""));
         assert!(html.contains("height=\"340\""));
         assert!(html.contains("id=\"lessonActionButtons\""));
-        assert!(html.contains("Lecția 1: „Problema: Ceața și Hackerul Rău 👾”"));
-        assert!(html.contains("Lecția 2: „Ochiul Magic care Vede prin Ceață și Fum 👀”"));
-        assert!(html.contains("Lecția 3: „Cum aflăm viteza fără GPS? (Numărăm becurile de pe jos!) 💡”"));
-        assert!(html.contains("Lecția 4: „Capcana Norului Împins de Vânt și a Înclinării Avionului! 💨”"));
-        assert!(html.contains("Lecția 5: „Cântarul Adevărului: Cum prindem orice minciună? ⚖️”"));
-        assert!(html.contains("Lecția 6: „Acum ești Comandant! Testează pe Simulatorul Mare și pe Filmarea Reală!”"));
+        assert!(html.contains("Lecția 1:"));
+        assert!(html.contains("Lecția 2:"));
+        assert!(html.contains("Lecția 3:"));
+        assert!(html.contains("Lecția 4:"));
+        assert!(html.contains("Lecția 5:"));
+        assert!(html.contains("Lecția 6:"));
+        assert!(html.contains("Drosophila"));
+        assert!(html.contains("T4/T5"));
+        assert!(html.contains("E-PG"));
+        assert!(html.contains("PFNd"));
+        assert!(html.contains("drawDrosophilaEpgRingWidget"));
         assert!(html.contains("⬅️ Lecția Anterioară"));
         assert!(html.contains("➡️ Lecția Următoare"));
     }
