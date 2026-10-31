@@ -13,6 +13,7 @@ pub mod rt_loop_60hz;
 pub mod sim_commands;
 pub mod ui_framework_rust;
 pub mod ui_lessons_6yo;
+pub mod ui_pitch_5min;
 pub mod ui_visual_engine;
 pub mod ws_telemetry;
 

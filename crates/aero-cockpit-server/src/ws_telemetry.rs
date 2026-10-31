@@ -32,6 +32,7 @@ use crate::ui_framework_rust::{
     get_all_6_interactive_lessons, render_aero_shield_app_maud_page, InteractiveLesson6Yo,
 };
 use crate::ui_lessons_6yo::{render_lessons_6yo_component, render_lessons_6yo_standalone_page};
+use crate::ui_pitch_5min::render_pitch_5min_page;
 use crate::ui_visual_engine::{
     serve_visual_canvases_ssr_fragment, serve_visual_engine_js, serve_visual_engine_spec_json,
 };
@@ -83,6 +84,8 @@ pub fn build_cockpit_router(state: CockpitServerState) -> Router {
     Router::new()
         .route("/", get(serve_index_html))
         .route("/index.html", get(serve_index_html))
+        .route("/prezentare", get(serve_pitch_5min_html))
+        .route("/5min", get(serve_pitch_5min_html))
         .route("/pagina/:page_num", get(serve_concept_page_html))
         .route("/ws/telemetry", get(ws_telemetry_handler))
         .route("/api/command", post(post_sim_command_handler))
@@ -121,6 +124,10 @@ async fn get_lessons_6yo_html_handler() -> Html<String> {
 
 async fn get_lessons_6yo_standalone_handler() -> Html<String> {
     Html(render_lessons_6yo_standalone_page())
+}
+
+async fn serve_pitch_5min_html() -> Html<String> {
+    Html(render_pitch_5min_page().into_string())
 }
 
 async fn get_flightgear_tests_handler() -> Json<FlightGearTestSuiteReport> {

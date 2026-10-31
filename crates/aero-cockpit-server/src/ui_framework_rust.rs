@@ -193,6 +193,13 @@ pub fn render_header_bar(current_tick: u64, gpu_device: &str, active_page: u8) -
 
                 div class="lang-and-status" {
                     a
+                        id="btn-open-pitch-5min"
+                        href="/prezentare"
+                        style="background:#00FF9D; color:#070B14; font-weight:900; border:2px solid #FFFFFF; padding:8px 16px; border-radius:10px; text-decoration:none; font-size:14px; display:inline-flex; align-items:center; gap:6px;"
+                    {
+                        "🎤 MOD PREZENTARE SIMPLĂ (5 MINUTE)"
+                    }
+                    a
                         id="btn-download-ghid-pdf"
                         href="/ghid-pdf"
                         target="_blank"
