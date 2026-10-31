@@ -225,6 +225,7 @@ pub struct InteractiveLesson6Yo {
     pub visual_rule_ro: &'static str,
     pub science_secret_ro: &'static str,
     pub default_mode: &'static str,
+    pub fg_video_url: &'static str,
     pub action_buttons: Vec<LessonActionButton>,
 }
 
@@ -246,6 +247,7 @@ impl HtmlComponent for InteractiveLesson6Yo {
             .attr("data-title", self.title)
             .attr("data-summary", self.kid_story_ro)
             .attr("data-default-mode", self.default_mode)
+            .attr("data-fg-video-url", self.fg_video_url)
             .attr("role", "group")
             .attr("aria-label", self.title);
 
@@ -271,10 +273,11 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             badge_emoji: "🎈",
             tab_label: "Lecția 1 🎈",
             title: "🎈 Lecția 1: „Problema: Ceața, Hackerul Rău 👾 și Musculița Google 🐝”",
-            kid_story_ro: "Ceața albă ascunde pista, iar Hackerul trage avionul în pădure — dar 🛡️ AERO-SHIELD + Creierul Musculiței Google (Drosophila 🐝) taie firul hackerului cu Foarfeca Aurie ✂️!",
-            visual_rule_ro: "🔴 Linia Roșie = Minciuna Hackerului | 🟢 Raza Verde = Drumul Adevărat AERO-SHIELD + Drosophila 🐝",
+            kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «🛡️ Pornește AERO-SHIELD + Musculița Google 🐝» de mai jos ca să vezi în zborul sintetic FlightGear cum tăiem firul hackerului cu Foarfeca Aurie ✂️!",
+            visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «🛡️ Pornește AERO-SHIELD + Musculița Google 🐝» pentru rezolvarea FlightGear!",
             science_secret_ro: "GNSS Spoofing Rejection + Google Research Drosophila Connectome Bio-Navigation",
             default_mode: "l1_fog",
+            fg_video_url: "/real_videos/fg_lesson_1.mp4",
             action_buttons: vec![
                 LessonActionButton {
                     id: "btn-l1-fog",
@@ -295,8 +298,8 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
                 LessonActionButton {
                     id: "btn-l1-shield",
                     emoji: "🛡️",
-                    label: "🛡️ AERO-SHIELD + Musculița 🐝",
-                    subtitle: "Creierul Musculiței Google + Foarfeca Aurie ✂️ taie minciuna!",
+                    label: "🟢 BUTONUL VERDE: 🛡️ Pornește AERO-SHIELD + Musculița Google 🐝",
+                    subtitle: "Rezolvă lecția cu FlightGear + Foarfeca Aurie ✂️!",
                     color_theme: "green",
                     action_code: "l1_shield",
                 },
@@ -308,10 +311,11 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             badge_emoji: "🔦",
             tab_label: "Lecția 2 🔦",
             title: "🔦 Lecția 2: „Ochii Magici T4/T5 ai Musculiței Google văd prin Ceață 👀”",
-            kid_story_ro: "Mișcă mouse-ul pe desen: Lupa Infraroșie (SWIR) și Ochii Magici T4/T5 ai Musculiței Google (Drosophila) văd becurile calde ale pistei direct prin ceață și fum!",
-            visual_rule_ro: "🖱️ Plimbă Lupa Infraroșie SWIR + Neuronii T4/T5 peste ceață ca să descoperi pista!",
+            kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «🔦 Aprinde Lupa SWIR + Ochii T4/T5 🐝» de mai jos ca să vezi în zborul sintetic FlightGear cum vedem becurile pistei direct prin ceață și fum!",
+            visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «🔦 Aprinde Lupa SWIR + Ochii T4/T5 🐝» și plimbă mouse-ul pe ecran!",
             science_secret_ro: "SWIR (1.55 μm) Mie Penetration + Drosophila T4 (ON) / T5 (OFF) Lobula Plate Neurons",
             default_mode: "l2_swir",
+            fg_video_url: "/real_videos/fg_lesson_2.mp4",
             action_buttons: vec![
                 LessonActionButton {
                     id: "btn-l2-fog-smoke",
@@ -324,8 +328,8 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
                 LessonActionButton {
                     id: "btn-l2-swir",
                     emoji: "🔦",
-                    label: "🔦 Lupa SWIR + Ochii T4/T5 🐝",
-                    subtitle: "Activează Lupa Magică SWIR și neuronii T4/T5 (mișcă mouse-ul!)",
+                    label: "🟢 BUTONUL VERDE: 🔦 Aprinde Lupa SWIR + Ochii T4/T5 🐝",
+                    subtitle: "Activează Lupa Magică SWIR și neuronii T4/T5 peste zborul FlightGear!",
                     color_theme: "green",
                     action_code: "l2_swir",
                 },
@@ -345,10 +349,11 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             badge_emoji: "🚂",
             tab_label: "Lecția 3 🚂",
             title: "🚂 Lecția 3: „Cum numără neuronii T4/T5 becurile + Inelul-Busolă E-PG cu 16 Luminițe 💡”",
-            kid_story_ro: "Neuronii T4/T5 măsoară cu Rigla Galbenă 📏 cât s-au mutat becurile de pe jos, iar Busola în Inel E-PG cu 16 Luminițe 🐝 arată mereu drumul spre pista Craiova RWY 09!",
-            visual_rule_ro: "🐢 Săgeți Scurte = 45 m/s | 🚀 Săgeți Lungi = 120 m/s | 🧭 Inelul E-PG cu 16 LED-uri = Busola vie",
+            kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «📏 Rigla T4/T5 + Inelul E-PG 🐝» de mai jos ca să măsori viteza pe zborul sintetic FlightGear și să aprinzi Busola în Inel cu 16 Luminițe spre Craiova RWY 09!",
+            visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «📏 Rigla T4/T5 + Inelul E-PG 🐝» pentru viteza fără GPS + Busola E-PG!",
             science_secret_ro: "Drosophila T4/T5 Elementary Motion Detectors (EMD) + 16-Wedge E-PG Ring Attractor",
             default_mode: "l3_slow",
+            fg_video_url: "/real_videos/fg_lesson_3.mp4",
             action_buttons: vec![
                 LessonActionButton {
                     id: "btn-l3-slow",
@@ -369,8 +374,8 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
                 LessonActionButton {
                     id: "btn-l3-ruler",
                     emoji: "📏",
-                    label: "📏 Rigla T4/T5 + Inelul E-PG 🐝",
-                    subtitle: "Măsoară viteza cu Rigla Galbenă și aprinde Inelul-Busolă cu 16 Luminițe!",
+                    label: "🟢 BUTONUL VERDE: 📏 Rigla T4/T5 + Inelul E-PG 🐝",
+                    subtitle: "Rezolvă lecția pe FlightGear cu Rigla Galbenă și Inelul-Busolă cu 16 Luminițe!",
                     color_theme: "green",
                     action_code: "l3_ruler",
                 },
@@ -382,10 +387,11 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             badge_emoji: "☁️",
             tab_label: "Lecția 4 ☁️",
             title: "☁️ Lecția 4: „Stabilizatorul HS/VS și Senzorul de Vânt PFNd al Musculiței! 💨”",
-            kid_story_ro: "Stabilizatorul HS/VS scade virajele în 6 direcții, iar Senzorul de Vânt PFNd simte rafala pe aripi cu 1 secundă înainte și taie ❌ Norul Mov de ✅ Pământul Verde!",
-            visual_rule_ro: "📢 HS/VS + PFNd: „Stai liniștit, doar s-a înclinat avionul în vânt, nu am sărit de pe pistă!”",
+            kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «🧠 HS/VS + PFNd: Separă Norul» de mai jos ca să vezi pe zborul FlightGear cum Stabilizatorul HS/VS și Senzorul PFNd taie ❌ Norul Mov de ✅ Pământul Verde!",
+            visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «🧠 HS/VS + PFNd: Separă Norul» pentru stabilizarea zborului în vânt!",
             science_secret_ro: "Lobula Plate HS/VS 6-DOF Derotation + Noduli PFNd Wind-Shear Feedforward + RANSAC",
             default_mode: "l4_separate",
+            fg_video_url: "/real_videos/fg_lesson_4.mp4",
             action_buttons: vec![
                 LessonActionButton {
                     id: "btn-l4-wind",
@@ -406,8 +412,8 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
                 LessonActionButton {
                     id: "btn-l4-separate",
                     emoji: "🧠",
-                    label: "🧠 HS/VS + PFNd: Separă Norul",
-                    subtitle: "Taie norul mincinos (❌) și citește doar solul verde fix (✅)!",
+                    label: "🟢 BUTONUL VERDE: 🧠 HS/VS + PFNd: Separă Norul",
+                    subtitle: "Taie norul mincinos (❌) și citește doar solul verde fix (✅) pe FlightGear!",
                     color_theme: "green",
                     action_code: "l4_separate",
                 },
@@ -419,16 +425,17 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             badge_emoji: "⚖️",
             tab_label: "Lecția 5 ⚖️",
             title: "⚖️ Lecția 5: „Cântarul Adevărului + Inelul-Busolă E-PG cu 16 Luminițe ⚖️”",
-            kid_story_ro: "Inelul-Busolă E-PG cu 16 Luminițe ține minte drumul spre pistă chiar și cu ochii închiși, răstoarnă Cântarul ⚖️ la minciuna mare și umple Paharul de Minciuni (CUSUM) în 3 secunde!",
-            visual_rule_ro: "🚨 Inelul E-PG + Cântarul Chi-Pătrat + Paharul CUSUM prind orice minciună GPS!",
+            kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «✅ Zbor Cinstit + Inel E-PG» (sau testează minciunile) ca să vezi pe zborul FlightGear cum Inelul E-PG cu 16 Luminițe, Cântarul ⚖️ și Paharul CUSUM prind hackerul!",
+            visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «✅ Zbor Cinstit + Inel E-PG» ca să vezi echilibrul pe zborul FlightGear!",
             science_secret_ro: "E-PG Ring Attractor Dark-Memory + Mahalanobis Chi-Square Gate (χ²) + Page-Hinkley CUSUM",
             default_mode: "l5_honest",
+            fg_video_url: "/real_videos/fg_lesson_5.mp4",
             action_buttons: vec![
                 LessonActionButton {
                     id: "btn-l5-honest",
                     emoji: "✅",
-                    label: "✅ Zbor Cinstit + Inel E-PG",
-                    subtitle: "Inelul E-PG cu 16 luminițe și Cântarul arată RWY 09 în echilibru",
+                    label: "🟢 BUTONUL VERDE: ✅ Zbor Cinstit + Inel E-PG",
+                    subtitle: "Inelul E-PG cu 16 luminițe și Cântarul arată RWY 09 în echilibru pe FlightGear",
                     color_theme: "green",
                     action_code: "l5_honest",
                 },
@@ -456,10 +463,11 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             badge_emoji: "🏆",
             tab_label: "Lecția 6 🏆",
             title: "🏆 Lecția 6: „Acum ești Comandantul Avionului Bio-Inspirat Drosophila + AERO-SHIELD!”",
-            kid_story_ro: "Felicitări, Comandante! Ai stăpânit harta completă a Creierului Google Drosophila (T4/T5 → HS/VS → Inelul E-PG cu 16 Luminițe → PFNd Vânt) și Scutul AERO-SHIELD!",
-            visual_rule_ro: "✨ Harta Creierului Google Drosophila + Cele 3 zone mari pe Ecranul Principal al Simulatorului!",
+            kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «🏅 Harta Drosophila & Diplomă» de mai jos ca să vezi pe zborul FlightGear harta completă a Creierului Google Drosophila (T4/T5 → HS/VS → E-PG 16 Luminițe → PFNd)!",
+            visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «🏅 Harta Drosophila & Diplomă» pentru absolvirea pe FlightGear!",
             science_secret_ro: "Google Research HHMI Janelia Drosophila Connectome (T4/T5 -> HS/VS -> E-PG -> PFNd) + ESKF",
             default_mode: "l6_commander",
+            fg_video_url: "/real_videos/fg_lesson_6.mp4",
             action_buttons: vec![
                 LessonActionButton {
                     id: "btn-l6-spotlight",
@@ -480,7 +488,7 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
                 LessonActionButton {
                     id: "btn-l6-diploma",
                     emoji: "🏅",
-                    label: "🏅 Harta Drosophila & Diplomă",
+                    label: "🟢 BUTONUL VERDE: 🏅 Harta Drosophila & Diplomă",
                     subtitle: "Vezi harta completă T4/T5 → HS/VS → E-PG → PFNd și Diploma de Comandant!",
                     color_theme: "green",
                     action_code: "l6_diploma",
@@ -559,23 +567,74 @@ impl HtmlComponent for Lessons6YoDeck {
             text: first_title
         );
 
-        // 3. Large centered interactive Canvas (760x340)
+        let first_fg_video = self
+            .lessons
+            .first()
+            .map(|l| l.fg_video_url)
+            .unwrap_or("/real_videos/fg_lesson_1.mp4");
+
+        // 3. Large centered 760x340 FlightGear Synthetic Flight Video + Interactive HUD Canvas Stage
+        let fg_video_el = rsx_elem!(
+            "video",
+            [
+                ("id", "fgLessonVideoPlayer"),
+                ("src", first_fg_video),
+                ("autoplay", "autoplay"),
+                ("loop", "loop"),
+                ("muted", "muted"),
+                ("playsinline", "playsinline"),
+                ("controls", "controls"),
+                ("class", "fg-lesson-video-player"),
+                ("aria-label", "Videoclip Zbor Sintetic FlightGear pentru lecția curentă")
+            ],
+            text: "Browserul tău nu suportă HTML5 Video."
+        );
+
         let canvas_el = rsx_elem!(
             "canvas",
             [
                 ("id", "lessonInteractiveCanvas"),
                 ("width", "760"),
                 ("height", "340"),
-                ("class", "lesson-interactive-canvas"),
+                ("class", "lesson-interactive-canvas hud-overlay-active"),
                 ("aria-label", "Desen interactiv 760x340 pentru conceptul curent")
             ],
             text: "Browserul tău nu suportă HTML5 Canvas."
         );
 
+        let mode_badge_btn = rsx_elem!(
+            "button",
+            [
+                ("type", "button"),
+                ("id", "btnToggleFgVideoHud"),
+                ("class", "fg-video-hud-toggle-pill"),
+                ("onclick", "window.cycleFgVideoDisplayMode()")
+            ],
+            text: "🎬 Zbor Sintetic FlightGear + HUD Interactiv (Schimbă Vederea)"
+        );
+
+        let stage_inner = rsx_elem!(
+            "div",
+            [("id", "fgLessonStageBox"), ("class", "lesson-stage-760x340-box")],
+            [fg_video_el, canvas_el, mode_badge_btn]
+        );
+
         let canvas_wrap = rsx_elem!(
             "div",
             [("class", "lesson-canvas-center-stage")],
-            [canvas_el]
+            [stage_inner]
+        );
+
+        // Dedicated Emerald-Green Hero Solve Button right below the FlightGear video/canvas stage
+        let green_hero_solve_btn = rsx_elem!(
+            "button",
+            [
+                ("type", "button"),
+                ("id", "btnSolveWithFlightGearGreen"),
+                ("class", "kid-action-btn theme-green solve-fg-green-hero-btn"),
+                ("onclick", "window.triggerGreenFlightGearSolution()")
+            ],
+            text: "🟢 BUTONUL VERDE (REZOLVĂ LECȚIA CU FLIGHTGEAR): 🛡️ Pornește AERO-SHIELD + Musculița Google 🐝"
         );
 
         // 4. The 3 large action buttons right below the canvas (#lessonActionButtons)
@@ -636,6 +695,7 @@ impl HtmlComponent for Lessons6YoDeck {
                 stepper_tabs,
                 current_title_el,
                 canvas_wrap,
+                green_hero_solve_btn,
                 action_buttons_host,
                 megaphone_banner,
                 bottom_nav
@@ -828,17 +888,74 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   display: flex;
   justify-content: center;
 }
-.lesson-interactive-canvas {
+.lesson-stage-760x340-box {
+  position: relative;
   width: 100%;
   max-width: 760px;
-  height: auto;
+  aspect-ratio: 760 / 340;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #040814;
+  border: 2px solid rgba(56, 189, 248, 0.45);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+}
+.fg-lesson-video-player {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 1;
+  background: #020617;
+}
+.fg-lesson-video-player.hidden-video {
+  display: none;
+}
+.lesson-interactive-canvas {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 760px;
+  height: 100%;
   aspect-ratio: 760 / 340;
   display: block;
   border-radius: 16px;
-  background: #040814;
-  border: 2px solid rgba(56, 189, 248, 0.38);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  background: transparent;
   cursor: crosshair;
+}
+.lesson-interactive-canvas.hud-overlay-active {
+  background: transparent;
+  pointer-events: auto;
+}
+.lesson-interactive-canvas.hidden-canvas {
+  display: none;
+}
+.fg-video-hud-toggle-pill {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 4;
+  background: rgba(15, 23, 42, 0.88);
+  color: #fde047;
+  border: 1.5px solid rgba(250, 204, 21, 0.65);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+.fg-video-hud-toggle-pill:hover {
+  background: rgba(30, 41, 59, 0.96);
+  border-color: #fde047;
+}
+.solve-fg-green-hero-btn {
+  width: 100%;
+  max-width: 760px;
+  font-size: 18px !important;
+  padding: 16px 24px !important;
+  letter-spacing: 0.2px;
 }
 .lesson-action-buttons-host {
   width: 100%;
@@ -861,8 +978,8 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   justify-content: center;
   padding: 14px 22px;
   border-radius: 14px;
-  border: 2px solid rgba(148, 163, 184, 0.4);
-  background: rgba(30, 41, 59, 0.9);
+  border: 2px solid rgba(148, 163, 184, 0.55);
+  background: rgba(30, 41, 59, 0.92);
   color: #ffffff;
   font-size: 17px;
   font-weight: 800;
@@ -874,28 +991,40 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   filter: brightness(1.12);
 }
 .kid-action-btn.active-mode {
-  box-shadow: 0 0 0 3px #fde047, 0 8px 20px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 0 0 3px #fde047, 0 8px 20px rgba(0, 0, 0, 0.5) !important;
   transform: translateY(-1px);
 }
-.kid-action-btn.theme-blue {
-  background: linear-gradient(135deg, rgba(3, 105, 161, 0.7), rgba(30, 58, 138, 0.8));
-  border-color: #38bdf8;
+.kid-action-btn.theme-blue,
+.kid-action-btn.theme-cyan {
+  background: linear-gradient(135deg, #0284c7, #1d4ed8) !important;
+  border: 2px solid #38bdf8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
 }
 .kid-action-btn.theme-red {
-  background: linear-gradient(135deg, rgba(185, 28, 28, 0.7), rgba(127, 29, 29, 0.8));
-  border-color: #f87171;
+  background: linear-gradient(135deg, #dc2626, #991b1b) !important;
+  border: 2px solid #f87171 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.35);
 }
-.kid-action-btn.theme-green {
-  background: linear-gradient(135deg, rgba(21, 128, 61, 0.7), rgba(6, 95, 70, 0.8));
-  border-color: #4ade80;
+.kid-action-btn.theme-green,
+#btnSolveWithFlightGearGreen {
+  background: linear-gradient(135deg, #059669, #10b981) !important;
+  border: 2px solid #34d399 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.55);
 }
 .kid-action-btn.theme-amber {
-  background: linear-gradient(135deg, rgba(180, 83, 9, 0.7), rgba(120, 53, 15, 0.8));
-  border-color: #fbbf24;
+  background: linear-gradient(135deg, #d97706, #b45309) !important;
+  border: 2px solid #fbbf24 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35);
 }
 .kid-action-btn.theme-purple {
-  background: linear-gradient(135deg, rgba(109, 40, 217, 0.7), rgba(76, 29, 149, 0.8));
-  border-color: #c084fc;
+  background: linear-gradient(135deg, #7c3aed, #5b21b6) !important;
+  border: 2px solid #c084fc !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.35);
 }
 .lesson-single-takeaway {
   margin: 0;
@@ -1014,6 +1143,7 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
   var state = {
     step: 1,
     mode: 'l1_fog',
+    fgDisplayMode: 'hud',
     tick: 0,
     mouseX: 300,
     mouseY: 130,
@@ -1028,6 +1158,58 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     var el = document.getElementById('lessonMegaphoneBanner');
     if (el) el.innerHTML = msg;
   }
+
+  function fillLessonStageBackground(ctx, w, h, solidColor) {
+    ctx.clearRect(0, 0, w, h);
+    if (state.fgDisplayMode === 'hud') {
+      ctx.fillStyle = 'rgba(4, 10, 24, 0.34)';
+      ctx.fillRect(0, 0, w, h);
+    } else {
+      ctx.fillStyle = solidColor || '#071024';
+      ctx.fillRect(0, 0, w, h);
+    }
+  }
+
+  window.cycleFgVideoDisplayMode = function() {
+    var vid = document.getElementById('fgLessonVideoPlayer');
+    var cvs = document.getElementById('lessonInteractiveCanvas');
+    var btn = document.getElementById('btnToggleFgVideoHud');
+    if (state.fgDisplayMode === 'hud') {
+      state.fgDisplayMode = 'video_only';
+      if (vid) vid.classList.remove('hidden-video');
+      if (cvs) cvs.classList.add('hidden-canvas');
+      if (btn) btn.textContent = '🎥 Doar Zborul Sintetic FlightGear (Apasă pt. HUD)';
+    } else if (state.fgDisplayMode === 'video_only') {
+      state.fgDisplayMode = 'canvas_only';
+      if (vid) vid.classList.add('hidden-video');
+      if (cvs) cvs.classList.remove('hidden-canvas');
+      if (btn) btn.textContent = '🎮 Doar Desenul Simulator (Apasă pt. FlightGear + HUD)';
+    } else {
+      state.fgDisplayMode = 'hud';
+      if (vid) vid.classList.remove('hidden-video');
+      if (cvs) cvs.classList.remove('hidden-canvas');
+      if (btn) btn.textContent = '🎬 Zbor Sintetic FlightGear + HUD Interactiv (Schimbă Vederea)';
+    }
+  };
+
+  window.triggerGreenFlightGearSolution = function() {
+    var activeGroup = document.querySelector('.lesson-6yo-action-group.active');
+    if (activeGroup) {
+      var greenBtn = activeGroup.querySelector('.kid-action-btn.theme-green');
+      if (greenBtn) {
+        var code = greenBtn.getAttribute('data-action-code');
+        if (code) window.setLessonMode(code, greenBtn);
+      }
+    }
+    var vid = document.getElementById('fgLessonVideoPlayer');
+    if (vid) {
+      vid.classList.remove('hidden-video');
+      if (typeof vid.play === 'function') {
+        var p = vid.play();
+        if (p && typeof p.catch === 'function') p.catch(function(){});
+      }
+    }
+  };
 
   window.toggleLessons6YoPanel = function() {
     var body = document.getElementById('lessons-6yo-collapsible-body');
@@ -1062,6 +1244,24 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
         var newTitle = groups[j].getAttribute('data-title');
         if (titleEl && newTitle) titleEl.textContent = newTitle;
 
+        var fgVideoUrl = groups[j].getAttribute('data-fg-video-url') || ('/real_videos/fg_lesson_' + s + '.mp4');
+        var fgLessonVideoPlayer = document.getElementById('fgLessonVideoPlayer');
+        if (fgLessonVideoPlayer) {
+          if (fgLessonVideoPlayer.getAttribute('src') !== fgVideoUrl) {
+            fgLessonVideoPlayer.src = fgVideoUrl;
+            fgLessonVideoPlayer.setAttribute('src', fgVideoUrl);
+          }
+          if (typeof fgLessonVideoPlayer.play === 'function') {
+            fgLessonVideoPlayer.play().catch(function(){});
+          }
+        }
+
+        var greenBtnInGroup = groups[j].querySelector('.kid-action-btn.theme-green');
+        var heroGreenBtn = document.getElementById('btnSolveWithFlightGearGreen');
+        if (greenBtnInGroup && heroGreenBtn) {
+          heroGreenBtn.textContent = greenBtnInGroup.textContent + ' (FlightGear Video 🎬)';
+        }
+
         var defMode = groups[j].getAttribute('data-default-mode') || ('l' + s + '_default');
         var firstBtn = groups[j].querySelector('.kid-action-btn');
         window.setLessonMode(defMode, firstBtn);
@@ -1070,6 +1270,7 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
       }
     }
   };
+  window.select6YoLesson = window.selectLesson6YoStep;
 
   window.stepLesson6YoDelta = function(delta) {
     var next = state.step + delta;
@@ -1243,8 +1444,7 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
   }
 
   function drawLesson1(ctx, w, h, t) {
-    ctx.fillStyle = '#071024';
-    ctx.fillRect(0, 0, w, h);
+    fillLessonStageBackground(ctx, w, h, '#071024');
 
     ctx.fillStyle = '#1e293b';
     ctx.fillRect(450, 45, 120, 75);
@@ -1341,8 +1541,7 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
   }
 
   function drawLesson2(ctx, w, h, t) {
-    ctx.fillStyle = '#050b18';
-    ctx.fillRect(0, 0, w, h);
+    fillLessonStageBackground(ctx, w, h, '#050b18');
 
     if (state.mode === 'l2_waves') {
       ctx.fillStyle = '#93c5fd';
@@ -1462,8 +1661,7 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
   }
 
   function drawLesson3(ctx, w, h, t) {
-    ctx.fillStyle = '#061020';
-    ctx.fillRect(0, 0, w, h);
+    fillLessonStageBackground(ctx, w, h, '#061020');
 
     var speedPx = (state.mode === 'l3_fast') ? 5.2 : 1.8;
     var stepDist = (state.mode === 'l3_fast') ? 78 : 28;
@@ -1540,8 +1738,7 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
   }
 
   function drawLesson4(ctx, w, h, t) {
-    ctx.fillStyle = '#060d1f';
-    ctx.fillRect(0, 0, w, h);
+    fillLessonStageBackground(ctx, w, h, '#060d1f');
 
     var isTilting = (t < state.tiltBurstUntil);
     var tiltAngle = isTilting ? Math.sin(t * 0.45) * 0.28 : 0.0;
@@ -1611,8 +1808,7 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
   }
 
   function drawLesson5(ctx, w, h, t) {
-    ctx.fillStyle = '#060c1a';
-    ctx.fillRect(0, 0, w, h);
+    fillLessonStageBackground(ctx, w, h, '#060c1a');
 
     if (state.mode === 'l5_slow_lie') {
       var elapsed = t - state.slowLieStartTick;
@@ -1705,8 +1901,7 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
   }
 
   function drawLesson6(ctx, w, h, t) {
-    ctx.fillStyle = '#071126';
-    ctx.fillRect(0, 0, w, h);
+    fillLessonStageBackground(ctx, w, h, '#071126');
 
     ctx.strokeStyle = '#fde047';
     ctx.lineWidth = 3;
@@ -1820,6 +2015,8 @@ mod tests {
             assert!(!lesson.kid_story_ro.is_empty());
             assert!(!lesson.visual_rule_ro.is_empty());
             assert!(!lesson.science_secret_ro.is_empty());
+            let expected_fg_url = format!("/real_videos/fg_lesson_{}.mp4", idx + 1);
+            assert_eq!(lesson.fg_video_url, expected_fg_url);
             assert_eq!(lesson.action_buttons.len(), 3);
         }
     }
@@ -1827,6 +2024,15 @@ mod tests {
     #[test]
     fn test_render_lessons_6yo_component_contains_spacious_760x340_canvas_and_all_lessons() {
         let html = render_lessons_6yo_component();
+        assert!(html.contains("id=\"fgLessonVideoPlayer\""));
+        assert!(html.contains("id=\"btnSolveWithFlightGearGreen\""));
+        assert!(html.contains("/real_videos/fg_lesson_1.mp4"));
+        assert!(html.contains("/real_videos/fg_lesson_2.mp4"));
+        assert!(html.contains("/real_videos/fg_lesson_3.mp4"));
+        assert!(html.contains("/real_videos/fg_lesson_4.mp4"));
+        assert!(html.contains("/real_videos/fg_lesson_5.mp4"));
+        assert!(html.contains("/real_videos/fg_lesson_6.mp4"));
+        assert!(html.contains("🟢 BUTONUL VERDE"));
         assert!(html.contains("id=\"lessonInteractiveCanvas\""));
         assert!(html.contains("width=\"760\""));
         assert!(html.contains("height=\"340\""));

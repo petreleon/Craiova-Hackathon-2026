@@ -29,6 +29,9 @@ pub struct InteractiveLesson6Yo {
     pub interactive_action_js: &'static str,
     pub visual_highlight_zone: &'static str,
     pub takeaway_badge_ro: &'static str,
+    pub fg_video_url: &'static str,
+    pub fg_video_caption_ro: &'static str,
+    pub fg_video_caption_en: &'static str,
 }
 
 /// Metadatele unei pagini de concept din arhitectura cu 6 pagini aerisite.
@@ -84,10 +87,13 @@ pub fn get_all_6_interactive_lessons() -> Vec<InteractiveLesson6Yo> {
             title_en: "Lesson 1: Thick Milk Fog, The GPS Hacker & The Google Drosophila Fly Brain",
             child_story_ro: "Imaginează-ți că mergi cu bicicleta prin ceață groasă ca laptele! Dacă întrebi un străin răutăcios (Hackerul GPS 🔴), el îți dă o hartă falsă ca să cazi în iarbă. Iar dacă închizi ochii (Senzorii Interni 🟠), amețești rapid! De aceea noi am copiat creierul de zbor Open-Source Google Research al musculiței Drosophila 🪰 (cu 🧭 E-PG Ring Attractor cu 16 Neuroni) — cel mai bun pilot fără GPS din natură!",
             child_story_en: "Imagine riding a bike in thick fog! A GPS hacker gives a fake map, and closing your eyes makes you dizzy. That's why we use the Google Research Drosophila fly connectome (🧭 E-PG 16-Neuron Ring Attractor)!",
-            interactive_action_label_ro: "🔴 Apasă Aici: Pornește Hackerul GPS și Vezi Busola Drosophila!",
-            interactive_action_js: "lessonPlayAction(1)",
+            interactive_action_label_ro: "🟢 APASĂ BUTONUL VERDE: Activează Scutul AERO-SHIELD în Zborul FlightGear!",
+            interactive_action_js: "triggerSchoolLessonState('solved')",
             visual_highlight_zone: "maudSchoolCanvas",
             takeaway_badge_ro: "⭐ Ai învățat de ce avionul roșu 🔴 și portocaliu 🟠 greșesc drumul, dar creierul Drosophila 🟢 rămâne pe pistă!",
+            fg_video_url: "/real_videos/fg_lesson_1.mp4",
+            fg_video_caption_ro: "🎬 Zbor Sintetic FlightGear (FG-01/07): Ceață CAT IIIc + Atac Hacker GPS vs. Scutul AERO-SHIELD pe Pista 09 Craiova",
+            fg_video_caption_en: "🎬 FlightGear Synthetic Flight (FG-01/07): CAT IIIc Fog + GPS Hacker Attack vs. AERO-SHIELD on Craiova RWY 09",
         },
         InteractiveLesson6Yo {
             lesson_num: 2,
@@ -96,10 +102,13 @@ pub fn get_all_6_interactive_lessons() -> Vec<InteractiveLesson6Yo> {
             title_en: "Lesson 2: T4/T5 Anti-Fog Optic Lobe & Magic Infrared Goggles (SWIR + ALS)",
             child_story_ro: "Când aprinzi o lanternă normală în ceață, lumina se lovește de picăturile de apă și face un perete alb. Dar avionul nostru folosește Ochelarii Infraroșii (SWIR 1550nm) împreună cu 👁️ T4/T5 Ochiul Anticeață din creierul Google Drosophila! Neuronii T4/T5 separă instantaneu becurile strălucitoare (ALS 💡) ale pistei din Craiova de laptele alb al ceții!",
             child_story_en: "Our SWIR Infrared Goggles and the Google Drosophila 👁️ T4/T5 Anti-Fog Optic Lobe cut through fog glare to lock onto bright runway lights (ALS)!",
-            interactive_action_label_ro: "🔦 Apasă Aici: Activează Ochiul Anticeață 👁️ T4/T5 peste Ceață!",
-            interactive_action_js: "lessonPlayAction(2)",
+            interactive_action_label_ro: "🟢 APASĂ BUTONUL VERDE: Pornește Ochiul Magic SWIR T4/T5 în FlightGear!",
+            interactive_action_js: "triggerSchoolLessonState('solved')",
             visual_highlight_zone: "maudSchoolCanvas",
             takeaway_badge_ro: "⭐ Ai descoperit cum 👁️ T4/T5 Ochiul Anticeață vede becurile pistei Craiova RWY 09!",
+            fg_video_url: "/real_videos/fg_lesson_2.mp4",
+            fg_video_caption_ro: "🎬 Zbor Sintetic FlightGear (FG-01 SWIR): Ochiul Infraroșu T4/T5 curăță ceața și fixează cele 18 bare luminoase ALS",
+            fg_video_caption_en: "🎬 FlightGear Synthetic Flight (FG-01 SWIR): T4/T5 Infrared Eye clears fog and locks onto 18 ALS light bars",
         },
         InteractiveLesson6Yo {
             lesson_num: 3,
@@ -108,10 +117,13 @@ pub fn get_all_6_interactive_lessons() -> Vec<InteractiveLesson6Yo> {
             title_en: "Lesson 3: HS/VS 6-DoF Rotation Stabilizer & Safe Horizon Sky",
             child_story_ro: "Când o musculiță sau un avion dă din aripi și virează, toată lumea pare că se învârte! În creierul Google Drosophila, neuronii 🔄 HS/VS (Stabilizatorul de Viraje 6-DoF) scad automat rotația capului ca să măsurăm viteza adevărată peste becurile verzi 🟢. Iar când privim sus spre cer, punem simplu ZERO (0.000000) — fără împărțire la zero și fără blocaj!",
             child_story_en: "Google Drosophila 🔄 HS/VS neurons subtract 6-DoF aircraft rotations immediately, while looking at the sky outputs a safe 0.000000 with zero crashes!",
-            interactive_action_label_ro: "🚀 Apasă Aici: Testează Stabilizatorul 🔄 HS/VS și Ridică Botul spre Cer!",
-            interactive_action_js: "lessonPlayAction(3)",
+            interactive_action_label_ro: "🟢 APASĂ BUTONUL VERDE: Măsoară Viteza cu Becurile ALS în FlightGear (1/Z = 0)!",
+            interactive_action_js: "triggerSchoolLessonState('solved')",
             visual_highlight_zone: "maudSchoolCanvas",
             takeaway_badge_ro: "⭐ Ai văzut cum 🔄 HS/VS stabilizează virajele 6-DoF și păstrează orizontul 100% sigur!",
+            fg_video_url: "/real_videos/fg_lesson_3.mp4",
+            fg_video_caption_ro: "🎬 Zbor Sintetic FlightGear (FG-05/06): Numărarea becurilor pistei ALS și măsurarea vitezei (1/Z = 0 la cer, fără blocaj!)",
+            fg_video_caption_en: "🎬 FlightGear Synthetic Flight (FG-05/06): Counting ALS lights & speed measurement (1/Z = 0 at sky, zero crash!)",
         },
         InteractiveLesson6Yo {
             lesson_num: 4,
@@ -120,10 +132,13 @@ pub fn get_all_6_interactive_lessons() -> Vec<InteractiveLesson6Yo> {
             title_en: "Lesson 4: PFNd Wind-Vision Neurons — Purple Fog Wind vs. Solid Green Ground",
             child_story_ro: "Uite secretul cel mai mare! Când bate vântul lateral, el împinge norul de ceață (Săgețile Mov 🟣). O cameră obișnuită (Avionul Galben 🟡) se păcălește și virează în câmp! Dar în creierul Google Drosophila, neuronii 💨 PFNd (Simțul Vântului în Ceață) și 🧭 E-PG Ring Attractor cu 16 Neuroni separă norul mov de pământul verde 🟢 cu 0.85 secunde ÎNAINTE ca rafala să lovească aripile!",
             child_story_en: "Google Drosophila 💨 PFNd neurons and the 🧭 E-PG 16-Neuron Ring Attractor separate moving purple fog from solid green ground 0.85s ahead of impact!",
-            interactive_action_label_ro: "🌪️ Apasă Aici: Suflă Vântul în Ceață (18 m/s) și Privește Neuronii 💨 PFNd!",
-            interactive_action_js: "lessonPlayAction(4)",
+            interactive_action_label_ro: "🟢 APASĂ BUTONUL VERDE: Separă Vântul din Ceață (PFNd 0.85s) în FlightGear!",
+            interactive_action_js: "triggerSchoolLessonState('solved')",
             visual_highlight_zone: "maudSchoolCanvas",
             takeaway_badge_ro: "⭐ Ai înțeles cum 💨 PFNd și 🧭 E-PG separă vântul din ceață (Mov) de pistă (Verde)!",
+            fg_video_url: "/real_videos/fg_lesson_4.mp4",
+            fg_video_caption_ro: "🎬 Zbor Sintetic FlightGear (FG-02/03): Viraj 6-DoF Roll +22° (HS/VS) + Rafală de Vânt în Ceață +15 m/s (PFNd 0.85s)",
+            fg_video_caption_en: "🎬 FlightGear Synthetic Flight (FG-02/03): 6-DoF Roll +22° (HS/VS) + Fog Wind Gust +15 m/s (PFNd 0.85s)",
         },
         InteractiveLesson6Yo {
             lesson_num: 5,
@@ -132,10 +147,13 @@ pub fn get_all_6_interactive_lessons() -> Vec<InteractiveLesson6Yo> {
             title_en: "Lesson 5: 16-Neuron E-PG Ring Compass + The CUSUM Anti-Hacker Cup",
             child_story_ro: "Dacă hackerul e șiret și trage harta GPS câte un milimetru pe secundă (Stealth Spoof 🕵️), Paharul nostru Magic CUSUM adună fiecare picătură de minciună și oprește GPS-ul fals în sub 2.9 secunde! Chiar și cu GPS-ul tăiat și în orbire totală, 🧭 E-PG Ring Attractor cu 16 Neuroni ține minte direcția exactă către Pista 09 Craiova!",
             child_story_en: "Our CUSUM Magic Cup catches sneaky GPS hackers in under 2.9s, while the 🧭 E-PG 16-Neuron Ring Attractor holds the exact heading to Craiova RWY 09 in total blindness!",
-            interactive_action_label_ro: "🕵️ Apasă Aici: Prinde Hackerul cu Paharul CUSUM + Busola 🧭 E-PG 16-Neuroni!",
-            interactive_action_js: "lessonPlayAction(5)",
+            interactive_action_label_ro: "🟢 APASĂ BUTONUL VERDE: Prinde Hackerul cu Paharul CUSUM & Busola E-PG!",
+            interactive_action_js: "triggerSchoolLessonState('solved')",
             visual_highlight_zone: "maudSchoolCanvas",
             takeaway_badge_ro: "⭐ Ai prins hackerul în < 2.9s, iar inelul cu 16 neuroni 🧭 E-PG a păstrat direcția pistei!",
+            fg_video_url: "/real_videos/fg_lesson_5.mp4",
+            fg_video_caption_ro: "🎬 Zbor Sintetic FlightGear (FG-08/09): Atac Lent Stealth Spoofing prins de Paharul CUSUM în 2.9s + Busola E-PG 16-Neuroni",
+            fg_video_caption_en: "🎬 FlightGear Synthetic Flight (FG-08/09): Stealth Spoofing caught by CUSUM Cup in 2.9s + 16-Neuron E-PG Compass",
         },
         InteractiveLesson6Yo {
             lesson_num: 6,
@@ -144,10 +162,13 @@ pub fn get_all_6_interactive_lessons() -> Vec<InteractiveLesson6Yo> {
             title_en: "Lesson 6: Flight Captain with the Google Drosophila Brain in Full Cyber-Siege!",
             child_story_ro: "Felicitări! Acum cunoști toate cele 4 etaje din creierul de zbor Google Research Drosophila: 1) 👁️ T4/T5 vede becurile prin ceață, 2) 🔄 HS/VS stabilizează virajele, 3) 🧭 E-PG Ring Attractor cu 16 Neuroni păstrează busola pistei, și 4) 💨 PFNd separă norul mov de pământul verde! Apasă butonul de mai jos pentru Misiunea Finală (Actul 3)!",
             child_story_en: "Congratulations! All 4 Google Drosophila stages (👁️ T4/T5, 🔄 HS/VS, 🧭 E-PG 16-Neuron Ring Attractor, 💨 PFNd) work together to land on Craiova RWY 09!",
-            interactive_action_label_ro: "🎬 Apasă Aici: Pornește Misiunea Finală Drosophila (Actul 3)!",
-            interactive_action_js: "lessonPlayAction(6)",
+            interactive_action_label_ro: "🟢 APASĂ BUTONUL VERDE: Aterizează Autonom în Whiteout 0m pe FlightGear!",
+            interactive_action_js: "triggerSchoolLessonState('solved')",
             visual_highlight_zone: "maudSchoolCanvas",
             takeaway_badge_ro: "🏆 DIPLOMĂ DE COMANDANT AERO-SHIELD & GOOGLE DROSOPHILA CONNECTOME OBȚINUTĂ!",
+            fg_video_url: "/real_videos/fg_lesson_6.mp4",
+            fg_video_caption_ro: "🎬 Zbor Sintetic FlightGear (FG-10): Aterizare Autonomă Completă în Whiteout 0m pe Pista 09 Craiova (Eroare 0.21m!)",
+            fg_video_caption_en: "🎬 FlightGear Synthetic Flight (FG-10): Full Autonomous Landing in 0m Whiteout on Craiova RWY 09 (0.21m Error!)",
         },
     ]
 }
@@ -222,7 +243,7 @@ pub fn render_floating_pointer() -> Markup {
 }
 
 /// PAGINA 1 (`#concept-page-1`): `1️⃣ Lecții Interactive — Creierul de Zbor Google Drosophila`.
-/// Un singur card mare, extrem de aerisit, cu 1 singur Canvas animat mare (`#maudSchoolCanvas`, `height: 300px`).
+/// Un singur card mare, extrem de aerisit, cu 1 singur Canvas animat mare (`#maudSchoolCanvas`, `height: 320px`) + Video FlightGear (`#maudSchoolFgVideo`).
 #[must_use]
 pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_active: bool) -> Markup {
     html! {
@@ -283,6 +304,7 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                         div class="lesson-action-row" {
                             button
                                 class="btn-big btn-big-green"
+                                style="background:linear-gradient(90deg, #059669 0%, #10b981 100%); border:3px solid #34d399; box-shadow:0 0 24px rgba(16,185,129,0.7); font-size:17.5px; font-weight:900;"
                                 onclick=(lesson.interactive_action_js)
                             {
                                 (lesson.interactive_action_label_ro)
@@ -311,20 +333,102 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                     }
                 }
 
-                // UN SINGUR Canvas Animat Mare (height: 300px) pentru experimentul vizual al lecției curente
+                // UN SINGUR Ecran Mare (height: 320px) cu Desenul Animat (#maudSchoolCanvas) + Videoclipul Zborului Sintetic FlightGear (#maudSchoolFgVideo)
                 div class="school-canvas-box" {
-                    div class="school-canvas-header" {
+                    div class="school-canvas-header" style="flex-wrap:wrap; gap:12px;" {
                         strong id="lesson-canvas-caption" {
-                            "🎨 DESENUL ANIMAT AL LECȚIEI (60 FPS LIVE — Apasă butonul verde de mai sus ca să faci experimentul!):"
+                            "🎨 DESENUL ANIMAT AL LECȚIEI (60 FPS LIVE — Apasă Butonul Verde ca să rezolvi lecția în FlightGear!):"
                         }
-                        span class="live-pill" { "ANIMAȚIE INTERACTIVĂ" }
+                        span class="live-pill" { "VIDEO FLIGHTGEAR + ANIMAȚIE LIVE" }
                     }
-                    canvas
-                        id="maudSchoolCanvas"
-                        width="960"
-                        height="300"
-                        style="width:100%; height:300px; background:#030917; border:2px solid #1e4273; border-radius:14px; display:block;"
-                    {}
+
+                    // Bara de control pentru videoclipul zborului sintetic FlightGear al lecției
+                    div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; background:#040d1e; border:1px solid #1e4273; border-radius:12px; padding:10px 16px;" {
+                        div id="maud-school-fg-caption" style="font-size:15px; font-weight:800; color:#00ff9d;" {
+                            "🎬 Zbor Sintetic FlightGear (FG-01/07): Ceață CAT IIIc + Atac Hacker GPS vs. Scutul AERO-SHIELD pe Pista 09 Craiova"
+                        }
+                        div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;" {
+                            span id="school-fg-opacity-label" style="font-size:14px; font-weight:800; color:#bae6fd;" {
+                                "🎚️ Transparență Video Zbor FlightGear: 55%"
+                            }
+                            input
+                                type="range"
+                                id="school-fg-opacity-slider"
+                                min="0"
+                                max="100"
+                                value="55"
+                                style="width:130px; cursor:pointer;"
+                                oninput="setSchoolFgVideoOpacity(this.value)"
+                            {}
+                        }
+                    }
+
+                    // Fereastra centrală cu Canvas + Videoclipul FlightGear suprapus
+                    div style="position:relative; border-radius:16px; overflow:hidden; border:2px solid #1e4273; background:#030917; height:320px;" {
+                        canvas
+                            id="maudSchoolCanvas"
+                            width="960"
+                            height="320"
+                            style="display:block; width:100%; height:320px; position:relative; z-index:1;"
+                        {}
+                        video
+                            id="maudSchoolFgVideo"
+                            src="/real_videos/fg_lesson_1.mp4"
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            controls
+                            style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.55; z-index:2; pointer-events:none;"
+                        {}
+                    }
+
+                    // Cele 3 Butoane Mari Interactive de Experiment (cu BUTONUL VERDE MARE STRĂLUCITOR în centru!)
+                    div style="display:grid; grid-template-columns:1fr 1.45fr 1fr; gap:14px; align-items:stretch; margin-top:4px;" {
+                        button
+                            id="btnDangerLessonRed"
+                            class="btn-big btn-big-red"
+                            onclick="triggerSchoolLessonState('danger')"
+                        {
+                            "👾 1. Arată Pericolul (Ceață / Hacker / Vânt)"
+                        }
+                        button
+                            id="btnSolveLessonGreen"
+                            class="btn-big btn-big-green"
+                            style="background:linear-gradient(90deg, #059669 0%, #10b981 100%); border:3px solid #34d399; box-shadow:0 0 28px rgba(16,185,129,0.75); font-size:18px; font-weight:900; color:#ffffff;"
+                            onclick="triggerSchoolLessonState('solved')"
+                        {
+                            "🟢 APASĂ BUTONUL VERDE: Activează Scutul AERO-SHIELD în Zborul FlightGear!"
+                        }
+                        button
+                            id="btnToggleFgVideoMode"
+                            class="btn-big btn-big-cyan"
+                            onclick="cycleSchoolFgVideoMode()"
+                        {
+                            "🎥 3. Vezi Filmarea FlightGear 100% Clar (sau 55% peste Desen)"
+                        }
+                    }
+
+                    // Banner-ul de confirmare când utilizatorul apasă pe Butonul Verde
+                    div
+                        id="school-green-solved-banner"
+                        style="background:rgba(16, 185, 129, 0.16); border:2px solid #10b981; color:#ecfdf5; padding:12px 18px; border-radius:12px; font-size:15.5px; font-weight:800;"
+                    {
+                        "✅ BRAVO! Ai apăsat Butonul Verde: Uite în filmarea FlightGear cum avionul verde rezolvă problema și rămâne pe Pista 09 Craiova!"
+                    }
+
+                    // Cele 3 butoane rapide pentru modul de afișare Video FlightGear vs. Desen Interactiv
+                    div style="display:flex; gap:10px; flex-wrap:wrap;" {
+                        button class="btn-mode-toggle" onclick="setSchoolFgVideoOpacity(55)" {
+                            "🎬 55% Video FlightGear + Desen Interactiv"
+                        }
+                        button class="btn-mode-toggle" onclick="setSchoolFgVideoOpacity(100)" {
+                            "🎥 100% Video Zbor FlightGear (Ecran Plin)"
+                        }
+                        button class="btn-mode-toggle" onclick="setSchoolFgVideoOpacity(0)" {
+                            "🎨 0% Video (Doar Desen Interactiv)"
+                        }
+                    }
                 }
             }
         }
@@ -1763,6 +1867,48 @@ const REAL_VIDEO_FILES = [
   "/real_videos/real_03_crosswind_cockpit_landing.mp4"
 ];
 
+const SCHOOL_FG_LESSONS = {
+  1: {
+    fg_video_url: "/real_videos/fg_lesson_1.mp4",
+    fg_video_caption_ro: "🎬 Zbor Sintetic FlightGear (FG-01/07): Ceață CAT IIIc + Atac Hacker GPS vs. Scutul AERO-SHIELD pe Pista 09 Craiova",
+    fg_video_caption_en: "🎬 FlightGear Synthetic Flight (FG-01/07): CAT IIIc Fog + GPS Hacker Attack vs. AERO-SHIELD on Craiova RWY 09",
+    green_btn_label_ro: "🟢 APASĂ BUTONUL VERDE: Activează Scutul AERO-SHIELD în Zborul FlightGear!"
+  },
+  2: {
+    fg_video_url: "/real_videos/fg_lesson_2.mp4",
+    fg_video_caption_ro: "🎬 Zbor Sintetic FlightGear (FG-01 SWIR): Ochiul Infraroșu T4/T5 curăță ceața și fixează cele 18 bare luminoase ALS",
+    fg_video_caption_en: "🎬 FlightGear Synthetic Flight (FG-01 SWIR): T4/T5 Infrared Eye clears fog and locks onto 18 ALS light bars",
+    green_btn_label_ro: "🟢 APASĂ BUTONUL VERDE: Pornește Ochiul Magic SWIR T4/T5 în FlightGear!"
+  },
+  3: {
+    fg_video_url: "/real_videos/fg_lesson_3.mp4",
+    fg_video_caption_ro: "🎬 Zbor Sintetic FlightGear (FG-05/06): Numărarea becurilor pistei ALS și măsurarea vitezei (1/Z = 0 la cer, fără blocaj!)",
+    fg_video_caption_en: "🎬 FlightGear Synthetic Flight (FG-05/06): Counting ALS lights & speed measurement (1/Z = 0 at sky, zero crash!)",
+    green_btn_label_ro: "🟢 APASĂ BUTONUL VERDE: Măsoară Viteza cu Becurile ALS în FlightGear (1/Z = 0)!"
+  },
+  4: {
+    fg_video_url: "/real_videos/fg_lesson_4.mp4",
+    fg_video_caption_ro: "🎬 Zbor Sintetic FlightGear (FG-02/03): Viraj 6-DoF Roll +22° (HS/VS) + Rafală de Vânt în Ceață +15 m/s (PFNd 0.85s)",
+    fg_video_caption_en: "🎬 FlightGear Synthetic Flight (FG-02/03): 6-DoF Roll +22° (HS/VS) + Fog Wind Gust +15 m/s (PFNd 0.85s)",
+    green_btn_label_ro: "🟢 APASĂ BUTONUL VERDE: Separă Vântul din Ceață (PFNd 0.85s) în FlightGear!"
+  },
+  5: {
+    fg_video_url: "/real_videos/fg_lesson_5.mp4",
+    fg_video_caption_ro: "🎬 Zbor Sintetic FlightGear (FG-08/09): Atac Lent Stealth Spoofing prins de Paharul CUSUM în 2.9s + Busola E-PG 16-Neuroni",
+    fg_video_caption_en: "🎬 FlightGear Synthetic Flight (FG-08/09): Stealth Spoofing caught by CUSUM Cup in 2.9s + 16-Neuron E-PG Compass",
+    green_btn_label_ro: "🟢 APASĂ BUTONUL VERDE: Prinde Hackerul cu Paharul CUSUM & Busola E-PG!"
+  },
+  6: {
+    fg_video_url: "/real_videos/fg_lesson_6.mp4",
+    fg_video_caption_ro: "🎬 Zbor Sintetic FlightGear (FG-10): Aterizare Autonomă Completă în Whiteout 0m pe Pista 09 Craiova (Eroare 0.21m!)",
+    fg_video_caption_en: "🎬 FlightGear Synthetic Flight (FG-10): Full Autonomous Landing in 0m Whiteout on Craiova RWY 09 (0.21m Error!)",
+    green_btn_label_ro: "🟢 APASĂ BUTONUL VERDE: Aterizează Autonom în Whiteout 0m pe FlightGear!"
+  }
+};
+
+window.schoolLessonMode = "solved";
+let currentSchoolFgOpacity = 55;
+
 const trailHistory = {
   truth: [],
   gnss: [],
@@ -1831,6 +1977,12 @@ function setAppLang(lang) {
     const txt = window.aeroLang === "en" ? el.getAttribute("data-en") : el.getAttribute("data-ro");
     if (txt) el.textContent = txt;
   });
+
+  const lessonMeta = SCHOOL_FG_LESSONS[currentLessonNum];
+  const fgCapEl = document.getElementById("maud-school-fg-caption");
+  if (fgCapEl && lessonMeta) {
+    fgCapEl.textContent = window.aeroLang === "en" ? lessonMeta.fg_video_caption_en : lessonMeta.fg_video_caption_ro;
+  }
 }
 
 // =========================================================================
@@ -1907,25 +2059,131 @@ function highlightVisualZone(zoneId, messageRo) {
 }
 
 // =========================================================================
-// PAGINA 1: ȘCOALA INTERACTIVĂ ÎN 6 LECȚII
+// PAGINA 1: ȘCOALA INTERACTIVĂ ÎN 6 LECȚII + VIDEO ZBOR FLIGHTGEAR
 // =========================================================================
+function setSchoolFgVideoOpacity(val) {
+  const numVal = Math.max(0, Math.min(100, Number(val) || 0));
+  currentSchoolFgOpacity = numVal;
+  const fgVideoEl = document.getElementById("maudSchoolFgVideo");
+  const sliderEl = document.getElementById("school-fg-opacity-slider");
+  const labelEl = document.getElementById("school-fg-opacity-label");
+
+  if (fgVideoEl) {
+    fgVideoEl.style.opacity = (numVal / 100).toFixed(2);
+    fgVideoEl.style.pointerEvents = numVal >= 95 ? "auto" : "none";
+  }
+  if (sliderEl) {
+    sliderEl.value = String(numVal);
+  }
+  if (labelEl) {
+    labelEl.textContent = `🎚️ Transparență Video Zbor FlightGear: ${numVal}%`;
+  }
+}
+
+function cycleSchoolFgVideoMode() {
+  if (currentSchoolFgOpacity === 55) {
+    setSchoolFgVideoOpacity(100);
+  } else if (currentSchoolFgOpacity === 100) {
+    setSchoolFgVideoOpacity(0);
+  } else {
+    setSchoolFgVideoOpacity(55);
+  }
+}
+
+function triggerSchoolLessonState(mode) {
+  window.schoolLessonMode = mode === "danger" ? "danger" : "solved";
+  const bannerEl = document.getElementById("school-green-solved-banner");
+  const fgVideoEl = document.getElementById("maudSchoolFgVideo");
+
+  if (window.schoolLessonMode === "danger") {
+    if (bannerEl) {
+      bannerEl.style.background = "rgba(225, 29, 72, 0.22)";
+      bannerEl.style.borderColor = "#fb7185";
+      bannerEl.style.color = "#ffe4e6";
+      bannerEl.textContent = "⚠️ PERICOL ACTIV ÎN LECȚIE! Apasă acum pe BUTONUL VERDE MARE (#btnSolveLessonGreen) de mai sus ca să activezi Scutul AERO-SHIELD în zborul FlightGear!";
+    }
+    highlightVisualZone("btnSolveLessonGreen", "Apasă pe acest BUTON VERDE MARE ca să rezolvi pericolul în zborul sintetic FlightGear!");
+  } else {
+    if (fgVideoEl) {
+      if (currentSchoolFgOpacity < 25) {
+        setSchoolFgVideoOpacity(55);
+      }
+      fgVideoEl.play().catch(() => {});
+    }
+    lessonPlayAction(currentLessonNum);
+    if (bannerEl) {
+      bannerEl.style.background = "rgba(16, 185, 129, 0.18)";
+      bannerEl.style.borderColor = "#10b981";
+      bannerEl.style.color = "#ecfdf5";
+      bannerEl.textContent = "✅ BRAVO! Ai apăsat Butonul Verde: Uite în filmarea FlightGear cum avionul verde rezolvă problema și rămâne pe Pista 09 Craiova!";
+    }
+  }
+  renderLessonMiniCanvas();
+}
+
 function selectLesson6Yo(num) {
-  currentLessonNum = num;
+  const clamped = Math.max(1, Math.min(6, Number(num) || 1));
+  currentLessonNum = clamped;
+  window.schoolLessonMode = "solved";
+
   for (let i = 1; i <= 6; i++) {
     const tab = document.getElementById(`lesson-tab-${i}`);
     const pane = document.getElementById(`lesson-pane-${i}`);
-    if (tab) tab.classList.toggle("active", i === num);
-    if (pane) pane.style.display = i === num ? "flex" : "none";
+    if (tab) tab.classList.toggle("active", i === clamped);
+    if (pane) pane.style.display = i === clamped ? "flex" : "none";
   }
+
   const starsEl = document.getElementById("school-stars-progress");
   if (starsEl) {
-    const filled = "⭐ ".repeat(num);
-    const empty = "☆ ".repeat(6 - num);
-    starsEl.textContent = `${filled}${empty}(Lecția ${num} din 6)`;
+    const filled = "⭐ ".repeat(clamped);
+    const empty = "☆ ".repeat(6 - clamped);
+    starsEl.textContent = `${filled}${empty}(Lecția ${clamped} din 6)`;
   }
+
+  const lessonMeta = SCHOOL_FG_LESSONS[clamped];
+  const fgVideoEl = document.getElementById("maudSchoolFgVideo");
+  if (fgVideoEl && lessonMeta) {
+    fgVideoEl.src = lessonMeta.fg_video_url;
+    fgVideoEl.load();
+    fgVideoEl.play().catch(() => {});
+  }
+
+  const fgCapEl = document.getElementById("maud-school-fg-caption");
+  if (fgCapEl && lessonMeta) {
+    fgCapEl.textContent = window.aeroLang === "en" ? lessonMeta.fg_video_caption_en : lessonMeta.fg_video_caption_ro;
+  }
+
+  const greenBtnEl = document.getElementById("btnSolveLessonGreen");
+  if (greenBtnEl && lessonMeta) {
+    greenBtnEl.textContent = lessonMeta.green_btn_label_ro;
+  }
+
+  const bannerEl = document.getElementById("school-green-solved-banner");
+  if (bannerEl && lessonMeta) {
+    bannerEl.style.background = "rgba(16, 185, 129, 0.16)";
+    bannerEl.style.borderColor = "#10b981";
+    bannerEl.style.color = "#ecfdf5";
+    bannerEl.textContent = `✅ Lecția ${clamped} pregătită! Apasă pe Butonul Verde strălucitor ca să vezi rezolvarea în zborul FlightGear!`;
+  }
+
   if (window.setSpotlightLessonStep) {
-    window.setSpotlightLessonStep(Math.min(5, num));
+    window.setSpotlightLessonStep(Math.min(5, clamped));
   }
+  renderLessonMiniCanvas();
+}
+
+function selectSchoolLesson(num) {
+  selectLesson6Yo(num);
+}
+
+function nextSchoolLesson() {
+  const next = currentLessonNum < 6 ? currentLessonNum + 1 : 1;
+  selectLesson6Yo(next);
+}
+
+function prevSchoolLesson() {
+  const prev = currentLessonNum > 1 ? currentLessonNum - 1 : 6;
+  selectLesson6Yo(prev);
 }
 
 function lessonPlayAction(num) {
@@ -1968,8 +2226,18 @@ function renderLessonMiniCanvas() {
   lessonAnimTick += 1;
 
   ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = "#040c1c";
+  ctx.fillStyle = window.schoolLessonMode === "danger" ? "#1e0712" : "#040c1c";
   ctx.fillRect(0, 0, w, h);
+
+  if (window.schoolLessonMode === "danger") {
+    ctx.fillStyle = "#ff2a5f";
+    ctx.font = "bold 14px sans-serif";
+    ctx.fillText("⚠️ MOD PERICOL ACTIV — APASĂ PE BUTONUL VERDE DE SUB ECRAN PENTRU A ACTIVA SCUTUL!", 175, 22);
+  } else {
+    ctx.fillStyle = "#00ff9d";
+    ctx.font = "bold 13.5px sans-serif";
+    ctx.fillText("✅ SCUTUL AERO-SHIELD & ZBORUL FLIGHTGEAR REZOLVAT ACTIV!", 175, 22);
+  }
 
   // Desenăm pista din Craiova în dreapta
   ctx.fillStyle = "#0b243b";
