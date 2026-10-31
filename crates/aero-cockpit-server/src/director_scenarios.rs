@@ -54,15 +54,15 @@ impl DirectorScenarioEngine {
     pub fn new(scenario_id: u8) -> Self {
         let seed = DIRECTOR_SEED_LRCV_2026 ^ u64::from(scenario_id);
         Self {
-            active_scenario_id: scenario_id.clamp(0, 3),
+            active_scenario_id: scenario_id.clamp(0, 4),
             scenario_tick: 0,
             rng: ChaCha8Rng::seed_from_u64(seed),
         }
     }
 
-    /// Activează un scenariu (`1`, `2` sau `3`) și resetează generatorul `ChaCha8Rng` la seed-ul canonic.
+    /// Activează un scenariu (`1`, `2`, `3` sau `4`) și resetează generatorul `ChaCha8Rng` la seed-ul canonic.
     pub fn start_scenario(&mut self, scenario_id: u8) {
-        let clean_id = scenario_id.clamp(1, 3);
+        let clean_id = scenario_id.clamp(1, 4);
         self.active_scenario_id = clean_id;
         self.scenario_tick = 0;
         self.rng = ChaCha8Rng::seed_from_u64(DIRECTOR_SEED_LRCV_2026 ^ u64::from(clean_id));
@@ -91,6 +91,10 @@ impl DirectorScenarioEngine {
             1 => Some(self.prescribe_act1_sudden_fog_shear(t, [micro_wx, micro_wy, micro_wz])),
             2 => Some(self.prescribe_act2_dynamic_6dof_maneuvers(t, [micro_wx, micro_wy, micro_wz])),
             3 => Some(self.prescribe_act3_cyber_siege_cat3c_touchdown(
+                t,
+                [micro_wx, micro_wy, micro_wz],
+            )),
+            4 => Some(self.prescribe_act4_ocean_checkpoint_rollback(
                 t,
                 [micro_wx, micro_wy, micro_wz],
             )),
@@ -153,58 +157,31 @@ impl DirectorScenarioEngine {
         }
     }
 
-    /// ACT 2: DYNAMIC 6-DoF MANEUVERS IN SHIFTING FOG
-    /// - Secvență coregrafiată de viraj stânga/dreapta ($\pm 25^\circ$), roll ($\pm 35^\circ$),
-    ///   urcare/coborâre și accelerare/decelerare suprapusă peste un front variabil de ceață.
+    /// ACT 2: UNALIGNED OFFSET APPROACH — MANUAL PILOT INTERCEPT TO RWY 09
+    /// - Aeronava pornește dezaliniată lateral (`y = -195m` în stânga pistei, `alt = 102m`, `yaw = -2.5°`)
+    ///   în ceață densă ($V_{MOR} = 65\text{ m}$) cu vânt lateral advers (`-4.2 m/s`) care o împinge ușor în exterior.
+    /// - Pilotul trebuie să manevreze manual avionul (`WASD` / `Săgeți` + `QE`) urmărind reticulul verde
+    ///   Flight Director și porțile 3D SVS pentru a se alinia cu Pista 09 Craiova și a ateriza la 0 km/h!
     fn prescribe_act2_dynamic_6dof_maneuvers(
         &self,
         t: f64,
         micro: [f64; 3],
     ) -> DirectorTickPrescription {
-        let (roll_rate, pitch_rate, yaw_rate, accel_x, banner) = if t < 2.0 {
-            (
-                17.5,
-                2.5,
-                12.5,
-                2.2,
-                "ACT 2: RIGHT BANK (+35 deg) + YAW (+25 deg) + THROTTLE BOOST",
-            )
-        } else if t < 4.5 {
-            (
-                -24.0,
-                -3.2,
-                -18.0,
-                -1.8,
-                "ACT 2: S-TURN REVERSAL (-35 deg ROLL / -25 deg YAW) IN SHIFTING FOG",
-            )
-        } else if t < 6.5 {
-            (
-                14.0,
-                2.0,
-                11.0,
-                1.5,
-                "ACT 2: ALIGNING GLIDESLOPE & RE-ANCHORING QUATERNION R_b^n(q)",
-            )
+        let banner = if t < 3.5 {
+            "ACT 2: APROPIERE NEALINIATĂ (-195m STÂNGA) — VIREAZĂ DREAPTA [D / →] SPRE RETICULUL VERDE!"
         } else {
-            (
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                "ACT 2: STABILIZED 6-DoF TRAJECTORY ON LRCV RWY 09",
-            )
+            "ACT 2: MANEVRARE MANUALĂ ÎN CEAȚĂ (65m) — ALINIAZĂ-TE PE AXUL PISTEI 09 & APASĂ [X]!"
         };
 
-        let fog_wx = -4.5 + 3.5 * (0.7 * t).sin() + micro[0];
-        let fog_wy = 9.5 * (0.55 * t).cos() + micro[1];
-        let fog_wz = 0.8 * (0.9 * t).sin() + micro[2];
-
-        let lookahead_wy = 9.5 * (0.55 * (t + 0.85)).cos() + micro[1];
+        let fog_wx = -2.5 + 1.0 * (0.45 * t).sin() + micro[0];
+        let fog_wy = -4.2 + 1.1 * (0.55 * t).cos() + micro[1];
+        let fog_wz = 0.20 * (0.8 * t).sin() + micro[2];
+        let lookahead_wy = -4.2 + 1.1 * (0.55 * (t + 0.85)).cos() + micro[1];
 
         DirectorTickPrescription {
-            commanded_rates_dps: [roll_rate, pitch_rate, yaw_rate],
-            commanded_accel_x_mps2: accel_x,
-            visibility_mor_m: 60.0,
+            commanded_rates_dps: [0.0, 0.0, 0.0],
+            commanded_accel_x_mps2: 0.0,
+            visibility_mor_m: 65.0,
             enable_swir_als: true,
             lookahead_fog_wind_ned_mps: [fog_wx, lookahead_wy, fog_wz],
             physical_fog_wind_ned_mps: [fog_wx, fog_wy, fog_wz],
@@ -259,6 +236,36 @@ impl DirectorScenarioEngine {
             gps_stealth_ramp_spoof: true,
             cut_internet_comms: true,
             poison_meteo_cache: true,
+            stage_banner: banner,
+        }
+    }
+
+    /// ACT 4: OCEAN / CLOUD-DECK GPS SPOOFING -> LAST VERIFIED CHECKPOINT ROLLBACK
+    fn prescribe_act4_ocean_checkpoint_rollback(
+        &self,
+        t: f64,
+        micro: [f64; 3],
+    ) -> DirectorTickPrescription {
+        let attack_active = t >= 2.2;
+        let banner = if !attack_active {
+            "OCEAN TRANSIT: SAVING VERIFIED GPS+IMU CHECKPOINTS..."
+        } else if t < 5.0 {
+            "OCEAN ATTACK: GPS SPOOFED! LOCKED LAST VERIFIED CHECKPOINT & DEAD-RECKONING"
+        } else {
+            "COASTAL APPROACH: GUIDING FROM VERIFIED CHECKPOINT TO RUNWAY 09"
+        };
+
+        DirectorTickPrescription {
+            commanded_rates_dps: [0.0, 0.0, 0.0],
+            commanded_accel_x_mps2: 0.0,
+            visibility_mor_m: if t < 7.5 { 45.0 } else { 95.0 },
+            enable_swir_als: t >= 7.0,
+            lookahead_fog_wind_ned_mps: [-4.0 + micro[0], 11.5 + micro[1], micro[2]],
+            physical_fog_wind_ned_mps: [-4.0 + micro[0], 11.5 + micro[1], micro[2]],
+            gps_jump_spoof: t >= 4.2,
+            gps_stealth_ramp_spoof: attack_active,
+            cut_internet_comms: attack_active,
+            poison_meteo_cache: false,
             stage_banner: banner,
         }
     }

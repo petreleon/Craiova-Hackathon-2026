@@ -7,6 +7,7 @@
 
 pub mod cli_train;
 pub mod director_scenarios;
+pub mod flightgear_bridge;
 pub mod rt_loop_60hz;
 pub mod sim_commands;
 pub mod ws_telemetry;
@@ -109,6 +110,26 @@ pub struct LrcvRunwayGuidance {
     pub als_bars_detected: usize,
     pub photonic_certainty_mean: f64,
     pub swir_als_active: bool,
+    #[serde(default)]
+    pub flare_active: bool,
+    #[serde(default)]
+    pub gear_down: bool,
+    #[serde(default)]
+    pub autobrake_armed: bool,
+    #[serde(default)]
+    pub spoilers_deployed: bool,
+    #[serde(default)]
+    pub reverse_thrust_active: bool,
+    #[serde(default)]
+    pub landing_complete: bool,
+    #[serde(default)]
+    pub crashed: bool,
+    #[serde(default)]
+    pub crash_reason: String,
+    #[serde(default)]
+    pub touchdown_vs_mps: f64,
+    #[serde(default)]
+    pub touchdown_lateral_err_m: f64,
 }
 
 /// 5. Status Cyber-Security Dual-Layer & GPU AI (`candle-core`).
@@ -125,6 +146,23 @@ pub struct CyberGpuTelemetry {
     pub live_training_progress: Option<TrainingProgressTelemetry>,
     pub active_director_scenario: u8,
     pub cyber_flags: CyberAttackFlags,
+    #[serde(default)]
+    pub flightgear_live: bool,
+    #[serde(default)]
+    pub flightgear_near_lrcv: bool,
+    #[serde(default)]
+    pub fg_autoland_assist: bool,
+    #[serde(default = "default_true_bool")]
+    pub shield_protection_enabled: bool,
+    #[serde(default)]
+    pub checkpoint_locked: bool,
+    #[serde(default)]
+    pub verified_checkpoint_ned: [f64; 3],
+}
+
+#[inline]
+const fn default_true_bool() -> bool {
+    true
 }
 
 /// Flag-urile active din Sandbox-ul Red-Team Cyber-Warfare (Art. 21).
@@ -337,5 +375,343 @@ mod tests {
             .meteo_source_status
             .contains("REAL AVIATION FOG VIDEO"));
         assert!(frame.approach_phase.contains("REAL FOG VIDEO REPLAY"));
+    }
+
+    #[test]
+    fn test_auto_loop_at_runway_end_prevents_freeze_and_preserves_state() {
+        let mut sim = make_test_sim();
+        sim.apply_command(SimCommand::ConfigureCyberAttack {
+            gps_jump_spoof: true,
+            gps_stealth_ramp_spoof: false,
+            cut_internet_comms: false,
+            poison_meteo_cache: false,
+        });
+
+        let mut reached_full_stop = false;
+        let mut looped_back_to_approach = false;
+
+        // 3500 cadre la 60 Hz (~58s): parcurge apropierea de la -1600m + Flare + Autobrake la 0 km/h + 6s dwell + auto-loop
+        for _ in 0..3500 {
+            let f = sim.step_60hz(1.0 / 60.0);
+            let x = f.aircraft_pose.pos_ned_m[0];
+            if f.lrcv_guidance.landing_complete && x >= 250.0 {
+                reached_full_stop = true;
+                assert_eq!(f.aircraft_pose.vel_body_mps[0], 0.0);
+            }
+            if reached_full_stop && x < -1400.0 {
+                looped_back_to_approach = true;
+                // Atacul GPS manual rămâne activ și după auto-loop!
+                assert!(f.cyber_and_gpu.cyber_flags.gps_jump_spoof);
+                break;
+            }
+        }
+
+        assert!(reached_full_stop);
+        assert!(looped_back_to_approach);
+    }
+
+    #[test]
+    fn test_manual_cyber_attack_stops_active_director_scenario() {
+        let mut sim = make_test_sim();
+        sim.apply_command(SimCommand::TriggerDirectorScenario { scenario_id: 3 });
+
+        let f_dir = sim.step_60hz(1.0 / 60.0);
+        assert_eq!(f_dir.cyber_and_gpu.active_director_scenario, 3);
+        assert!(f_dir.cyber_and_gpu.cyber_flags.gps_stealth_ramp_spoof);
+
+        // Utilizatorul apasă manual pe „Atac GPS Brusc" în timpul Scenariului 3:
+        // Director Mode trebuie să se oprească și să nu mai suprascrie flag-urile manuale!
+        sim.apply_command(SimCommand::ConfigureCyberAttack {
+            gps_jump_spoof: true,
+            gps_stealth_ramp_spoof: false,
+            cut_internet_comms: false,
+            poison_meteo_cache: false,
+        });
+
+        for _ in 0..10 {
+            let f_manual = sim.step_60hz(1.0 / 60.0);
+            assert_eq!(f_manual.cyber_and_gpu.active_director_scenario, 0);
+            assert!(f_manual.cyber_and_gpu.cyber_flags.gps_jump_spoof);
+            assert!(!f_manual.cyber_and_gpu.cyber_flags.gps_stealth_ramp_spoof);
+        }
+    }
+
+    #[test]
+    fn test_flight_director_converges_and_stays_locked_when_pilot_follows_circle() {
+        let mut sim = make_test_sim();
+        let f0 = sim.step_60hz(1.0 / 60.0);
+        // La start, cercul verde este perfect centrat pe botul avionului
+        assert!(f0.lrcv_guidance.glideslope_error_deg.abs() < 0.25);
+        assert!(f0.lrcv_guidance.heading_correction_deg.abs() < 0.25);
+
+        // Pilotul trage brusc de manșă în sus (+9 deg „spre lună") și virează dreapta (+11 deg)
+        sim.apply_command(SimCommand::ManeuverStep {
+            d_yaw_deg: 11.0,
+            d_pitch_deg: 9.0,
+            d_roll_deg: 0.0,
+            d_throttle_mps: 0.0,
+        });
+        let f_disturbed = sim.step_60hz(1.0 / 60.0);
+        // Cercul verde îi cere acum clar să coboare botul (< -7 deg) și să vireze stânga (< -9 deg)
+        assert!(f_disturbed.lrcv_guidance.glideslope_error_deg < -7.0);
+        assert!(f_disturbed.lrcv_guidance.heading_correction_deg < -9.0);
+
+        // Pilotul urmează indicația cercului verde
+        sim.apply_command(SimCommand::ManeuverStep {
+            d_yaw_deg: f_disturbed.lrcv_guidance.heading_correction_deg,
+            d_pitch_deg: f_disturbed.lrcv_guidance.glideslope_error_deg,
+            d_roll_deg: 0.0,
+            d_throttle_mps: 0.0,
+        });
+
+        // După aliniere și încă 3 secunde (180 cadre) de zbor liber, cercul verde RĂMÂNE FIX pe centru!
+        let mut f_locked = sim.step_60hz(1.0 / 60.0);
+        for _ in 0..180 {
+            f_locked = sim.step_60hz(1.0 / 60.0);
+        }
+        assert!(f_locked.lrcv_guidance.glideslope_error_deg.abs() < 0.35);
+        assert!(f_locked.lrcv_guidance.heading_correction_deg.abs() < 0.35);
+    }
+
+    #[test]
+    fn test_landing_flare_reduces_sink_rate_before_touchdown() {
+        let mut sim = make_test_sim();
+        let f_high = sim.step_60hz(1.0 / 60.0);
+        let initial_sink_mps = f_high.aircraft_pose.vel_ground_ned_mps[2];
+        assert!(initial_sink_mps > 3.2);
+        assert!(!f_high.lrcv_guidance.flare_active);
+
+        let mut saw_flare_zone = false;
+        let mut min_flare_sink_before_touchdown = 99.0_f64;
+
+        for _ in 0..2100 {
+            let f = sim.step_60hz(1.0 / 60.0);
+            let h_agl = -f.aircraft_pose.pos_ned_m[2];
+            if f.lrcv_guidance.flare_active {
+                saw_flare_zone = true;
+            }
+            if (0.5..=3.5).contains(&h_agl) {
+                min_flare_sink_before_touchdown =
+                    min_flare_sink_before_touchdown.min(f.aircraft_pose.vel_ground_ned_mps[2]);
+            }
+            if h_agl <= 0.1 {
+                break;
+            }
+        }
+
+        assert!(saw_flare_zone);
+        // Rata de coborâre înainte de contact scade de la ~3.56 m/s sub 1.25 m/s datorită Flare-ului!
+        assert!(min_flare_sink_before_touchdown < 1.25);
+    }
+
+    #[test]
+    fn test_full_landing_rollout_autobrake_to_zero_speed_and_manual_gear_x() {
+        let raw_json = serde_json::json!({
+            "type": "ConfigureLandingSystems",
+            "payload": { "gear_down": true, "autobrake_armed": true }
+        });
+        let parsed = SimCommand::parse_flexible_json(&raw_json);
+        assert_eq!(
+            parsed,
+            Some(SimCommand::ConfigureLandingSystems {
+                gear_down: Some(true),
+                autobrake_armed: Some(true),
+            })
+        );
+
+        let mut sim = make_test_sim();
+        let f0 = sim.step_60hz(1.0 / 60.0);
+        assert!(!f0.lrcv_guidance.gear_down);
+        assert!(!f0.lrcv_guidance.autobrake_armed);
+
+        // Pilotul apasă tasta [X] (armează Trenul de Aterizare + Autobrake)
+        sim.apply_command(SimCommand::ConfigureLandingSystems {
+            gear_down: Some(true),
+            autobrake_armed: Some(true),
+        });
+
+        let mut final_frame = sim.step_60hz(1.0 / 60.0);
+        assert!(final_frame.lrcv_guidance.gear_down);
+        assert!(final_frame.lrcv_guidance.autobrake_armed);
+
+        for _ in 0..3000 {
+            final_frame = sim.step_60hz(1.0 / 60.0);
+            if final_frame.lrcv_guidance.landing_complete {
+                break;
+            }
+        }
+
+        assert!(final_frame.lrcv_guidance.landing_complete);
+        assert!(final_frame.lrcv_guidance.spoilers_deployed);
+        assert!(!final_frame.lrcv_guidance.reverse_thrust_active);
+        assert_eq!(final_frame.aircraft_pose.vel_body_mps[0], 0.0);
+        assert!(final_frame.aircraft_pose.vel_ground_ned_mps[0].abs() < 1e-6);
+        assert!(final_frame.lrcv_guidance.touchdown_vs_mps < 1.35);
+
+        let stopped_x = final_frame.aircraft_pose.pos_ned_m[0];
+        assert!(stopped_x > 250.0 && stopped_x < 1200.0);
+
+        // Fără taxi și fără auto-loop nedorit după ce pilotul a interacționat manual (încă 10 secunde / 600 cadre)
+        for _ in 0..600 {
+            final_frame = sim.step_60hz(1.0 / 60.0);
+        }
+        assert!(final_frame.lrcv_guidance.landing_complete);
+        assert!(!final_frame.lrcv_guidance.crashed);
+        assert_eq!(final_frame.aircraft_pose.vel_body_mps[0], 0.0);
+        assert!((final_frame.aircraft_pose.pos_ned_m[0] - stopped_x).abs() < 1e-6);
+    }
+
+    #[test]
+    fn test_crosswind_physically_drifts_aircraft_and_requires_crab_angle() {
+        let mut sim = make_test_sim();
+        sim.apply_command(SimCommand::SetCrosswind {
+            wx_ned_mps: -3.0,
+            wy_ned_mps: 18.0,
+            turbulence_intensity: 0.35,
+        });
+
+        let mut frame = sim.step_60hz(1.0 / 60.0);
+        // Imediat, reticulul Flight Director cere unghi de Crab stânga (< -10 deg) împotriva vântului!
+        assert!(frame.lrcv_guidance.heading_correction_deg < -10.0);
+        assert!(frame.aircraft_pose.crab_angle_cmd_deg < -10.0);
+
+        for _ in 0..180 {
+            frame = sim.step_60hz(1.0 / 60.0);
+        }
+
+        // În 3 secunde fără corecție din partea pilotului, vântul lateral de 18 m/s împinge fizic avionul > 45m spre dreapta!
+        assert!(frame.aircraft_pose.pos_ned_m[1] > 45.0);
+    }
+
+    #[test]
+    fn test_crash_system_detects_hard_impact_and_off_runway_cfit() {
+        let mut sim = make_test_sim();
+
+        // 1) Picaj abrupt înainte de pistă (CFIT)
+        sim.apply_command(SimCommand::ManeuverStep {
+            d_yaw_deg: 0.0,
+            d_pitch_deg: -18.0,
+            d_roll_deg: 0.0,
+            d_throttle_mps: 0.0,
+        });
+
+        let mut frame = sim.step_60hz(1.0 / 60.0);
+        for _ in 0..600 {
+            frame = sim.step_60hz(1.0 / 60.0);
+            if frame.lrcv_guidance.crashed {
+                break;
+            }
+        }
+        assert!(frame.lrcv_guidance.crashed);
+        assert!(frame.lrcv_guidance.crash_reason.contains("CFIT"));
+        assert_eq!(frame.aircraft_pose.vel_body_mps[0], 0.0);
+
+        // 2) Resetul curăță starea de Crash; apoi testăm aterizare pe burtă (Gear UP [G]) pe pistă
+        sim.apply_command(SimCommand::ResetApproach);
+        let reset_frame = sim.step_60hz(1.0 / 60.0);
+        assert!(!reset_frame.lrcv_guidance.crashed);
+
+        sim.apply_command(SimCommand::ConfigureLandingSystems {
+            gear_down: Some(false),
+            autobrake_armed: Some(true),
+        });
+        let mut belly_frame = sim.step_60hz(1.0 / 60.0);
+        for _ in 0..2500 {
+            belly_frame = sim.step_60hz(1.0 / 60.0);
+            if belly_frame.lrcv_guidance.crashed {
+                break;
+            }
+        }
+        assert!(belly_frame.lrcv_guidance.crashed);
+        assert!(belly_frame.lrcv_guidance.crash_reason.contains("BURTĂ"));
+    }
+
+    #[test]
+    fn test_scenario_2_starts_unaligned_and_requires_pilot_maneuver() {
+        let mut sim = make_test_sim();
+        sim.apply_command(SimCommand::TriggerDirectorScenario { scenario_id: 2 });
+
+        let f0 = sim.step_60hz(1.0 / 60.0);
+        // Avionul pornește la ~195m în stânga axului pistei, în ceață densă (65m), dezaliniat:
+        assert!(f0.aircraft_pose.pos_ned_m[1] < -190.0);
+        assert!((f0.fog_and_meteo.visibility_mor_m - 65.0).abs() < 1e-6);
+        // Punctul verde este mult mai mobil (> +20° la start) pentru a comanda un viraj S-Turn de interceptare a axului:
+        assert!(f0.lrcv_guidance.heading_correction_deg > 20.0);
+        assert_eq!(f0.cyber_and_gpu.active_director_scenario, 2);
+
+        // Dacă pilotul NU manevrează deloc timp de 2 secunde, avionul NU se auto-aliniază singur:
+        let mut f_no_input = f0;
+        for _ in 0..120 {
+            f_no_input = sim.step_60hz(1.0 / 60.0);
+        }
+        assert!(f_no_input.aircraft_pose.pos_ned_m[1] < -180.0);
+
+        // Când pilotul urmărește activ punctul verde (Flight Director), legea S-Turn (Localizer Intercept + Lead Rollout)
+        // aliniază aeronava pe axul pistei ÎNAINTE de prag și elimină aterizarea pe diagonală:
+        let mut f_cur = f_no_input;
+        for _ in 0..2200 {
+            if f_cur.lrcv_guidance.spoilers_deployed || f_cur.lrcv_guidance.crashed {
+                break;
+            }
+            let hdg_cmd = (f_cur.lrcv_guidance.heading_correction_deg * 0.12).clamp(-1.8, 1.8);
+            let gs_cmd = (f_cur.lrcv_guidance.glideslope_error_deg * 0.12).clamp(-0.8, 0.8);
+            sim.apply_command(SimCommand::ManeuverStep {
+                d_yaw_deg: hdg_cmd,
+                d_pitch_deg: gs_cmd,
+                d_roll_deg: hdg_cmd * 0.8,
+                d_throttle_mps: 0.0,
+            });
+            f_cur = sim.step_60hz(1.0 / 60.0);
+        }
+        assert_eq!(f_cur.cyber_and_gpu.active_director_scenario, 2);
+        assert!(f_cur.lrcv_guidance.spoilers_deployed);
+        assert!(!f_cur.lrcv_guidance.crashed);
+        // La touchdown, aeronava este pe centrul pistei (|y| < 6m) și aliniată drept (fără aterizare diagonală!):
+        assert!(f_cur.aircraft_pose.pos_ned_m[1].abs() < 6.0);
+        let vx = f_cur.aircraft_pose.vel_ground_ned_mps[0];
+        let vy = f_cur.aircraft_pose.vel_ground_ned_mps[1];
+        let touchdown_track_deg = vy.atan2(vx.max(1.0)).to_degrees();
+        assert!(touchdown_track_deg.abs() < 3.5);
+    }
+
+    #[test]
+    fn test_shield_disabled_causes_closed_loop_spoof_deviation() {
+        let mut sim_shielded = make_test_sim();
+        let mut sim_unshielded = make_test_sim();
+
+        sim_shielded.apply_command(SimCommand::ConfigureCyberAttack {
+            gps_jump_spoof: true,
+            gps_stealth_ramp_spoof: false,
+            cut_internet_comms: false,
+            poison_meteo_cache: false,
+        });
+        sim_unshielded.apply_command(SimCommand::SetShieldProtection { enabled: false });
+        sim_unshielded.apply_command(SimCommand::ConfigureCyberAttack {
+            gps_jump_spoof: true,
+            gps_stealth_ramp_spoof: false,
+            cut_internet_comms: false,
+            poison_meteo_cache: false,
+        });
+
+        let mut f_shield = sim_shielded.step_60hz(1.0 / 60.0);
+        let mut f_unshield = sim_unshielded.step_60hz(1.0 / 60.0);
+        for _ in 0..360 {
+            f_shield = sim_shielded.step_60hz(1.0 / 60.0);
+            f_unshield = sim_unshielded.step_60hz(1.0 / 60.0);
+            if f_unshield.lrcv_guidance.crashed {
+                break;
+            }
+        }
+
+        // Cu Scutul AERO-SHIELD ACTIV: avionul rămâne perfect pe axul pistei (|y| < 1.0m) și carantinează GPS-ul!
+        assert!(f_shield.cyber_and_gpu.shield_protection_enabled);
+        assert!(f_shield.aircraft_pose.pos_ned_m[1].abs() < 1.0);
+        assert!(!f_shield.lrcv_guidance.crashed);
+
+        // Cu Scutul OPRIT (Avion Clasic): autopilotul urmărește GPS-ul falsificat și deviază sever în afara axului!
+        assert!(!f_unshield.cyber_and_gpu.shield_protection_enabled);
+        assert!(
+            f_unshield.aircraft_pose.pos_ned_m[1].abs() > 35.0 || f_unshield.lrcv_guidance.crashed
+        );
     }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- AERO-SHIELD LRCV V2.0 — FlightGear Nasal HUD & CAT IIIc Autoland Loader -->
+<PropertyList>
+  <aero-shield>
+    <active type="int">0</active>
+    <autoland-cmd type="int">0</autoland-cmd>
+  </aero-shield>
+  <nasal>
+    <aero_shield>
+      <file>/home/monk/Downloads/hackathon/Craiova-Hackathon-2026/flightgear/aero_shield_hud.nas</file>
+    </aero_shield>
+  </nasal>
+</PropertyList>

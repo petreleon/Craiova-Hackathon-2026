@@ -79,6 +79,26 @@ pub enum SimCommand {
     /// Activează redarea și fuziunea metricilor extrase din videoclipuri reale de aviație (aterizare în ceață)
     /// din `real_videos/` (`🎬 TEST REAL FOG VIDEO`).
     ReplayRealVideo,
+    /// Configurează manual trenul de aterizare (`gear_down`) și sistemul `Autobrake` (`autobrake_armed`).
+    ConfigureLandingSystems {
+        gear_down: Option<bool>,
+        autobrake_armed: Option<bool>,
+    },
+    /// Setează vântul lateral / frontal continuu în simulator (`wy_ned_mps`: pozitiv = împinge spre dreapta pistei).
+    SetCrosswind {
+        wx_ned_mps: f64,
+        wy_ned_mps: f64,
+        turbulence_intensity: f64,
+    },
+    /// Activează/dezactivează protecția în buclă închisă `AERO-SHIELD` (`enabled = false` demonstrează
+    /// ce pățește un avion clasic când urmează orbește semnalul GPS falsificat!).
+    SetShieldProtection {
+        enabled: bool,
+    },
+    /// Activează/dezactivează asistența Autoland CAT IIIc transmisă înapoi către FlightGear prin UDP (`:5506`).
+    SetFlightGearAutoland {
+        enabled: bool,
+    },
     /// Resetează aeronava la începutul conului de apropiere LRCV RWY 09.
     ResetApproach,
 }
@@ -144,10 +164,32 @@ impl SimCommand {
             },
             SimCommand::TriggerDirectorScenario { scenario_id } => {
                 SimCommand::TriggerDirectorScenario {
-                    scenario_id: scenario_id.clamp(1, 3),
+                    scenario_id: scenario_id.clamp(1, 4),
                 }
             }
             SimCommand::ReplayRealVideo => SimCommand::ReplayRealVideo,
+            SimCommand::ConfigureLandingSystems {
+                gear_down,
+                autobrake_armed,
+            } => SimCommand::ConfigureLandingSystems {
+                gear_down,
+                autobrake_armed,
+            },
+            SimCommand::SetCrosswind {
+                wx_ned_mps,
+                wy_ned_mps,
+                turbulence_intensity,
+            } => SimCommand::SetCrosswind {
+                wx_ned_mps: sanitize_f64(wx_ned_mps, -35.0, 35.0, 0.0),
+                wy_ned_mps: sanitize_f64(wy_ned_mps, -35.0, 35.0, 0.0),
+                turbulence_intensity: sanitize_f64(turbulence_intensity, 0.0, 1.0, 0.25),
+            },
+            SimCommand::SetShieldProtection { enabled } => {
+                SimCommand::SetShieldProtection { enabled }
+            }
+            SimCommand::SetFlightGearAutoland { enabled } => {
+                SimCommand::SetFlightGearAutoland { enabled }
+            }
             SimCommand::ResetApproach => SimCommand::ResetApproach,
         }
     }
@@ -234,6 +276,42 @@ impl SimCommand {
                 d_throttle_mps: -5.0,
             },
             "replay_real_video" | "ReplayRealVideo" => SimCommand::ReplayRealVideo,
+            "configure_landing_systems" | "ConfigureLandingSystems" | "arm_landing" => {
+                let gear_down = val.get("gear_down").and_then(|v| v.as_bool());
+                let autobrake_armed = val.get("autobrake_armed").and_then(|v| v.as_bool());
+                SimCommand::ConfigureLandingSystems {
+                    gear_down: gear_down.or(Some(true)),
+                    autobrake_armed: autobrake_armed.or(Some(true)),
+                }
+            }
+            "set_crosswind" | "SetCrosswind" | "crosswind" => {
+                let wy = val
+                    .get("wy_ned_mps")
+                    .or_else(|| val.get("crosswind_mps"))
+                    .and_then(|v| v.as_f64())
+                    .unwrap_or(0.0);
+                let wx = val
+                    .get("wx_ned_mps")
+                    .and_then(|v| v.as_f64())
+                    .unwrap_or(0.0);
+                let turb = val
+                    .get("turbulence_intensity")
+                    .and_then(|v| v.as_f64())
+                    .unwrap_or(0.25);
+                SimCommand::SetCrosswind {
+                    wx_ned_mps: wx,
+                    wy_ned_mps: wy,
+                    turbulence_intensity: turb,
+                }
+            }
+            "set_shield_protection" | "SetShieldProtection" => {
+                let enabled = val.get("enabled").and_then(|v| v.as_bool()).unwrap_or(true);
+                SimCommand::SetShieldProtection { enabled }
+            }
+            "set_flightgear_autoland" | "SetFlightGearAutoland" => {
+                let enabled = val.get("enabled").and_then(|v| v.as_bool()).unwrap_or(false);
+                SimCommand::SetFlightGearAutoland { enabled }
+            }
             "reset" | "reset_approach" | "ResetApproach" => SimCommand::ResetApproach,
             _ => return None,
         };

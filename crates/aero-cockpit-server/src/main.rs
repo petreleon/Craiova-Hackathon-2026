@@ -16,6 +16,9 @@ use tokio::sync::watch;
 use tracing::{error, info};
 
 use aero_cockpit_server::cli_train::{run_candle_fine_tuning_job, ActiveAiModel};
+use aero_cockpit_server::flightgear_bridge::{
+    spawn_flightgear_udp_listener, FlightGearLiveState,
+};
 use aero_cockpit_server::rt_loop_60hz::{
     spawn_dedicated_60hz_rt_thread, FlightSimulator60Hz, LRCV_RWY09_LAT_DEG, LRCV_RWY09_LON_DEG,
 };
@@ -39,6 +42,9 @@ async fn main() {
         Arc::new(ArcSwap::from_pointee(None));
     let live_meteo = Arc::new(ArcSwap::from_pointee(LiveMeteoSnapshot::default()));
     let is_training_flag = Arc::new(AtomicBool::new(false));
+    let fg_live_state: Arc<ArcSwap<Option<FlightGearLiveState>>> =
+        Arc::new(ArcSwap::from_pointee(None));
+    spawn_flightgear_udp_listener(Arc::clone(&fg_live_state));
 
     info!(
         "AERO-SHIELD LRCV V2.0 starting — Target Threshold: Craiova RWY 09 ({:.4}N, {:.4}E)",
@@ -96,6 +102,7 @@ async fn main() {
         Arc::clone(&training_progress),
         Arc::clone(&live_meteo),
         Arc::clone(&is_training_flag),
+        Arc::clone(&fg_live_state),
     ) {
         error!("Failed to spawn aero-60hz-rt-loop thread: {}", err);
         return;

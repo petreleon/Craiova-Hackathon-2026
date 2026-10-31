@@ -361,6 +361,7 @@ pub fn run_real_video_benchmark(
 
     let prior_v_ground = Vector3::new(0.0, 3.4, 68.0);
     let gyro_bias = Vector3::zeros();
+    let mut prev_swir: Option<Vec<f32>> = None;
 
     for (idx, rgb_bytes) in raw_frames.iter().enumerate() {
         let t_sec = idx as f64 * dt;
@@ -369,6 +370,39 @@ pub fn run_real_video_benchmark(
 
         let dual_frame =
             rgb24_to_dual_band_frame(rgb_bytes, width, height, idx as u64, t_sec, &kin, 120.0)?;
+
+        // Pentru filmări MP4 fără telemetrie IMU atașată, estimăm rotația globală a camerei (shake q, r)
+        // din banda superioară deasupra orizontului (unde rho_ground == 0) ca să nu confundăm zdruncinarea camerei cu vântul!
+        if let Some(ref prev) = prev_swir {
+            let sky_h = (height / 3).max(4);
+            let mut sum_du = 0.0_f64;
+            let mut sum_dv = 0.0_f64;
+            let mut sum_w = 0.0_f64;
+            for py in 2..sky_h.saturating_sub(2) {
+                for px in 2..width.saturating_sub(2) {
+                    let c = py * width + px;
+                    let ix = 0.5 * f64::from(dual_frame.swir_band[c + 1] - dual_frame.swir_band[c - 1]);
+                    let iy = 0.5 * f64::from(dual_frame.swir_band[c + width] - dual_frame.swir_band[c - width]);
+                    let it = f64::from(dual_frame.swir_band[c] - prev[c]);
+                    let g2 = ix * ix + iy * iy;
+                    if g2 > 1e-3 {
+                        sum_du += (-it * ix / (g2 + 1e-3)).clamp(-4.0, 4.0) * g2;
+                        sum_dv += (-it * iy / (g2 + 1e-3)).clamp(-4.0, 4.0) * g2;
+                        sum_w += g2;
+                    }
+                }
+            }
+            if sum_w > 1e-2 {
+                let du_norm = (sum_du / sum_w) / (0.5 * width as f64);
+                let dv_norm = (sum_dv / sum_w) / (0.5 * height as f64);
+                kin.q_radps = (-dv_norm / dt).clamp(-0.65, 0.65);
+                kin.r_radps = (-du_norm / dt).clamp(-0.65, 0.65);
+            } else {
+                kin.q_radps = 0.0;
+                kin.r_radps = 0.0;
+            }
+        }
+        prev_swir = Some(dual_frame.swir_band.clone());
 
         // Check input frame finiteness
         if !dual_frame.vis_band.iter().all(|v| v.is_finite())
@@ -412,7 +446,12 @@ pub fn run_real_video_benchmark(
         sum_fog_patches += report.motion_estimate.active_fog_patches as f64;
         sum_w_photon += report.mean_photonic_weight;
         sum_v_ground += report.motion_estimate.v_ground_body_mps;
-        sum_w_fog += report.motion_estimate.w_fog_body_mps;
+        let wf = report.motion_estimate.w_fog_body_mps;
+        sum_w_fog += Vector3::new(
+            wf.x.clamp(-24.0, 24.0),
+            wf.y.clamp(-24.0, 24.0),
+            wf.z.clamp(-12.0, 12.0),
+        );
         total_als_beacons += report.als_suppression.beacons.len();
         if report.motion_estimate.gust_warning_active {
             gust_triggers += 1;
@@ -579,6 +618,15 @@ mod tests {
             println!("Notice: real_videos directory not present in local test environment; skipping live file pass.");
             return;
         };
+
+        if std::process::Command::new("ffmpeg")
+            .arg("-version")
+            .output()
+            .is_err()
+        {
+            println!("Notice: ffmpeg binary not installed in PATH; skipping offline MP4 decode pass.");
+            return;
+        }
 
         let mut entries: Vec<(PathBuf, String)> = Vec::new();
         if let Ok(read_dir) = fs::read_dir(&dir) {

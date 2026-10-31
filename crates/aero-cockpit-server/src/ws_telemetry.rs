@@ -26,6 +26,7 @@ use crate::{LiveMeteoSnapshot, TelemetryFrameV2};
 
 /// HTML-ul static încapsulat în binar (`include_str!`) pentru funcționare 100% autonomă.
 pub const EMBEDDED_INDEX_HTML: &str = include_str!("../static/index.html");
+pub const EMBEDDED_COMPLEX_HTML: &str = include_str!("../static/index_complex_backup.html");
 
 /// Starea partajată a serverului Axum.
 #[derive(Clone)]
@@ -65,6 +66,7 @@ pub fn build_cockpit_router(state: CockpitServerState) -> Router {
     Router::new()
         .route("/", get(serve_index_html))
         .route("/index.html", get(serve_index_html))
+        .route("/complex", get(serve_complex_html))
         .route("/ws/telemetry", get(ws_telemetry_handler))
         .route("/api/command", post(post_sim_command_handler))
         .route("/api/health", get(get_health_handler))
@@ -74,8 +76,15 @@ pub fn build_cockpit_router(state: CockpitServerState) -> Router {
         .with_state(state)
 }
 
-async fn serve_index_html() -> Html<&'static str> {
-    Html(EMBEDDED_INDEX_HTML)
+async fn serve_index_html() -> Html<String> {
+    if let Ok(disk_html) = std::fs::read_to_string("crates/aero-cockpit-server/static/index.html") {
+        return Html(disk_html);
+    }
+    Html(EMBEDDED_INDEX_HTML.to_string())
+}
+
+async fn serve_complex_html() -> Html<&'static str> {
+    Html(EMBEDDED_COMPLEX_HTML)
 }
 
 async fn get_health_handler(State(state): State<CockpitServerState>) -> Json<HealthResponse> {
