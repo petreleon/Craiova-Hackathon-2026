@@ -78,6 +78,7 @@ def run_fast_storm_simulation() -> dict:
     approach_crab_deg = 11.5
 
     touchdown_snap = None
+    mid_approach_snap = None
     touchdown_latched = False
 
     # Simulate up to 90 seconds (5400 steps at 60 Hz)
@@ -117,6 +118,18 @@ def run_fast_storm_simulation() -> dict:
         raw_xtk_rate = clamp((y_m - prev_y_m) / dt, -8.0, 8.0)
         prev_y_m = y_m
         xtk_rate_filt = 0.75 * xtk_rate_filt + 0.25 * raw_xtk_rate
+
+        if x_m >= -900.0 and mid_approach_snap is None:
+            mid_approach_snap = {
+                "t_sec": round(t_sec, 2),
+                "x_m": round(x_m, 2),
+                "agl_m": round(h_agl, 2),
+                "xtk_m": round(y_m, 4),
+                "hdg_deg": round(cur_hdg, 4),
+                "hdg_err_rwy_deg": round(wrap180(cur_hdg - rwy_hdg), 4),
+                "hdg_corr_deg": round(fd["heading_correction_deg"], 4),
+                "gs_err_deg": round(fd["glideslope_error_deg"], 4),
+            }
 
         if h_agl <= 1.25 and x_m >= -15.0 and not touchdown_latched:
             touchdown_latched = True
@@ -167,7 +180,7 @@ def run_fast_storm_simulation() -> dict:
             if spd_mps <= 0.3:
                 break
         else:
-            if h_agl > 38.0:
+            if h_agl > 250.0:
                 approach_crab_deg = 0.92 * approach_crab_deg + 0.08 * fd["crab_needed_deg"]
             eff_crab = (
                 fd["crab_needed_deg"]
@@ -207,7 +220,7 @@ def run_fast_storm_simulation() -> dict:
             # Second-order roll, pitch, and yaw response driven by JSBSim-extracted derivatives
             p_dps = (ap["cmd_roll_deg"] - cur_roll) * 5.8
             cur_roll += p_dps * dt
-            slip_blend = 1.0 - smoothstep_c1(12.0, 42.0, h_agl)
+            slip_blend = ap["slip_blend"]
             weathervane_yaw = eff_crab * 0.45 * slip_blend
             target_r_dps = (
                 cur_roll * 1.45 * (1.0 - slip_blend)
@@ -250,8 +263,16 @@ def run_fast_storm_simulation() -> dict:
 
     final_hdg_err = wrap180(cur_hdg - rwy_hdg)
     on_runway = touchdown_latched and (-15.0 <= x_m <= 2485.0) and (abs(y_m) < 1.5)
+    mid_ok = (
+        mid_approach_snap is not None
+        and abs(mid_approach_snap["xtk_m"]) < 1.5
+        and abs(mid_approach_snap["hdg_err_rwy_deg"]) < 1.5
+        and abs(mid_approach_snap["hdg_corr_deg"]) < 0.5
+        and abs(mid_approach_snap["gs_err_deg"]) < 0.3
+    )
     verdict_pass = (
         on_runway
+        and mid_ok
         and abs(touchdown_snap["xtk_m"]) < 1.5
         and abs(y_m) < 1.5
         and abs(touchdown_snap["hdg_err_rwy_deg"]) < 1.5
@@ -264,6 +285,7 @@ def run_fast_storm_simulation() -> dict:
     return {
         "verdict": "PASS" if verdict_pass else "FAIL",
         "touchdown_on_runway": bool(on_runway),
+        "mid_approach_58m_agl": mid_approach_snap,
         "touchdown": touchdown_snap,
         "rollout_stop": {
             "x_m": round(x_m, 2),

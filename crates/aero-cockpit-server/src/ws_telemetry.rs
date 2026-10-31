@@ -38,6 +38,7 @@ use crate::{LiveMeteoSnapshot, TelemetryFrameV2};
 /// HTML-ul static încapsulat în binar (`include_str!`) pentru funcționare 100% autonomă.
 pub const EMBEDDED_INDEX_HTML: &str = include_str!("../static/index.html");
 pub const EMBEDDED_COMPLEX_HTML: &str = include_str!("../static/index.html");
+pub const EMBEDDED_VIDEO_DEMO_HTML: &str = include_str!("../static/video_demo.html");
 
 /// Starea partajată a serverului Axum.
 #[derive(Clone)]
@@ -81,6 +82,8 @@ pub fn build_cockpit_router(state: CockpitServerState) -> Router {
         .route("/pagina/:page_num", get(serve_concept_page_html))
         .route("/prezentare", get(serve_pitch_5min_html))
         .route("/5min", get(serve_pitch_5min_html))
+        .route("/video-demo", get(serve_video_demo_html))
+        .route("/demo", get(serve_video_demo_html))
         .route("/ghid-pdf", get(ghid_pdf_handler))
         .route("/lectii-6-ani", get(get_lessons_6yo_standalone_handler))
         .route("/api/lessons-6yo", get(get_lessons_6yo_handler))
@@ -141,6 +144,13 @@ async fn get_lessons_6yo_standalone_handler() -> Html<String> {
 
 async fn serve_pitch_5min_html() -> Html<String> {
     Html(render_pitch_5min_page().into_string())
+}
+
+async fn serve_video_demo_html() -> Html<String> {
+    if let Ok(disk_html) = std::fs::read_to_string("crates/aero-cockpit-server/static/video_demo.html") {
+        return Html(disk_html);
+    }
+    Html(EMBEDDED_VIDEO_DEMO_HTML.to_string())
 }
 
 async fn get_flightgear_tests_handler() -> Json<FlightGearTestSuiteReport> {

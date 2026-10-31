@@ -1780,8 +1780,9 @@
           ctx.restore();
 
           // 6a. Poarta 3D Conformă HITS pe Pista 09 (proiectată 3D Pinhole cu ruliu, tangaj și yaw!)
-          const xGate3D = Math.max(0, Math.min(rwyLenM, camX + 180));
-          const hGate3D = Math.max(3.5, (110 - xGate3D) * Math.tan((3.0 * Math.PI) / 180));
+          const aimXRefGate = c.flightgear_live_connected ? 210 : 110;
+          const xGate3D = Math.max(-3000, Math.min(rwyLenM, camX + 180));
+          const hGate3D = Math.max(2.0, (aimXRefGate - xGate3D) * Math.tan((3.0 * Math.PI) / 180));
           const gTL = projectPoint3D(xGate3D, -22.5, -(hGate3D + 8.0));
           const gTR = projectPoint3D(xGate3D,  22.5, -(hGate3D + 8.0));
           const gBR = projectPoint3D(xGate3D,  22.5, -Math.max(0, hGate3D - 8.0));
@@ -2030,8 +2031,9 @@
       }
 
       // RETICUL 3D CONFORM FLIGHT DIRECTOR + SIMBOL 3D FPV (Flight Path Vector proiectat Pinhole pe Pista 09!)
-      const xAim3D = Math.max(0, Math.min(1500, camX + 180));
-      const hAim3D = Math.max(3.5, (110 - xAim3D) * Math.tan((3.0 * Math.PI) / 180));
+      const aimXRef = c.flightgear_live_connected ? 210 : 110;
+      const xAim3D = Math.max(-3000, Math.min(c.flightgear_live_connected ? 2400 : 1500, camX + 180));
+      const hAim3D = Math.max(2.0, (aimXRef - xAim3D) * Math.tan((3.0 * Math.PI) / 180));
       const aimPt3D = projectPoint3D(xAim3D, 0, -hAim3D);
 
       const vxGnd = p.vel_ground_ned_mps[0] || 36;

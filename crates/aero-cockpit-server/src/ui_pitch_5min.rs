@@ -48,8 +48,8 @@ pub const FIVE_MINUTE_PITCH_SLIDES: [PitchMinuteSlide; 5] = [
         simple_formula_ro: "Minciuna GPS = |500 m (GPS fals) − 0 m (Pista reală)| = 500 m > 2 m ➔ GPS Fals Oprit!",
         btn_problem_ro: "🔴 SIMULEAZĂ CEAȚA + ATACUL GPS",
         btn_solution_ro: "🟢 PORNEȘTE SCUTUL AERO-SHIELD",
-        video_url: "/real_videos/real_01_cat3_whiteout_cockpit_lc130.mp4",
-        video_caption_ro: "🎬 Filmare Reală din Cabină (CAT III Whiteout) vs. Aterizare AERO-SHIELD pe Pista 09 Craiova",
+        video_url: "/real_videos/Autonomous_FLIGH_AEROSHIELD.mp4",
+        video_caption_ro: "🎬 Zbor Autonom Înregistrat (Pista 09 Craiova): Ceață CAT IIIc + Bruiaj GPS (+250m) vs. AERO-SHIELD",
         teleprompter_ro: "„La Craiova, ceața deasă și bruiajul GPS opresc avioanele; sistemul nostru detectează instantaneu GPS-ul fals și aterizează avionul fără GPS, cu eroare sub 1 metru.”",
     },
     PitchMinuteSlide {
@@ -141,6 +141,9 @@ pub fn render_pitch_5min_page() -> Markup {
                 header class="pitch-topbar" {
                     div class="pitch-brand-group" {
                         span class="pitch-brand-title" { "✈️ AERO-SHIELD CRAIOVA (5 MIN PITCH)" }
+                        a class="pitch-link-btn pitch-link-tech" href="/video-demo" {
+                            "🎬 Regie Video & Q&A (/video-demo)"
+                        }
                         a class="pitch-link-btn pitch-link-tech" href="/pagina/1" {
                             "🔬 Platforma Tehnică (/pagina/1)"
                         }
@@ -251,8 +254,11 @@ pub fn render_pitch_5min_page() -> Markup {
                                 strong id="pitch-video-caption" style="color:#67E8F9; font-size:14px;" {
                                     (s1.video_caption_ro)
                                 }
-                                span class="pitch-mini-badge" style="border-color:#38BDF8; color:#67E8F9;" {
-                                    "VIDEO SEPARAT 100% CLAR"
+                                div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;" {
+                                    button onclick="playAutonomousFlightAt(0)" style="background:#065F46; color:#FFF; border:1.5px solid #00FF9D; border-radius:7px; padding:3px 8px; font-size:11.5px; font-weight:800; cursor:pointer;" { "🎬 00:00 Spoof" }
+                                    button onclick="playAutonomousFlightAt(26)" style="background:#070B14; color:#67E8F9; border:1.5px solid #38BDF8; border-radius:7px; padding:3px 8px; font-size:11.5px; font-weight:800; cursor:pointer;" { "00:26 3 Ecrane" }
+                                    button onclick="playAutonomousFlightAt(64)" style="background:#070B14; color:#FDE047; border:1.5px solid #FDE047; border-radius:7px; padding:3px 8px; font-size:11.5px; font-weight:800; cursor:pointer;" { "01:04 Apare Pista" }
+                                    button onclick="playAutonomousFlightAt(75)" style="background:#070B14; color:#00FF9D; border:1.5px solid #00FF9D; border-radius:7px; padding:3px 8px; font-size:11.5px; font-weight:800; cursor:pointer;" { "01:15 Touchdown 0.2m" }
                                 }
                             }
                             video
@@ -641,8 +647,8 @@ const PITCH_SLIDES = {
     simple_formula_ro: "Minciuna GPS = |500 m (GPS fals) − 0 m (Pista reală)| = 500 m > 2 m ➔ GPS Fals Oprit!",
     btn_problem_ro: "🔴 SIMULEAZĂ CEAȚA + ATACUL GPS",
     btn_solution_ro: "🟢 PORNEȘTE SCUTUL AERO-SHIELD",
-    video_url: "/real_videos/real_01_cat3_whiteout_cockpit_lc130.mp4",
-    video_caption_ro: "🎬 Filmare Reală din Cabină (CAT III Whiteout) vs. Aterizare AERO-SHIELD pe Pista 09 Craiova",
+    video_url: "/real_videos/Autonomous_FLIGH_AEROSHIELD.mp4",
+    video_caption_ro: "🎬 Zbor Autonom Înregistrat (Pista 09 Craiova): Ceață CAT IIIc + Bruiaj GPS (+250m) vs. AERO-SHIELD",
     teleprompter_ro: "„La Craiova, ceața deasă și bruiajul GPS opresc avioanele; sistemul nostru detectează instantaneu GPS-ul fals și aterizează avionul fără GPS, cu eroare sub 1 metru.”"
   },
   2: {
@@ -792,6 +798,23 @@ function togglePitchSolutionState() {
   isPitchSolutionActive = !isPitchSolutionActive;
   updatePitchActionUi();
   renderPitchCanvas();
+}
+
+function playAutonomousFlightAt(sec) {
+  const vid = document.getElementById("pitchVideo");
+  const cap = document.getElementById("pitch-video-caption");
+  const targetUrl = "/real_videos/Autonomous_FLIGH_AEROSHIELD.mp4";
+  if (cap) {
+    cap.textContent = "🎬 Zbor Autonom Înregistrat (Pista 09 Craiova): Ceață CAT IIIc + Bruiaj GPS (+250m) vs. AERO-SHIELD";
+  }
+  if (vid) {
+    if (vid.getAttribute("src") !== targetUrl) {
+      vid.setAttribute("src", targetUrl);
+      vid.load();
+    }
+    vid.currentTime = Number(sec) || 0;
+    vid.play().catch(() => {});
+  }
 }
 
 function formatPitchTimer(sec) {

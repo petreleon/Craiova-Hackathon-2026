@@ -64,9 +64,13 @@ COMMON_BRIDGES=(
   "--prop:/local-weather/autostart=0"
   "--prop:/sim/gui/dialogs/metar/mode/local-weather=0"
   "--prop:/environment/weather-scenario=Manual input"
-  "--metar=XXXX 012345Z 17514G18KT 0220 +TSRA FG BKN002 OVC004 14/14 Q1002"
-  "--prop:/environment/rain-norm=0.85"
-  "--prop:/environment/turbulence/magnitude-norm=0.28"
+  "--metar=XXXX 011200Z 08902KT 0240 FG NSC 18/18 Q1018"
+  "--prop:/environment/rain-norm=0.0"
+  "--prop:/environment/snow-norm=0.0"
+  "--prop:/environment/turbulence/magnitude-norm=0.0"
+  "--prop:/environment/aircraft-effects/fog-level=0.0"
+  "--prop:/environment/aircraft-effects/frost-level=0.0"
+  "--prop:/controls/anti-ice/window-heat=1"
   "--prop:/aero-shield/autoland-local=1"
   "--prop:/aero-shield/autoland-cmd=1"
   "--prop:/fdm/jsbsim/running=1"
@@ -83,8 +87,7 @@ COMMON_BRIDGES=(
   "--generic=socket,in,20,127.0.0.1,5506,udp,aero_shield"
   "--telnet=socket,bi,60,127.0.0.1,5501,tcp"
   "--config=$SCRIPT_DIR/flightgear/aero_shield_config.xml"
-  "--enable-hud"
-  "--enable-hud-3d"
+  "--disable-hud"
 )
 
 echo "✈️  Pornire FlightGear <-> AERO-SHIELD (Altitudine 950 ft MSL = ~525 ft / 160m AGL pe panta de 3.0° la 1.4 NM de LRCV)"
@@ -107,10 +110,10 @@ elif [ "${1:-}" = "--unaligned" ]; then
     --altitude=980 \
     --vc=75 \
     --heading=85 \
-    --visibility=160 \
-    --wind=175@10 \
+    --visibility=240 \
+    --wind=89@2 \
     --disable-real-weather-fetch \
-    --timeofday=dusk \
+    --timeofday=noon \
     "${COMMON_BRIDGES[@]}" \
     "$@" 2>&1 | tee "$LOG_FILE"
 elif [ "${1:-}" = "--autoland" ]; then
@@ -122,10 +125,10 @@ elif [ "${1:-}" = "--autoland" ]; then
     --altitude=950 \
     --vc=75 \
     --heading=88.93 \
-    --visibility=150 \
-    --wind=175@8 \
+    --visibility=240 \
+    --wind=89@2 \
     --disable-real-weather-fetch \
-    --timeofday=dusk \
+    --timeofday=noon \
     --prop:/aero-shield/autoland-local=1 \
     "${COMMON_BRIDGES[@]}" \
     "$@" 2>&1 | tee "$LOG_FILE"
@@ -138,10 +141,10 @@ else
     --altitude=950 \
     --vc=75 \
     --heading=88.93 \
-    --visibility=160 \
-    --wind=175@7 \
+    --visibility=240 \
+    --wind=89@2 \
     --disable-real-weather-fetch \
-    --timeofday=dusk \
+    --timeofday=noon \
     "${COMMON_BRIDGES[@]}" \
     "$@" 2>&1 | tee "$LOG_FILE"
 fi

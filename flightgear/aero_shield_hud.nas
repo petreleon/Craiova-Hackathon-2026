@@ -141,7 +141,12 @@ var build_cdi_bar = func(xtk_m) {
 var spawn_3d_fog_tunnel = func() {
     if (tunnel_spawned) return;
     tunnel_spawned = 1;
-    setprop("/sim/model/geometry/square/top", 1);
+    setprop("/sim/model/geometry/square/top", 0);
+    setprop("/sim/model/geometry/square/left", 0);
+    setprop("/sim/model/geometry/square/right", 0);
+    setprop("/sim/model/geometry/square/bottom", 0);
+    setprop("/sim/hud/visibility[0]", 0);
+    setprop("/sim/hud/visibility[1]", 0);
 
     var apt = airportinfo("LRCV");
     if (apt != nil and contains(apt, "runways") and contains(apt.runways, "09")) {
@@ -160,18 +165,18 @@ var spawn_3d_fog_tunnel = func() {
     var base_elev = (g_info != nil and size(g_info) > 0 and g_info[0] != nil) ? g_info[0] : LRCV_ELEV_M;
 
     var cursor = geo.Coord.new(thr);
-    cursor.apply_course_distance(LRCV_RWY_HDG, 140.0);
+    cursor.apply_course_distance(LRCV_RWY_HDG, 210.0);
     var step_m = 85.0;
     var gs_rad = 3.0 * math.pi / 180.0;
-    var dz_m = step_m * math.sin(gs_rad) / math.cos(gs_rad);
-    var cur_alt = base_elev + 2.0;
+    var tan_gs = math.sin(gs_rad) / math.cos(gs_rad);
 
-    for (var i = 0; i < 20; i += 1) {
-        cursor.set_alt(cur_alt);
-        var mdl = geo.put_model("Models/Geometry/square.xml", cursor, LRCV_RWY_HDG);
+    for (var i = 1; i <= 20; i += 1) {
+        var dist_from_tdz = i * step_m;
+        var gate_coord = geo.Coord.new(cursor);
+        gate_coord.apply_course_distance(LRCV_RWY_HDG + 180.0, dist_from_tdz);
+        gate_coord.set_alt(base_elev + dist_from_tdz * tan_gs);
+        var mdl = geo.put_model("Models/Geometry/square.xml", gate_coord, LRCV_RWY_HDG);
         append(tunnel_models, mdl);
-        cursor.apply_course_distance(LRCV_RWY_HDG + 180.0, step_m);
-        cur_alt += dz_m;
     }
 };
 
@@ -792,9 +797,9 @@ var compute_local_lrcv_guidance = func() {
     var ground_blend = on_rwy_x * on_gnd_z;
 
     var crab_est = clamp(wrap180(rel_yaw - act_rel_trk), -22.0, 22.0);
-    var decrab_w = smoothstep_c1(12.0, 42.0, agl_m) * (1.0 - ground_blend);
-    var flare_yaw = clamp(tgt_rel_trk * 0.22, -1.0, 1.0);
-    var desired_rel_yaw = clamp((tgt_rel_trk + crab_est) * decrab_w + flare_yaw * (1.0 - decrab_w), -45.0, 45.0);
+    var decrab_w = smoothstep_c1(250.0, 320.0, agl_m) * (1.0 - ground_blend);
+    var flare_align_scale = 0.22 + 0.78 * smoothstep_c1(6.0, 14.0, agl_m);
+    var desired_rel_yaw = clamp(tgt_rel_trk * flare_align_scale + crab_est * decrab_w, -45.0, 45.0);
     var tgt_hdg = LRCV_RWY_HDG + desired_rel_yaw;
     var hdg_corr = wrap180(tgt_hdg - hdg);
 
@@ -966,7 +971,7 @@ var update_aero_shield_hud = func() {
     var y_ac = xtk_m;
     var z_ac = -math.max(1.8, agl_m);
     var yaw_rel_rad = wrap180(cur_hdg - LRCV_RWY_HDG) * math.pi / 180.0;
-    var pitch_rad_3d = cur_pitch * math.pi / 180.0;
+    var pitch_rad_3d = ((agl_m > 1.8 ? (local_g.act_fpa or -3.0) : cur_pitch)) * math.pi / 180.0;
     var roll_rad_3d = cur_roll * math.pi / 180.0;
 
     rwy_poly_path.reset();
@@ -975,7 +980,7 @@ var update_aero_shield_hud = func() {
 
     # Pista 09 are lungimea fizica 2485m (X = 0 .. 2485m). Cand x_ac > 2465m, avionul a depasit pista (Overrun)!
     var x_near = math.max(0.0, x_ac + 10.0);
-    var x_far  = math.min(2485.0, math.max(x_near + 25.0, x_ac + 1650.0));
+    var x_far  = 2485.0;
     if (x_ac < 2465.0 and x_near < x_far) {
         var p_nl = project_rwy_pt3d(x_near, -22.5, 0.0, x_ac, y_ac, z_ac, yaw_rel_rad, pitch_rad_3d, roll_rad_3d, cx, cy, focal);
         var p_nr = project_rwy_pt3d(x_near,  22.5, 0.0, x_ac, y_ac, z_ac, yaw_rel_rad, pitch_rad_3d, roll_rad_3d, cx, cy, focal);
@@ -1015,8 +1020,8 @@ var update_aero_shield_hud = func() {
 
     # Proiectie 3D Conforma pe Pista a Portii HITS (gate_box_path), a Simbolului FPV 3D (fpv_group) si a Punctului Verde (fd_group)
     gate_box_path.reset();
-    var x_gate = clamp(x_ac + 180.0, 0.0, 2400.0);
-    var h_gate = math.max(3.5, (210.0 - x_gate) * 0.05240778);
+    var x_gate = clamp(x_ac + 180.0, -3000.0, 2400.0);
+    var h_gate = math.max(2.0, (210.0 - x_gate) * 0.05240778);
     var g_tl = project_rwy_pt3d(x_gate, -22.5, -(h_gate + 8.0), x_ac, y_ac, z_ac, yaw_rel_rad, pitch_rad_3d, roll_rad_3d, cx, cy, focal);
     var g_tr = project_rwy_pt3d(x_gate,  22.5, -(h_gate + 8.0), x_ac, y_ac, z_ac, yaw_rel_rad, pitch_rad_3d, roll_rad_3d, cx, cy, focal);
     var g_br = project_rwy_pt3d(x_gate,  22.5, -math.max(0.0, h_gate - 8.0), x_ac, y_ac, z_ac, yaw_rel_rad, pitch_rad_3d, roll_rad_3d, cx, cy, focal);
@@ -1028,12 +1033,6 @@ var update_aero_shield_hud = func() {
                      .lineTo(g_bl[0], g_bl[1])
                      .close();
     }
-
-    var p_aim3d = project_rwy_pt3d(x_gate, 0.0, -h_gate, x_ac, y_ac, z_ac, yaw_rel_rad, pitch_rad_3d, roll_rad_3d, cx, cy, focal);
-    var base_fd_x = p_aim3d != nil ? p_aim3d[0] : cx;
-    var base_fd_y = p_aim3d != nil ? p_aim3d[1] : cy;
-    var fd_x = clamp(base_fd_x + hdg_corr * 3.2, 32.0, 356.0);
-    var fd_y = clamp(base_fd_y - gs_err * 5.5, 42.0, 210.0);
 
     var d_fpv = 180.0;
     var trk_rad = (local_g.act_rel_trk or 0.0) * math.pi / 180.0;
@@ -1049,6 +1048,9 @@ var update_aero_shield_hud = func() {
     if (fpv_group != nil) {
         fpv_group.setTranslation(fpv_x, fpv_y);
     }
+
+    var fd_x = clamp(cx + hdg_corr * 3.8, 32.0, 356.0);
+    var fd_y = clamp(cy - gs_err * 6.5, 42.0, 210.0);
 
     fd_vec_path.reset();
     fd_vec_path.moveTo(fpv_x, fpv_y).lineTo(fd_x, fd_y);
@@ -1159,9 +1161,13 @@ var update_aero_shield_hud = func() {
             "WATCHDOG CHI2: %.2f (Prag 18.5) | CUSUM: %.2f (Prag 6.5) | CARANTINA GPS: %s",
             chi2_val, cusum_val, (quar > 0 or spoof_jam_active > 0) ? "DA (BLOCAT)" : "NU"
         ));
+        var st_locks = getprop("/aero-shield/star-tracker/stars-locked") or 8;
+        var st_snr = getprop("/aero-shield/star-tracker/mean-snr-swir-db") or 24.8;
+        var st_aerr = getprop("/aero-shield/star-tracker/attitude-err-arcsec") or 4.2;
+        var st_src = getprop("/aero-shield/star-tracker/ephemeris-source") or "IAU2006_J2000_STELLARIUM";
         cyber_txt_cmp.setText(sprintf(
-            "ABATERE: AERO-SHIELD=%+.1fm (PISTA) | GPS SPOOF=%+.1fm | BRUIAJ INS=%+.1fm",
-            shield_xtk_val, spoof_xtk_val, ins_xtk_val
+            "ABATERE: SHIELD=%+.1fm | SPOOF=%+.1fm | SWIR 2.2um (%s): %d STELE SNR=%.1fdB Att=%.1f\"",
+            shield_xtk_val, spoof_xtk_val, st_src, st_locks, st_snr, st_aerr
         ));
     }
 
@@ -1223,7 +1229,11 @@ var update_aero_shield_hud = func() {
         math.abs(xtk_m) < 10.0 ? 0.45 : 0.20
     );
     hud_win.write(
-        sprintf("GLIDESLOPE: %s", pitch_txt),
+        sprintf("GLIDESLOPE: %s | SWIR 2.2um STAR TRACKER: %d LOCKS (SNR %.1fdB, Att %.1f\")",
+            pitch_txt,
+            getprop("/aero-shield/star-tracker/stars-locked") or 8,
+            getprop("/aero-shield/star-tracker/mean-snr-swir-db") or 24.8,
+            getprop("/aero-shield/star-tracker/attitude-err-arcsec") or 4.2),
         flare > 0 ? 0.25 : 0.92,
         0.96,
         flare > 0 ? 1.0 : 0.35
@@ -1339,21 +1349,43 @@ var update_aero_shield_hud = func() {
     settimer(update_aero_shield_hud, 0.05);
 };
 
+var apply_cat3_daylight_fog_env = func() {
+    call(func { fgcommand("timeofday", props.Node.new({"timeofday": "noon"})); }, []);
+    setprop("/environment/weather-scenario", "Manual input");
+    setprop("/environment/metar/data", "XXXX 011200Z 08902KT 0240 FG NSC 18/18 Q1018");
+    setprop("/environment/config/enabled", 1);
+    setprop("/environment/params/metar-updates-environment", 0);
+    setprop("/environment/config/presets/visibility-m", 240.0);
+    setprop("/environment/config/presets/visibility-m-override", 1);
+    setprop("/environment/config/presets/wind-from-north-fps", -0.06);
+    setprop("/environment/config/presets/wind-from-east-fps", -3.37);
+    setprop("/environment/config/presets/wind-override", 1);
+    setprop("/environment/config/presets/turbulence-magnitude-norm", 0.0);
+    setprop("/environment/config/presets/turbulence-magnitude-norm-override", 1);
+    setprop("/environment/visibility-m", 240.0);
+    setprop("/environment/effective-visibility-m", 240.0);
+    setprop("/environment/wind-from-heading-deg", 89.0);
+    setprop("/environment/wind-speed-kt", 2.0);
+    setprop("/environment/rain-norm", 0.0);
+    setprop("/environment/snow-norm", 0.0);
+    setprop("/environment/turbulence/magnitude-norm", 0.0);
+    setprop("/environment/aircraft-effects/fog-level", 0.0);
+    setprop("/environment/aircraft-effects/frost-level", 0.0);
+    setprop("/environment/aircraft-effects/rain-Splash-norm", 0.0);
+    setprop("/environment/aircraft-effects/use-wipers", 0);
+    setprop("/controls/anti-ice/window-heat", 1);
+    setprop("/controls/lighting/cabin-heat", 1.0);
+    setprop("/controls/lighting/defrost", 1.0);
+    for (var ci = 0; ci < 5; ci += 1) {
+        setprop("/environment/clouds/layer[" ~ ci ~ "]/coverage", "clear");
+        setprop("/environment/clouds/layer[" ~ ci ~ "]/coverage-type", 5);
+    }
+};
+
 _setlistener("/sim/signals/fdm-initialized", func {
     setprop("/aero-shield/autoland-local", 1);
     setprop("/aero-shield/autoland-cmd", 1);
-    setprop("/environment/weather-scenario", "Manual input");
-    setprop("/environment/metar/data", "XXXX 012345Z 17514G18KT 0220 +TSRA FG BKN002 OVC004 14/14 Q1002");
-    setprop("/environment/config/enabled", 1);
-    setprop("/environment/params/metar-updates-environment", 0);
-    setprop("/environment/config/presets/visibility-m", 220.0);
-    setprop("/environment/config/presets/visibility-m-override", 1);
-    setprop("/environment/config/presets/wind-from-north-fps", -23.5394);
-    setprop("/environment/config/presets/wind-from-east-fps", 2.0594);
-    setprop("/environment/config/presets/wind-override", 1);
-    setprop("/environment/config/presets/turbulence-magnitude-norm", 0.28);
-    setprop("/environment/config/presets/turbulence-magnitude-norm-override", 1);
-    setprop("/environment/rain-norm", 0.85);
+    apply_cat3_daylight_fog_env();
     setprop("/controls/engines/engine/use-primer", 0);
     setprop("/controls/engines/engine[0]/use-primer", 0);
     setprop("/fdm/jsbsim/settings/damage", 0);
@@ -1378,18 +1410,7 @@ _setlistener("/sim/signals/fdm-initialized", func {
 if (getprop("/sim/signals/fdm-initialized") and !hud_loop_running) {
     setprop("/aero-shield/autoland-local", 1);
     setprop("/aero-shield/autoland-cmd", 1);
-    setprop("/environment/weather-scenario", "Manual input");
-    setprop("/environment/metar/data", "XXXX 012345Z 17514G18KT 0220 +TSRA FG BKN002 OVC004 14/14 Q1002");
-    setprop("/environment/config/enabled", 1);
-    setprop("/environment/params/metar-updates-environment", 0);
-    setprop("/environment/config/presets/visibility-m", 220.0);
-    setprop("/environment/config/presets/visibility-m-override", 1);
-    setprop("/environment/config/presets/wind-from-north-fps", -23.5394);
-    setprop("/environment/config/presets/wind-from-east-fps", 2.0594);
-    setprop("/environment/config/presets/wind-override", 1);
-    setprop("/environment/config/presets/turbulence-magnitude-norm", 0.28);
-    setprop("/environment/config/presets/turbulence-magnitude-norm-override", 1);
-    setprop("/environment/rain-norm", 0.85);
+    apply_cat3_daylight_fog_env();
     hud_loop_running = 1;
     settimer(update_aero_shield_hud, 0.10);
 }

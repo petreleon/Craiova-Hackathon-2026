@@ -106,10 +106,10 @@ def compute_unified_fd_guidance_py(
         rel_yaw_deg if raw_horiz_speed < 3.0 else math.degrees(math.atan2(vy_mps, max(0.5, vx_mps)))
     )
     crab_needed_deg = clamp(wrap180(rel_yaw_deg - actual_track_deg), -22.0, 22.0) if raw_horiz_speed > 6.0 else 0.0
-    decrab_factor = smoothstep_c1(12.0, 42.0, alt_agl_m) * (1.0 - ground_blend)
-    flare_yaw_deg = clamp(target_track_deg * 0.22, -1.0, 1.0)
+    decrab_factor = smoothstep_c1(250.0, 320.0, alt_agl_m) * (1.0 - ground_blend)
+    flare_align_scale = 0.22 + 0.78 * smoothstep_c1(6.0, 14.0, alt_agl_m)
     desired_rel_yaw_deg = clamp(
-        (target_track_deg + crab_needed_deg) * decrab_factor + flare_yaw_deg * (1.0 - decrab_factor),
+        target_track_deg * flare_align_scale + crab_needed_deg * decrab_factor,
         -45.0,
         45.0,
     )
@@ -196,7 +196,9 @@ def compute_ap_control_from_fd(
       AERO-SHIELD's unified Flight Director (`gs_err_deg -> 0.0`, `cur_pitch_deg -> tgt_pit_deg`).
     """
     hdg_corr = wrap180(tgt_hdg_deg - cur_hdg_deg)
-    slip_blend = 1.0 - smoothstep_c1(12.0, 42.0, agl_m)
+    low_alt_slip = 1.0 - smoothstep_c1(12.0, 42.0, agl_m)
+    crosswind_slip = smoothstep_c1(0.5, 2.5, abs(crab_deg)) * (1.0 - smoothstep_c1(250.0, 320.0, agl_m))
+    slip_blend = max(low_alt_slip, crosswind_slip)
     if slip_blend > 0.02:
         xtk_int_next = clamp(xtk_int + xtk_m * dt * 0.90, -8.5, 8.5)
         rud_int_next = clamp(
@@ -295,6 +297,7 @@ def compute_ap_control_from_fd(
         "rud_int": rud_int_next,
         "gs_int": gs_int_next,
         "elev_int": elev_int_next,
+        "slip_blend": slip_blend,
     }
 
 
@@ -581,44 +584,83 @@ def set_spoof_jam_mode(enabled: bool, stealth: bool = False, shield_on: bool = T
 
 def apply_storm_weather(mcp: FlightGearMcpClient) -> None:
     """
-    Configure CAT IIIc Thunderstorm + Heavy Rain + Fog (+TSRA FG) in FlightGear:
-      - Wind: 175 deg @ 14 kt (14 kt * 1.68781 = 23.629 fps; from 175 deg -> north=-23.5394 fps, east=+2.0594 fps)
-      - Visibility: 220 m
-      - Rain: 0.85, Turbulence: 0.28
+    Configure weather in FlightGear:
+      - Default (CAT III Daylight Fog for clean visual recording):
+        Daylight (noon), Visibility 240 m, Wind 089 deg @ 2.0 kt (calm headwind),
+        Rain 0.0, Turbulence 0.0, clear upper sky (no dark clouds), zero windshield fog/frost.
+      - If FG_FORCE_STORM=1:
+        Thunderstorm + Heavy Rain + Crosswind (175 deg @ 14 kt, Rain 0.85, Turbulence 0.28).
     """
+    if os.environ.get("FG_FORCE_STORM", "0") == "1":
+        mcp.set_batch([
+            ("/environment/config/enabled", 1),
+            ("/environment/params/metar-updates-environment", 0),
+            ("/environment/config/presets/visibility-m", 220.0),
+            ("/environment/config/presets/visibility-m-override", 1),
+            ("/environment/config/presets/wind-from-north-fps", -23.5394),
+            ("/environment/config/presets/wind-from-east-fps", 2.0594),
+            ("/environment/config/presets/wind-override", 1),
+            ("/environment/config/presets/turbulence-magnitude-norm", 0.28),
+            ("/environment/config/presets/turbulence-magnitude-norm-override", 1),
+            ("/environment/visibility-m", 220.0),
+            ("/environment/wind-from-heading-deg", 175.0),
+            ("/environment/wind-speed-kt", 14.0),
+            ("/environment/rain-norm", 0.85),
+            ("/environment/turbulence/magnitude-norm", 0.28),
+        ])
+        post_aeroshield_cmd({"type": "SetFogDensity", "payload": {"visibility_m": 180.0}})
+        post_aeroshield_cmd({"type": "SetCrosswind", "payload": {"wind_mps": 7.2, "turbulence": 0.35}})
+        return
+
     mcp.set_batch([
+        ("/environment/weather-scenario", "Manual input"),
+        ("/environment/metar/data", "XXXX 011200Z 08902KT 0240 FG NSC 18/18 Q1018"),
         ("/environment/config/enabled", 1),
         ("/environment/params/metar-updates-environment", 0),
-        ("/environment/config/presets/visibility-m", 220.0),
+        ("/environment/config/presets/visibility-m", 240.0),
         ("/environment/config/presets/visibility-m-override", 1),
-        ("/environment/config/presets/wind-from-north-fps", -23.5394),
-        ("/environment/config/presets/wind-from-east-fps", 2.0594),
+        ("/environment/config/presets/wind-from-north-fps", -0.06),
+        ("/environment/config/presets/wind-from-east-fps", -3.37),
         ("/environment/config/presets/wind-override", 1),
-        ("/environment/config/presets/turbulence-magnitude-norm", 0.28),
+        ("/environment/config/presets/turbulence-magnitude-norm", 0.0),
         ("/environment/config/presets/turbulence-magnitude-norm-override", 1),
-        ("/environment/config/boundary/entry[0]/visibility-m", 220.0),
-        ("/environment/config/boundary/entry[0]/wind-from-heading-deg", 175.0),
-        ("/environment/config/boundary/entry[0]/wind-speed-kt", 14.0),
-        ("/environment/config/boundary/entry[0]/turbulence-norm", 0.28),
-        ("/environment/config/boundary/entry[1]/visibility-m", 220.0),
-        ("/environment/config/boundary/entry[1]/wind-from-heading-deg", 175.0),
-        ("/environment/config/boundary/entry[1]/wind-speed-kt", 14.0),
-        ("/environment/config/boundary/entry[1]/turbulence-norm", 0.28),
-        ("/environment/config/aloft/entry[0]/visibility-m", 220.0),
-        ("/environment/config/aloft/entry[0]/wind-from-heading-deg", 175.0),
-        ("/environment/config/aloft/entry[0]/wind-speed-kt", 16.0),
-        ("/environment/config/aloft/entry[0]/turbulence-norm", 0.28),
-        ("/environment/visibility-m", 220.0),
-        ("/environment/wind-from-heading-deg", 175.0),
-        ("/environment/wind-speed-kt", 14.0),
-        ("/environment/wind-from-north-fps", -23.5394),
-        ("/environment/wind-from-east-fps", 2.0594),
-        ("/environment/rain-norm", 0.85),
-        ("/environment/turbulence/magnitude-norm", 0.28),
-        ("/environment/turbulence/use-cloud-turbulence", 1),
+        ("/environment/config/boundary/entry[0]/visibility-m", 240.0),
+        ("/environment/config/boundary/entry[0]/wind-from-heading-deg", 89.0),
+        ("/environment/config/boundary/entry[0]/wind-speed-kt", 2.0),
+        ("/environment/config/boundary/entry[0]/turbulence-norm", 0.0),
+        ("/environment/config/boundary/entry[1]/visibility-m", 240.0),
+        ("/environment/config/boundary/entry[1]/wind-from-heading-deg", 89.0),
+        ("/environment/config/boundary/entry[1]/wind-speed-kt", 2.0),
+        ("/environment/config/boundary/entry[1]/turbulence-norm", 0.0),
+        ("/environment/config/aloft/entry[0]/visibility-m", 240.0),
+        ("/environment/config/aloft/entry[0]/wind-from-heading-deg", 89.0),
+        ("/environment/config/aloft/entry[0]/wind-speed-kt", 2.0),
+        ("/environment/config/aloft/entry[0]/turbulence-norm", 0.0),
+        ("/environment/visibility-m", 240.0),
+        ("/environment/effective-visibility-m", 240.0),
+        ("/environment/wind-from-heading-deg", 89.0),
+        ("/environment/wind-speed-kt", 2.0),
+        ("/environment/wind-from-north-fps", -0.06),
+        ("/environment/wind-from-east-fps", -3.37),
+        ("/environment/rain-norm", 0.0),
+        ("/environment/snow-norm", 0.0),
+        ("/environment/turbulence/magnitude-norm", 0.0),
+        ("/environment/turbulence/use-cloud-turbulence", 0),
+        ("/environment/aircraft-effects/fog-level", 0.0),
+        ("/environment/aircraft-effects/frost-level", 0.0),
+        ("/environment/aircraft-effects/rain-Splash-norm", 0.0),
+        ("/environment/aircraft-effects/use-wipers", 0),
+        ("/controls/anti-ice/window-heat", 1),
+        ("/controls/lighting/cabin-heat", 1.0),
+        ("/controls/lighting/defrost", 1.0),
+        ("/environment/clouds/layer[0]/coverage", "clear"),
+        ("/environment/clouds/layer[1]/coverage", "clear"),
+        ("/environment/clouds/layer[2]/coverage", "clear"),
+        ("/environment/clouds/layer[3]/coverage", "clear"),
+        ("/environment/clouds/layer[4]/coverage", "clear"),
     ])
-    post_aeroshield_cmd({"type": "SetFogDensity", "payload": {"visibility_m": 180.0}})
-    post_aeroshield_cmd({"type": "SetCrosswind", "payload": {"wind_mps": 7.2, "turbulence": 0.35}})
+    post_aeroshield_cmd({"type": "SetFogDensity", "payload": {"visibility_m": 240.0}})
+    post_aeroshield_cmd({"type": "SetCrosswind", "payload": {"wind_mps": 0.0, "turbulence": 0.0}})
 
 
 def cmd_verify() -> int:
@@ -637,6 +679,8 @@ def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False) -> int
     apply_storm_weather(mcp)
     post_aeroshield_cmd({"type": "SetShieldProtection", "payload": {"enabled": True}})
     mcp.set_batch([
+        ("/sim/hud/visibility[0]", 0),
+        ("/sim/hud/visibility[1]", 0),
         ("/aero-shield/autoland-local", 0),
         ("/aero-shield/autoland-cmd", 0),
         ("/aero-shield/fg-mcp-override", 1),
@@ -682,7 +726,7 @@ def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False) -> int
     elev_int = 0.0
     cmd_pit = -1.0
     hdg_corr = 0.0
-    approach_crab_deg = 12.2
+    approach_crab_deg = 0.0
     touchdown_latched = False
     delayed_spoof_triggered = False
 
@@ -842,8 +886,19 @@ def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False) -> int
                 raw_xtk_rate = clamp((xtk_m - prev_xtk_m) / max(0.02, dt), -8.0, 8.0)
                 prev_xtk_m = xtk_m
                 xtk_rate_filt = 0.75 * xtk_rate_filt + 0.25 * raw_xtk_rate
-                if agl_m > 38.0 and kt > 45.0:
+                wind_crab_deg = math.degrees(
+                    math.asin(
+                        clamp(
+                            s["wind_kt"] * math.sin(math.radians(s["wind_dir_deg"] - rwy_hdg)) / max(45.0, kt),
+                            -0.45,
+                            0.45,
+                        )
+                    )
+                )
+                if agl_m > 250.0 and kt > 45.0:
                     approach_crab_deg = 0.92 * approach_crab_deg + 0.08 * s["crab_deg"]
+                else:
+                    approach_crab_deg = wind_crab_deg
                 eff_crab_deg = s["crab_deg"] if abs(s["crab_deg"]) > abs(approach_crab_deg) else approach_crab_deg
                 ap = compute_ap_control_from_fd(
                     tgt_hdg_deg=tgt_hdg,

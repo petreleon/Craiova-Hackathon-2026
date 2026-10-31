@@ -1562,6 +1562,19 @@ pub fn render_full_cockpit_page_at(initial_page: u8) -> Markup {
     }
 }
 
+/// Randează fragmentul HTML al Academiei Micului Pilot (`render_page_1_interactive_school`).
+#[must_use]
+pub fn render_lessons_6yo_component() -> String {
+    let lessons = get_all_6_interactive_lessons();
+    render_page_1_interactive_school(&lessons, true).into_string()
+}
+
+/// Randează pagina standalone a Academiei Micului Pilot (`render_full_cockpit_page_at(1)`).
+#[must_use]
+pub fn render_lessons_6yo_standalone_page() -> String {
+    render_full_cockpit_page_at(1).into_string()
+}
+
 /// Funcția principală SSR care randează aplicația aerisită cu 6 pagini (câte un singur concept vizibil pe ecran).
 #[must_use]
 pub fn render_aero_shield_app_maud_page(state: &CockpitServerState, initial_page: u8) -> Markup {

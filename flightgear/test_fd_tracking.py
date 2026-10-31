@@ -345,6 +345,22 @@ class TestFlightDirectorTrackingAndConfidentlyWrong(unittest.TestCase):
         self.assertLess(abs(res["touchdown"]["hdg_corr_deg"]), 0.5)
         self.assertLess(abs(res["touchdown"]["gs_err_deg"]), 0.3)
 
+    def test_stellarium_swir_star_tracker_fast_verdict(self):
+        """
+        Verifies the Stellarium J2000/ICRS + SWIR 2.2um Infrared Star Tracker suite:
+          - SWIR SNR > 20 dB and > +18 dB gain over Visible in 220m storm fog
+          - 100% Spherical Triangle Star-ID match rate & < 0.02 px sub-pixel centroiding
+          - SVD Wahba 3D attitude error < 0.01 deg (canceling +3.5 deg INS gyro drift)
+          - Combined Astro-Inertial + Storm + GPS Spoofing autoland VERDICT == PASS
+        """
+        from fast_stellarium_swir_verdict import run_all_fast_stellarium_swir_tests
+
+        summary = run_all_fast_stellarium_swir_tests()
+        self.assertEqual(summary["verdict"], "PASS", f"Expected VERDICT PASS, got: {summary}")
+        self.assertTrue(summary["tests"]["test1_stellarium_ephemeris_and_swir_snr"]["pass"])
+        self.assertTrue(summary["tests"]["test2_fpa_centroiding_triangle_id_and_wahba_svd"]["pass"])
+        self.assertTrue(summary["tests"]["test3_combined_fg_stellarium_swir_storm_autoland"]["pass"])
+
 
 if __name__ == "__main__":
     unittest.main()

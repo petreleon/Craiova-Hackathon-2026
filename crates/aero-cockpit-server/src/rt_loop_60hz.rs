@@ -1949,18 +1949,17 @@ pub fn compute_unified_fd_guidance(
         0.0
     };
     let decrab_factor = if flightgear_live {
-        smoothstep_c1(12.0, 42.0, alt_agl_m) * (1.0 - ground_blend)
+        smoothstep_c1(250.0, 320.0, alt_agl_m) * (1.0 - ground_blend)
     } else {
         1.0 - ground_blend
     };
-    let flare_yaw_deg = (target_track_deg * 0.22).clamp(-1.0, 1.0);
-    let desired_rel_yaw_deg = if flightgear_live {
-        ((target_track_deg + crab_needed_deg) * decrab_factor
-            + flare_yaw_deg * (1.0 - decrab_factor))
-            .clamp(-45.0, 45.0)
+    let flare_align_scale = if flightgear_live {
+        0.22 + 0.78 * smoothstep_c1(6.0, 14.0, alt_agl_m)
     } else {
-        (target_track_deg + crab_needed_deg * decrab_factor).clamp(-45.0, 45.0)
+        1.0
     };
+    let desired_rel_yaw_deg =
+        (target_track_deg * flare_align_scale + crab_needed_deg * decrab_factor).clamp(-45.0, 45.0);
     let target_heading_deg = (runway_heading_deg + desired_rel_yaw_deg).rem_euclid(360.0);
     let raw_hdg_corr = wrap180_deg(target_heading_deg - true_heading_deg);
     let heading_correction_deg = sanitize_f64(raw_hdg_corr, -90.0, 90.0, 0.0);
@@ -2246,9 +2245,10 @@ mod tests {
     fn test_crosswind_decrab_aligns_heading_with_runway_before_threshold() {
         let rwy_hdg = LRCV_RWY09_HEADING_DEG;
         // În vânt lateral puternic (vy_wind = 8.0 m/s -> avionul a avut crab de +8°),
-        // la alt_agl_m <= 10.0m pe axul pistei (y = 0, vy = 0), decrab_factor este 0.0
-        // și target_heading_deg este 100% aliniat paralel cu axul Pistei 09 (fără aterizare diagonală!).
-        for &alt_agl_m in &[10.0_f64, 6.0, 2.5] {
+        // pe toată panta finală sub 250m AGL (inclusiv la 82.0m AGL / X=-1434m și <= 10.0m AGL)
+        // pe axul pistei (y = 0, vy = 0), decrab_factor este 0.0 (Wing-Low Forward-Slip)
+        // și target_heading_deg este 100% aliniat paralel cu axul Pistei 09!
+        for &alt_agl_m in &[82.0_f64, 45.0, 10.0, 6.0, 2.5] {
             let ug = compute_unified_fd_guidance(
                 [-15.0, 0.0, -alt_agl_m],
                 [36.0, 0.0, 1.5],
