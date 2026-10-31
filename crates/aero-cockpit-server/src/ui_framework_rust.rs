@@ -192,6 +192,14 @@ pub fn render_header_bar(current_tick: u64, gpu_device: &str, active_page: u8) -
                 }
 
                 div class="lang-and-status" {
+                    a
+                        id="btn-download-ghid-pdf"
+                        href="/ghid-pdf"
+                        target="_blank"
+                        style="background:#FDE047; color:#070B14; font-weight:800; border:2px solid #FFFFFF; padding:8px 16px; border-radius:10px; text-decoration:none; font-size:14px; display:inline-flex; align-items:center; gap:6px;"
+                    {
+                        "📘 Descarcă Ghidul Complet PDF (Explicat de la 0)"
+                    }
                     div class="lang-switch" {
                         button class="lang-btn active" id="btn-lang-ro" onclick="setAppLang('ro')" {
                             "🇷🇴 Română"
@@ -266,6 +274,18 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                             span class="drosophila-bio-pill" { "🔄 HS/VS Stabilizatorul de Viraje 6-DoF" }
                             span class="drosophila-bio-pill" { "🧭 E-PG Busola în Inel 16-Neuroni" }
                             span class="drosophila-bio-pill" { "💨 PFNd Simțul Vântului în Ceață" }
+                        }
+                        div style="margin-top:14px; padding:12px 18px; background:#0B1325; border:2px solid #FDE047; border-radius:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;" {
+                            div style="font-size:15px; font-weight:800; color:#FFFFFF;" {
+                                "📖 Vrei să citești explicația completă pas cu pas pentru toată sala și juriu?"
+                            }
+                            a
+                                href="/ghid-pdf"
+                                target="_blank"
+                                style="background:#FDE047; color:#070B14; font-weight:900; border:2px solid #FFFFFF; padding:8px 16px; border-radius:10px; text-decoration:none; font-size:14.5px; display:inline-flex; align-items:center; gap:6px;"
+                            {
+                                "📘 Descarcă Ghidul Complet PDF (Explicat de la 0 — Toate cele 5 Crate-uri Rust & Formulele Simple)"
+                            }
                         }
                     }
                     div class="stars-box" id="school-stars-progress" {
@@ -3385,6 +3405,8 @@ mod tests {
         assert!(html_p5.contains("id=\"maud-school-legend-html\""));
 
         let html = render_full_cockpit_page_at(6).into_string();
+        assert!(html.contains("/ghid-pdf"));
+        assert!(html.contains("Descarcă Ghidul Complet PDF"));
         assert!(html.contains("id=\"zone-long-range-100km\""));
         assert!(html.contains("100.000 km Fără GPS"));
         assert!(html.contains("Cele 3 Formule Simple pe Înțelesul Tuturor"));

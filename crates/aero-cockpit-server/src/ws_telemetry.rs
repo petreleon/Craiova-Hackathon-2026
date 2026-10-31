@@ -9,7 +9,7 @@ use std::time::{Duration, Instant};
 use arc_swap::ArcSwap;
 use axum::extract::ws::{Message, WebSocket, WebSocketUpgrade};
 use axum::extract::{Path as AxumPath, Query, State};
-use axum::http::StatusCode;
+use axum::http::{header, StatusCode};
 use axum::response::{Html, IntoResponse};
 use axum::routing::{get, post};
 use axum::{Json, Router};
@@ -103,6 +103,7 @@ pub fn build_cockpit_router(state: CockpitServerState) -> Router {
             "/api/long-range-zero-gps",
             get(get_long_range_zero_gps_handler).post(get_long_range_zero_gps_handler),
         )
+        .route("/ghid-pdf", get(ghid_pdf_handler))
         .nest_service("/real_videos", ServeDir::new(real_videos_dir))
         .nest_service("/static", ServeDir::new(static_dir))
         .fallback_service(ServeDir::new(static_dir))
@@ -148,6 +149,43 @@ pub fn load_or_run_long_range_zero_gps_report() -> LongRangeZeroGpsReport {
 
 async fn get_long_range_zero_gps_handler() -> Json<LongRangeZeroGpsReport> {
     Json(load_or_run_long_range_zero_gps_report())
+}
+
+async fn ghid_pdf_handler() -> impl IntoResponse {
+    let candidate_paths = [
+        "AERO_SHIELD_Ghid_Complet_Explicat_De_La_Zero.pdf",
+        "/home/petreleon/aero-shield-lrcv/AERO_SHIELD_Ghid_Complet_Explicat_De_La_Zero.pdf",
+        "/home/petreleon/code/Craiova Hackathon 2026/AERO_SHIELD_Ghid_Complet_Explicat_De_La_Zero.pdf",
+    ];
+    for p_str in &candidate_paths {
+        let p = Path::new(p_str);
+        if let Ok(bytes) = std::fs::read(p) {
+            return (
+                StatusCode::OK,
+                [
+                    (header::CONTENT_TYPE, "application/pdf"),
+                    (
+                        header::CONTENT_DISPOSITION,
+                        "inline; filename=\"AERO_SHIELD_Ghid_Complet_Explicat_De_La_Zero.pdf\"",
+                    ),
+                    (header::CACHE_CONTROL, "no-cache"),
+                ],
+                bytes,
+            );
+        }
+    }
+    (
+        StatusCode::NOT_FOUND,
+        [
+            (header::CONTENT_TYPE, "text/plain; charset=utf-8"),
+            (
+                header::CONTENT_DISPOSITION,
+                "inline; filename=\"AERO_SHIELD_Ghid_Complet_Explicat_De_La_Zero.pdf\"",
+            ),
+            (header::CACHE_CONTROL, "no-cache"),
+        ],
+        b"Ghidul PDF este in curs de generare.".to_vec(),
+    )
 }
 
 #[derive(Debug, Default, Deserialize)]
