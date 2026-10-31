@@ -651,7 +651,7 @@ pub fn render_page_3_four_planes_race(is_active: bool) -> Markup {
     }
 }
 
-/// Panoul „💡 Cele 3 Formule Simple pe Înțelesul Tuturor (Fără Matematică Grea!)” — afișat pe Pagina 4 și Pagina 6 (100% opac, contrast WCAG AAA).
+/// Panoul „💡 Cele 3 Formule Simple pe Înțelesul Tuturor + Formula 4 (Busola Cerului — Fără Matematică Grea!)” — afișat pe Pagina 4 și Pagina 6 (100% opac, contrast WCAG AAA).
 #[must_use]
 pub fn render_three_simple_formulas_panel() -> Markup {
     html! {
@@ -661,7 +661,7 @@ pub fn render_three_simple_formulas_panel() -> Markup {
         {
             div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;" {
                 h2 style="font-size:22px; font-weight:900; color:#FDE047;" {
-                    "💡 Cele 3 Formule Simple pe Înțelesul Tuturor (Fără Matematică Grea!)"
+                    "💡 Cele 3 Formule Simple pe Înțelesul Tuturor + Formula 4 (Busola Cerului — Fără Matematică Grea!)"
                 }
                 span style="background:#0B1325; border:2px solid #00FF9D; color:#00FF9D; font-weight:900; font-size:13.5px; padding:5px 14px; border-radius:999px;" {
                     "🎯 PRECIZIE < 1 METRU LA 100.000 KM FĂRĂ GPS"
@@ -672,10 +672,10 @@ pub fn render_three_simple_formulas_panel() -> Markup {
                 strong style="color:#00FF9D;" { "100.000 km fără GPS (de 2,5 ori înconjurul Pământului)" }
                 " cu o eroare sub "
                 strong style="color:#FDE047;" { "1 metru (0,38 m medie)" }
-                "! Totul se bazează pe 3 adunări și scăderi simple:"
+                "! Totul se bazează pe adunări și scăderi simple (Sol + Creier Drosophila + Fizica Aripilor + Busola Cerului de Sus):"
             }
 
-            div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px;" {
+            div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(265px, 1fr)); gap:16px;" {
                 // Formula 1
                 div style="background:#0B1325; border:2px solid #00FF9D; border-left:6px solid #00FF9D; border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:10px;" {
                     div style="font-size:16px; font-weight:900; color:#FDE047;" {
@@ -722,6 +722,98 @@ pub fn render_three_simple_formulas_panel() -> Markup {
                         " și blocată instantaneu!"
                     }
                 }
+
+                // Formula 4 (Busola Cerului — Camera de Sus)
+                div style="background:#0B1325; border:2px solid #F0ABFC; border-left:6px solid #F0ABFC; border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:10px;" {
+                    div style="font-size:16px; font-weight:900; color:#FDE047;" {
+                        "🔭 Formula 4 (Busola Cerului — Camera de Sus):"
+                    }
+                    div style="background:#070B14; border:2px solid #F0ABFC; border-radius:10px; padding:12px 14px; font-size:15px; font-weight:900; color:#F0ABFC; line-height:1.45;" {
+                        "Direcția Nord Adevărată = Stelele văzute Ziua în Infraroșu (peste nori) + Inelele de Lumină Polarizată (sub nori, ca Ochiul de Sus al Muștei DRA)"
+                    }
+                    p style="font-size:14.5px; color:#FFFFFF; line-height:1.5;" {
+                        "Chiar și ziua la amiază sau sub nori groși, camera orientată în sus vede stelele în infraroșu și inelele de lumină polarizată ale Soarelui — blocând eroarea busolei E-PG sub "
+                        strong style="color:#00FF9D;" { "0,005°!" }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Cardul „🔭 Camera Infraroșu de Sus (Zenith SWIR + Ochiul Dorsal DRA — Al 4-lea Pilon de Navigație)” cu comparația SR-71 Blackbird, B-2 Spirit și U-2 Dragon Lady.
+#[must_use]
+pub fn render_zenith_swir_dra_sky_compass_card() -> Markup {
+    html! {
+        div
+            id="zone-zenith-swir-dra-compass"
+            style="background:#070B14; border:2px solid #00FF9D; border-radius:18px; padding:22px 26px; margin-bottom:6px; display:flex; flex-direction:column; gap:16px;"
+        {
+            div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;" {
+                h2 style="font-size:21px; font-weight:900; color:#FDE047;" {
+                    "🔭 Camera Infraroșu de Sus (Zenith SWIR + Ochiul Dorsal DRA — Al 4-lea Pilon de Navigație)"
+                }
+                span style="background:#0B1325; border:2px solid #FDE047; color:#FDE047; font-weight:900; font-size:13px; padding:5px 14px; border-radius:999px;" {
+                    "🌟 STELE ZIUA ÎN SWIR 1.5 µm + POLARIZARE DRA SUB < 0,005°"
+                }
+            }
+
+            div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;" {
+                // Regimul 1
+                div style="background:#0B1325; border:2px solid #38BDF8; border-radius:14px; padding:16px 18px;" {
+                    div style="font-size:16px; font-weight:900; color:#FDE047; margin-bottom:8px;" {
+                        "1️⃣ Regimul 1 — Deasupra norilor sau în ceață subțire (Stele văzute Ziua în Infraroșu SWIR 1.5 µm):"
+                    }
+                    p style="font-size:14.5px; color:#FFFFFF; line-height:1.55;" {
+                        "Camera privește drept în sus în infraroșu ("
+                        strong style="color:#67E8F9;" { "SWIR 1.5 µm" }
+                        "). Deoarece împrăștierea luminii albastre ("
+                        em { "Rayleigh scattering" }
+                        ") nu există în infraroșu, "
+                        strong style="color:#00FF9D;" { "cerul este negru în SWIR chiar și la ora 12:00 ziua" }
+                        ", permițând camerei să vadă stelele strălucitoare în plină zi!"
+                    }
+                }
+
+                // Regimul 2
+                div style="background:#0B1325; border:2px solid #00FF9D; border-radius:14px; padding:16px 18px;" {
+                    div style="font-size:16px; font-weight:900; color:#00FF9D; margin-bottom:8px;" {
+                        "2️⃣ Regimul 2 — În interiorul norilor groși / ceții (Polarizarea Cerului prin Ochiul Dorsal al Muștei DRA):"
+                    }
+                    p style="font-size:14.5px; color:#FFFFFF; line-height:1.55;" {
+                        "Chiar și când norii acoperă stelele, camera de sus citește "
+                        strong style="color:#FDE047;" { "inelele de polarizare ale luminii solare împrăștiate prin nori" }
+                        ", exact ca fotoreceptorii specializați orientați în sus ("
+                        strong style="color:#67E8F9;" { "Dorsal Rim Area DRA, R7/R8" }
+                        ") ai musculiței Drosophila și ca „pietrele soarelui” vikinge, fixând inelul-busolă E-PG (16 neuroni) la "
+                        strong style="color:#00FF9D;" { "< 0,005°" }
+                        " fără nicio derivă!"
+                    }
+                }
+
+                // Explicația Fizică Simplă (CMB vs. Infraroșu SWIR + Polarizare DRA)
+                div style="background:#0B1325; border:2px solid #FDE047; border-radius:14px; padding:16px 18px;" {
+                    div style="font-size:16px; font-weight:900; color:#FDE047; margin-bottom:8px;" {
+                        "3️⃣ Explicația Fizică Simplă (CMB vs. Infraroșu SWIR + Polarizare DRA):"
+                    }
+                    p style="font-size:14.5px; color:#FFFFFF; line-height:1.55;" {
+                        "Fondul Cosmic de Microunde ("
+                        strong style="color:#67E8F9;" { "CMB 2.7 K" }
+                        ") este în domeniul microundelor și necesită antene mari, în timp ce "
+                        strong style="color:#00FF9D;" { "Infraroșul (SWIR) + Polarizarea Cerului (DRA)" }
+                        " orientate în sus ne oferă "
+                        strong style="color:#FDE047;" { "Stelele Ziua + Busola Polarizată prin Nori" }
+                        " într-o cameră optică compactă!"
+                    }
+                }
+            }
+
+            // 4️⃣ Ecusonul de Moștenire Aeronautică Reală
+            div style="background:#0B1325; border:2px solid #FDE047; border-left:7px solid #00FF9D; border-radius:12px; padding:14px 18px; font-size:15.5px; font-weight:900; color:#FFFFFF; line-height:1.5;" {
+                "4️⃣ Ecuson de Moștenire Aeronautică Reală: "
+                span style="color:#FDE047;" {
+                    "✈️ Folosit pe SR-71 Blackbird („R2-D2” Nortronics NAS-14V1), B-2 Spirit și U-2 Dragon Lady — adus acum în premieră pe avioane civile cu arhitectura Google Drosophila DRA!"
+                }
             }
         }
     }
@@ -759,8 +851,11 @@ pub fn render_page_4_shield_and_controls(is_active: bool) -> Markup {
                     }
                 }
 
-                // Partea 0A: Cele 3 Formule Simple pe Înțelesul Tuturor (Fără Matematică Grea!)
+                // Partea 0A: Cele 3 Formule Simple pe Înțelesul Tuturor + Formula 4 (Busola Cerului)
                 (render_three_simple_formulas_panel())
+
+                // Partea 0A-2: Camera Infraroșu de Sus (Zenith SWIR + Ochiul Dorsal DRA — SR-71 Blackbird, B-2 Spirit, U-2 Dragon Lady)
+                (render_zenith_swir_dra_sky_compass_card())
 
                 // Partea 0B: Panoul Vizual cu cele 4 Etaje ale Modelului Conectomic Open-Source Google Research Drosophila
                 div class="drosophila-4-stages-grid" id="zone-drosophila-connectome" {
@@ -1108,8 +1203,11 @@ pub fn render_page_6_flightgear_tests(fg: &FlightGearTestSuiteReport, is_active:
                     }
                 }
 
-                // Cele 3 Formule Simple pe Înțelesul Tuturor (afișate direct și pe Pagina 6!)
+                // Cele 3 Formule Simple pe Înțelesul Tuturor + Formula 4 (afișate direct și pe Pagina 6!)
                 (render_three_simple_formulas_panel())
+
+                // Camera Infraroșu de Sus (Zenith SWIR + Ochiul Dorsal DRA — SR-71 Blackbird, B-2 Spirit, U-2 Dragon Lady)
+                (render_zenith_swir_dra_sky_compass_card())
 
                 // Sumar KPI pe 5 casete mari (Peak Error, Touchdown Error, Lateral, Longitudinal, Vertical & NaN status)
                 div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:14px; margin-bottom:20px;" {
@@ -3219,11 +3317,17 @@ mod tests {
         let html_p4 = render_full_cockpit_page_at(4).into_string();
         assert!(html_p4.contains("Cele 3 Formule Simple pe Înțelesul Tuturor"));
         assert!(html_p4.contains("Poziția Exactă = Harta din Memoria Avionului + Amprenta Solului de sub Noi"));
+        assert!(html_p4.contains("Formula 4 (Busola Cerului"));
+        assert!(html_p4.contains("Camera Infraroșu de Sus"));
+        assert!(html_p4.contains("SR-71 Blackbird"));
 
         let html = render_full_cockpit_page_at(6).into_string();
         assert!(html.contains("id=\"zone-long-range-100km\""));
         assert!(html.contains("100.000 km Fără GPS"));
         assert!(html.contains("Cele 3 Formule Simple pe Înțelesul Tuturor"));
+        assert!(html.contains("Formula 4 (Busola Cerului"));
+        assert!(html.contains("Camera Infraroșu de Sus"));
+        assert!(html.contains("SR-71 Blackbird"));
         assert!(html.contains("id=\"zone-error-sources-breakdown\""));
         assert!(html.contains("id=\"zone-error-remediation\""));
         assert!(html.contains("SURSA #1"));

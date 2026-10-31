@@ -817,10 +817,10 @@ pub fn lessons_6yo_router<S: Clone + Send + Sync + 'static>() -> Router<S> {
         .route("/lessons-6yo", get(page_lessons_6yo_standalone))
 }
 
-/// Simple 3 Formulas Card HTML (Zero heavy math, < 1m precision at 100,000 km, WCAG AAA contrast).
+/// Simple 3 Formulas + Formula 4 (Sky Compass) & Zenith SWIR + DRA Card HTML (Zero heavy math, < 1m precision at 100,000 km, WCAG AAA contrast).
 const SIMPLE_3_FORMULAS_100K_HTML: &str = r#"
 <div class="simple-3-formulas-title">
-  💡 CELE 3 FORMULE SIMPLE (FĂRĂ MATEMATICĂ GREA!) — PRECIZIE &lt; 1 METRU CHIAR ȘI LA 100.000 KM FĂRĂ GPS:
+  💡 Cele 3 Formule Simple pe Înțelesul Tuturor + Formula 4 (Busola Cerului — FĂRĂ MATEMATICĂ GREA!) — PRECIZIE &lt; 1 METRU CHIAR ȘI LA 100.000 KM FĂRĂ GPS:
 </div>
 <div class="simple-3-formulas-list">
   <div class="simple-formula-item">
@@ -837,6 +837,28 @@ const SIMPLE_3_FORMULAS_100K_HTML: &str = r#"
     <span class="simple-formula-badge">3. ⚖️ Formula 3 (Detectorul de Minciuni):</span>
     <strong class="simple-formula-eq">Vântul pe Aripi = Viteza față de Pământ − Viteza Aerului din Față</strong>
     <span class="simple-formula-desc"> — Dacă GPS-ul sau internetul spune altceva decât simt aripile, îl blocăm pe loc!</span>
+  </div>
+  <div class="simple-formula-item" style="border-color:#F0ABFC;">
+    <span class="simple-formula-badge">4. 🔭 Formula 4 (Busola Cerului — Camera de Sus):</span>
+    <strong class="simple-formula-eq">Direcția Nord Adevărată = Stelele văzute Ziua în Infraroșu (peste nori) + Inelele de Lumină Polarizată (sub nori, ca Ochiul de Sus al Muștei DRA)</strong>
+    <span class="simple-formula-desc"> — Chiar și ziua la amiază sau sub nori groși, camera orientată în sus vede stelele în infraroșu și inelele de lumină polarizată ale Soarelui — blocând eroarea busolei E-PG sub 0,005°!</span>
+  </div>
+</div>
+<div style="margin-top:16px; background:#070B14; border:2px solid #34D399; border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:10px;">
+  <div style="font-size:17.5px; font-weight:900; color:#FEF08A;">
+    🔭 Camera Infraroșu de Sus (Zenith SWIR + Ochiul Dorsal DRA — Al 4-lea Pilon de Navigație)
+  </div>
+  <div style="font-size:14.5px; color:#FFFFFF; line-height:1.5;">
+    <strong style="color:#FEF08A;">1️⃣ Regimul 1 — Deasupra norilor sau în ceață subțire (Stele văzute Ziua în Infraroșu SWIR 1.5 µm):</strong> Camera privește drept în sus în infraroșu (SWIR 1.5 µm). Deoarece împrăștierea luminii albastre (<em>Rayleigh scattering</em>) nu există în infraroșu, cerul este negru în SWIR chiar și la ora 12:00 ziua, permițând camerei să vadă stelele strălucitoare în plină zi!
+  </div>
+  <div style="font-size:14.5px; color:#FFFFFF; line-height:1.5;">
+    <strong style="color:#34D399;">2️⃣ Regimul 2 — În interiorul norilor groși / ceții (Polarizarea Cerului prin Ochiul Dorsal al Muștei DRA):</strong> Chiar și când norii acoperă stelele, camera de sus citește inelele de polarizare ale luminii solare împrăștiate prin nori, exact ca fotoreceptorii specializați orientați în sus (<em>Dorsal Rim Area DRA, R7/R8</em>) ai musculiței Drosophila și ca „pietrele soarelui” vikinge, fixând inelul-busolă E-PG (16 neuroni) la &lt; 0,005° fără nicio derivă!
+  </div>
+  <div style="font-size:14.5px; color:#FFFFFF; line-height:1.5;">
+    <strong style="color:#38BDF8;">3️⃣ Explicația Fizică Simplă (CMB vs. Infraroșu SWIR + Polarizare DRA):</strong> Fondul Cosmic de Microunde (CMB 2.7 K) este în domeniul microundelor și necesită antene mari, în timp ce Infraroșul (SWIR) + Polarizarea Cerului (DRA) orientate în sus ne oferă Stelele Ziua + Busola Polarizată prin Nori într-o cameră optică compactă!
+  </div>
+  <div style="background:#0F172A; border:2px solid #FACC15; border-left:6px solid #34D399; border-radius:10px; padding:10px 14px; font-size:14.5px; font-weight:900; color:#FEF08A;">
+    ✈️ Folosit pe SR-71 Blackbird („R2-D2” Nortronics NAS-14V1), B-2 Spirit și U-2 Dragon Lady — adus acum în premieră pe avioane civile cu arhitectura Google Drosophila DRA!
   </div>
 </div>
 "#;
@@ -2101,6 +2123,9 @@ mod tests {
         assert!(html.contains("Formula 1 (Cheia Pământului)"));
         assert!(html.contains("Formula 2 (Creierul Musculiței Google)"));
         assert!(html.contains("Formula 3 (Detectorul de Minciuni)"));
+        assert!(html.contains("Formula 4 (Busola Cerului"));
+        assert!(html.contains("Camera Infraroșu de Sus"));
+        assert!(html.contains("SR-71 Blackbird"));
         assert!(html.contains("⬅️ Lecția Anterioară"));
         assert!(html.contains("➡️ Lecția Următoare"));
     }
