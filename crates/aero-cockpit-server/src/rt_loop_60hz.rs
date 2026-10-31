@@ -631,6 +631,16 @@ impl FlightSimulator60Hz {
             );
             let next_z = self.pos_ned.inner.z + vel_ground_ned.inner.z * dt;
             self.pos_ned.inner.z = sanitize_f64(next_z.min(0.0), -1500.0, 0.0, -25.0);
+        } else {
+            // Reluare automată continuă a apropierii când avionul atinge pragul pistei (x >= 120 m),
+            // astfel încât animația pe Pagina 2 și Cursa celor 4 Avioane pe Pagina 3 să ruleze neîntrerupt!
+            let init_pos = [-900.0, 0.0, -52.0];
+            self.sim_time_sec = 0.0;
+            self.pos_ned = FramedVec3::new(init_pos[0], init_pos[1], init_pos[2]);
+            self.raw_gnss_pos_ned = init_pos;
+            self.pure_ins_pos_ned = init_pos;
+            self.naive_flow_pos_ned = init_pos;
+            self.aero_shield_pos_ned = init_pos;
         }
 
         let true_pos = self.pos_ned.to_array();

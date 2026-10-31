@@ -625,12 +625,40 @@ pub fn render_page_3_four_planes_race(is_active: bool) -> Markup {
                     }
                 }
 
-                // 1. Pista văzută de sus (#radarCanvas mare 780x440, height: 440px, 100% curată, fără niciun video suprapus!)
+                // 1. Bara compactă SUS (direct deasupra #radarCanvas) cu cele 3 butoane mai mici de test
+                div
+                    class="three-race-buttons-bar"
+                    style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px; margin-bottom:10px; padding:8px 12px; background:#070B14; border:2px solid #38BDF8; border-radius:12px;"
+                {
+                    button
+                        class="btn-big btn-big-red"
+                        style="padding:6px 12px; font-size:0.80rem; font-weight:800; border-radius:6px; line-height:1.25; width:auto; flex:0 1 auto;"
+                        onclick="raceTriggerHackerAttack()"
+                    {
+                        "👾 Atacă GPS-ul cu Hackerul! (Vezi cum Avionul Roșu iese în iarbă!)"
+                    }
+                    button
+                        class="btn-big btn-big-purple"
+                        style="padding:6px 12px; font-size:0.80rem; font-weight:800; border-radius:6px; line-height:1.25; width:auto; flex:0 1 auto;"
+                        onclick="injectSuddenFogGustWithHighlight()"
+                    {
+                        "💨 Suflă Vântul în Ceață! (Vezi cum Avionul Galben se păcălește!)"
+                    }
+                    button
+                        class="btn-big btn-big-green"
+                        style="padding:6px 12px; font-size:0.80rem; font-weight:800; border-radius:6px; line-height:1.25; width:auto; flex:0 1 auto;"
+                        onclick="resetAndHighlight()"
+                    {
+                        "🔄 Resetează Cursa pe Mijlocul Pistei"
+                    }
+                }
+
+                // 2. Pista văzută de sus (#radarCanvas mare 780x440, height: 440px, 100% curată, fără niciun video suprapus!)
                 div class="radar-stage-440" {
                     canvas id="radarCanvas" width="780" height="440" style="position:relative; z-index:4; width:100%; height:100%; display:block; background:#070B14;" {}
                 }
 
-                // 2. Cele 4 Carduri Mari și Aerisite de Legendă (câte unul pentru fiecare avion)
+                // 3. Cele 4 Carduri Mari și Aerisite de Legendă (câte unul pentru fiecare avion)
                 div class="four-planes-cards-grid" {
                     div class="plane-explain-card plane-card-green" {
                         div class="plane-card-header" {
@@ -682,19 +710,6 @@ pub fn render_page_3_four_planes_race(is_active: bool) -> Markup {
                         p class="plane-kid-text" {
                             "Ca atunci când mergi cu ochii închiși prin cameră: la început știi unde ești, dar după câteva secunde amețești și te rătăcești!"
                         }
-                    }
-                }
-
-                // 3. Cele 3 Butoane Mari de Test chiar pe Pagina 3
-                div class="three-race-buttons-bar" {
-                    button class="btn-big btn-big-red" onclick="raceTriggerHackerAttack()" {
-                        "👾 Atacă GPS-ul cu Hackerul! (Vezi cum Avionul Roșu iese în iarbă!)"
-                    }
-                    button class="btn-big btn-big-purple" onclick="injectSuddenFogGustWithHighlight()" {
-                        "💨 Suflă Vântul în Ceață! (Vezi cum Avionul Galben se păcălește!)"
-                    }
-                    button class="btn-big btn-big-green" onclick="resetAndHighlight()" {
-                        "🔄 Resetează Cursa pe Mijlocul Pistei"
                     }
                 }
 
@@ -2432,6 +2447,9 @@ const SCHOOL_FG_LESSONS = {
 
 window.schoolLessonMode = "solved";
 let currentSchoolFgOpacity = 55;
+let radarAnimTick = 0;
+let lastRecordedRadarX = null;
+window.radarMode = "game";
 
 const trailHistory = {
   truth: [],
@@ -2441,6 +2459,18 @@ const trailHistory = {
   shield: []
 };
 const MAX_TRAIL_LEN = 160;
+
+function clearRadarTrails() {
+  Object.keys(trailHistory).forEach((k) => {
+    trailHistory[k] = [];
+  });
+  lastRecordedRadarX = null;
+}
+
+window.setRadarMode6yo = function(mode) {
+  window.radarMode = mode === "chart" ? "chart" : "game";
+  renderRadarCanvas();
+};
 
 // =========================================================================
 // NAVIGAREA ÎNTRE CELE 6 PAGINI AERISITE (CÂTE 1 CONCEPT PE PAGINĂ)
@@ -2454,6 +2484,11 @@ function switchConceptPage(pageNum) {
     const navBtn = document.getElementById(`nav-page-btn-${i}`);
     if (pageEl) {
       pageEl.classList.toggle("active-page", i === clamped);
+      if (i === clamped) {
+        pageEl.querySelectorAll("video").forEach((v) => {
+          v.play().catch(() => {});
+        });
+      }
     }
     if (navBtn) {
       navBtn.classList.toggle("active", i === clamped);
@@ -2471,7 +2506,18 @@ function switchConceptPage(pageNum) {
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 
-  // Redimensionăm imediat Canvas-urile când pagina devine vizibilă
+  // Când utilizatorul navighează pe Pagina 3 din orice altă pagină, pornim imediat cursa de la capătul pistei!
+  if (clamped === 3) {
+    clearRadarTrails();
+    radarAnimTick = 0;
+    sendSimCommand({ type: "ResetApproach" });
+  }
+
+  // Randăm sincron în cadrul curent + în requestAnimationFrame ca animația să fie pornită instantaneu!
+  renderHudCanvas();
+  renderRadarCanvas();
+  renderLessonMiniCanvas();
+
   requestAnimationFrame(() => {
     window.dispatchEvent(new Event("resize"));
     renderHudCanvas();
@@ -2985,9 +3031,14 @@ function toggleBlindNormalFog() {
 }
 
 function raceTriggerHackerAttack() {
+  if (latestFrame && latestFrame.aircraft_pose && latestFrame.aircraft_pose.pos_ned_m[0] > -120) {
+    clearRadarTrails();
+    sendSimCommand({ type: "ResetApproach" });
+  }
   cyberState.gps_jump_spoof = true;
   cyberState.gps_stealth_ramp_spoof = true;
   sendSimCommand({ type: "ConfigureCyberAttack", payload: cyberState });
+  renderRadarCanvas();
   highlightVisualZone("zone-radar", "Hackerul a atacat GPS-ul! Privește cum Avionul Roșu ✈️🔴 iese în iarbă, dar Avionul Verde ✈️🟢 rămâne pe pistă!");
 }
 
@@ -3007,8 +3058,10 @@ function triggerScenarioWithHighlight(id) {
 
 function resetAndHighlight() {
   cyberState = { gps_jump_spoof: false, gps_stealth_ramp_spoof: false, cut_internet_comms: false, poison_meteo_cache: false };
-  Object.keys(trailHistory).forEach((k) => { trailHistory[k] = []; });
+  clearRadarTrails();
+  radarAnimTick = 0;
   sendSimCommand({ type: "ResetApproach" });
+  renderRadarCanvas();
 }
 
 function stepManeuver(dyaw, dpitch, droll, dthr) {
@@ -3143,6 +3196,12 @@ function updateTelemetryDom(f) {
 }
 
 function recordEstimatorTrails(f) {
+  const curX = f.aircraft_pose.pos_ned_m[0];
+  if (lastRecordedRadarX !== null && curX < lastRecordedRadarX - 150) {
+    clearRadarTrails();
+  }
+  lastRecordedRadarX = curX;
+
   const pushPt = (arr, pos) => {
     arr.push([pos[0], pos[1]]);
     if (arr.length > MAX_TRAIL_LEN) arr.shift();
@@ -3330,7 +3389,32 @@ function renderRadarCanvas() {
   ctx.fillText("✈️🟠 Fără Cameră (INS)", 26, 102);
   ctx.restore();
 
-  if (!latestFrame) return;
+  radarAnimTick += 1;
+  const simProg = (radarAnimTick % 540) / 540;
+  const fallbackX = -900 + simProg * 1020;
+
+  // Dacă WebSocket-ul se reconectează sau suntem în primele milisecunde după mutarea pe Pagina 3,
+  // garantăm că cele 4 avioane zboară continuu la 60 FPS fără niciun cadru înghețat!
+  const e = (latestFrame && latestFrame.estimators_arena) ? latestFrame.estimators_arena : {
+    pure_ins_pos_ned: [fallbackX, -simProg * 42, -25],
+    raw_gnss_pos_ned: [fallbackX, simProg * 65, -25],
+    naive_flow_pos_ned: [fallbackX, simProg * 28, -25],
+    aero_shield_pos_ned: [fallbackX, 0.0, -25]
+  };
+
+  if (trailHistory.shield.length < 2) {
+    const startX = -900;
+    const curX = e.aero_shield_pos_ned[0];
+    const steps = 16;
+    for (let s = 0; s <= steps; s++) {
+      const frac = s / steps;
+      const sx = startX + (curX - startX) * frac;
+      trailHistory.ins.push([sx, e.pure_ins_pos_ned[1] * frac]);
+      trailHistory.gnss.push([sx, e.raw_gnss_pos_ned[1] * frac]);
+      trailHistory.naive.push([sx, e.naive_flow_pos_ned[1] * frac]);
+      trailHistory.shield.push([sx, e.aero_shield_pos_ned[1] * frac]);
+    }
+  }
 
   const drawTrail = (pts, color, width) => {
     if (pts.length < 2) return;
@@ -3364,7 +3448,6 @@ function renderRadarCanvas() {
     ctx.stroke();
   };
 
-  const e = latestFrame.estimators_arena;
   drawPlaneDot(e.pure_ins_pos_ned, "#FF9100", 7.0);
   drawPlaneDot(e.raw_gnss_pos_ned, "#FF2A5F", 7.0);
   drawPlaneDot(e.naive_flow_pos_ned, "#FDE047", 7.0);
@@ -3388,6 +3471,13 @@ mod tests {
 
     #[test]
     fn test_page_6_renders_long_range_100km_zero_gps_and_error_sources() {
+        let html_p3 = render_full_cockpit_page_at(3).into_string();
+        let pos_btns = html_p3.find("class=\"three-race-buttons-bar\"").unwrap_or(usize::MAX);
+        let pos_canvas = html_p3.find("id=\"radarCanvas\"").unwrap_or(0);
+        assert!(pos_btns < pos_canvas, "The 3 compact race buttons must be at the top, above #radarCanvas");
+        assert!(html_p3.contains("font-size:0.80rem;"));
+        assert!(html_p3.contains("clearRadarTrails()"));
+
         let html_p4 = render_full_cockpit_page_at(4).into_string();
         assert!(html_p4.contains("Cele 3 Formule Simple pe Înțelesul Tuturor"));
         assert!(html_p4.contains("Poziția Exactă = Harta din Memoria Avionului + Amprenta Solului de sub Noi"));
