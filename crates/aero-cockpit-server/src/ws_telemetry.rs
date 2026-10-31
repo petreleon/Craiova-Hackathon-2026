@@ -23,6 +23,9 @@ use tower_http::services::ServeDir;
 use crate::flightgear_synthetic_10::{
     run_all_10_flightgear_synthetic_tests, FlightGearTestSuiteReport,
 };
+use crate::long_range_zero_gps_test::{
+    run_long_range_100km_zero_gps_benchmark, LongRangeZeroGpsReport,
+};
 use crate::rt_loop_60hz::{LRCV_RWY09_LAT_DEG, LRCV_RWY09_LON_DEG};
 use crate::sim_commands::{sanitize_f64, SimCommand};
 use crate::ui_framework_rust::{
@@ -96,6 +99,10 @@ pub fn build_cockpit_router(state: CockpitServerState) -> Router {
             "/api/flightgear-tests",
             get(get_flightgear_tests_handler).post(get_flightgear_tests_handler),
         )
+        .route(
+            "/api/long-range-zero-gps",
+            get(get_long_range_zero_gps_handler).post(get_long_range_zero_gps_handler),
+        )
         .nest_service("/real_videos", ServeDir::new(real_videos_dir))
         .nest_service("/static", ServeDir::new(static_dir))
         .fallback_service(ServeDir::new(static_dir))
@@ -118,6 +125,29 @@ async fn get_lessons_6yo_standalone_handler() -> Html<String> {
 async fn get_flightgear_tests_handler() -> Json<FlightGearTestSuiteReport> {
     let report = run_all_10_flightgear_synthetic_tests();
     Json(report)
+}
+
+/// Încarcă raportul `real_videos/long_range_zero_gps_report.json` (dacă există pe disc)
+/// sau rulează determinist cursa sintetică lungă de 100 km fără GPS (`run_long_range_100km_zero_gps_benchmark`).
+#[must_use]
+pub fn load_or_run_long_range_zero_gps_report() -> LongRangeZeroGpsReport {
+    let candidate_paths = [
+        "real_videos/long_range_zero_gps_report.json",
+        "/home/petreleon/aero-shield-lrcv/real_videos/long_range_zero_gps_report.json",
+    ];
+    for p_str in &candidate_paths {
+        let p = Path::new(p_str);
+        if let Ok(content) = std::fs::read_to_string(p) {
+            if let Ok(parsed) = serde_json::from_str::<LongRangeZeroGpsReport>(&content) {
+                return parsed;
+            }
+        }
+    }
+    run_long_range_100km_zero_gps_benchmark()
+}
+
+async fn get_long_range_zero_gps_handler() -> Json<LongRangeZeroGpsReport> {
+    Json(load_or_run_long_range_zero_gps_report())
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -508,4 +538,21 @@ pub fn spawn_lrcv_open_meteo_poller(live_meteo: Arc<ArcSwap<LiveMeteoSnapshot>>)
             tokio::time::sleep(Duration::from_secs(30)).await;
         }
     });
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_load_or_run_long_range_zero_gps_report_endpoint_data() {
+        let r = load_or_run_long_range_zero_gps_report();
+        assert!((r.total_distance_km - 100.0).abs() < 1e-6);
+        assert_eq!(r.total_frames_60hz, 90_000);
+        assert!((r.gps_availability_pct - 0.0).abs() < 1e-9);
+        assert!(r.zero_nan_or_inf_verified);
+        assert!(r.final_touchdown_error_m < 0.85);
+        assert_eq!(r.phases.len(), 4);
+        assert_eq!(r.identified_error_sources.len(), 4);
+    }
 }

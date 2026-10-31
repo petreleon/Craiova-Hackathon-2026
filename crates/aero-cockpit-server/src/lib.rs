@@ -8,6 +8,7 @@
 pub mod cli_train;
 pub mod director_scenarios;
 pub mod flightgear_synthetic_10;
+pub mod long_range_zero_gps_test;
 pub mod rt_loop_60hz;
 pub mod sim_commands;
 pub mod ui_framework_rust;

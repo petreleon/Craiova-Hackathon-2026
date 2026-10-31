@@ -71,8 +71,8 @@ pub const SIX_CONCEPT_PAGES: [ConceptPageMeta; 6] = [
     },
     ConceptPageMeta {
         page_num: 6,
-        nav_badge_ro: "6️⃣ 10 Teste FlightGear",
-        full_title_ro: "Cele 10 Teste Sintetice FlightGear (Pe VM-ul GPU)",
+        nav_badge_ro: "6️⃣ 10 Teste FG & 100km Zero-GPS",
+        full_title_ro: "Cele 10 Teste Sintetice FlightGear & Cursa Lungă 100 km Fără GPS (Analiza Erorii)",
     },
 ];
 
@@ -973,14 +973,196 @@ pub fn render_page_5_real_videos(bench_json: &serde_json::Value, is_active: bool
     }
 }
 
-/// PAGINA 6 (`#concept-page-6`): `6️⃣ Cele 10 Teste Sintetice FlightGear (Pe VM-ul GPU)`.
+/// PAGINA 6 (`#concept-page-6`): `6️⃣ Cele 10 Teste Sintetice FlightGear & Cursa Lungă 100 km Fără GPS (Analiza Erorii)`.
 #[must_use]
 pub fn render_page_6_flightgear_tests(fg: &FlightGearTestSuiteReport, is_active: bool) -> Markup {
+    let lr = crate::ws_telemetry::load_or_run_long_range_zero_gps_report();
+
     html! {
         div
             id="concept-page-6"
             class=(if is_active { "concept-page-view active-page" } else { "concept-page-view" })
         {
+            section class="spacious-card" id="zone-long-range-100km" style="margin-bottom:24px; border:2px solid #00ff9d;" {
+                div class="page-hero-header" {
+                    div {
+                        span class="concept-pill" style="background:rgba(0,255,157,0.16); color:#00ff9d; border:1px solid #00ff9d;" {
+                            "CURSĂ SINTETICĂ LUNGĂ FĂRĂ GPS • 100 KM (25 MIN / 90.000 CADRE LA 60 HZ) • IDENTIFICAREA ERORII"
+                        }
+                        h1 class="page-main-title" {
+                            "🧭 Cursă Sintetică Lungă 100 km Fără GPS (Slatina/Balș → Craiova RWY 09) — Identificarea & Descompunerea Erorii"
+                        }
+                        p class="page-subtitle" {
+                            "🧒 "
+                            strong style="color:#ffd600;" { "Explicat simplu (ca la 6 ani): " }
+                            "Ce se întâmplă dacă zburăm "
+                            strong style="color:#00e5ff;" { (format!("{:.0} km", lr.total_distance_km)) }
+                            " ("
+                            strong style="color:#00e5ff;" { (format!("{:.0} minute / {} cadre la 60 Hz", lr.total_duration_sec / 60.0, lr.total_frames_60hz)) }
+                            ") cu "
+                            strong style="color:#ff2a5f;" { (format!("{:.1}% GPS", lr.gps_availability_pct)) }
+                            " (sateliți complet opriți / bruiați)? Pe parcursul a 85 km fără niciun reper luminos la sol, chiar și sistemul nostru acumulează o eroare maximă de "
+                            strong style="color:#ffd600;" { (format!("{:.1} m", lr.peak_error_before_als_m)) }
+                            " (~0.36% din distanță), pe care o "
+                            strong style="color:#00ff9d;" { "identificăm exact pe 4 cauze fizice" }
+                            " și o "
+                            strong style="color:#00ff9d;" { "reducem la doar " (format!("{:.2} m", lr.final_touchdown_error_m)) }
+                            " când camera vede becurile pistei (ALS) la aterizare!"
+                        }
+                    }
+                }
+
+                // Sumar KPI pe 5 casete mari (Peak Error, Touchdown Error, Lateral, Longitudinal, Vertical & NaN status)
+                div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:14px; margin-bottom:20px;" {
+                    div style="background:#081a33; border:1.5px solid #ffd600; border-radius:14px; padding:14px;" {
+                        div style="font-size:13px; color:#fde047; font-weight:800;" { "⚠️ EROARE MAXIMĂ ÎNAINTE DE PISTĂ (KM 85)" }
+                        div style="font-size:28px; font-weight:900; color:#ffd600; margin:6px 0;" {
+                            (format!("{:.1} m", lr.peak_error_before_als_m))
+                        }
+                        div style="font-size:13px; color:#cbd5e1;" {
+                            "După 85 km de croazieră oarbă fără GPS și fără becuri ALS (~0.36% drift din distanță)"
+                        }
+                    }
+                    div style="background:#081a33; border:2px solid #00ff9d; border-radius:14px; padding:14px;" {
+                        div style="font-size:13px; color:#6ee7b7; font-weight:800;" { "🎯 EROARE FINALĂ LA ATERIZARE (KM 100)" }
+                        div style="font-size:28px; font-weight:900; color:#00ff9d; margin:6px 0;" {
+                            (format!("{:.2} m", lr.final_touchdown_error_m))
+                        }
+                        div style="font-size:13px; color:#cbd5e1;" {
+                            "După ancorarea optică pe becurile pistei Craiova RWY 09 (CAT IIIc < 0.85 m)"
+                        }
+                    }
+                    div style="background:#081a33; border:1.5px solid #00e5ff; border-radius:14px; padding:14px;" {
+                        div style="font-size:13px; color:#7dd3fc; font-weight:800;" { "↔️ ABATERE LATERALĂ / LONGITUDINALĂ" }
+                        div style="font-size:22px; font-weight:900; color:#00e5ff; margin:6px 0;" {
+                            "Lat: " (format!("{:.2} m", lr.lateral_touchdown_error_m)) " | Long: " (format!("{:.2} m", lr.longitudinal_touchdown_error_m))
+                        }
+                        div style="font-size:13px; color:#cbd5e1;" {
+                            "Abatere verticală (altitudine): "
+                            strong style="color:#00ff9d;" { (format!("{:.2} m", lr.vertical_touchdown_error_m)) }
+                        }
+                    }
+                    div style="background:#081a33; border:1.5px solid #38bdf8; border-radius:14px; padding:14px;" {
+                        div style="font-size:13px; color:#bae6fd; font-weight:800;" { "🛡️ STABILITATE NUMERICĂ (90.000 CADRE)" }
+                        div style="font-size:22px; font-weight:900; color:#00ff9d; margin:6px 0;" {
+                            @if lr.zero_nan_or_inf_verified {
+                                "✅ 0 NaN / 0 Inf (100% Stabil)"
+                            } @else {
+                                "⚠️ Verificare numerică"
+                            }
+                        }
+                        div style="font-size:13px; color:#cbd5e1;" {
+                            "GPS folosit pe toată cursa de 100 km: "
+                            strong style="color:#ff2a5f;" { (format!("{:.1}%", lr.gps_availability_pct)) }
+                        }
+                    }
+                }
+
+                // Tabelul / Cardurile celor 4 Faze ale Cursei de 100 km Fără GPS
+                h2 style="color:#00e5ff; font-size:20px; margin:18px 0 12px 0;" {
+                    "📍 Evoluția Erorii pe Cele 4 Faze ale Zborului Sintetic de 100 km (Fără GPS)"
+                }
+                div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px; margin-bottom:22px;" {
+                    @for phase in &lr.phases {
+                        div style="background:#071529; border:1px solid #1e3a5f; border-radius:14px; padding:15px;" {
+                            div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;" {
+                                span class="fg-id-badge" {
+                                    "FAZA " (phase.phase_index) " (" (format!("{:.0}–{:.0} km", phase.km_start, phase.km_end)) ")"
+                                }
+                                span style="font-size:13px; color:#7dd3fc; font-weight:700;" {
+                                    (format!("{:.0}s • {} cadre", phase.duration_sec, phase.frames_60hz))
+                                }
+                            }
+                            div style="color:#ffffff; font-weight:800; font-size:16.5px; margin-bottom:8px;" {
+                                (phase.phase_name)
+                            }
+                            div style="font-size:14px; color:#cbd5e1; line-height:1.55;" {
+                                div {
+                                    "🌫️ Vizibilitate MOR: "
+                                    strong style="color:#fde047;" { (format!("{:.0} m", phase.visibility_mor_m)) }
+                                    " | 🧭 Eroare busolă E-PG: "
+                                    strong style="color:#00e5ff;" { (format!("{:.3}°", phase.epg_compass_error_deg)) }
+                                }
+                                div style="margin-top:6px;" {
+                                    "🟢 Eroare AERO-SHIELD (final / max): "
+                                    strong style="color:#00ff9d;" {
+                                        (format!("{:.2} m", phase.aero_shield_pos_error_end_m))
+                                        " / "
+                                        (format!("{:.1} m", phase.aero_shield_pos_error_max_m))
+                                    }
+                                    " ("
+                                    (format!("{:.3}%", phase.aero_shield_drift_pct_of_distance))
+                                    " din distanță, RMSE viteză "
+                                    (format!("{:.3} m/s", phase.aero_shield_vel_rmse_mps))
+                                    ")"
+                                }
+                                div style="margin-top:6px; border-top:1px dashed #1e3a5f; padding-top:6px; font-size:13px;" {
+                                    "🟠 INS pur (fără cameră): "
+                                    strong style="color:#ff9100;" { (format!("{:.0} m", phase.pure_ins_pos_error_end_m)) }
+                                    " | 🟡 Flux optic naiv: "
+                                    strong style="color:#ffd600;" { (format!("{:.0} m", phase.naive_flow_pos_error_end_m)) }
+                                    " | 🔴 GPS falsificat: "
+                                    strong style="color:#ff2a5f;" { (format!("{:.0} m", phase.spoofed_gps_pos_error_end_m)) }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // SECȚIUNEA ESENȚIALĂ: Identificarea și Descompunerea celor 4 Surse Fizice de Eroare
+                div id="zone-error-sources-breakdown" style="background:#061326; border:2px solid #ffd600; border-radius:16px; padding:18px; margin-bottom:20px;" {
+                    h2 style="color:#ffd600; font-size:21px; margin-bottom:8px;" {
+                        "🔍 De unde provine eroarea de " (format!("{:.1} m", lr.peak_error_before_als_m)) " înainte de pistă? (Cele 4 Surse Fizice Identificate)"
+                    }
+                    p style="color:#e2f1ff; font-size:15px; margin-bottom:14px; line-height:1.5;" {
+                        "Am izolat matematic în simulatorul Rust fiecare componentă care contribuie la deriva acumulată pe cei 85 km de zbor fără GPS și fără lumini de pistă:"
+                    }
+                    div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px;" {
+                        @for (idx, src) in lr.identified_error_sources.iter().enumerate() {
+                            div style="background:#0b1e3b; border:1px solid #334155; border-radius:12px; padding:14px;" {
+                                div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;" {
+                                    span style="color:#ffd600; font-weight:900; font-size:15px;" {
+                                        "SURSA #" (idx + 1) " • " (format!("{:.1}%", src.contribution_pct))
+                                    }
+                                    span style="background:rgba(255,214,0,0.18); color:#fde047; font-weight:900; padding:3px 9px; border-radius:8px; font-size:14px;" {
+                                        "+" (format!("{:.1} m", src.contribution_m))
+                                    }
+                                }
+                                div style="color:#ffffff; font-weight:800; font-size:16px; margin-bottom:8px;" {
+                                    (src.source_name)
+                                }
+                                div class="progress-bar-outer" style="margin-bottom:10px; height:10px;" {
+                                    div
+                                        class="progress-bar-inner"
+                                        style=(format!("width:{:.1}%; background:linear-gradient(90deg, #ffd600, #ff9100);", src.contribution_pct.clamp(0.0, 100.0)))
+                                    {}
+                                }
+                                p style="color:#bae6fd; font-size:14px; line-height:1.5; margin-bottom:8px;" {
+                                    "⚙️ " (src.physical_mechanism)
+                                }
+                                div style="font-size:12.5px; color:#94a3b8; border-top:1px dashed #1e3a5f; padding-top:6px;" {
+                                    " 📌 Activă în: " strong style="color:#7dd3fc;" { (src.active_in_phases) }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // SECȚIUNEA DE REMEDIERE: Cum corectăm fiecare sursă de eroare
+                div id="zone-error-remediation" style="background:#051c24; border:1.5px solid #00ff9d; border-radius:16px; padding:18px;" {
+                    h2 style="color:#00ff9d; font-size:20px; margin-bottom:10px;" {
+                        "🛠️ Cum Remediem / Eliminăm Fiecare Sursă de Eroare în Arhitectura AERO-SHIELD"
+                    }
+                    div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px;" {
+                        @for rec in &lr.engineering_remediation_recommendations {
+                            div style="background:#072630; border-left:4px solid #00ff9d; border-radius:10px; padding:12px 14px; color:#ecfdf5; font-size:14.5px; line-height:1.5;" {
+                                "✅ " (rec)
+                            }
+                        }
+                    }
+                }
+            }
+
             section class="spacious-card" id="zone-flightgear-10" {
                 div class="page-hero-header" {
                     div {
@@ -1061,6 +1243,45 @@ pub fn render_bottom_page_navigator(active_page: u8) -> Markup {
 #[must_use]
 pub fn render_aero_shield_app_maud(state: &CockpitServerState) -> Markup {
     render_aero_shield_app_maud_page(state, 1)
+}
+
+/// Randează pagina completă SSR la numărul de pagină specificat (`1..=6`) fără `CockpitServerState`.
+#[must_use]
+pub fn render_full_cockpit_page_at(initial_page: u8) -> Markup {
+    let active_page = initial_page.clamp(1, 6);
+    let lessons = get_all_6_interactive_lessons();
+    let bench_json = compute_or_load_real_video_benchmark();
+    let fg_report = run_all_10_flightgear_synthetic_tests();
+
+    html! {
+        (DOCTYPE)
+        html lang="ro" {
+            head {
+                meta charset="UTF-8";
+                meta name="viewport" content="width=device-width, initial-scale=1.0";
+                title { "AERO-SHIELD LRCV V2.0 — Rust Maud SSR • 6 Pagini Aerisite (Craiova RWY 09)" }
+                style { (PreEscaped(MAUD_COCKPIT_CSS)) }
+            }
+            body data-initial-page=(active_page) {
+                (render_header_bar(0, "CUDA NVIDIA / CPU SIMD", active_page))
+                (render_floating_pointer())
+
+                main class="spacious-page-container" {
+                    (render_page_1_interactive_school(&lessons, active_page == 1))
+                    (render_page_2_windshield_hud(active_page == 2))
+                    (render_page_3_four_planes_race(active_page == 3))
+                    (render_page_4_shield_and_controls(active_page == 4))
+                    (render_page_5_real_videos(&bench_json, active_page == 5))
+                    (render_page_6_flightgear_tests(&fg_report, active_page == 6))
+                }
+
+                (render_bottom_page_navigator(active_page))
+
+                script { (PreEscaped(MAUD_COCKPIT_JS_ENGINE)) }
+                script { (PreEscaped(crate::ui_visual_engine::render_visual_canvases_script())) }
+            }
+        }
+    }
 }
 
 /// Funcția principală SSR care randează aplicația aerisită cu 6 pagini (câte un singur concept vizibil pe ecran).
@@ -1837,7 +2058,7 @@ const CONCEPT_PAGE_TITLES_RO = {
   3: "Cursa celor 4 Avioane (De ce noi rămânem pe pistă?)",
   4: "Creierul Google Drosophila & Scutul Anti-Hacker",
   5: "Cele 3 Filmări Video Reale din Cabina Piloților",
-  6: "Cele 10 Teste Sintetice FlightGear (Pe VM-ul GPU)"
+  6: "Cele 10 Teste Sintetice FlightGear & Cursa Lungă 100 km Fără GPS (Analiza Erorii)"
 };
 
 const REAL_VIDEO_FILES = [
@@ -2774,3 +2995,22 @@ function animationLoop() {
 connectWebSocket();
 requestAnimationFrame(animationLoop);
 "####;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_page_6_renders_long_range_100km_zero_gps_and_error_sources() {
+        let html = render_full_cockpit_page_at(6).into_string();
+        assert!(html.contains("id=\"zone-long-range-100km\""));
+        assert!(html.contains("id=\"zone-error-sources-breakdown\""));
+        assert!(html.contains("id=\"zone-error-remediation\""));
+        assert!(html.contains("SURSA #1"));
+        assert!(html.contains("SURSA #2"));
+        assert!(html.contains("SURSA #3"));
+        assert!(html.contains("SURSA #4"));
+        assert!(html.contains("id=\"zone-flightgear-10\""));
+    }
+}
+
