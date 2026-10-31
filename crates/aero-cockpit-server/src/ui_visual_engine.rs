@@ -720,7 +720,7 @@ pub fn render_visual_canvases_script() -> String {
       ctx.fill();
       ctx.restore();
 
-      // Cutie 100% OPACĂ #050811 cu bordură groasă de 2px (fără pulsație Math.sin!)
+      // Cutie 100% OPACĂ #050811 cu bordură groasă de 2px (fără pulsație sinusoidală!)
       const borderCol = isFocused ? '#ffb800' : c.color_hex;
       drawRoundedBox(ctx, bx, by, bw, bh, 9, SOLID_BG_DARK, borderCol, 2.2);
 
@@ -924,7 +924,7 @@ pub fn render_visual_canvases_script() -> String {
       gnss: -32
     }};
 
-    // Momeala Hackerului 👾 — Casetă de text 100% FIXĂ în colțul dreapta-jos al pistei (fără mișcare, fără Math.sin!)
+    // Momeala Hackerului 👾 — Casetă de text 100% FIXĂ în colțul dreapta-jos al pistei (fără mișcare, fără oscilație!)
     const spoofMeters = Number(s.spoof_offset_m) || 0;
     const gnssY = mapPlaneToArenaY('gnss', planeErrors.gnss);
     const gnssX = Math.max(trackLeftX + 30, Math.min(trackRightX - 40, planeBaseX + xOffsets.gnss));
