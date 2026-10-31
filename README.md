@@ -45,7 +45,7 @@
 
 ## 🚨 2. Problema Reală pe care o Rezolvăm la Craiova (`LRCV — Pista 09`)
 
-Imaginați-vă o aeronavă cu **180 de pasageri** aflată pe panta finală de $3.0^\circ$ spre **Aeroportul Internațional Craiova (`LRCV`)** pe o ceață densă de iarnă în care vizibilitatea scade sub **50–200 m (Categoria IIIB/IIIC)**, combinată cu vânt lateral de furtună și atacuri de război electronic:
+Imaginați-vă o aeronavă cu **180 de pasageri** aflată pe panta finală de **`3.0°`** spre **Aeroportul Internațional Craiova (`LRCV`)** pe o ceață densă de iarnă în care vizibilitatea scade sub **50–200 m (Categoria IIIB/IIIC)**, combinată cu vânt lateral de furtună și atacuri de război electronic:
 
 1. **Fenomenul „Confidently Wrong” (Spoofing GPS & Bruiaj ILS)**:
    - Cu un emițător SDR de câteva sute de euro, un atacator poate injecta un semnal GPS/ILS falsificat coerent care comandă autopilotului clasic o deviere laterală de **`+250 m` în câmp**, în timp ce receptorul GPS afișează **`12/12 SATS LOCKED | RAIM: GREEN | HDOP: 0.8 | Eroare: 0.0 m PE AX`**!
@@ -61,10 +61,10 @@ Am construit un copilot autonom complet pasiv și imun la radio-interferențe, c
 
 | Sub-Sistem la Bord | Tehnologie & Fizică | Rol Operațional în Ceață / Spoofing |
 | :--- | :--- | :--- |
-| **1. Cameră Frontală Dual-Band (`VIS + SWIR 1.5 µm`)** | Senzor InGaAs în infraroșu scurt ($0.9\text{--}1.7\text{ }\mu\text{m}$), unde coeficientul de extincție Mie în ceață scade la $\beta_{\text{SWIR}} \approx 0.22\,\beta_{\text{VIS}}$ | Penetrează ceața de **$4\times$ mai departe** decât ochiul uman ($50\text{ m} \to 200\text{ m}$), extrăgând centroizii sub-pixel ($I_{\text{SWIR}}^2$) ai balizajului luminos ALS fără halou |
-| **2. Radar Milimetric `FMCW 94 GHz` + Altimetru** | Lungime de undă $\lambda = 3.2\text{ mm}$ transparentă la picăturile micronice de ceață | Măsoară altitudinea reală AGL cu precizie de **`3 cm`**, viteza Doppler la sol și profilul TERCOM al terenului sub plafonul de nori |
-| **3. Unitate Inerțială Tactică (`IMU 400 Hz`) + ES-EKF 22 Stări** | Integrare pe varietatea $\text{SO}(3) \times \mathbb{R}^3$ cu *Error-State Extended Kalman Filter* în 22 de stări | Asigură continuitatea buclei de control la $60\text{ Hz}$ și derotarea fluxului optic 3D (separând rotația aeronavei de translația reală) |
-| **4. Astro-Tracker Zenital `SWIR 2.2 µm` (Stellarium J2000) + `DRA`** | Cameră zenitală în banda K ($2.2\text{ }\mu\text{m}$, împrăștiere Rayleigh redusă de $256\times$) + fotoreceptori de polarizare UV/albastru (*Dorsal Rim Area*) | Blochează **9 stele în plină zi / prin pâclă** (`SNR +20.87 dB` vs `-8.68 dB` în vizibil), rezolvă atitudinea 3D prin **Wahba SVD** cu eroare **`0.00018°`** și anulează complet driftul giroscopic INS |
+| **1. Cameră Frontală Dual-Band (`VIS + SWIR 1.5 µm`)** | Senzor InGaAs în infraroșu scurt (`0.9–1.7 µm`), unde coeficientul de extincție Mie în ceață scade la `β_SWIR ≈ 0.22 × β_VIS` | Penetrează ceața de **`4×` mai departe** decât ochiul uman (`50 m → 200 m`), extrăgând centroizii sub-pixel (`I_SWIR²`) ai balizajului luminos ALS fără halou |
+| **2. Radar Milimetric `FMCW 94 GHz` + Altimetru** | Lungime de undă `λ = 3.2 mm` transparentă la picăturile micronice de ceață | Măsoară altitudinea reală AGL cu precizie de **`3 cm`**, viteza Doppler la sol și profilul TERCOM al terenului sub plafonul de nori |
+| **3. Unitate Inerțială Tactică (`IMU 400 Hz`) + ES-EKF 22 Stări** | Integrare pe varietatea `SO(3) × ℝ³` cu *Error-State Extended Kalman Filter* în 22 de stări | Asigură continuitatea buclei de control la `60 Hz` și derotarea fluxului optic 3D (separând rotația aeronavei de translația reală) |
+| **4. Astro-Tracker Zenital `SWIR 2.2 µm` (Stellarium J2000) + `DRA`** | Cameră zenitală în banda K (`2.2 µm`, împrăștiere Rayleigh redusă de `256×`) + fotoreceptori de polarizare UV/albastru (*Dorsal Rim Area*) | Blochează **9 stele în plină zi / prin pâclă** (`SNR +20.87 dB` vs `-8.68 dB` în vizibil), rezolvă atitudinea 3D prin **Wahba SVD** cu eroare **`0.00018°`** și anulează complet driftul giroscopic INS |
 | **5. Creier Bionic Google Research *Drosophila* (`139.255` Neuroni)** | Connectomul complet *FlyWire* (Nature, oct. 2024): `Retina -> Lamina -> Medulla (T4/T5) -> Lobula Plate (HS/VS) -> Central Complex (E-PG Ring Attractor 16 neuroni + PFNd)` | Menține capul adevărat fără halucinații neurale și anticipează rafalele de vânt lateral cu **`0.85 s` înainte** ca vântul să lovească fuzelajul |
 
 ---
@@ -131,31 +131,40 @@ Am construit un copilot autonom complet pasiv și imun la radio-interferențe, c
 
 ---
 
-## 🧮 6. Cele 5 Formule Fundamentale și Sinteza Automată din Librăriile FlightGear (`c172p.xml`)
+## 🧮 6. Cele 5 Legi Fizice Fundamentale & Sinteza Automată din Librăriile FlightGear (`c172p.xml`)
 
-### A. Cele 5 Legi Fizice pe Înțelesul Tuturor
-1. **Derotarea Giroscopică a Fluxului Optic (`HS/VS` & `Lamina`)**:
-   $$\omega_{\text{translație reală}} = \underbrace{15\text{ px/s}}_{\text{flux optic cameră}} - \underbrace{12\text{ px/s}}_{\text{rotație giroscop IMU}} = 3\text{ px/s}\text{ (mișcarea pură față de pistă)}$$
-2. **Amplificarea Vizibilității în Infraroșu Scurt (`SWIR 1.5–2.2 µm`)**:
-   $$V_{\text{SWIR}} = \frac{\beta_{\text{VIS}}}{\beta_{\text{SWIR}}} \cdot V_{\text{MOR}} \approx 4.5 \times 50\text{ m} = 225\text{ m}\quad (+2.5\text{ s timp critic de reacție înainte de prag})$$
-3. **Compensarea Predictivă a Vântului Lateral cu `0.85 s` Înainte de Impact (`PFNd` Gust Lookahead)**:
-   $$v_{\text{comandă}} = -v_{\text{vânt estimat optic la }60\text{ m în față}} \implies +10\text{ m/s} - 10\text{ m/s} = 0.0\text{ m abatere laterală}$$
-4. **Inversiunea Analitică $2\times 2$ pentru Aliniere *Wing-Low Forward-Slip* Fără Reglaj Manual (`fg_library_extractor.py`)**:
-   Din derivatele aerodinamice JSBSim extrase automat din `c172p.xml` ($C_{l_{\delta_a}} = 0.20, C_{l_{\delta_r}} = 0.0147, C_{n_{\delta_a}} = -0.0504, C_{n_{\delta_r}} = -0.0645$, $\det(\mathbf{M}_{\text{lat}}) = -0.012159 \neq 0$):
-   $$\begin{bmatrix} \delta_{a,\text{trim}} \\ \delta_{r,\text{trim}} \end{bmatrix} = -\begin{bmatrix} C_{l_{\delta_a}} & C_{l_{\delta_r}} \\ C_{n_{\delta_a}} & C_{n_{\delta_r}} \end{bmatrix}^{-1} \begin{bmatrix} C_{l_\beta} \\ C_{n_\beta} \end{bmatrix} \beta_{\text{req}}, \qquad \phi_{\text{slip}} = \arcsin\!\left(-\frac{q_{\infty} S_w (C_{Y_\beta}\beta + C_{Y_{\delta_r}}\delta_r)}{m g}\right)$$
-   menținând fuzelajul avionului paralel cu Pista 09 (`88.9314°`) pe toată panta finală, chiar și în vânt lateral de furtună (`14–18 kt`).
-5. **Paznicul Anti-Spoofing Dual-Layer ($\chi^2$ Mahalanobis + CUSUM) în `16.6 ms`**:
-   $$d_M^2 = \mathbf{r}_{\text{GNSS}}^\top \mathbf{S}^{-1} \mathbf{r}_{\text{GNSS}} = 96.4 > \tau_{\chi^2}\;(18.5) \implies \text{GNSS QUARANTINED în } 1\text{ cadru } (16.6\text{ ms})$$
+| # | Legea Fizică / Modulul Bionic | Formula Intuitivă & Exemplu Numeric Real | Efectul Direct asupra Zborului Autonom |
+| :-: | :--- | :--- | :--- |
+| **1** | **Derotarea Giroscopică a Fluxului Optic** (`HS/VS` & `Lamina`) | `15 px/s (văzut de cameră) − 12 px/s (rotirea din giroscop IMU) = 3 px/s (mișcarea reală a pistei)` | Elimină complet iluzia că pista fuge atunci când doar vântul înclină aripile avionului |
+| **2** | **Amplificarea Vizibilității în Infraroșu Scurt** (`SWIR 1.5–2.2 µm`) | `V_SWIR = (β_VIS / β_SWIR) × V_MOR ≈ 4.5 × 50 m = 225 m` | Oferă **`+2.5 secunde` timp suplimentar de reacție** înainte de pragul pistei în ceață CAT IIIc |
+| **3** | **Compensarea Predictivă a Vântului Lateral cu `0.85 s` Înainte** (`PFNd` Gust Lookahead) | `v_vânt(la 60m în față) = +10 m/s  ⟹  v_comandă = −10 m/s  ⟹  +10 − 10 = 0.0 m abatere` | Camera vede cum vântul împinge ceața la `60 m` în fața avionului și contrabracază preventiv |
+| **4** | **Amprenta Dealurilor sub Nori (`TERCOM`) & Sinteza `2×2` din `c172p.xml`** | `500 m (barometru) − 420 m (radar 94 GHz) = deal de 80 m` • `[δ_a, δ_r]ᵀ = −M_lat⁻¹ · [C_lβ, C_nβ]ᵀ · β_req` | Localizare fără GPS sub plafonul de nori + aliniere *Wing-Low* exactă (`det(M_lat) = −0.01216`) |
+| **5** | **Paznicul Anti-Hacker GPS Dual-Layer** (`Chi² Mahalanobis + CUSUM`) | `|250 m (GPS fals) − 0 m (Cameră SWIR + Radar)| = 250 m > 2 m  (χ² = 96.4 > 18.5)` | Semnalul GPS falsificat este **tăiat și izolat în carantină în `16.6 ms`** (un singur cadru la 60 Hz) |
+
+```text
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ SINTEZĂ ANALITICĂ AUTOMATĂ DIN LIBRĂRIILE FLIGHTGEAR (flightgear/fg_library_extractor.py -> c172p.xml):  │
+│                                                                                                          │
+│   M_lat = [ C_l_da   C_l_dr ] = [  0.2000   0.0147 ]   ==>  det(M_lat) = -0.012159 != 0                  │
+│           [ C_n_da   C_n_dr ]   [ -0.0504  -0.0645 ]                                                     │
+│                                                                                                          │
+│   [ delta_a_trim ] = - M_lat^(-1) * [ C_l_beta ] * beta_req   (Reziduu numeric de moment: 1.0e-18 ≈ 0)   │
+│   [ delta_r_trim ]                  [ C_n_beta ]                                                         │
+│                                                                                                          │
+│   phi_slip = arcsin( - q_inf * S_w * (C_Y_beta * beta + C_Y_dr * delta_r) / (m * g) )                    │
+│   ==> Menține fuzelajul paralel cu Pista 09 (88.9314°) pe toată panta finală, fără reglaj manual!        │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## 🏆 7. Rezultate Validate Automat (FlightGear Live + Stellarium SWIR + Server Rust)
 
-| Test / Scenariu deVerificare | Condiții Meteo & Cyber | Abatere la Touchdown (`TD_Xtk`) | Cap la Touchdown (`TD_Hdg` vs `88.93°`) | Abatere la Oprire (`Stop_Xtk`) | Verdict Automat |
+| Test / Scenariu de Verificare | Condiții Meteo & Cyber | Abatere la Touchdown (`TD_Xtk`) | Cap la Touchdown (`TD_Hdg` vs `88.93°`) | Abatere la Oprire (`Stop_Xtk`) | Verdict Automat |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | **1. Zbor Live FlightGear — Ceață CAT III (Zi, Înregistrare Video)** | `Vis: 240 m`, `089@2kt`, Spoofing GPS `+250 m` activ | **`+0.11 m`** (`11 cm`!) | **`88.9°`** (`0.03°` eroare!) | **`-0.18 m`** (`18 cm`!) | ✅ **`PASS`** |
 | **2. Zbor Live FlightGear — Furtună Severă (`+TSRA FG`)** | `Vis: 220 m`, Vânt lateral `175° @ 14G18kt`, Ploaie `0.85`, Spoofing `+250 m` | **`-0.25 m`** (`25 cm`!) | **`88.8°`** la oprire | **`-1.84 m`** | ✅ **`PASS`** |
-| **3. Fuziune Stellarium SWIR ($2.2\text{ }\mu\text{m}$) + FlightGear (`223 ms`)** | `9 stele` blocate (`Ori,Tau,Aur,UMa,Cas`), `SWIR SNR +20.87 dB` vs `VIS -8.68 dB` | **`-0.072 m`** (`7.2 cm`!) | **`88.94°`** (Wahba err `0.00018°`) | **`+0.914 m`** | ✅ **`PASS`** |
+| **3. Fuziune Stellarium SWIR (`2.2 µm`) + FlightGear (`223 ms`)** | `9 stele` blocate (`Ori,Tau,Aur,UMa,Cas`), `SWIR SNR +20.87 dB` vs `VIS -8.68 dB` | **`-0.072 m`** (`7.2 cm`!) | **`88.94°`** (Wahba err `0.00018°`) | **`+0.914 m`** | ✅ **`PASS`** |
 | **4. Suite Unit Tests Rust + Python (`cargo test` & `unittest`)** | `42` teste Rust (`aero-cockpit-server`) + `7` teste 6-DoF Python | `0.0001 m` | `88.9314°` | `0` erori / `0` `.unwrap()` | ✅ **`49/49 PASS`** |
 
 ---
