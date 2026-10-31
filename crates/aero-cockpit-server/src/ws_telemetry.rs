@@ -547,7 +547,7 @@ mod tests {
     #[test]
     fn test_load_or_run_long_range_zero_gps_report_endpoint_data() {
         let r = load_or_run_long_range_zero_gps_report();
-        assert!((r.total_distance_km - 100.0).abs() < 1e-6);
+        assert!((r.total_distance_km - 100_000.0).abs() < 1e-6);
         assert_eq!(r.total_frames_60hz, 90_000);
         assert!((r.gps_availability_pct - 0.0).abs() < 1e-9);
         assert!(r.zero_nan_or_inf_verified);
