@@ -336,31 +336,54 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                 // 2 PANOURI ALĂTURATE COMPLET SEPARATE: Stânga = Animația Interactivă (#maudSchoolCanvas), Dreapta = Videoclipul Zborului Sintetic FlightGear (#maudSchoolFgVideo)
                 div class="school-canvas-box" {
                     div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:stretch;" {
-                        // Panoul Stâng: DOAR Animația Interactivă Pas-cu-Pas (100% curată, fără video suprapus!)
+                        // Panoul Stâng: DOAR Animația Interactivă Pas-cu-Pas (100% curată, cu texte în HTML cu wrap natural!)
                         div style="background:#070B14; border:2px solid #38BDF8; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px;" {
-                            div style="display:flex; justify-content:space-between; align-items:center; gap:8px;" {
+                            div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;" {
                                 strong id="lesson-canvas-caption" style="color:#FDE047; font-size:15.5px;" {
-                                    "🎨 Animația Interactivă Pas-cu-Pas (Texte 100% Statice)"
+                                    "🎨 Animația Interactivă Pas-cu-Pas (Fără Suprapuneri)"
                                 }
-                                span class="live-pill" { "CANVAS 60 FPS SEPARAT" }
+                                span class="live-pill" { "CANVAS 640×300 SEPARAT" }
+                            }
+                            div
+                                id="maud-school-status-html"
+                                style="white-space:normal; overflow-wrap:break-word; word-break:break-word; line-height:1.45; padding:10px 14px; background:#0B1325; border:2px solid #00FF9D; border-radius:10px; color:#00FF9D; font-weight:900; font-size:14px;"
+                            {
+                                "✅ SCUTUL AERO-SHIELD & ZBORUL FLIGHTGEAR REZOLVAT ACTIV!"
                             }
                             canvas
                                 id="maudSchoolCanvas"
-                                width="560"
-                                height="320"
-                                style="display:block; width:100%; height:320px; border-radius:14px; background:#070B14; border:2px solid #38BDF8;"
+                                width="640"
+                                height="300"
+                                style="display:block; width:100%; height:300px; border-radius:14px; background:#070B14; border:2px solid #38BDF8;"
                             {}
+                            div
+                                id="maud-school-legend-html"
+                                style="display:flex; flex-direction:column; gap:6px; padding:12px 14px; background:#0B1325; border:2px solid #FDE047; border-radius:10px; white-space:normal; overflow-wrap:break-word; word-break:break-word;"
+                            {
+                                div id="maud-school-legend-line1" style="font-size:14px; font-weight:900; color:#FDE047;" {
+                                    "☁️ CEAȚĂ GROASĂ CA LAPTELE + HACKER GPS 👾"
+                                }
+                                div id="maud-school-legend-line2" style="font-size:13.5px; font-weight:800; color:#FFFFFF;" {
+                                    "✈️🔴 GPS Păcălit (în iarbă!) — Cercul Roșu deviază în sus"
+                                }
+                                div id="maud-school-legend-line3" style="font-size:13.5px; font-weight:800; color:#00FF9D;" {
+                                    "✈️🟢 Creierul Drosophila (Drept pe pistă!) — Cercul Verde aterizează pe RWY 09"
+                                }
+                                div id="maud-school-legend-drosophila" style="font-size:12.5px; font-weight:800; color:#67E8F9; border-top:1px solid #38BDF8; padding-top:6px;" {
+                                    "🧬 Harta Google Drosophila: 👁️ T4/T5 Anticeață • 🔄 HS/VS 6-DoF • 🧭 E-PG 16-Neuroni • 💨 PFNd Vânt 0.85s"
+                                }
+                            }
                         }
 
                         // Panoul Drept: DOAR Filmarea Zborului Sintetic FlightGear (100% clară, opacity: 1.0, fără canvas suprapus!)
                         div style="background:#070B14; border:2px solid #00FF9D; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px;" {
-                            div style="display:flex; justify-content:space-between; align-items:center; gap:8px;" {
+                            div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;" {
                                 strong style="color:#00FF9D; font-size:15.5px;" {
                                     "🎬 Filmarea Zborului Sintetic FlightGear"
                                 }
                                 span class="live-pill" { "VIDEO 100% CLAR SEPARAT" }
                             }
-                            div id="maud-school-fg-caption" style="font-size:14px; font-weight:800; color:#FFFFFF;" {
+                            div id="maud-school-fg-caption" style="font-size:14px; font-weight:800; color:#FFFFFF; white-space:normal; overflow-wrap:break-word;" {
                                 "🎬 Zbor Sintetic FlightGear (FG-01/07): Ceață CAT IIIc + Atac Hacker GPS vs. Scutul AERO-SHIELD pe Pista 09 Craiova"
                             }
                             video
@@ -371,7 +394,7 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                                 muted
                                 playsinline
                                 controls
-                                style="display:block; width:100%; height:320px; object-fit:cover; border-radius:14px; opacity:1.0; background:#000; border:2px solid #00FF9D;"
+                                style="display:block; width:100%; height:300px; object-fit:cover; border-radius:14px; opacity:1.0; background:#000; border:2px solid #00FF9D;"
                             {}
                         }
                     }
@@ -398,11 +421,14 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                     // Banner-ul de confirmare când utilizatorul apasă pe Butonul Verde
                     div
                         id="school-green-solved-banner"
-                        style="background:#070B14; border:2px solid #00FF9D; color:#FFFFFF; padding:12px 18px; border-radius:12px; font-size:15.5px; font-weight:800;"
+                        style="background:#070B14; border:2px solid #00FF9D; color:#FFFFFF; padding:12px 18px; border-radius:12px; font-size:15.5px; font-weight:800; white-space:normal; overflow-wrap:break-word;"
                     {
                         "✅ BRAVO! Ai apăsat Butonul Verde: Uite în filmarea FlightGear din dreapta și în animația din stânga cum avionul verde rămâne pe Pista 09 Craiova!"
                     }
                 }
+
+                // Formulele matematice intuitive cu numere simple direct pe Pagina 1
+                (render_three_simple_formulas_panel())
             }
         }
     }
@@ -445,27 +471,29 @@ pub fn render_page_2_windshield_hud(is_active: bool) -> Markup {
 
                 // Grid side-by-side (2 panouri alăturate, 0 suprapunere!)
                 div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:stretch;" {
-                    // Panoul Stâng: 🪟 Animația Parbrizului 3D & Vectorii AI (#hudCanvas)
-                    div style="background:#070B14; border:2px solid #38BDF8; border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:12px;" {
-                        div style="display:flex; justify-content:space-between; align-items:center;" {
+                    // Panoul Stâng: 🪟 Animația Parbrizului 3D & Vectorii AI (#hudCanvas) — callout-uri în afara canvas-ului!
+                    div style="background:#070B14; border:2px solid #38BDF8; border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:10px;" {
+                        div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;" {
                             strong style="font-size:16.5px; color:#00FF9D;" {
                                 "🪟 Animația Parbrizului 3D & Vectorii AI"
                             }
-                            span class="live-pill" { "GRAFIC 3D SEPARAT" }
+                            span class="live-pill" { "GRAFIC 3D SEPARAT (720×440)" }
                         }
-                        div style="position:relative; width:100%; height:440px; border-radius:16px; overflow:hidden; background:#070B14; border:2px solid #38BDF8;" {
+                        div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:space-between;" {
                             div class="hud-callout-badge hud-callout-fog" {
                                 "☁️💨 NOR ÎMPINS DE VÂNT (Săgeți Mov)"
                             }
                             div class="hud-callout-badge hud-callout-als" {
                                 "💡 BECURI PE PĂMÂNT VĂZUTE PRIN CEAȚĂ"
                             }
-                            div class="gust-alert-overlay" id="gust-overlay" style="z-index:10;" {
-                                "⚠️ ATENȚIE! AM VĂZUT UN NOR DE VÂNT ÎN FAȚĂ CU 0.85 SECUNDE ÎNAINTE SĂ LOVEASCĂ AVIONUL!"
-                            }
+                        }
+                        div class="gust-alert-overlay" id="gust-overlay" {
+                            "⚠️ ATENȚIE! AM VĂZUT UN NOR DE VÂNT ÎN FAȚĂ CU 0.85 SECUNDE ÎNAINTE SĂ LOVEASCĂ AVIONUL!"
+                        }
+                        div style="width:100%; height:440px; border-radius:16px; overflow:hidden; background:#070B14; border:2px solid #38BDF8;" {
                             canvas
                                 id="hudCanvas"
-                                width="600"
+                                width="720"
                                 height="440"
                                 style="display:block; width:100%; height:440px; border-radius:16px; background:#070B14;"
                             {}
@@ -540,6 +568,9 @@ pub fn render_page_2_windshield_hud(is_active: bool) -> Markup {
                         "🌫️ Ceață Oarbă / Normală"
                     }
                 }
+
+                // Formulele matematice intuitive cu numere simple pe Pagina 2
+                (render_three_simple_formulas_panel())
             }
         }
     }
@@ -574,9 +605,9 @@ pub fn render_page_3_four_planes_race(is_active: bool) -> Markup {
                     }
                 }
 
-                // 1. Pista văzută de sus (#radarCanvas mare, height: 440px, 100% curată, fără niciun video suprapus!)
+                // 1. Pista văzută de sus (#radarCanvas mare 780x440, height: 440px, 100% curată, fără niciun video suprapus!)
                 div class="radar-stage-440" {
-                    canvas id="radarCanvas" style="position:relative; z-index:4; width:100%; height:100%; display:block; background:#030914;" {}
+                    canvas id="radarCanvas" width="780" height="440" style="position:relative; z-index:4; width:100%; height:100%; display:block; background:#070B14;" {}
                 }
 
                 // 2. Cele 4 Carduri Mari și Aerisite de Legendă (câte unul pentru fiecare avion)
@@ -646,94 +677,101 @@ pub fn render_page_3_four_planes_race(is_active: bool) -> Markup {
                         "🔄 Resetează Cursa pe Mijlocul Pistei"
                     }
                 }
+
+                // Formulele matematice intuitive cu numere simple pe Pagina 3
+                (render_three_simple_formulas_panel())
             }
         }
     }
 }
 
-/// Panoul „💡 Cele 3 Formule Simple pe Înțelesul Tuturor + Formula 4 (Busola Cerului — Fără Matematică Grea!)” — afișat pe Pagina 4 și Pagina 6 (100% opac, contrast WCAG AAA).
+/// Panoul „💡 Cele 3 Formule Simple pe Înțelesul Tuturor + Cele 5 Formule Matematice Intuitive cu Numere Simple (+, −, ×)” — afișat pe toate cele 6 pagini (100% opac, contrast WCAG AAA).
 #[must_use]
 pub fn render_three_simple_formulas_panel() -> Markup {
     html! {
         div
             class="simple-formulas-3-panel"
-            style="background:#070B14; border:2px solid #FDE047; border-radius:18px; padding:22px 26px; margin-bottom:6px;"
+            style="background:#070B14; border:2px solid #FDE047; border-radius:18px; padding:22px 26px; margin-bottom:6px; white-space:normal; overflow-wrap:break-word; word-break:break-word;"
         {
             div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;" {
-                h2 style="font-size:22px; font-weight:900; color:#FDE047;" {
-                    "💡 Cele 3 Formule Simple pe Înțelesul Tuturor + Formula 4 (Busola Cerului — Fără Matematică Grea!)"
+                h2 style="font-size:21px; font-weight:900; color:#FDE047;" {
+                    "💡 Cele 3 Formule Simple pe Înțelesul Tuturor + Cele 5 Formule Matematice cu Numere Simple (Pentru Matematicieni și Non-Matematicieni!)"
                 }
                 span style="background:#0B1325; border:2px solid #00FF9D; color:#00FF9D; font-weight:900; font-size:13.5px; padding:5px 14px; border-radius:999px;" {
                     "🎯 PRECIZIE < 1 METRU LA 100.000 KM FĂRĂ GPS"
                 }
             }
-            p style="color:#FFFFFF; font-size:16px; line-height:1.55; margin-bottom:16px;" {
-                "Nu ai nevoie de ecuații complicate ca să înțelegi cum zboară avionul nostru "
-                strong style="color:#00FF9D;" { "100.000 km fără GPS (de 2,5 ori înconjurul Pământului)" }
-                " cu o eroare sub "
-                strong style="color:#FDE047;" { "1 metru (0,38 m medie)" }
-                "! Totul se bazează pe adunări și scăderi simple (Sol + Creier Drosophila + Fizica Aripilor + Busola Cerului de Sus):"
+            p style="color:#FFFFFF; font-size:15.5px; line-height:1.55; margin-bottom:16px;" {
+                "Orice om din sală (matematician sau non-matematician) poate verifica în minte în 3 secunde aceste 5 calcule cu numere simple ("
+                strong style="color:#FDE047;" { "+, −, ×" }
+                ") care garantează o eroare sub "
+                strong style="color:#00FF9D;" { "1 metru (0,38 m medie) chiar și la 100.000 km fără GPS" }
+                ":"
             }
 
-            div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(265px, 1fr)); gap:16px;" {
-                // Formula 1
-                div style="background:#0B1325; border:2px solid #00FF9D; border-left:6px solid #00FF9D; border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:10px;" {
-                    div style="font-size:16px; font-weight:900; color:#FDE047;" {
-                        "🔑 Formula 1 (De ce avem < 1 metru eroare chiar și la 100.000 km fără GPS):"
+            div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(290px, 1fr)); gap:16px;" {
+                // Formula 1: Eliminarea Balansului Avionului (Scădere simplă)
+                div style="background:#0B1325; border:2px solid #38BDF8; border-left:6px solid #38BDF8; border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:8px;" {
+                    div style="font-size:15.5px; font-weight:900; color:#FDE047;" {
+                        "1️⃣ Formula 1 — Eliminarea Balansului Avionului (Scădere simplă):"
                     }
-                    div style="background:#070B14; border:2px solid #00FF9D; border-radius:10px; padding:12px 14px; font-size:15.5px; font-weight:900; color:#00FF9D; line-height:1.45;" {
-                        "Poziția Exactă = Harta din Memoria Avionului + Amprenta Solului de sub Noi"
+                    div style="background:#070B14; border:2px solid #38BDF8; border-radius:10px; padding:10px 12px; font-size:14.5px; font-weight:900; color:#67E8F9; line-height:1.45;" {
+                        "Mișcarea Pământului = Mișcarea din Cameră − Rotirea Avionului (V_pământ = V_cameră − V_rotire)"
                     }
-                    div style="background:#070B14; border:1px solid #38BDF8; border-radius:8px; padding:8px 12px; font-size:14px; font-weight:800; color:#67E8F9;" {
-                        "📐 Forma Solului = Înălțimea Avionului − Distanța până la Sol"
-                    }
-                    p style="font-size:14.5px; color:#FFFFFF; line-height:1.5;" {
-                        "Nu doar numărăm pașii în orb, ci potrivim permanent forma solului și reperele de sub noi cu harta internă — "
-                        strong style="color:#FDE047;" { "ca zimții unei chei în broască!" }
-                        " Eroarea se resetează mereu la sub 1 metru!"
+                    div style="background:#070B14; border:1px solid #FDE047; border-radius:8px; padding:9px 12px; font-size:14px; font-weight:800; color:#FDE047; line-height:1.45;" {
+                        "🔢 Exemplu cu numere: 15 pixeli/s (cât se mișcă imaginea pe cameră) − 12 pixeli/s (cât s-a înclinat botul avionului) = 3 pixeli/s (mișcarea reală față de pistă!)"
                     }
                 }
 
-                // Formula 2
-                div style="background:#0B1325; border:2px solid #38BDF8; border-left:6px solid #38BDF8; border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:10px;" {
-                    div style="font-size:16px; font-weight:900; color:#FDE047;" {
-                        "🧠 Formula 2 (Separarea Ceții și a Virajelor):"
+                // Formula 2: De ce vedem de 4× mai departe prin Ceață în Infraroșu SWIR (Înmulțire simplă)
+                div style="background:#0B1325; border:2px solid #00FF9D; border-left:6px solid #00FF9D; border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:8px;" {
+                    div style="font-size:15.5px; font-weight:900; color:#FDE047;" {
+                        "2️⃣ Formula 2 — De ce vedem de 4× mai departe prin Ceață în Infraroșu SWIR (Înmulțire simplă):"
                     }
-                    div style="background:#070B14; border:2px solid #38BDF8; border-radius:10px; padding:12px 14px; font-size:15.5px; font-weight:900; color:#67E8F9; line-height:1.45;" {
-                        "Viteza Avionului = Ce Vede Camera − Rotirea Avionului − Mișcarea Norului de Ceață"
+                    div style="background:#070B14; border:2px solid #00FF9D; border-radius:10px; padding:10px 12px; font-size:14.5px; font-weight:900; color:#00FF9D; line-height:1.45;" {
+                        "Distanța Văzută în Infraroșu (SWIR) = 4 × Distanța Văzută cu Ochiul (D_SWIR = 4 × D_ochi)"
                     }
-                    p style="font-size:14.5px; color:#FFFFFF; line-height:1.5;" {
-                        "Creierul musculiței Google (T4/T5 + HS/VS + PFNd) scade rotația avionului și mișcarea norilor împinși de vânt ca să afle "
-                        strong style="color:#00FF9D;" { "viteza reală față de pământul fix!" }
-                    }
-                }
-
-                // Formula 3
-                div style="background:#0B1325; border:2px solid #FDE047; border-left:6px solid #FDE047; border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:10px;" {
-                    div style="font-size:16px; font-weight:900; color:#FDE047;" {
-                        "⚖️ Formula 3 (Prinderea Hackerului în < 3 secunde):"
-                    }
-                    div style="background:#070B14; border:2px solid #FDE047; border-radius:10px; padding:12px 14px; font-size:15.5px; font-weight:900; color:#FDE047; line-height:1.45;" {
-                        "Adevărul Fizic = Viteza pe Sol − Aerul care lovește Aripile"
-                    }
-                    p style="font-size:14.5px; color:#FFFFFF; line-height:1.5;" {
-                        "Dacă satelitul GPS sau internetul spune altceva decât simt aripile și camera avionului, minciuna este "
-                        strong style="color:#FF2A5F;" { "prinsă în sub 2,9 secunde" }
-                        " și blocată instantaneu!"
+                    div style="background:#070B14; border:1px solid #FDE047; border-radius:8px; padding:9px 12px; font-size:14px; font-weight:800; color:#FDE047; line-height:1.45;" {
+                        "🔢 Exemplu cu numere: Dacă pilotul vede cu ochiul doar la 50 metri în ceață → Camera noastră vede la 4 × 50 m = 200 metri!"
                     }
                 }
 
-                // Formula 4 (Busola Cerului — Camera de Sus)
-                div style="background:#0B1325; border:2px solid #F0ABFC; border-left:6px solid #F0ABFC; border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:10px;" {
-                    div style="font-size:16px; font-weight:900; color:#FDE047;" {
-                        "🔭 Formula 4 (Busola Cerului — Camera de Sus):"
+                // Formula 3: Anularea Vântului Lateral cu Creierul de Muscă Drosophila (Adunare și Scădere)
+                div style="background:#0B1325; border:2px solid #F0ABFC; border-left:6px solid #F0ABFC; border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:8px;" {
+                    div style="font-size:15.5px; font-weight:900; color:#FDE047;" {
+                        "3️⃣ Formula 3 — Anularea Vântului Lateral cu Creierul de Muscă Drosophila (Adunare și Scădere):"
                     }
-                    div style="background:#070B14; border:2px solid #F0ABFC; border-radius:10px; padding:12px 14px; font-size:15px; font-weight:900; color:#F0ABFC; line-height:1.45;" {
-                        "Direcția Nord Adevărată = Stelele văzute Ziua în Infraroșu (peste nori) + Inelele de Lumină Polarizată (sub nori, ca Ochiul de Sus al Muștei DRA)"
+                    div style="background:#070B14; border:2px solid #F0ABFC; border-radius:10px; padding:10px 12px; font-size:14.5px; font-weight:900; color:#F0ABFC; line-height:1.45;" {
+                        "Abaterea de la Pistă = Împingerea Vântului + Corecția Avionului = 0 (E_lateral = V_vânt + V_corecție = 0)"
                     }
-                    p style="font-size:14.5px; color:#FFFFFF; line-height:1.5;" {
-                        "Chiar și ziua la amiază sau sub nori groși, camera orientată în sus vede stelele în infraroșu și inelele de lumină polarizată ale Soarelui — blocând eroarea busolei E-PG sub "
-                        strong style="color:#00FF9D;" { "0,005°!" }
+                    div style="background:#070B14; border:1px solid #FDE047; border-radius:8px; padding:9px 12px; font-size:14px; font-weight:800; color:#FDE047; line-height:1.45;" {
+                        "🔢 Exemplu cu numere: +10 m/s (vântul ne împinge la dreapta în iarbă) − 10 m/s (neuronii PFNd îndreaptă avionul spre stânga) = 0 metri abatere (aterizăm fix pe linia din mijlocul pistei!)"
+                    }
+                }
+
+                // Formula 4: Amprenta Dealurilor sub Nori (< 1m la 100.000 km) + Busola Cerului
+                div style="background:#0B1325; border:2px solid #00FF9D; border-left:6px solid #00FF9D; border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:8px;" {
+                    div style="font-size:15.5px; font-weight:900; color:#FDE047;" {
+                        "4️⃣ Formula 4 (Busola Cerului & Amprenta Dealurilor sub Nori pentru Eroare < 1m la 100.000 km):"
+                    }
+                    div style="background:#070B14; border:2px solid #00FF9D; border-radius:10px; padding:10px 12px; font-size:14px; font-weight:900; color:#00FF9D; line-height:1.45;" {
+                        "Înălțimea Dealului de sub noi = Altitudinea Avionului (Barometru) − Distanța până la Pământ (Radar) (H_deal = H_avion − D_radar) | Poziția Exactă = Harta din Memoria Avionului + Amprenta Solului de sub Noi"
+                    }
+                    div style="background:#070B14; border:1px solid #FDE047; border-radius:8px; padding:9px 12px; font-size:14px; font-weight:800; color:#FDE047; line-height:1.45;" {
+                        "🔢 Exemplu cu numere: 500 m (altitudinea avionului în nori) − 420 m (distanța măsurată de radar în jos) = 80 metri (înălțimea exactă a dealului de sub noi → îl găsim pe hartă cu eroare < 1 metru, fără GPS!) + Stelele văzute Ziua în Infraroșu & Polarizarea DRA (< 0,005°)"
+                    }
+                }
+
+                // Formula 5: Scutul Anti-Hackeri / GPS Fals (Scădere și Comparație simplă)
+                div style="background:#0B1325; border:2px solid #FF2A5F; border-left:6px solid #FF2A5F; border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:8px;" {
+                    div style="font-size:15.5px; font-weight:900; color:#FDE047;" {
+                        "5️⃣ Formula 5 — Scutul Anti-Hackeri / GPS Fals (Scădere și Comparație simplă):"
+                    }
+                    div style="background:#070B14; border:2px solid #FF2A5F; border-radius:10px; padding:10px 12px; font-size:14.5px; font-weight:900; color:#FDA4AF; line-height:1.45;" {
+                        "Minciuna GPS = |Poziția spusă de GPS − Poziția văzută de Cameră și Dealuri| (Δ_eroare = |P_GPS − P_real|)"
+                    }
+                    div style="background:#070B14; border:1px solid #FDE047; border-radius:8px; padding:9px 12px; font-size:14px; font-weight:800; color:#FDE047; line-height:1.45;" {
+                        "🔢 Exemplu cu numere: |500 m (unde minte hackerul că suntem) − 0 m (unde ne arată camera și dealul că suntem)| = 500 m > 2 m (limita permisă) ➔ 🚨 GPS FALS OPRIT AUTOMAT!"
                     }
                 }
             }
@@ -1142,6 +1180,8 @@ pub fn render_page_5_real_videos(bench_json: &serde_json::Value, is_active: bool
                         }
                     }
                 }
+
+                (render_three_simple_formulas_panel())
             }
         }
     }
@@ -1475,7 +1515,6 @@ pub fn render_full_cockpit_page_at(initial_page: u8) -> Markup {
                 (render_bottom_page_navigator(active_page))
 
                 script { (PreEscaped(MAUD_COCKPIT_JS_ENGINE)) }
-                script { (PreEscaped(crate::ui_visual_engine::render_visual_canvases_script())) }
             }
         }
     }
@@ -1515,7 +1554,6 @@ pub fn render_aero_shield_app_maud_page(state: &CockpitServerState, initial_page
                 (render_bottom_page_navigator(active_page))
 
                 script { (PreEscaped(MAUD_COCKPIT_JS_ENGINE)) }
-                script { (PreEscaped(crate::ui_visual_engine::render_visual_canvases_script())) }
             }
         }
     }
@@ -1902,49 +1940,64 @@ body {
 .windshield-stage-480 {
   position: relative;
   width: 100%;
-  height: 480px;
+  height: 440px;
   background: #070B14;
   border: 2px solid #38BDF8;
   border-radius: 18px;
   overflow: hidden;
 }
 .hud-callout-badge {
-  position: absolute;
-  z-index: 8;
-  padding: 8px 14px;
+  position: static;
+  padding: 10px 16px;
   border-radius: 10px;
   font-size: 13.5px;
   font-weight: 900;
-  pointer-events: none;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.45;
 }
 .hud-callout-fog {
-  top: 16px;
-  left: 18px;
   background: #070B14;
   border: 2px solid #F0ABFC;
   color: #FFFFFF;
 }
 .hud-callout-als {
-  bottom: 16px;
-  right: 18px;
   background: #070B14;
   border: 2px solid #00FF9D;
   color: #FFFFFF;
 }
 .gust-alert-overlay {
-  position: absolute;
-  top: 16px;
-  left: 18px;
-  right: 18px;
+  position: static;
+  margin-top: 10px;
   background: #070B14;
   border: 2px solid #FDE047;
   color: #FDE047;
-  padding: 10px 22px;
+  padding: 12px 18px;
   border-radius: 12px;
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 900;
   text-align: center;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
   display: none;
+}
+.btn-big-action,
+.page-nav-btn,
+.lesson-tab-big,
+.hud-summary-badge,
+.drosophila-bio-pill,
+.tel-pill,
+.legend-card,
+.plane-explain-card,
+.shield-big-card,
+.fg-spacious-card,
+.lesson-big-story,
+.lesson-action-callout {
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .three-legend-boxes {
   display: grid;
@@ -2233,6 +2286,7 @@ body {
 "####;
 
 const MAUD_COCKPIT_JS_ENGINE: &str = r####"
+window.AERO_MAUD_PRIMARY_LOOP = true;
 let ws = null;
 let latestFrame = null;
 let currentConceptPage = Number(document.body.getAttribute("data-initial-page") || 1);
@@ -2241,6 +2295,59 @@ let lessonAnimTick = 0;
 let spotlightTimer = null;
 let currentRealVideoIdx = 1;
 let isBlindFog = false;
+
+// Funcție de siguranță pentru desenarea etichetelor în Canvas 2D fără trunchiere și fără suprapunere (cu usedRects + ctx.clip)
+function rectsOverlap2D(a, b, pad) {
+  const p = pad || 4;
+  return !(
+    a.x + a.w + p <= b.x ||
+    b.x + b.w + p <= a.x ||
+    a.y + a.h + p <= b.y ||
+    b.y + b.h + p <= a.y
+  );
+}
+
+function drawSafeBoundedBadge(ctx, usedRects, text, x, y, maxW, canvasW, canvasH, borderCol, textCol) {
+  const safeMaxW = Math.max(60, Math.min(maxW || (canvasW - 24), canvasW - 16));
+  let fontPx = 12.5;
+  ctx.font = `bold ${fontPx}px sans-serif`;
+  let textW = ctx.measureText(text).width;
+  while (textW + 18 > safeMaxW && fontPx > 9.5) {
+    fontPx -= 0.5;
+    ctx.font = `bold ${fontPx}px sans-serif`;
+    textW = ctx.measureText(text).width;
+  }
+  const boxW = Math.min(safeMaxW, Math.ceil(textW + 18));
+  const boxH = 24;
+  let bx = Math.max(8, Math.min(x, canvasW - boxW - 8));
+  let by = Math.max(8, Math.min(y, canvasH - boxH - 8));
+  let candidate = { x: bx, y: by, w: boxW, h: boxH };
+
+  if (Array.isArray(usedRects)) {
+    let tries = 0;
+    while (tries < 6 && usedRects.some((r) => rectsOverlap2D(candidate, r, 4))) {
+      by = Math.min(canvasH - boxH - 8, by + boxH + 6);
+      candidate = { x: bx, y: by, w: boxW, h: boxH };
+      tries += 1;
+    }
+    usedRects.push(candidate);
+  }
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(candidate.x, candidate.y, candidate.w, candidate.h);
+  ctx.clip();
+  ctx.fillStyle = "#070B14";
+  ctx.fillRect(candidate.x, candidate.y, candidate.w, candidate.h);
+  ctx.strokeStyle = borderCol || "#38BDF8";
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(candidate.x, candidate.y, candidate.w, candidate.h);
+  ctx.fillStyle = textCol || "#FFFFFF";
+  ctx.font = `bold ${fontPx}px sans-serif`;
+  ctx.fillText(text, candidate.x + 8, candidate.y + 16);
+  ctx.restore();
+  return candidate;
+}
 
 let cyberState = {
   gps_jump_spoof: false,
@@ -2487,6 +2594,61 @@ function cycleSchoolFgVideoMode() {
   }
 }
 
+const SCHOOL_LESSON_HTML_LEGENDS = {
+  1: {
+    line1: "☁️ Lecția 1: Ceață Groasă ca Laptele + Hacker GPS 👾 (Calcul: |500 m − 0 m| = 500 m > 2 m -> GPS Oprit!)",
+    line2: "✈️🔴 Cercul Roșu = GPS Păcălit (în iarbă la 500 m!) | ✈️🟢 Cercul Verde = Creierul Drosophila (Drept pe Pista 09!)",
+    line3: "🧭 Busola în Inel E-PG (16 Neuroni) + 🗺️ TERCOM (4 × 50 m = 200 m) păstrează eroarea sub 0,38 m fără GPS!"
+  },
+  2: {
+    line1: "👁️ Lecția 2: Ochiul Anticeață T4/T5 + Camera SWIR văd 12–18 bare luminoase ALS prin ceață!",
+    line2: "✈️🟢 Cercul Verde urmărește becurile aurii ALS (Formula 1: 15 px/s − 12 px/s = 3 px/s sol curat!)",
+    line3: "🧭 Busola E-PG cu 16 Neuroni rămâne ancorată la 90° spre Pista Craiova RWY 09!"
+  },
+  3: {
+    line1: "🔄 Lecția 3: Stabilizatorul de Viraje HS/VS 6-DoF | La cer (Z = ∞) inversul distanței 1/Z = 0.000000 (Zero blocaj!)",
+    line2: "✈️🟢 Măsurăm viteza peste becurile pistei fără împărțire la zero când avionul ridică botul spre cer!",
+    line3: "🗺️ Formula 2 (TERCOM): 4 pași × 50 m = 200 m (Potrivire pe Amprenta Solului ca zimții unei chei în broască!)"
+  },
+  4: {
+    line1: "🟣⬇️ Lecția 4: Vânt în Ceață (18 m/s) — Izolat matematic de Pământul Fix cu 0.85s înainte de impact!",
+    line2: "💨 PFNd Simțul Vântului în Ceață + 🧭 E-PG Busola în Inel 16-Neuroni: Viteza Ceață (12) ≠ Viteza Sol (3)!",
+    line3: "✈️🟢 Avionul compensează automat unghiul de crab și rămâne pe axul pistei Craiova 09!"
+  },
+  5: {
+    line1: "🥤 Lecția 5: Paharul CUSUM — Prinde Hackerul Lent (Stealth Spoofing) în < 2.9 secunde!",
+    line2: "🚨 Formula 5: |Poziția GPS (500 m) − Poziția Sol (0 m)| = 500 m > Prag 2 m -> GPS Tăiat Automat!",
+    line3: "🧭 Busola Cerului (Formula 4: +10 m/s − 10 m/s = 0 m) + E-PG 16-Neuroni țin direcția RWY 09!"
+  },
+  6: {
+    line1: "🏆 Lecția 6: Comandant Drosophila — Aterizare Autonomă în Whiteout 0m pe Craiova RWY 09 (Eroare 0.21 m)!",
+    line2: "🌍 Testat pe 100.000 km Fără GPS (2,5× Înconjurul Pământului) -> Eroare Medie 0,38 m (Sub 1 Metru)!",
+    line3: "👉 👁️ T4/T5 + 🔄 HS/VS + 🧭 E-PG 16-Neuroni + 💨 PFNd active simultan la 60 Hz!"
+  }
+};
+
+function updateSchoolHtmlLegendDom() {
+  const statusEl = document.getElementById("maud-school-status-html");
+  if (statusEl) {
+    if (window.schoolLessonMode === "danger") {
+      statusEl.style.borderColor = "#FF2A5F";
+      statusEl.style.color = "#FDE047";
+      statusEl.textContent = "⚠️ MOD PERICOL ACTIV — APASĂ PE BUTONUL VERDE DE SUB ECRAN PENTRU A ACTIVA SCUTUL AERO-SHIELD!";
+    } else {
+      statusEl.style.borderColor = "#00FF9D";
+      statusEl.style.color = "#00FF9D";
+      statusEl.textContent = `✅ SCUTUL AERO-SHIELD & ZBORUL FLIGHTGEAR REZOLVAT ACTIV (LECȚIA ${currentLessonNum} DIN 6)!`;
+    }
+  }
+  const meta = SCHOOL_LESSON_HTML_LEGENDS[currentLessonNum] || SCHOOL_LESSON_HTML_LEGENDS[1];
+  const l1 = document.getElementById("maud-school-legend-line1");
+  const l2 = document.getElementById("maud-school-legend-line2");
+  const l3 = document.getElementById("maud-school-legend-line3");
+  if (l1 && meta) l1.textContent = meta.line1;
+  if (l2 && meta) l2.textContent = meta.line2;
+  if (l3 && meta) l3.textContent = meta.line3;
+}
+
 function triggerSchoolLessonState(mode) {
   window.schoolLessonMode = mode === "danger" ? "danger" : "solved";
   const bannerEl = document.getElementById("school-green-solved-banner");
@@ -2515,6 +2677,7 @@ function triggerSchoolLessonState(mode) {
       bannerEl.textContent = "✅ BRAVO! Ai apăsat Butonul Verde: Uite în filmarea FlightGear cum avionul verde rezolvă problema și rămâne pe Pista 09 Craiova!";
     }
   }
+  updateSchoolHtmlLegendDom();
   renderLessonMiniCanvas();
 }
 
@@ -2566,6 +2729,7 @@ function selectLesson6Yo(num) {
   if (window.setSpotlightLessonStep) {
     window.setSpotlightLessonStep(Math.min(5, clamped));
   }
+  updateSchoolHtmlLegendDom();
   renderLessonMiniCanvas();
 }
 
@@ -2614,57 +2778,38 @@ function lessonPlayAction(num) {
 function renderLessonMiniCanvas() {
   const canvas = document.getElementById("maudSchoolCanvas");
   if (!canvas) return;
-  if (canvas.clientWidth > 50 && canvas.width !== canvas.clientWidth) {
-    canvas.width = canvas.clientWidth;
-  }
+  // Rezoluție internă 100% FIXĂ (640x300) — nu micșorăm niciodată canvas.width la clientWidth!
+  if (canvas.width !== 640) canvas.width = 640;
+  if (canvas.height !== 300) canvas.height = 300;
+
   const ctx = canvas.getContext("2d");
   const w = canvas.width;
   const h = canvas.height;
   lessonAnimTick += 1;
+  const usedRects = [];
 
   // Fundal 100% opac WCAG AAA
   ctx.clearRect(0, 0, w, h);
   ctx.fillStyle = "#070B14";
   ctx.fillRect(0, 0, w, h);
 
-  // Caseta superioară 100% STATICĂ și OPACĂ (#070B14) pentru starea scutului
-  ctx.fillStyle = "#0B1325";
-  ctx.strokeStyle = window.schoolLessonMode === "danger" ? "#FF2A5F" : "#00FF9D";
-  ctx.lineWidth = 2;
-  ctx.fillRect(14, 8, w - 28, 28);
-  ctx.strokeRect(14, 8, w - 28, 28);
-
-  if (window.schoolLessonMode === "danger") {
-    ctx.fillStyle = "#FDE047";
-    ctx.font = "bold 13.5px sans-serif";
-    ctx.fillText("⚠️ MOD PERICOL ACTIV — APASĂ PE BUTONUL VERDE DE SUB ECRAN PENTRU A ACTIVA SCUTUL!", 24, 27);
-  } else {
-    ctx.fillStyle = "#00FF9D";
-    ctx.font = "bold 13.5px sans-serif";
-    ctx.fillText("✅ SCUTUL AERO-SHIELD & ZBORUL FLIGHTGEAR REZOLVAT ACTIV!", 24, 27);
-  }
-
-  // Desenăm pista din Craiova în dreapta (poziție 100% FIXĂ)
+  // Desenăm pista din Craiova în dreapta (poziție 100% FIXĂ, rezervată în usedRects)
+  const rwyRect = { x: w - 156, y: 46, w: 140, h: h - 62 };
+  usedRects.push(rwyRect);
   ctx.fillStyle = "#0B1325";
   ctx.strokeStyle = "#00FF9D";
   ctx.lineWidth = 3;
-  ctx.fillRect(w - 175, 76, 155, h - 118);
-  ctx.strokeRect(w - 175, 76, 155, h - 118);
+  ctx.fillRect(rwyRect.x, rwyRect.y, rwyRect.w, rwyRect.h);
+  ctx.strokeRect(rwyRect.x, rwyRect.y, rwyRect.w, rwyRect.h);
 
-  // Etichetă 100% STATICĂ pentru Pistă în casetă opacă
-  ctx.fillStyle = "#070B14";
-  ctx.strokeStyle = "#00FF9D";
-  ctx.lineWidth = 1.5;
-  ctx.fillRect(w - 175, 44, 155, 26);
-  ctx.strokeRect(w - 175, 44, 155, 26);
-  ctx.fillStyle = "#00FF9D";
-  ctx.font = "bold 12.5px sans-serif";
-  ctx.fillText("🎯 PISTA CRAIOVA 09", w - 168, 61);
+  // Etichetă scurtă, 100% STATICĂ și încadrată cu clip() pentru Pistă
+  drawSafeBoundedBadge(ctx, usedRects, "🎯 PISTA 09", w - 156, 12, 140, w, h, "#00FF9D", "#00FF9D");
 
   // Desenăm Inelul-Busolă cu 16 Neuroni (🧭 E-PG Ring Attractor) în poziție FIXĂ stânga-jos
-  const ringCx = 78;
-  const ringCy = h - 92;
-  const ringR = 32;
+  const ringCx = 68;
+  const ringCy = h - 78;
+  const ringR = 30;
+  usedRects.push({ x: 14, y: h - 122, w: 132, h: 112 });
 
   ctx.save();
   ctx.fillStyle = "#0B1325";
@@ -2693,38 +2838,17 @@ function renderLessonMiniCanvas() {
   ctx.stroke();
   ctx.restore();
 
-  // Eticheta E-PG 100% STATICĂ
-  ctx.fillStyle = "#070B14";
-  ctx.strokeStyle = "#38BDF8";
-  ctx.lineWidth = 1.5;
-  ctx.fillRect(14, h - 52, 210, 20);
-  ctx.strokeRect(14, h - 52, 210, 20);
-  ctx.fillStyle = "#FDE047";
-  ctx.font = "bold 11.5px sans-serif";
-  ctx.fillText("🧭 E-PG Busola în Inel 16-Neuroni", 20, h - 38);
-
-  // Bara cu cele 4 circuite biologice Google Drosophila în partea de jos (100% STATICĂ și OPACĂ)
-  ctx.fillStyle = "#0B1325";
-  ctx.strokeStyle = "#38BDF8";
-  ctx.lineWidth = 1.5;
-  ctx.fillRect(14, h - 28, w - 28, 22);
-  ctx.strokeRect(14, h - 28, w - 28, 22);
-  ctx.fillStyle = "#FFFFFF";
-  ctx.font = "bold 11px sans-serif";
-  ctx.fillText(
-    "🪰 GOOGLE DROSOPHILA:  👁️ T4/T5 Ochiul Anticeață  |  🔄 HS/VS Stabilizatorul de Viraje 6-DoF  |  🧭 E-PG Busola în Inel 16-Neuroni  |  💨 PFNd Simțul Vântului în Ceață",
-    20,
-    h - 13
-  );
+  // Etichetă scurtă E-PG 100% STATICĂ și încadrată cu clip()
+  drawSafeBoundedBadge(ctx, usedRects, "🧭 E-PG 16", 14, h - 34, 128, w, h, "#38BDF8", "#FDE047");
 
   // DOAR formele geometrice / cercurile / săgețile se mișcă cu `t`!
-  // TOATE textele explicative sunt desenate în caseta STATICĂ și 100% OPACĂ de la (14, 44)!
+  // Toate explicațiile lungi sunt afișate în panourile HTML #maud-school-status-html și #maud-school-legend-html!
   const t = (lessonAnimTick % 180) / 180;
 
   if (currentLessonNum === 1) {
-    // Forme geometrice în mișcare (fără niciun text mișcător!)
-    const xRed = 155 + t * (w - 355);
-    const yRed = h / 2 + 10 - Math.sin(t * 3.14) * 55;
+    drawSafeBoundedBadge(ctx, usedRects, "☁️ LECȚIA 1: 🟢 PISTĂ vs 🔴 GPS FALS", 14, 12, w - 184, w, h, "#FDE047", "#FDE047");
+    const xRed = 155 + t * (w - 335);
+    const yRed = h / 2 - 6 - Math.sin(t * 3.14) * 52;
     ctx.fillStyle = "#FF2A5F";
     ctx.strokeStyle = "#FFFFFF";
     ctx.lineWidth = 2;
@@ -2733,8 +2857,8 @@ function renderLessonMiniCanvas() {
     ctx.fill();
     ctx.stroke();
 
-    const xGrn = 155 + t * (w - 340);
-    const yGrn = h / 2 + 28;
+    const xGrn = 155 + t * (w - 320);
+    const yGrn = h / 2 + 24;
     ctx.fillStyle = "#00FF9D";
     ctx.strokeStyle = "#FFFFFF";
     ctx.lineWidth = 2;
@@ -2742,31 +2866,15 @@ function renderLessonMiniCanvas() {
     ctx.arc(xGrn, yGrn, 10, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
-
-    // Casetă de text 100% STATICĂ și 100% OPACĂ (#070B14)
-    ctx.fillStyle = "#070B14";
-    ctx.strokeStyle = "#FDE047";
-    ctx.lineWidth = 2;
-    ctx.fillRect(14, 44, w - 198, 74);
-    ctx.strokeRect(14, 44, w - 198, 74);
-    ctx.fillStyle = "#FDE047";
-    ctx.font = "bold 13.5px sans-serif";
-    ctx.fillText("☁️ CEAȚĂ GROASĂ CA LAPTELE + HACKER GPS 👾", 24, 64);
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 13px sans-serif";
-    ctx.fillText("✈️🔴 GPS Păcălit (în iarbă!) — Cercul Roșu deviază", 24, 86);
-    ctx.fillStyle = "#00FF9D";
-    ctx.fillText("✈️🟢 Creierul Drosophila (Drept pe pistă!) — Cercul Verde", 24, 108);
   } else if (currentLessonNum === 2) {
-    // Becurile pistei (forme geometrice)
+    drawSafeBoundedBadge(ctx, usedRects, "👁️ LECȚIA 2: 12 BECURI SWIR ALS", 14, 12, w - 184, w, h, "#38BDF8", "#FDE047");
     for (let i = 0; i < 6; i++) {
       ctx.fillStyle = "#FDE047";
       ctx.beginPath();
-      ctx.arc(w - 162 + i * 24, h / 2 + 18, 7, 0, Math.PI * 2);
+      ctx.arc(w - 144 + i * 22, h / 2 + 18, 6.5, 0, Math.PI * 2);
       ctx.fill();
     }
-    // Cerc avion verde în mișcare (fără text mișcător!)
-    const xGrn = 155 + t * (w - 345);
+    const xGrn = 155 + t * (w - 325);
     ctx.fillStyle = "#00FF9D";
     ctx.strokeStyle = "#FFFFFF";
     ctx.lineWidth = 2;
@@ -2774,98 +2882,45 @@ function renderLessonMiniCanvas() {
     ctx.arc(xGrn, h / 2 + 18, 10, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
-
-    // Casetă de text 100% STATICĂ și OPACĂ
-    ctx.fillStyle = "#070B14";
-    ctx.strokeStyle = "#38BDF8";
-    ctx.lineWidth = 2;
-    ctx.fillRect(14, 44, w - 198, 60);
-    ctx.strokeRect(14, 44, w - 198, 60);
-    ctx.fillStyle = "#FDE047";
-    ctx.font = "bold 13.5px sans-serif";
-    ctx.fillText("👁️ T4/T5 Ochiul Anticeață + SWIR: Văd 12 becuri prin ceață!", 24, 68);
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 13px sans-serif";
-    ctx.fillText("✈️🟢 Cercul Verde urmărește becurile aurii ALS până pe pistă", 24, 92);
   } else if (currentLessonNum === 3) {
-    // Forme geometrice (cercuri verzi) care trec pe sub avion (fără text mișcător!)
+    drawSafeBoundedBadge(ctx, usedRects, "🔄 LECȚIA 3: VITEZĂ SOL (CER 1/Z = 0)", 14, 12, w - 184, w, h, "#00FF9D", "#00FF9D");
     for (let i = 0; i < 6; i++) {
-      const bx = 150 + ((w - 340 - (lessonAnimTick * 3 + i * 75) % (w - 340)));
+      const bx = 150 + ((w - 320 - (lessonAnimTick * 3 + i * 70) % (w - 320)));
       ctx.fillStyle = "#00FF9D";
       ctx.beginPath();
-      ctx.arc(bx, h / 2 + 34, 6, 0, Math.PI * 2);
+      ctx.arc(bx, h / 2 + 26, 6, 0, Math.PI * 2);
       ctx.fill();
     }
-    // Casetă de text 100% STATICĂ și OPACĂ
-    ctx.fillStyle = "#070B14";
-    ctx.strokeStyle = "#00FF9D";
-    ctx.lineWidth = 2;
-    ctx.fillRect(14, 44, w - 198, 62);
-    ctx.strokeRect(14, 44, w - 198, 62);
-    ctx.fillStyle = "#00FF9D";
-    ctx.font = "bold 13.5px sans-serif";
-    ctx.fillText("🔄 HS/VS Stabilizatorul de Viraje 6-DoF | Cer ρ_ground = 0.000000", 24, 68);
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 13px sans-serif";
-    ctx.fillText("✈️🟢 Măsurăm viteza peste becuri fără blocaj la orizont!", 24, 92);
   } else if (currentLessonNum === 4) {
-    // Particule geometrice mov de vânt în mișcare (fără text mișcător!)
+    drawSafeBoundedBadge(ctx, usedRects, "💨 LECȚIA 4: VÂNT 18 m/s (15−12 = 3)", 14, 12, w - 184, w, h, "#F0ABFC", "#FDE047");
     for (let i = 0; i < 6; i++) {
-      const fy = 115 + ((lessonAnimTick * 2 + i * 26) % (h - 175));
-      const fx = 165 + i * 34;
+      const fy = 60 + ((lessonAnimTick * 2 + i * 26) % (h - 110));
+      const fx = 165 + i * 44;
       ctx.fillStyle = "#F0ABFC";
       ctx.beginPath();
       ctx.arc(fx, fy, 6, 0, Math.PI * 2);
       ctx.fill();
     }
-    // Casetă de text 100% STATICĂ și OPACĂ
-    ctx.fillStyle = "#070B14";
-    ctx.strokeStyle = "#F0ABFC";
-    ctx.lineWidth = 2;
-    ctx.fillRect(14, 44, w - 198, 62);
-    ctx.strokeRect(14, 44, w - 198, 62);
-    ctx.fillStyle = "#FDE047";
-    ctx.font = "bold 13.5px sans-serif";
-    ctx.fillText("🟣⬇️ Vânt în Ceață (18 m/s) — Izolat de Pământul Fix", 24, 68);
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 12.5px sans-serif";
-    ctx.fillText("💨 PFNd Simțul Vântului în Ceață + 🧭 E-PG Busola în Inel 16-Neuroni (0.85s înainte!)", 24, 92);
   } else if (currentLessonNum === 5) {
-    // Paharul CUSUM (doar nivelul lichidului se mișcă, textul este 100% STATIC!)
+    drawSafeBoundedBadge(ctx, usedRects, "🥤 LECȚIA 5: PAHAR CUSUM (< 2.9s)", 14, 12, w - 184, w, h, "#FDE047", "#FDE047");
     const fillH = Math.min(95, (lessonAnimTick % 160) * 0.75);
     ctx.fillStyle = "#0B1325";
     ctx.strokeStyle = "#38BDF8";
     ctx.lineWidth = 2.5;
-    ctx.fillRect(145, 114, 58, 100);
-    ctx.strokeRect(145, 114, 58, 100);
+    ctx.fillRect(220, 90, 64, 104);
+    ctx.strokeRect(220, 90, 64, 104);
     ctx.fillStyle = fillH > 70 ? "#FF2A5F" : "#FDE047";
-    ctx.fillRect(148, 114 + (100 - fillH), 52, fillH);
-
-    // Casetă de text 100% STATICĂ și OPACĂ
-    ctx.fillStyle = "#070B14";
-    ctx.strokeStyle = "#FDE047";
-    ctx.lineWidth = 2;
-    ctx.fillRect(14, 44, w - 198, 62);
-    ctx.strokeRect(14, 44, w - 198, 62);
-    ctx.fillStyle = "#FDE047";
-    ctx.font = "bold 13.5px sans-serif";
-    ctx.fillText("🥤 PAHARUL CUSUM — Detectare Stealth Spoofing în < 2.9s", 24, 68);
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 12.5px sans-serif";
-    ctx.fillText("🚨 HACKER PRINS ÎN 2.8s! 🧭 E-PG 16-Neuroni ține direcția RWY 09!", 24, 92);
+    ctx.fillRect(223, 90 + (104 - fillH), 58, fillH);
   } else {
-    // Casetă de text 100% STATICĂ și OPACĂ pentru Lecția 6
-    ctx.fillStyle = "#070B14";
-    ctx.strokeStyle = "#00FF9D";
-    ctx.lineWidth = 2;
-    ctx.fillRect(14, 44, w - 198, 66);
-    ctx.strokeRect(14, 44, w - 198, 66);
+    drawSafeBoundedBadge(ctx, usedRects, "🏆 LECȚIA 6: ATERIZARE 0.21m PE RWY 09", 14, 12, w - 184, w, h, "#00FF9D", "#00FF9D");
+    const xGrn = 155 + t * (w - 280);
     ctx.fillStyle = "#00FF9D";
-    ctx.font = "bold 14px sans-serif";
-    ctx.fillText("🏆 COMANDANT DROSOPHILA: Aterizare Perfectă pe Craiova RWY 09 (< 0.4m)!", 24, 68);
-    ctx.fillStyle = "#FDE047";
-    ctx.font = "bold 13px sans-serif";
-    ctx.fillText("👉 👁️ T4/T5 + 🔄 HS/VS + 🧭 E-PG 16-Neuroni + 💨 PFNd active la 60 Hz!", 24, 94);
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(xGrn, h / 2 + 12, 11, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
   }
 }
 
@@ -3085,10 +3140,8 @@ function recordEstimatorTrails(f) {
 function renderHudCanvas() {
   const canvas = document.getElementById("hudCanvas");
   if (!canvas) return;
-  if (canvas.clientWidth > 50 && (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight)) {
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
-  }
+  if (canvas.width !== 720) canvas.width = 720;
+  if (canvas.height !== 440) canvas.height = 440;
   const ctx = canvas.getContext("2d");
   const w = canvas.width;
   const h = canvas.height;
@@ -3187,13 +3240,12 @@ function renderHudCanvas() {
 function renderRadarCanvas() {
   const canvas = document.getElementById("radarCanvas");
   if (!canvas) return;
-  if (canvas.clientWidth > 50 && (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight)) {
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
-  }
+  if (canvas.width !== 780) canvas.width = 780;
+  if (canvas.height !== 440) canvas.height = 440;
   const ctx = canvas.getContext("2d");
   const w = canvas.width;
   const h = canvas.height;
+  const usedRects = [];
   ctx.clearRect(0, 0, w, h);
   ctx.fillStyle = "#070B14";
   ctx.fillRect(0, 0, w, h);
@@ -3221,40 +3273,42 @@ function renderRadarCanvas() {
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // Pista Craiova RWY 09 (100% opacă, cu etichetă STATICĂ)
+  // Pista Craiova RWY 09 (100% opacă, cu etichetă STATICĂ verificată prin usedRects)
   const rwyX0 = mapX(0);
   const rwyX1 = mapX(150);
+  const rwyBox = { x: rwyX0, y: mapY(-22), w: rwyX1 - rwyX0, h: mapY(22) - mapY(-22) };
+  usedRects.push(rwyBox);
   ctx.fillStyle = "#0B1325";
   ctx.strokeStyle = "#00FF9D";
   ctx.lineWidth = 3;
-  ctx.fillRect(rwyX0, mapY(-22), rwyX1 - rwyX0, mapY(22) - mapY(-22));
-  ctx.strokeRect(rwyX0, mapY(-22), rwyX1 - rwyX0, mapY(22) - mapY(-22));
+  ctx.fillRect(rwyBox.x, rwyBox.y, rwyBox.w, rwyBox.h);
+  ctx.strokeRect(rwyBox.x, rwyBox.y, rwyBox.w, rwyBox.h);
 
-  ctx.fillStyle = "#070B14";
-  ctx.strokeStyle = "#00FF9D";
-  ctx.lineWidth = 1.5;
-  ctx.fillRect(rwyX0 - 65, mapY(-22) - 32, 165, 24);
-  ctx.strokeRect(rwyX0 - 65, mapY(-22) - 32, 165, 24);
-  ctx.fillStyle = "#00FF9D";
-  ctx.font = "bold 13px sans-serif";
-  ctx.fillText("🎯 PISTA CRAIOVA 09", rwyX0 - 56, mapY(-22) - 15);
+  drawSafeBoundedBadge(ctx, usedRects, "🎯 PISTA CRAIOVA 09", rwyX0 - 50, mapY(-22) - 32, 165, w, h, "#00FF9D", "#00FF9D");
 
-  // Panou / Legendă 100% FIXĂ și OPACĂ (#070B14) în colțul stânga-sus (NICIUN TEXT MIȘCĂTOR PE TRAIECTORII!)
+  // Panou / Legendă 100% FIXĂ și OPACĂ (#070B14) în colțul stânga-sus cu clip()
+  const legRect = { x: 16, y: 14, w: 280, h: 108 };
+  usedRects.push(legRect);
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(legRect.x, legRect.y, legRect.w, legRect.h);
+  ctx.clip();
   ctx.fillStyle = "#070B14";
   ctx.strokeStyle = "#38BDF8";
   ctx.lineWidth = 2;
-  ctx.fillRect(16, 14, 290, 108);
-  ctx.strokeRect(16, 14, 290, 108);
+  ctx.fillRect(legRect.x, legRect.y, legRect.w, legRect.h);
+  ctx.strokeRect(legRect.x, legRect.y, legRect.w, legRect.h);
 
-  ctx.font = "bold 13px sans-serif";
+  ctx.font = "bold 12.5px sans-serif";
   ctx.fillStyle = "#00FF9D";
-  ctx.fillText("✈️🟢 Avionul Nostru (PE PISTĂ!)", 28, 36);
+  ctx.fillText("✈️🟢 Avionul Nostru (PE PISTĂ!)", 26, 36);
   ctx.fillStyle = "#FF2A5F";
-  ctx.fillText("✈️🔴 GPS Păcălit", 28, 58);
+  ctx.fillText("✈️🔴 GPS Păcălit", 26, 58);
   ctx.fillStyle = "#FDE047";
-  ctx.fillText("✈️🟡 Păcălit de Ceață", 28, 80);
+  ctx.fillText("✈️🟡 Păcălit de Ceață", 26, 80);
   ctx.fillStyle = "#FF9100";
-  ctx.fillText("✈️🟠 Fără Cameră (INS)", 28, 102);
+  ctx.fillText("✈️🟠 Fără Cameră (INS)", 26, 102);
+  ctx.restore();
 
   if (!latestFrame) return;
 
@@ -3318,8 +3372,17 @@ mod tests {
         assert!(html_p4.contains("Cele 3 Formule Simple pe Înțelesul Tuturor"));
         assert!(html_p4.contains("Poziția Exactă = Harta din Memoria Avionului + Amprenta Solului de sub Noi"));
         assert!(html_p4.contains("Formula 4 (Busola Cerului"));
+        assert!(html_p4.contains("15 pixeli/s (cât se mișcă imaginea pe cameră) − 12 pixeli/s"));
+        assert!(html_p4.contains("4 × 50 m = 200 metri"));
+        assert!(html_p4.contains("+10 m/s (vântul ne împinge la dreapta în iarbă) − 10 m/s"));
+        assert!(html_p4.contains("500 m (altitudinea avionului în nori) − 420 m"));
+        assert!(html_p4.contains("= 500 m > 2 m") || html_p4.contains("= 500 m &gt; 2 m"));
         assert!(html_p4.contains("Camera Infraroșu de Sus"));
         assert!(html_p4.contains("SR-71 Blackbird"));
+
+        let html_p5 = render_full_cockpit_page_at(5).into_string();
+        assert!(html_p5.contains("id=\"maud-school-status-html\""));
+        assert!(html_p5.contains("id=\"maud-school-legend-html\""));
 
         let html = render_full_cockpit_page_at(6).into_string();
         assert!(html.contains("id=\"zone-long-range-100km\""));

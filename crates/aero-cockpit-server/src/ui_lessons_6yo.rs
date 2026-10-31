@@ -275,7 +275,7 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             title: "🎈 Lecția 1: „Problema: Ceața, Hackerul Rău 👾 și Musculița Google 🐝”",
             kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «🛡️ Pornește AERO-SHIELD + Musculița Google 🐝» de mai jos ca să vezi în zborul sintetic FlightGear cum tăiem firul hackerului cu Foarfeca Aurie ✂️!",
             visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «🛡️ Pornește AERO-SHIELD + Musculița Google 🐝» pentru rezolvarea FlightGear!",
-            science_secret_ro: "Formula 1 (Cheia Pământului): Forma Solului de sub Noi = Înălțimea Avionului − Distanța până la Pământ (Precizie < 1 metru chiar și la 100.000 km — 2.5 înconjururi ale Pământului fără GPS!)",
+            science_secret_ro: "Formula 5 (Scutul Anti-Hackeri / GPS Fals — Scădere și Comparație simplă): Minciuna GPS = |Poziția spusă de GPS − Poziția văzută de Cameră și Dealuri| (Δ_eroare = |P_GPS − P_real|). Exemplu cu numere: |500 m (unde minte hackerul că suntem) − 0 m (unde ne arată camera și dealul că suntem)| = 500 m > 2 m (limita permisă) ➔ 🚨 GPS FALS OPRIT AUTOMAT!",
             default_mode: "l1_fog",
             fg_video_url: "/real_videos/fg_lesson_1.mp4",
             action_buttons: vec![
@@ -313,7 +313,7 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             title: "🔦 Lecția 2: „Ochii Magici T4/T5 ai Musculiței Google văd prin Ceață 👀”",
             kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «🔦 Aprinde Lupa SWIR + Ochii T4/T5 🐝» de mai jos ca să vezi în zborul sintetic FlightGear cum vedem becurile pistei direct prin ceață și fum!",
             visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «🔦 Aprinde Lupa SWIR + Ochii T4/T5 🐝» și plimbă mouse-ul pe ecran!",
-            science_secret_ro: "Formula 1 (Cheia Pământului în Ceață): Forma Solului și Luminile Pistei = Înălțimea Avionului − Distanța SWIR până la Pământ (Precizie < 1 metru la 100.000 km fără GPS!)",
+            science_secret_ro: "Formula 2 (De ce vedem de 4× mai departe prin Ceață în Infraroșu SWIR — Înmulțire simplă): Distanța Văzută în Infraroșu (SWIR) = 4 × Distanța Văzută cu Ochiul (D_SWIR = 4 × D_ochi). Exemplu cu numere: Dacă pilotul vede cu ochiul doar la 50 metri în ceață → Camera noastră vede la 4 × 50 m = 200 metri!",
             default_mode: "l2_swir",
             fg_video_url: "/real_videos/fg_lesson_2.mp4",
             action_buttons: vec![
@@ -351,7 +351,7 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             title: "🚂 Lecția 3: „Cum numără neuronii T4/T5 becurile + Inelul-Busolă E-PG cu 16 Luminițe 💡”",
             kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «📏 Rigla T4/T5 + Inelul E-PG 🐝» de mai jos ca să măsori viteza pe zborul sintetic FlightGear și să aprinzi Busola în Inel cu 16 Luminițe spre Craiova RWY 09!",
             visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «📏 Rigla T4/T5 + Inelul E-PG 🐝» pentru viteza fără GPS + Busola E-PG!",
-            science_secret_ro: "Formula 2 (Creierul Musculiței Google): Mișcarea Adevărată = Ce Văd Ochii în Ceață − Înclinarea Avionului − Mișcarea Norilor (Precizie < 1 metru chiar și la 100.000 km!)",
+            science_secret_ro: "Formula 4 (Amprenta Dealurilor sub Nori pentru Eroare < 1m la 100.000 km — Scădere simplă): Înălțimea Dealului de sub noi = Altitudinea Avionului (Barometru) − Distanța până la Pământ (Radar) (H_deal = H_avion − D_radar). Exemplu cu numere: 500 m (altitudinea avionului în nori) − 420 m (distanța măsurată de radar în jos) = 80 metri (înălțimea exactă a dealului de sub noi → îl găsim pe hartă cu eroare < 1 metru, fără GPS!)",
             default_mode: "l3_slow",
             fg_video_url: "/real_videos/fg_lesson_3.mp4",
             action_buttons: vec![
@@ -389,7 +389,7 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             title: "☁️ Lecția 4: „Stabilizatorul HS/VS și Senzorul de Vânt PFNd al Musculiței! 💨”",
             kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «🧠 HS/VS + PFNd: Separă Norul» de mai jos ca să vezi pe zborul FlightGear cum Stabilizatorul HS/VS și Senzorul PFNd taie ❌ Norul Mov de ✅ Pământul Verde!",
             visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «🧠 HS/VS + PFNd: Separă Norul» pentru stabilizarea zborului în vânt!",
-            science_secret_ro: "Formula 2 (Separarea Vântului): Mișcarea Adevărată = Ce Văd Ochii în Ceață − Înclinarea Avionului − Mișcarea Norilor (Eroare < 1 metru la 100.000 km fără GPS!)",
+            science_secret_ro: "Formula 1 (Eliminarea Balansului Avionului — Scădere simplă): Mișcarea Pământului = Mișcarea din Cameră − Rotirea Avionului (V_pământ = V_cameră − V_rotire) → 15 pixeli/s − 12 pixeli/s = 3 pixeli/s! Formula 3 (Anularea Vântului Lateral Drosophila — Adunare și Scădere): Abaterea de la Pistă = Împingerea Vântului + Corecția Avionului = 0 (E_lateral = V_vânt + V_corecție = 0) → +10 m/s − 10 m/s = 0 metri abatere!",
             default_mode: "l4_separate",
             fg_video_url: "/real_videos/fg_lesson_4.mp4",
             action_buttons: vec![
@@ -427,7 +427,7 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             title: "⚖️ Lecția 5: „Cântarul Adevărului + Inelul-Busolă E-PG cu 16 Luminițe ⚖️”",
             kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «✅ Zbor Cinstit + Inel E-PG» (sau testează minciunile) ca să vezi pe zborul FlightGear cum Inelul E-PG cu 16 Luminițe, Cântarul ⚖️ și Paharul CUSUM prind hackerul!",
             visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «✅ Zbor Cinstit + Inel E-PG» ca să vezi echilibrul pe zborul FlightGear!",
-            science_secret_ro: "Formula 3 (Detectorul de Minciuni): Vântul pe Aripi = Viteza față de Pământ − Viteza Aerului din Față (Blochează orice minciună GPS și păstrează precizia < 1 metru la 100.000 km!)",
+            science_secret_ro: "Formula 5 (Scutul Anti-Hackeri / GPS Fals — Scădere și Comparație simplă): Minciuna GPS = |Poziția spusă de GPS − Poziția văzută de Cameră și Dealuri| (Δ_eroare = |P_GPS − P_real|). Exemplu cu numere: |500 m (unde minte hackerul că suntem) − 0 m (unde ne arată camera și dealul că suntem)| = 500 m > 2 m (limita permisă) ➔ 🚨 GPS FALS OPRIT AUTOMAT!",
             default_mode: "l5_honest",
             fg_video_url: "/real_videos/fg_lesson_5.mp4",
             action_buttons: vec![
@@ -465,7 +465,7 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             title: "🏆 Lecția 6: „Acum ești Comandantul Avionului Bio-Inspirat Drosophila + AERO-SHIELD!”",
             kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «🏅 Harta Drosophila & Diplomă» de mai jos ca să vezi pe zborul FlightGear harta completă a Creierului Google Drosophila (T4/T5 → HS/VS → E-PG 16 Luminițe → PFNd)!",
             visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «🏅 Harta Drosophila & Diplomă» pentru absolvirea pe FlightGear!",
-            science_secret_ro: "Cele 3 Formule Simple (Cheia Pământului + Creierul Musculiței Google + Detectorul de Minciuni) => Precizie < 1 metru chiar și la 100.000 km (2.5 înconjururi ale Pământului fără GPS!)",
+            science_secret_ro: "Cele 5 Formule Simple cu Numere (+, −, ×): (1) Balans: 15 px/s − 12 px/s = 3 px/s; (2) Ceață SWIR: 4 × 50 m = 200 m; (3) Vânt Drosophila PFNd: +10 m/s − 10 m/s = 0 m; (4) Dealuri sub Nori: 500 m − 420 m = 80 m (eroare < 1m la 100.000 km); (5) Anti-Hacker GPS: |500 m − 0 m| = 500 m > 2 m ➔ GPS Fals Oprit Automat!",
             default_mode: "l6_commander",
             fg_video_url: "/real_videos/fg_lesson_6.mp4",
             action_buttons: vec![
@@ -817,29 +817,39 @@ pub fn lessons_6yo_router<S: Clone + Send + Sync + 'static>() -> Router<S> {
         .route("/lessons-6yo", get(page_lessons_6yo_standalone))
 }
 
-/// Simple 3 Formulas + Formula 4 (Sky Compass) & Zenith SWIR + DRA Card HTML (Zero heavy math, < 1m precision at 100,000 km, WCAG AAA contrast).
+/// Simple 5 Intuitive Mathematical Formulas + Concrete Examples with Simple Numbers (+, -, ×) + Zenith SWIR + DRA Card HTML (Zero heavy math, < 1m precision at 100,000 km, WCAG AAA contrast).
 const SIMPLE_3_FORMULAS_100K_HTML: &str = r#"
 <div class="simple-3-formulas-title">
-  💡 Cele 3 Formule Simple pe Înțelesul Tuturor + Formula 4 (Busola Cerului — FĂRĂ MATEMATICĂ GREA!) — PRECIZIE &lt; 1 METRU CHIAR ȘI LA 100.000 KM FĂRĂ GPS:
+  💡 Cele 5 Formule Matematice Intuitive + Exemple Concrete cu Numere Simple (+, −, ×) pe Înțelesul Oricui (Fără Matematică Grea!) — PRECIZIE &lt; 1 METRU CHIAR ȘI LA 100.000 KM FĂRĂ GPS:
 </div>
 <div class="simple-3-formulas-list">
   <div class="simple-formula-item">
-    <span class="simple-formula-badge">1. 🔑 Formula 1 (Cheia Pământului):</span>
-    <strong class="simple-formula-eq">Forma Solului de sub Noi = Înălțimea Avionului − Distanța până la Pământ</strong>
-    <span class="simple-formula-desc"> — Potrivim dealurile și luminile de sub noi cu harta din memoria avionului — ca zimții unei chei în broască! De aceea eroarea nu se adună niciodată și rămâne sub 1 metru chiar și după 100.000 km!</span>
+    <span class="simple-formula-badge">1. 🔄 Formula 1 — Eliminarea Balansului Avionului (Scădere simplă / Formula 2 (Creierul Musculiței Google) HS/VS):</span>
+    <strong class="simple-formula-eq">Mișcarea Pământului = Mișcarea din Cameră − Rotirea Avionului (V_pământ = V_cameră − V_rotire)</strong>
+    <span class="simple-formula-desc"> — <strong>Exemplu cu numere:</strong> <code>15 pixeli/s</code> (cât se mișcă imaginea pe cameră) − <code>12 pixeli/s</code> (cât s-a înclinat botul avionului) = <code>3 pixeli/s</code> (mișcarea reală față de pistă!).</span>
   </div>
   <div class="simple-formula-item">
-    <span class="simple-formula-badge">2. 🧠 Formula 2 (Creierul Musculiței Google):</span>
-    <strong class="simple-formula-eq">Mișcarea Adevărată = Ce Văd Ochii în Ceață − Înclinarea Avionului − Mișcarea Norilor</strong>
-    <span class="simple-formula-desc"> — Scădem virajele și vântul ca să știm exact pe unde mergem!</span>
+    <span class="simple-formula-badge">2. 🔦 Formula 2 — De ce vedem de 4× mai departe prin Ceață în Infraroșu SWIR (Înmulțire simplă):</span>
+    <strong class="simple-formula-eq">Distanța Văzută în Infraroșu (SWIR) = 4 × Distanța Văzută cu Ochiul (D_SWIR = 4 × D_ochi)</strong>
+    <span class="simple-formula-desc"> — <strong>Exemplu cu numere:</strong> Dacă pilotul vede cu ochiul doar la <code>50 metri</code> în ceață → Camera noastră vede la <code>4 × 50 m = 200 metri!</code></span>
   </div>
   <div class="simple-formula-item">
-    <span class="simple-formula-badge">3. ⚖️ Formula 3 (Detectorul de Minciuni):</span>
-    <strong class="simple-formula-eq">Vântul pe Aripi = Viteza față de Pământ − Viteza Aerului din Față</strong>
-    <span class="simple-formula-desc"> — Dacă GPS-ul sau internetul spune altceva decât simt aripile, îl blocăm pe loc!</span>
+    <span class="simple-formula-badge">3. 🐝 Formula 3 — Anularea Vântului Lateral cu Creierul de Muscă Drosophila (Adunare și Scădere PFNd):</span>
+    <strong class="simple-formula-eq">Abaterea de la Pistă = Împingerea Vântului + Corecția Avionului = 0 (E_lateral = V_vânt + V_corecție = 0)</strong>
+    <span class="simple-formula-desc"> — <strong>Exemplu cu numere:</strong> <code>+10 m/s</code> (vântul ne împinge la dreapta în iarbă) − <code>10 m/s</code> (neuronii PFNd îndreaptă avionul spre stânga) = <code>0 metri abatere</code> (aterizăm fix pe linia din mijlocul pistei!).</span>
+  </div>
+  <div class="simple-formula-item">
+    <span class="simple-formula-badge">4. ⛰️ Formula 4 — Amprenta Dealurilor sub Nori pentru Eroare &lt; 1m la 100.000 km (Scădere simplă / Formula 1 (Cheia Pământului)):</span>
+    <strong class="simple-formula-eq">Înălțimea Dealului de sub noi = Altitudinea Avionului (Barometru) − Distanța până la Pământ (Radar) (H_deal = H_avion − D_radar)</strong>
+    <span class="simple-formula-desc"> — <strong>Exemplu cu numere:</strong> <code>500 m</code> (altitudinea avionului în nori) − <code>420 m</code> (distanța măsurată de radar în jos) = <code>80 metri</code> (înălțimea exactă a dealului de sub noi → îl găsim pe hartă cu eroare &lt; 1 metru, fără GPS!).</span>
+  </div>
+  <div class="simple-formula-item" style="border-color:#F87171;">
+    <span class="simple-formula-badge">5. 🛡️ Formula 5 — Scutul Anti-Hackeri / GPS Fals (Scădere și Comparație simplă / Formula 3 (Detectorul de Minciuni)):</span>
+    <strong class="simple-formula-eq">Minciuna GPS = |Poziția spusă de GPS − Poziția văzută de Cameră și Dealuri| (Δ_eroare = |P_GPS − P_real|)</strong>
+    <span class="simple-formula-desc"> — <strong>Exemplu cu numere:</strong> <code>|500 m</code> (unde minte hackerul că suntem) − <code>0 m</code> (unde ne arată camera și dealul că suntem)<code>| = 500 m &gt; 2 m</code> (limita permisă) ➔ 🚨 <strong>GPS FALS OPRIT AUTOMAT!</strong></span>
   </div>
   <div class="simple-formula-item" style="border-color:#F0ABFC;">
-    <span class="simple-formula-badge">4. 🔭 Formula 4 (Busola Cerului — Camera de Sus):</span>
+    <span class="simple-formula-badge">🔭 Bonus — Formula 4 (Busola Cerului — Camera de Sus Zenith SWIR + DRA):</span>
     <strong class="simple-formula-eq">Direcția Nord Adevărată = Stelele văzute Ziua în Infraroșu (peste nori) + Inelele de Lumină Polarizată (sub nori, ca Ochiul de Sus al Muștei DRA)</strong>
     <span class="simple-formula-desc"> — Chiar și ziua la amiază sau sub nori groși, camera orientată în sus vede stelele în infraroșu și inelele de lumină polarizată ale Soarelui — blocând eroarea busolei E-PG sub 0,005°!</span>
   </div>
@@ -1138,11 +1148,16 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   font-size: 15.5px;
   line-height: 1.5;
   color: #FFFFFF;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .simple-formula-badge {
   color: #FEF08A;
   font-weight: 900;
   margin-right: 6px;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 .simple-formula-eq {
   color: #FFFFFF;
@@ -1151,10 +1166,25 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   border-radius: 6px;
   padding: 2px 8px;
   font-weight: 900;
+  white-space: normal;
+  overflow-wrap: break-word;
+  display: inline-block;
+  margin: 2px 0;
 }
 .simple-formula-desc {
   color: #FFFFFF;
   font-weight: 600;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+.lesson-6yo-step-btn,
+.kid-action-btn,
+.lesson-6yo-single-title,
+.lesson-single-takeaway,
+.lesson-separate-box-header {
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .lessons-6yo-bottom-nav {
   display: flex;
@@ -1277,6 +1307,7 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
   }
 
   function fillLessonStageBackground(ctx, w, h, solidColor) {
+    window._lessonUsedRects = [];
     ctx.fillStyle = solidColor || '#071024';
     ctx.fillRect(0, 0, w, h);
   }
@@ -1472,16 +1503,49 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     ctx.restore();
   }
 
-  // Utilitar WCAG AAA: Casetă 100% opacă #070B14 cu bordură 2px și text static #FFFFFF sau #FEF08A
+  // Utilitar WCAG AAA: Casetă 100% opacă #070B14 cu bordură 2px, anti-coliziune și clamping în [8..LOGICAL_W-8]
   function drawStaticBadge(ctx, cx, cy, text, borderColor, isYellowText) {
     ctx.save();
-    ctx.font = 'bold 12px sans-serif';
-    var metrics = ctx.measureText(text);
+    var str = String(text || '');
     var padX = 10;
-    var boxW = Math.ceil(metrics.width) + padX * 2;
+    var maxBoxW = LOGICAL_W - 16;
+    var fontPx = 12;
+    ctx.font = 'bold ' + fontPx + 'px sans-serif';
+    var textW = Math.ceil(ctx.measureText(str).width);
+    while (textW + padX * 2 > maxBoxW && fontPx > 9.5) {
+      fontPx -= 0.5;
+      ctx.font = 'bold ' + fontPx + 'px sans-serif';
+      textW = Math.ceil(ctx.measureText(str).width);
+    }
+    var boxW = Math.min(maxBoxW, textW + padX * 2);
     var boxH = 24;
-    var bx = Math.round(cx - boxW / 2);
-    var by = Math.round(cy - boxH / 2);
+    var bx = Math.max(8, Math.min(LOGICAL_W - boxW - 8, Math.round(cx - boxW / 2)));
+    var by = Math.max(6, Math.min(LOGICAL_H - boxH - 6, Math.round(cy - boxH / 2)));
+
+    if (!window._lessonUsedRects) window._lessonUsedRects = [];
+    var used = window._lessonUsedRects;
+    var stepDir = (cy > LOGICAL_H * 0.65) ? -1 : 1;
+    for (var attempt = 0; attempt < 8; attempt++) {
+      var hit = false;
+      for (var k = 0; k < used.length; k++) {
+        var r = used[k];
+        if (!(bx + boxW + 2 < r.x || bx - 2 > r.x + r.w || by + boxH + 2 < r.y || by - 2 > r.y + r.h)) {
+          hit = true;
+          break;
+        }
+      }
+      if (!hit) break;
+      by += stepDir * (boxH + 4);
+      if (by + boxH > LOGICAL_H - 4) {
+        stepDir = -1;
+        by = Math.max(4, LOGICAL_H - boxH - 4);
+      } else if (by < 4) {
+        stepDir = 1;
+        by = 4;
+      }
+    }
+    by = Math.max(4, Math.min(LOGICAL_H - boxH - 4, by));
+    used.push({ x: bx, y: by, w: boxW, h: boxH });
 
     ctx.fillStyle = '#070B14';
     ctx.fillRect(bx, by, boxW, boxH);
@@ -1492,20 +1556,28 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     ctx.fillStyle = isYellowText ? '#FEF08A' : '#FFFFFF';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(text, cx, cy + 1);
+    ctx.fillText(str, bx + boxW / 2, by + boxH / 2 + 1, boxW - 12);
     ctx.restore();
   }
 
   // Widget Vizual Animat: „🐝 Creierul Google Drosophila: Inelul-Busolă E-PG cu 16 Luminițe”
   function drawDrosophilaEpgRingWidget(ctx, cx, cy, r, t, activeWedge, showTitle) {
     ctx.save();
+    if (!window._lessonUsedRects) window._lessonUsedRects = [];
     if (showTitle) {
+      var rx = cx - r - 32;
+      var ry = cy - r - 28;
+      var rw = (r + 32) * 2;
+      var rh = (r + 24) * 2;
       ctx.fillStyle = '#070B14';
       ctx.strokeStyle = '#FACC15';
       ctx.lineWidth = 2;
-      ctx.fillRect(cx - r - 32, cy - r - 28, (r + 32) * 2, (r + 24) * 2);
-      ctx.strokeRect(cx - r - 32, cy - r - 28, (r + 32) * 2, (r + 24) * 2);
+      ctx.fillRect(rx, ry, rw, rh);
+      ctx.strokeRect(rx, ry, rw, rh);
       drawStaticBadge(ctx, cx, cy - r - 14, '🐝 E-PG 16 LUMINIȚE', '#FACC15', true);
+      window._lessonUsedRects.push({ x: rx, y: ry, w: rw, h: rh });
+    } else {
+      window._lessonUsedRects.push({ x: cx - r - 8, y: cy - r - 8, w: (r + 8) * 2, h: (r + 8) * 2 });
     }
 
     ctx.strokeStyle = '#38BDF8';
@@ -1557,7 +1629,8 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
     ctx.strokeStyle = '#34D399';
     ctx.lineWidth = 2;
     ctx.strokeRect(450, 45, 120, 75);
-    drawStaticBadge(ctx, 495, 26, '🛬 PISTA CRAIOVA RWY 09', '#34D399', true);
+    window._lessonUsedRects.push({ x: 450, y: 45, w: 120, h: 75 });
+    drawStaticBadge(ctx, 495, 24, '🛬 PISTA CRAIOVA RWY 09', '#34D399', true);
 
     for (var i = 0; i < 5; i++) {
       ctx.fillStyle = (t % 20 < 10) ? '#34D399' : '#FEF08A';
@@ -1576,7 +1649,8 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
       ctx.strokeRect(430, 180, 140, 56);
       ctx.setLineDash([]);
       ctx.restore();
-      drawStaticBadge(ctx, 485, 162, '👻 PISTA FALSĂ (PĂDURE!)', '#F87171', false);
+      window._lessonUsedRects.push({ x: 430, y: 180, w: 140, h: 56 });
+      drawStaticBadge(ctx, 485, 158, '👻 PISTA FALSĂ (PĂDURE!)', '#F87171', false);
     }
 
     if (state.mode === 'l1_hacker') {
@@ -1997,10 +2071,10 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
       ctx.strokeRect(st.x, 48, 118, 44);
       ctx.fillStyle = '#FEF08A';
       ctx.font = 'bold 11px sans-serif';
-      ctx.fillText(st.label, st.x + 6, 66);
+      ctx.fillText(st.label, st.x + 6, 66, 106);
       ctx.fillStyle = '#FFFFFF';
       ctx.font = 'bold 10px sans-serif';
-      ctx.fillText(st.sub, st.x + 6, 82);
+      ctx.fillText(st.sub, st.x + 6, 82, 106);
     }
 
     var boxes = [
@@ -2016,13 +2090,14 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
       ctx.lineWidth = 2;
       ctx.fillRect(b.x, 108, 146, 68);
       ctx.strokeRect(b.x, 108, 146, 68);
+      window._lessonUsedRects.push({ x: b.x, y: 108, w: 146, h: 68 });
 
       ctx.fillStyle = '#FEF08A';
       ctx.font = 'bold 11.5px sans-serif';
-      ctx.fillText(b.title, b.x + 8, 132);
+      ctx.fillText(b.title, b.x + 8, 132, 130);
       ctx.fillStyle = '#FFFFFF';
       ctx.font = 'bold 10.5px sans-serif';
-      ctx.fillText(b.sub, b.x + 8, 154);
+      ctx.fillText(b.sub, b.x + 8, 154, 130);
 
       drawStaticBadge(ctx, b.x + 73, 198, '⬇️ VEZI JOS', '#FACC15', true);
     }

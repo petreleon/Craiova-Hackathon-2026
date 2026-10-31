@@ -86,23 +86,24 @@
     ctx.strokeStyle = borderColor || "#00e5ff";
     ctx.stroke();
 
+    const maxBubbleTextW = Math.max(60, w - 20);
     // Title in PURE WHITE (#FFFFFF)
     ctx.fillStyle = TEXT_PURE_WHITE;
-    ctx.font = "bold 12.5px 'Segoe UI', system-ui, sans-serif";
-    ctx.fillText(title, x + 10, y + 21);
+    ctx.font = "bold 12px 'Segoe UI', system-ui, sans-serif";
+    ctx.fillText(title, x + 10, y + 21, maxBubbleTextW);
 
     // Subtitle in BRIGHT YELLOW (#FEF08A)
     if (subtitle) {
       ctx.fillStyle = TEXT_BRIGHT_YELLOW;
       ctx.font = "bold 11px 'Segoe UI', system-ui, sans-serif";
-      ctx.fillText(subtitle, x + 10, y + 39);
+      ctx.fillText(subtitle, x + 10, y + 39, maxBubbleTextW);
     }
 
     // Badge in PURE WHITE (#FFFFFF)
     if (badge) {
       ctx.fillStyle = TEXT_PURE_WHITE;
       ctx.font = "bold 10.5px 'Segoe UI', system-ui, sans-serif";
-      ctx.fillText(badge, x + 10, y + 55);
+      ctx.fillText(badge, x + 10, y + 55, maxBubbleTextW);
     }
 
     ctx.restore();
@@ -603,10 +604,11 @@
       ctx.lineWidth = 2.0;
       ctx.stroke();
 
+      const maxCardTextW = Math.max(80, panelW - 36);
       ctx.fillStyle = TEXT_PURE_WHITE;
       ctx.font = "bold 11.5px 'Segoe UI', system-ui, sans-serif";
       ctx.textAlign = "left";
-      ctx.fillText(c.title, 22, cy + 19);
+      ctx.fillText(c.title, 22, cy + 19, maxCardTextW);
 
       ctx.fillStyle = TEXT_BRIGHT_YELLOW;
       ctx.font = "bold 11px 'Segoe UI', system-ui, sans-serif";
@@ -614,12 +616,12 @@
         lang === "ro"
           ? `Abatere: ${c.err.toFixed(1)}m`
           : `Error: ${c.err.toFixed(1)}m`;
-      ctx.fillText(errLabel, 22, cy + 37);
+      ctx.fillText(errLabel, 22, cy + 37, maxCardTextW);
 
       if (ch >= 54) {
         ctx.fillStyle = TEXT_PURE_WHITE;
         ctx.font = "10px 'Segoe UI', system-ui, sans-serif";
-        ctx.fillText(c.desc, 22, cy + 53);
+        ctx.fillText(c.desc, 22, cy + 53, maxCardTextW);
       }
     });
   }
@@ -1018,7 +1020,12 @@
     );
   }
 
+  window.tickVisualEngine60fps = function () {
+    if (window.AERO_MAUD_PRIMARY_LOOP === true) return;
+  };
+
   function install6yoCanvases() {
+    if (window.AERO_MAUD_PRIMARY_LOOP === true) return;
     window.renderHudCanvas = renderHudCanvas6yo;
     window.renderRadarCanvas = renderRadarCanvas6yo;
     window.setRadarMode6yo = setRadarMode6yo;

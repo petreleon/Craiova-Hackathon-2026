@@ -371,10 +371,11 @@ pub fn run_long_range_100km_zero_gps_benchmark() -> LongRangeZeroGpsReport {
     let peak_error_before_als_m = sanitize_f64(p2_max_err, 0.50, 0.99, 0.79);
 
     let simple_formulas_for_everyone = vec![
-        "FORMULA 1 (De ce eroarea este < 1 metru chiar și la 100.000 km): Poziția Exactă = Harta din Memoria Avionului + Amprenta Pământului de sub Noi (Eroarea NU se mai adună cu kilometrii, ci se resetează la fiecare secundă!)".to_string(),
-        "FORMULA 2 (Cum vedem solul chiar și prin nori groși de 0m): Forma Pământului = Înălțimea Avionului (Barometru) − Distanța până la Sol (Rază Altimetru) -> Se potrivește pe harta internă exact ca zimții unei chei în broască!".to_string(),
-        "FORMULA 3 (Cum simțim vântul și prindem GPS-ul fals): Vântul Adevărat = Viteza față de Pământ (Cameră + Creier Musculiță) − Viteza Aerului pe Aripi (Tub Pitot) -> Dacă GPS-ul spune altceva, e blocat instantaneu!".to_string(),
-        "FORMULA 4 (Busola Cerului — Camera Infraroșu de Sus): Direcția Nord Adevărată = Stelele văzute Ziua în Infraroșu SWIR (peste nori, ca pe SR-71 Blackbird / B-2 Spirit) + Inelele de Lumină Polarizată (sub nori, ca Ochiul Dorsal al Muștei DRA) -> Eroare unghiulară < 0.005°!".to_string(),
+        "FORMULA 1 — Eliminarea Balansului Avionului (Scădere simplă): Mișcarea Pământului = Mișcarea din Cameră − Rotirea Avionului (V_pământ = V_cameră − V_rotire) | Exemplu: 15 pixeli/s (cameră) − 12 pixeli/s (înclinare avion) = 3 pixeli/s (mișcarea reală față de pistă!)".to_string(),
+        "FORMULA 2 — De ce vedem de 4× mai departe prin Ceață în Infraroșu SWIR (Înmulțire simplă): Distanța Văzută în Infraroșu (SWIR) = 4 × Distanța Văzută cu Ochiul (D_SWIR = 4 × D_ochi) | Exemplu: Dacă pilotul vede doar la 50 m în ceață → Camera noastră vede la 4 × 50 m = 200 metri!".to_string(),
+        "FORMULA 3 — Anularea Vântului Lateral cu Creierul de Muscă Drosophila (Adunare și Scădere): Abaterea de la Pistă = Împingerea Vântului + Corecția Avionului = 0 (E_lateral = V_vânt + V_corecție = 0) | Exemplu: +10 m/s (vântul împinge la dreapta) − 10 m/s (neuronii PFNd îndreaptă spre stânga) = 0 metri abatere (fix pe centrul pistei!)".to_string(),
+        "FORMULA 4 — Amprenta Dealurilor sub Nori pentru Eroare < 1m la 100.000 km + Busola Cerului (Scădere simplă): Înălțimea Dealului = Altitudinea Avionului (Barometru) − Distanța până la Pământ (Radar) (H_deal = H_avion − D_radar) | Exemplu: 500 m (barometru) − 420 m (radar în jos) = 80 metri (găsim dealul pe hartă cu eroare < 1m, fără GPS! + Camera Infraroșu de Sus SWIR/DRA SR-71 Blackbird ține Nordul la < 0.005°)".to_string(),
+        "FORMULA 5 — Scutul Anti-Hackeri / GPS Fals (Scădere și Comparație simplă): Minciuna GPS = |Poziția spusă de GPS − Poziția văzută de Cameră și Dealuri| (Δ_eroare = |P_GPS − P_real|) | Exemplu: |500 m (unde minte hackerul) − 0 m (unde arată camera și dealul)| = 500 m > 2 m (limita permisă) ➔ 🚨 GPS FALS OPRIT AUTOMAT!".to_string(),
     ];
 
     let phases = [
@@ -604,7 +605,7 @@ mod tests {
         assert!((report.bounded_loop_max_error_100000km_m - 0.79).abs() < 1e-6);
         assert!((report.bounded_loop_mean_error_100000km_m - 0.38).abs() < 1e-6);
         assert!((report.final_touchdown_error_m - 0.21).abs() < 1e-6);
-        assert_eq!(report.simple_formulas_for_everyone.len(), 4);
+        assert_eq!(report.simple_formulas_for_everyone.len(), 5);
 
         for p in &report.phases {
             assert!(p.aero_shield_pos_error_end_m < 1.00);

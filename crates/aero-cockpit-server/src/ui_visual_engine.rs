@@ -725,20 +725,21 @@ pub fn render_visual_canvases_script() -> String {
       drawRoundedBox(ctx, bx, by, bw, bh, 9, SOLID_BG_DARK, borderCol, 2.2);
 
       ctx.save();
+      const maxTextW = Math.max(60, bw - 18);
       ctx.textAlign = 'left';
       ctx.fillStyle = TEXT_PURE_WHITE;
-      ctx.font = 'bold 12.5px sans-serif';
-      ctx.fillText(pickText(c.title_ro, c.title_en), bx + 10, by + 21);
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText(pickText(c.title_ro, c.title_en), bx + 10, by + 21, isFocused ? Math.max(60, maxTextW - 96) : maxTextW);
 
       ctx.fillStyle = TEXT_BRIGHT_YELLOW;
       ctx.font = 'bold 11px sans-serif';
-      ctx.fillText(pickText(c.subtitle_ro, c.subtitle_en), bx + 10, by + 39);
+      ctx.fillText(pickText(c.subtitle_ro, c.subtitle_en), bx + 10, by + 39, maxTextW);
 
       const badgeText = pickText(c.alert_badge_ro, c.alert_badge_en);
       if (badgeText) {{
         ctx.fillStyle = TEXT_PURE_WHITE;
         ctx.font = 'bold 10.5px sans-serif';
-        ctx.fillText(badgeText, bx + 10, by + 56);
+        ctx.fillText(badgeText, bx + 10, by + 56, maxTextW);
       }}
 
       if (isFocused && activeSpotlight) {{
@@ -747,7 +748,7 @@ pub fn render_visual_canvases_script() -> String {
         ctx.fillStyle = TEXT_BRIGHT_YELLOW;
         ctx.font = 'bold 10px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(ptrText, bx + bw - 54, by + 17);
+        ctx.fillText(ptrText, bx + bw - 54, by + 17, 88);
       }}
       ctx.restore();
     }});
@@ -802,11 +803,11 @@ pub fn render_visual_canvases_script() -> String {
     ctx.fillStyle = TEXT_BRIGHT_YELLOW;
     ctx.font = 'bold 11px sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText(pickText(arena.grass_danger_ro, arena.grass_danger_en), trackLeftX + 16, 24);
+    ctx.fillText(pickText(arena.grass_danger_ro, arena.grass_danger_en), trackLeftX + 16, 24, 324);
 
     drawRoundedBox(ctx, trackLeftX + 8, h - 32, 340, 24, 6, SOLID_BG_DARK, '#00ff9d', 2.0);
     ctx.fillStyle = TEXT_BRIGHT_YELLOW;
-    ctx.fillText(pickText(arena.grass_danger_ro, arena.grass_danger_en), trackLeftX + 16, h - 16);
+    ctx.fillText(pickText(arena.grass_danger_ro, arena.grass_danger_en), trackLeftX + 16, h - 16, 324);
 
     // 2. Pista 09 Craiova
     drawRoundedBox(
@@ -836,7 +837,7 @@ pub fn render_visual_canvases_script() -> String {
     ctx.fillStyle = TEXT_PURE_WHITE;
     ctx.font = 'bold 11px sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText(pickText(arena.runway_title_ro, arena.runway_title_en), trackLeftX + 18, rwyCenterY - rwyHalfHeight + 21);
+    ctx.fillText(pickText(arena.runway_title_ro, arena.runway_title_en), trackLeftX + 18, rwyCenterY - rwyHalfHeight + 21, 314);
 
     // 3. PANOU LATERAL STÂNGA 100% FIX ȘI STATIC CU NUMELE CELOR 4 AVIOANE [1]..[4] (ZERO TEXT MIȘCĂTOR!)
     drawRoundedBox(ctx, 8, 8, staticPanelW - 4, h - 16, 10, SOLID_BG_DARK, '#00e5ff', 2.2);
@@ -846,7 +847,8 @@ pub fn render_visual_canvases_script() -> String {
     ctx.fillText(
       pickText('🏁 AVIOANE ÎN CURSĂ (FIX):', '🏁 PLANES IN RACE (FIXED):'),
       18,
-      30
+      30,
+      staticPanelW - 24
     );
 
     const planeNumMap = {{
@@ -861,6 +863,7 @@ pub fn render_visual_canvases_script() -> String {
       const cardY = 44 + idx * 92;
       const cardW = staticPanelW - 20;
       const cardH = 82;
+      const maxCardTextW = Math.max(80, cardW - 18);
       const numStr = planeNumMap[p.key] || String(idx + 1);
       const errVal = planeErrors[p.key] || 0;
 
@@ -870,7 +873,7 @@ pub fn render_visual_canvases_script() -> String {
       ctx.fillStyle = TEXT_PURE_WHITE;
       ctx.font = 'bold 12px sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillText('[' + numStr + '] ' + pickText(p.label_ro, p.label_en), cardX + 10, cardY + 22);
+      ctx.fillText('[' + numStr + '] ' + pickText(p.label_ro, p.label_en), cardX + 10, cardY + 22, maxCardTextW);
 
       // Eroare în GALBEN STRĂLUCITOR #FEF08A
       ctx.fillStyle = TEXT_BRIGHT_YELLOW;
@@ -878,7 +881,7 @@ pub fn render_visual_canvases_script() -> String {
       const statusText = p.key === 'shield'
         ? pickText('Abatere: ', 'Error: ') + errVal.toFixed(1) + 'm (PE PISTĂ ✅)'
         : pickText('Abatere: ', 'Error: ') + errVal.toFixed(1) + 'm';
-      ctx.fillText(statusText, cardX + 10, cardY + 44);
+      ctx.fillText(statusText, cardX + 10, cardY + 44, maxCardTextW);
 
       // Scurtă explicație fixă în ALB PUR
       ctx.fillStyle = TEXT_PURE_WHITE;
@@ -890,7 +893,7 @@ pub fn render_visual_canvases_script() -> String {
           : p.key === 'naive'
             ? pickText('Împins de vântul din ceață', 'Pushed by fog crosswind')
             : pickText('Derivă lentă fără cameră', 'Slow drift without camera');
-      ctx.fillText(shortRole, cardX + 10, cardY + 66);
+      ctx.fillText(shortRole, cardX + 10, cardY + 66, maxCardTextW);
     }});
 
     // 4. POZIȚIILE SILUETELOR AVIOANELOR PE PISTĂ (SE MIȘCĂ DOAR AVIOANELE CU NUMĂRUL 1..4, FĂRĂ TEXT MIȘCĂTOR!)
@@ -946,7 +949,7 @@ pub fn render_visual_canvases_script() -> String {
       ctx.fillStyle = TEXT_PURE_WHITE;
       ctx.font = 'bold 11px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(pickText(arena.hacker_decoy_ro, arena.hacker_decoy_en), fixedDecoyBoxX + 119, fixedDecoyBoxY + 18);
+      ctx.fillText(pickText(arena.hacker_decoy_ro, arena.hacker_decoy_en), fixedDecoyBoxX + 119, fixedDecoyBoxY + 18, 222);
     }}
 
     // Desenăm traseele și siluetele avioanelor + cercul mic cu numărul fix 1, 2, 3, 4 (#FFFFFF pe #050811)
@@ -995,7 +998,7 @@ pub fn render_visual_canvases_script() -> String {
       ctx.fillStyle = TEXT_BRIGHT_YELLOW;
       ctx.font = 'bold 11px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(ptrText, fixedSpotX + 63, fixedSpotY + 16);
+      ctx.fillText(ptrText, fixedSpotX + 63, fixedSpotY + 16, 112);
     }}
   }};
 
@@ -1068,10 +1071,15 @@ pub fn render_visual_canvases_script() -> String {
       ctx.fillText(
         '[' + (idx + 1) + '] ' + pickText(p.label_ro, p.label_en) + ': ' + Number(val || 0).toFixed(2) + 'm',
         bx + 8,
-        25
+        25,
+        194
       );
     }});
   }}
+
+  window.tickVisualEngine60fps = function() {{
+    if (window.AERO_MAUD_PRIMARY_LOOP === true) return;
+  }};
 }})();
 "#
     )
