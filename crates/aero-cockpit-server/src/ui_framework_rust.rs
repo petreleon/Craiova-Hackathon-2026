@@ -51,8 +51,8 @@ pub const SIX_CONCEPT_PAGES: [ConceptPageMeta; 6] = [
     },
     ConceptPageMeta {
         page_num: 2,
-        nav_badge_ro: "2️⃣ Parbrizul & Filmarea 50%",
-        full_title_ro: "Parbrizul Avionului & Filmarea Reală (Ce vede camera prin ceață?)",
+        nav_badge_ro: "2️⃣ Parbrizul & Filmarea Reală",
+        full_title_ro: "Parbrizul Avionului & Filmarea Reală (2 Panouri Separate)",
     },
     ConceptPageMeta {
         page_num: 3,
@@ -333,58 +333,51 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                     }
                 }
 
-                // UN SINGUR Ecran Mare (height: 320px) cu Desenul Animat (#maudSchoolCanvas) + Videoclipul Zborului Sintetic FlightGear (#maudSchoolFgVideo)
+                // 2 PANOURI ALĂTURATE COMPLET SEPARATE: Stânga = Animația Interactivă (#maudSchoolCanvas), Dreapta = Videoclipul Zborului Sintetic FlightGear (#maudSchoolFgVideo)
                 div class="school-canvas-box" {
-                    div class="school-canvas-header" style="flex-wrap:wrap; gap:12px;" {
-                        strong id="lesson-canvas-caption" {
-                            "🎨 DESENUL ANIMAT AL LECȚIEI (60 FPS LIVE — Apasă Butonul Verde ca să rezolvi lecția în FlightGear!):"
-                        }
-                        span class="live-pill" { "VIDEO FLIGHTGEAR + ANIMAȚIE LIVE" }
-                    }
-
-                    // Bara de control pentru videoclipul zborului sintetic FlightGear al lecției
-                    div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; background:#040d1e; border:1px solid #1e4273; border-radius:12px; padding:10px 16px;" {
-                        div id="maud-school-fg-caption" style="font-size:15px; font-weight:800; color:#00ff9d;" {
-                            "🎬 Zbor Sintetic FlightGear (FG-01/07): Ceață CAT IIIc + Atac Hacker GPS vs. Scutul AERO-SHIELD pe Pista 09 Craiova"
-                        }
-                        div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;" {
-                            span id="school-fg-opacity-label" style="font-size:14px; font-weight:800; color:#bae6fd;" {
-                                "🎚️ Transparență Video Zbor FlightGear: 55%"
+                    div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:stretch;" {
+                        // Panoul Stâng: DOAR Animația Interactivă Pas-cu-Pas (100% curată, fără video suprapus!)
+                        div style="background:#040d1e; border:2px solid #1e4273; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px;" {
+                            div style="display:flex; justify-content:space-between; align-items:center; gap:8px;" {
+                                strong id="lesson-canvas-caption" style="color:#00e5ff; font-size:15.5px;" {
+                                    "🎨 Animația Interactivă Pas-cu-Pas"
+                                }
+                                span class="live-pill" { "CANVAS 60 FPS SEPARAT" }
                             }
-                            input
-                                type="range"
-                                id="school-fg-opacity-slider"
-                                min="0"
-                                max="100"
-                                value="55"
-                                style="width:130px; cursor:pointer;"
-                                oninput="setSchoolFgVideoOpacity(this.value)"
+                            canvas
+                                id="maudSchoolCanvas"
+                                width="560"
+                                height="320"
+                                style="display:block; width:100%; height:320px; border-radius:14px; background:#040a14; border:2px solid #1e4273;"
+                            {}
+                        }
+
+                        // Panoul Drept: DOAR Filmarea Zborului Sintetic FlightGear (100% clară, opacity: 1.0, fără canvas suprapus!)
+                        div style="background:#040d1e; border:2px solid #00e5ff; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px;" {
+                            div style="display:flex; justify-content:space-between; align-items:center; gap:8px;" {
+                                strong style="color:#00ff9d; font-size:15.5px;" {
+                                    "🎬 Filmarea Zborului Sintetic FlightGear"
+                                }
+                                span class="live-pill" { "VIDEO 100% CLAR SEPARAT" }
+                            }
+                            div id="maud-school-fg-caption" style="font-size:13.5px; font-weight:800; color:#bae6fd;" {
+                                "🎬 Zbor Sintetic FlightGear (FG-01/07): Ceață CAT IIIc + Atac Hacker GPS vs. Scutul AERO-SHIELD pe Pista 09 Craiova"
+                            }
+                            video
+                                id="maudSchoolFgVideo"
+                                src="/real_videos/fg_lesson_1.mp4"
+                                autoplay
+                                loop
+                                muted
+                                playsinline
+                                controls
+                                style="display:block; width:100%; height:320px; object-fit:cover; border-radius:14px; opacity:1.0; background:#000; border:2px solid #00e5ff;"
                             {}
                         }
                     }
 
-                    // Fereastra centrală cu Canvas + Videoclipul FlightGear suprapus
-                    div style="position:relative; border-radius:16px; overflow:hidden; border:2px solid #1e4273; background:#030917; height:320px;" {
-                        canvas
-                            id="maudSchoolCanvas"
-                            width="960"
-                            height="320"
-                            style="display:block; width:100%; height:320px; position:relative; z-index:1;"
-                        {}
-                        video
-                            id="maudSchoolFgVideo"
-                            src="/real_videos/fg_lesson_1.mp4"
-                            autoplay
-                            loop
-                            muted
-                            playsinline
-                            controls
-                            style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.55; z-index:2; pointer-events:none;"
-                        {}
-                    }
-
-                    // Cele 3 Butoane Mari Interactive de Experiment (cu BUTONUL VERDE MARE STRĂLUCITOR în centru!)
-                    div style="display:grid; grid-template-columns:1fr 1.45fr 1fr; gap:14px; align-items:stretch; margin-top:4px;" {
+                    // Butoanele Mari Interactive de Experiment (cu BUTONUL VERDE MARE STRĂLUCITOR în centru!)
+                    div style="display:grid; grid-template-columns:1fr 1.6fr; gap:14px; align-items:stretch; margin-top:6px;" {
                         button
                             id="btnDangerLessonRed"
                             class="btn-big btn-big-red"
@@ -400,13 +393,6 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                         {
                             "🟢 APASĂ BUTONUL VERDE: Activează Scutul AERO-SHIELD în Zborul FlightGear!"
                         }
-                        button
-                            id="btnToggleFgVideoMode"
-                            class="btn-big btn-big-cyan"
-                            onclick="cycleSchoolFgVideoMode()"
-                        {
-                            "🎥 3. Vezi Filmarea FlightGear 100% Clar (sau 55% peste Desen)"
-                        }
                     }
 
                     // Banner-ul de confirmare când utilizatorul apasă pe Butonul Verde
@@ -414,20 +400,7 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
                         id="school-green-solved-banner"
                         style="background:rgba(16, 185, 129, 0.16); border:2px solid #10b981; color:#ecfdf5; padding:12px 18px; border-radius:12px; font-size:15.5px; font-weight:800;"
                     {
-                        "✅ BRAVO! Ai apăsat Butonul Verde: Uite în filmarea FlightGear cum avionul verde rezolvă problema și rămâne pe Pista 09 Craiova!"
-                    }
-
-                    // Cele 3 butoane rapide pentru modul de afișare Video FlightGear vs. Desen Interactiv
-                    div style="display:flex; gap:10px; flex-wrap:wrap;" {
-                        button class="btn-mode-toggle" onclick="setSchoolFgVideoOpacity(55)" {
-                            "🎬 55% Video FlightGear + Desen Interactiv"
-                        }
-                        button class="btn-mode-toggle" onclick="setSchoolFgVideoOpacity(100)" {
-                            "🎥 100% Video Zbor FlightGear (Ecran Plin)"
-                        }
-                        button class="btn-mode-toggle" onclick="setSchoolFgVideoOpacity(0)" {
-                            "🎨 0% Video (Doar Desen Interactiv)"
-                        }
+                        "✅ BRAVO! Ai apăsat Butonul Verde: Uite în filmarea FlightGear din dreapta și în animația din stânga cum avionul verde rămâne pe Pista 09 Craiova!"
                     }
                 }
             }
@@ -435,7 +408,7 @@ pub fn render_page_1_interactive_school(lessons: &[InteractiveLesson6Yo], is_act
     }
 }
 
-/// PAGINA 2 (`#concept-page-2`): `2️⃣ Parbrizul Avionului & Filmarea Reală (Ce vede camera prin ceață?)`.
+/// PAGINA 2 (`#concept-page-2`): `2️⃣ Parbrizul Avionului & Filmarea Reală (2 Panouri Separate)`.
 #[must_use]
 pub fn render_page_2_windshield_hud(is_active: bool) -> Markup {
     html! {
@@ -443,7 +416,7 @@ pub fn render_page_2_windshield_hud(is_active: bool) -> Markup {
             id="concept-page-2"
             class=(if is_active { "concept-page-view active-page" } else { "concept-page-view" })
         {
-            // 1. Banda Povestitorului în Timp Real deasupra Parbrizului
+            // 1. Banda Povestitorului în Timp Real deasupra celor 2 panouri separate
             section class="storyteller-bar" id="storyteller-bar" {
                 div class="story-icon" id="story-icon" { "🟢" }
                 div style="flex:1;" {
@@ -451,7 +424,7 @@ pub fn render_page_2_windshield_hud(is_active: bool) -> Markup {
                         "💬 POVESTITORUL ÎN TIMP REAL: Totul este liniștit! Avionul zboară drept spre pista din Craiova."
                     }
                     div class="story-subtext" id="story-subtext" {
-                        "👉 Privește prin parbriz: filmarea reală din avion este suprapusă 50% peste săgețile inteligente care separă pământul (verde) de ceață (mov)!"
+                        "👉 În stânga vezi Animația 3D a Parbrizului cu săgețile AI (verde = pământ, mov = ceață), iar în dreapta vezi Filmarea Reală 100% clară din cabina piloților!"
                     }
                 }
                 div class="hud-summary-badge" id="hud-guidance-summary" {
@@ -459,60 +432,75 @@ pub fn render_page_2_windshield_hud(is_active: bool) -> Markup {
                 }
             }
 
-            // 2. Cardul Central Mare al Parbrizului (#hudCanvas la 480px + #hudBgRealVideo la 50%)
+            // 2. Cardul Central Mare cu CELE 2 PANOURI COMPLET SEPARATE: Stânga = #hudCanvas, Dreapta = #hudBgRealVideo
             section class="spacious-card" id="zone-hud" {
                 div class="windshield-top-controls" {
                     div {
-                        span class="concept-pill" { "CONCEPTUL 2 DIN 6 • PARBRIZUL INTELIGENT + FILMARE REALĂ 50%" }
+                        span class="concept-pill" { "CONCEPTUL 2 DIN 6 • PARBRIZUL 3D SEPARAT + FILMAREA REALĂ 100% CLARĂ" }
                         h1 class="page-main-title" style="margin-top:6px;" {
-                            "👀 Ce Vede Camera Avionului prin Ceața Groasă?"
-                        }
-                    }
-                    div class="slider-control-box" {
-                        span style="font-size:15px; font-weight:700; color:#bae6fd;" {
-                            "🎚️ Transparență Video peste Grafic:"
-                        }
-                        input
-                            type="range"
-                            id="video-opacity-slider"
-                            min="0"
-                            max="90"
-                            value="50"
-                            style="width:150px; cursor:pointer;"
-                            oninput="setHudVideoOpacity(this.value)"
-                        {}
-                        strong id="video-opacity-label" style="color:#00ff9d; font-size:18px; min-width:48px;" {
-                            "50%"
+                            "👀 Ce Vede Camera Avionului prin Ceața Groasă? (Animație 3D vs. Filmare Reală)"
                         }
                     }
                 }
 
-                // Fereastra Mare a Parbrizului (height: 480px)
-                div class="windshield-stage-480" {
-                    video
-                        id="hudBgRealVideo"
-                        src="/real_videos/real_02_als_runway_approach_cdg.mp4"
-                        autoplay
-                        loop
-                        muted
-                        playsinline
-                        style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.50; pointer-events:none; z-index:1;"
-                    {}
-
-                    // Baloane Vizuale Explicative direct pe Parbriz
-                    div class="hud-callout-badge hud-callout-fog" {
-                        "☁️💨 NOR ÎMPINS DE VÂNT (Săgeți Mov)"
+                // Grid side-by-side (2 panouri alăturate, 0 suprapunere!)
+                div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:stretch;" {
+                    // Panoul Stâng: 🪟 Animația Parbrizului 3D & Vectorii AI (#hudCanvas)
+                    div style="background:#040d1e; border:2px solid #254f88; border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:12px;" {
+                        div style="display:flex; justify-content:space-between; align-items:center;" {
+                            strong style="font-size:16.5px; color:#00ff9d;" {
+                                "🪟 Animația Parbrizului 3D & Vectorii AI"
+                            }
+                            span class="live-pill" { "GRAFIC 3D SEPARAT" }
+                        }
+                        div style="position:relative; width:100%; height:440px; border-radius:16px; overflow:hidden; background:#050c18; border:2px solid #1e4273;" {
+                            div class="hud-callout-badge hud-callout-fog" {
+                                "☁️💨 NOR ÎMPINS DE VÂNT (Săgeți Mov)"
+                            }
+                            div class="hud-callout-badge hud-callout-als" {
+                                "💡 BECURI PE PĂMÂNT VĂZUTE PRIN CEAȚĂ"
+                            }
+                            div class="gust-alert-overlay" id="gust-overlay" style="z-index:10;" {
+                                "⚠️ ATENȚIE! AM VĂZUT UN NOR DE VÂNT ÎN FAȚĂ CU 0.85 SECUNDE ÎNAINTE SĂ LOVEASCĂ AVIONUL!"
+                            }
+                            canvas
+                                id="hudCanvas"
+                                width="600"
+                                height="440"
+                                style="display:block; width:100%; height:440px; border-radius:16px; background:#050c18;"
+                            {}
+                        }
                     }
-                    div class="hud-callout-badge hud-callout-als" {
-                        "💡 BECURI PE PĂMÂNT VĂZUTE PRIN CEAȚĂ"
-                    }
 
-                    // Alerta pulsatorie de rafală văzută în față (0.85s înainte de impact)
-                    div class="gust-alert-overlay" id="gust-overlay" style="z-index:10;" {
-                        "⚠️ ATENȚIE! AM VĂZUT UN NOR DE VÂNT ÎN FAȚĂ CU 0.85 SECUNDE ÎNAINTE SĂ LOVEASCĂ AVIONUL!"
+                    // Panoul Drept: 🎥 Filmarea Video Reală din Cabina Piloților (#hudBgRealVideo)
+                    div style="background:#040d1e; border:2px solid #00e5ff; border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:12px;" {
+                        div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;" {
+                            strong style="font-size:16.5px; color:#00e5ff;" {
+                                "🎥 Filmarea Video Reală din Cabina Piloților"
+                            }
+                            div style="display:flex; gap:6px; flex-wrap:wrap;" {
+                                button class="btn-mode-toggle" onclick="switchHudRealVideo(0)" {
+                                    "🎥 Filmarea Reală 1 (LC-130)"
+                                }
+                                button class="btn-mode-toggle" onclick="switchHudRealVideo(1)" {
+                                    "🎥 Filmarea Reală 2 (Paris CDG)"
+                                }
+                                button class="btn-mode-toggle" onclick="switchHudRealVideo(2)" {
+                                    "🎥 Filmarea Reală 3 (Vânt Lateral)"
+                                }
+                            }
+                        }
+                        video
+                            id="hudBgRealVideo"
+                            src="/real_videos/real_02_als_runway_approach_cdg.mp4"
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            controls
+                            style="display:block; width:100%; height:440px; object-fit:cover; border-radius:16px; opacity:1.0; background:#000; border:2px solid #00e5ff;"
+                        {}
                     }
-
-                    canvas id="hudCanvas" style="position:relative; z-index:4; width:100%; height:100%; display:block;" {}
                 }
 
                 // 3. Cele 3 Casete Mari și Simple de Legendă
@@ -586,18 +574,9 @@ pub fn render_page_3_four_planes_race(is_active: bool) -> Markup {
                     }
                 }
 
-                // 1. Pista văzută de sus (#radarCanvas mare, height: 440px + filmare 50% opțională)
+                // 1. Pista văzută de sus (#radarCanvas mare, height: 440px, 100% curată, fără niciun video suprapus!)
                 div class="radar-stage-440" {
-                    video
-                        id="radarBgRealVideo"
-                        src="/real_videos/real_03_crosswind_cockpit_landing.mp4"
-                        autoplay
-                        loop
-                        muted
-                        playsinline
-                        style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.22; pointer-events:none; z-index:1;"
-                    {}
-                    canvas id="radarCanvas" style="position:relative; z-index:4; width:100%; height:100%; display:block;" {}
+                    canvas id="radarCanvas" style="position:relative; z-index:4; width:100%; height:100%; display:block; background:#030914;" {}
                 }
 
                 // 2. Cele 4 Carduri Mari și Aerisite de Legendă (câte unul pentru fiecare avion)
@@ -1854,7 +1833,7 @@ let cyberState = {
 
 const CONCEPT_PAGE_TITLES_RO = {
   1: "Lecții Interactive — Creierul de Zbor Google Drosophila",
-  2: "Parbrizul Avionului & Filmarea Reală (Ce vede camera prin ceață?)",
+  2: "Parbrizul Avionului & Filmarea Reală (2 Panouri Separate)",
   3: "Cursa celor 4 Avioane (De ce noi rămânem pe pistă?)",
   4: "Creierul Google Drosophila & Scutul Anti-Hacker",
   5: "Cele 3 Filmări Video Reale din Cabina Piloților",
@@ -2404,7 +2383,7 @@ function openRealVideoInWindshield(idx) {
   switchHudRealVideo(idx);
   switchConceptPage(2);
   setTimeout(() => {
-    highlightVisualZone("zone-hud", `Filmarea Reală #${idx + 1} rulează acum suprapusă 50% în Parbrizul Mare!`);
+    highlightVisualZone("zone-hud", `Filmarea Reală #${idx + 1} rulează acum 100% clar în panoul video separat din dreapta!`);
   }, 200);
 }
 
@@ -2593,7 +2572,7 @@ function recordEstimatorTrails(f) {
 }
 
 // =========================================================================
-// CANVAS 1 (PAGINA 2): PARBRIZUL AVIONULUI CU SĂGEȚI VERZI ȘI MOV PESTE VIDEO
+// CANVAS 1 (PAGINA 2): PARBRIZUL AVIONULUI 3D SEPARAT (100% OPAC, FĂRĂ VIDEO SUPRAPUS)
 // =========================================================================
 function renderHudCanvas() {
   const canvas = document.getElementById("hudCanvas");
@@ -2606,6 +2585,12 @@ function renderHudCanvas() {
   const w = canvas.width;
   const h = canvas.height;
   ctx.clearRect(0, 0, w, h);
+
+  // Fundal 100% opac pentru cer și sol ca panoul 3D să fie complet independent de video
+  ctx.fillStyle = "#050e1d";
+  ctx.fillRect(0, 0, w, h * 0.52);
+  ctx.fillStyle = "#08182e";
+  ctx.fillRect(0, h * 0.52, w, h * 0.48);
 
   if (!latestFrame) return;
   const p = latestFrame.aircraft_pose;
@@ -2689,7 +2674,7 @@ function renderHudCanvas() {
 }
 
 // =========================================================================
-// CANVAS 2 (PAGINA 3): CURSA CELOR 4 AVIOANE VĂZUTE DE SUS
+// CANVAS 2 (PAGINA 3): CURSA CELOR 4 AVIOANE VĂZUTE DE SUS (100% OPAC, FĂRĂ VIDEO)
 // =========================================================================
 function renderRadarCanvas() {
   const canvas = document.getElementById("radarCanvas");
@@ -2702,6 +2687,8 @@ function renderRadarCanvas() {
   const w = canvas.width;
   const h = canvas.height;
   ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = "#030914";
+  ctx.fillRect(0, 0, w, h);
 
   const mapX = (xNed) => ((xNed + 950) / 1150) * (w - 110) + 40;
   const mapY = (yNed) => h / 2 + (yNed / 150) * (h * 0.40);

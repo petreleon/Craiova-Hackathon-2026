@@ -1034,23 +1034,26 @@
         </div>
       </div>
 
-      <div class="canvas-wrap">
-        <!-- GRAFICUL 3D SUB VIDEO (Z-INDEX 1) -->
-        <canvas id="hudCanvas" style="position:relative; z-index:1;"></canvas>
+      <!-- 2 PANOURI ALĂTURATE COMPLET SEPARATE: Stânga = Grafic 3D (#hudCanvas), Dreapta = Filmare Reală (#real-cockpit-video-overlay) -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:10px; background:#030710;">
+        <div class="canvas-wrap" style="height:380px; border:2px solid #1e4273; border-radius:10px; position:relative;">
+          <canvas id="hudCanvas" style="display:block; width:100%; height:100%; background:#050c18;"></canvas>
+          <div class="gust-alert-overlay" id="gust-overlay">
+            🌪️ ALERTĂ TIMPURIE DE RAFALĂ ÎN CEAȚĂ: Vânt lateral de 18.0 m/s văzut în nori cu 0.85 secunde ÎNAINTE să lovească avionul!
+          </div>
+        </div>
 
-        <!-- FILMAREA VIDEO REALĂ SUPRAPUSĂ CU TRANSPARENȚĂ 50% (OPACITY: 0.50) PESTE GRAFIC (Z-INDEX 3) -->
-        <video
-          id="real-cockpit-video-overlay"
-          src="/real_videos/real_02_als_runway_approach_cdg.mp4"
-          muted
-          loop
-          autoplay
-          playsinline
-          style="display:block; position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity: 0.50; pointer-events: none; z-index:3;"
-        ></video>
-
-        <div class="gust-alert-overlay" id="gust-overlay">
-          🌪️ ALERTĂ TIMPURIE DE RAFALĂ ÎN CEAȚĂ: Vânt lateral de 18.0 m/s văzut în nori cu 0.85 secunde ÎNAINTE să lovească avionul!
+        <div style="height:380px; border:2px solid #00e5ff; border-radius:10px; overflow:hidden; background:#000;">
+          <video
+            id="real-cockpit-video-overlay"
+            src="/real_videos/real_02_als_runway_approach_cdg.mp4"
+            muted
+            loop
+            autoplay
+            playsinline
+            controls
+            style="display:block; width:100%; height:100%; object-fit:cover; opacity:1.0;"
+          ></video>
         </div>
       </div>
 
@@ -1065,32 +1068,21 @@
           <div style="color:#cbd5e1; margin-top:2px;" data-i18n="leg_purple_desc">Arată cum vântul împinge ceața în lateral. Noi le ignorăm la ghidaj și le folosim ca să vedem rafalele din timp!</div>
         </div>
         <div class="legend-chip" style="border-left: 3px solid #ffb800;">
-          <strong style="color:#ffb800;" data-i18n="leg_yellow_title">🟡 Suprapunere 50% Video Real + Grafic</strong>
-          <div style="color:#cbd5e1; margin-top:2px;" data-i18n="leg_yellow_desc">Vezi simultan filmarea reală din cabină (50% transparență) suprapusă peste graficul 3D de ghidare.</div>
+          <strong style="color:#ffb800;" data-i18n="leg_yellow_title">🟡 2 Panouri Separate: Grafic 3D + Video Real</strong>
+          <div style="color:#cbd5e1; margin-top:2px;" data-i18n="leg_yellow_desc">Vezi în stânga graficul 3D de ghidare și în dreapta filmarea reală 100% clară din cabină.</div>
         </div>
       </div>
     </section>
 
-    <!-- ZONA 3: CURSA CELOR 4 AVIOANE — GRAFIC RADAR + FILMARE REALĂ SUPRAPUSĂ 50% -->
+    <!-- ZONA 3: CURSA CELOR 4 AVIOANE — GRAFIC RADAR 100% CURAT (FĂRĂ VIDEO SUPRAPUS) -->
     <section class="viewport-card" id="zone-radar-card">
       <div class="card-header">
-        <span data-i18n="zone3_header">🏁 ZONA 3: CURSA CELOR 4 AVIOANE (GRAFIC + VIDEO 50%) — DE CE NOI ATERIZĂM PE PISTĂ?</span>
+        <span data-i18n="zone3_header">🏁 ZONA 3: CURSA CELOR 4 AVIOANE — DE CE NOI ATERIZĂM PE PISTĂ?</span>
         <span id="eta-summary">TIMP PÂNĂ LA ATERIZARE: 13.2 s | LUMINI VĂZUTE: 12</span>
       </div>
       <div class="canvas-wrap" style="height: 265px;">
-        <!-- GRAFICUL CELOR 4 TRAIECTORII SUB VIDEO (Z-INDEX 1) -->
-        <canvas id="radarCanvas" style="position:relative; z-index:1;"></canvas>
-
-        <!-- FILMAREA VIDEO REALĂ SUPRAPUSĂ CU TRANSPARENȚĂ 50% (OPACITY: 0.5) PESTE GRAFICUL RADAR (Z-INDEX 3) -->
-        <video
-          id="radar-overlay-video"
-          src="/real_videos/real_02_als_runway_approach_cdg.mp4"
-          muted
-          loop
-          autoplay
-          playsinline
-          style="display:block; position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.5; pointer-events:none; z-index:3;"
-        ></video>
+        <!-- GRAFICUL CELOR 4 TRAIECTORII 100% CURAT (FĂRĂ VIDEO SUPRAPUS) -->
+        <canvas id="radarCanvas" style="position:relative; z-index:1; background:#030914;"></canvas>
       </div>
       <div class="arena-legend">
         <div class="est-pill" style="border-left: 4px solid #00ff9d; background:#07221c;">
@@ -1902,32 +1894,22 @@
 
     function applyVideoOpacityToDom() {
       const mainVid = document.getElementById("real-cockpit-video-overlay");
-      const radarVid = document.getElementById("radar-overlay-video");
       const slider = document.getElementById("video-opacity-slider");
       const valEl = document.getElementById("video-opacity-val");
       const summaryEl = document.getElementById("hud-guidance-summary");
 
-      const effectivePct = mainViewMode === "sim" ? 0 : videoOpacityPct;
-      const alpha = (effectivePct / 100.0).toFixed(2);
-
-      if (slider) slider.value = effectivePct;
-      if (valEl) valEl.textContent = `${effectivePct}%`;
+      if (slider) slider.value = "100";
+      if (valEl) valEl.textContent = "100%";
       if (summaryEl) {
         summaryEl.textContent = currentLang === "ro"
-          ? `TRANSPARENȚĂ VIDEO: ${effectivePct}% PESTE GRAFIC`
-          : `VIDEO OPACITY: ${effectivePct}% OVER GRAPHIC`;
+          ? "2 PANOURI SEPARATE: GRAFIC 3D + VIDEO 100% CLAR"
+          : "2 SEPARATE PANELS: 3D GRAPHIC + 100% CLEAR VIDEO";
       }
 
-      [mainVid, radarVid].forEach((vidEl) => {
-        if (!vidEl) return;
-        if (effectivePct <= 0 || mainViewMode === "sim") {
-          vidEl.style.opacity = "0";
-          vidEl.style.display = "none";
-        } else {
-          vidEl.style.display = "block";
-          vidEl.style.opacity = alpha;
-        }
-      });
+      if (mainVid) {
+        mainVid.style.display = "block";
+        mainVid.style.opacity = "1.0";
+      }
     }
 
     function onVideoOpacityChange(val) {

@@ -573,21 +573,13 @@ impl HtmlComponent for Lessons6YoDeck {
             .map(|l| l.fg_video_url)
             .unwrap_or("/real_videos/fg_lesson_1.mp4");
 
-        // 3. Large centered 760x340 FlightGear Synthetic Flight Video + Interactive HUD Canvas Stage
-        let fg_video_el = rsx_elem!(
-            "video",
-            [
-                ("id", "fgLessonVideoPlayer"),
-                ("src", first_fg_video),
-                ("autoplay", "autoplay"),
-                ("loop", "loop"),
-                ("muted", "muted"),
-                ("playsinline", "playsinline"),
-                ("controls", "controls"),
-                ("class", "fg-lesson-video-player"),
-                ("aria-label", "Videoclip Zbor Sintetic FlightGear pentru lecția curentă")
-            ],
-            text: "Browserul tău nu suportă HTML5 Video."
+        // 3. Two Completely Separate, Opaque Media Boxes (gap: 24px, opacity: 1.0, ZERO overlap):
+        //    - Box 1: Interactive Animation Canvas (#lessonInteractiveCanvas)
+        //    - Box 2: FlightGear Synthetic Flight Video (#fgLessonVideoPlayer)
+        let box1_header = rsx_elem!(
+            "div",
+            [("class", "lesson-separate-box-header")],
+            text: "🎨 Animația Interactivă a Lecției (Pas cu Pas)"
         );
 
         let canvas_el = rsx_elem!(
@@ -596,33 +588,56 @@ impl HtmlComponent for Lessons6YoDeck {
                 ("id", "lessonInteractiveCanvas"),
                 ("width", "760"),
                 ("height", "340"),
-                ("class", "lesson-interactive-canvas hud-overlay-active"),
+                ("class", "lesson-interactive-canvas"),
                 ("aria-label", "Desen interactiv 760x340 pentru conceptul curent")
             ],
             text: "Browserul tău nu suportă HTML5 Canvas."
         );
 
-        let mode_badge_btn = rsx_elem!(
-            "button",
+        let animation_box = rsx_elem!(
+            "div",
             [
-                ("type", "button"),
-                ("id", "btnToggleFgVideoHud"),
-                ("class", "fg-video-hud-toggle-pill"),
-                ("onclick", "window.cycleFgVideoDisplayMode()")
+                ("id", "lessonAnimationSeparateBox"),
+                ("class", "lesson-separate-media-card")
             ],
-            text: "🎬 Zbor Sintetic FlightGear + HUD Interactiv (Schimbă Vederea)"
+            [box1_header, canvas_el]
         );
 
-        let stage_inner = rsx_elem!(
+        let box2_header = rsx_elem!(
             "div",
-            [("id", "fgLessonStageBox"), ("class", "lesson-stage-760x340-box")],
-            [fg_video_el, canvas_el, mode_badge_btn]
+            [("class", "lesson-separate-box-header fg-video-header")],
+            text: "🎬 Videoclipul Zborului Sintetic FlightGear (Rezolvare 3D)"
+        );
+
+        let fg_video_el = rsx_elem!(
+            "video",
+            [
+                ("id", "fgLessonVideoPlayer"),
+                ("src", first_fg_video),
+                ("controls", "controls"),
+                ("autoplay", "autoplay"),
+                ("loop", "loop"),
+                ("muted", "muted"),
+                ("playsinline", "playsinline"),
+                ("class", "fg-lesson-video-player"),
+                ("aria-label", "Videoclip Zbor Sintetic FlightGear pentru lecția curentă")
+            ],
+            text: "Browserul tău nu suportă HTML5 Video."
+        );
+
+        let video_box = rsx_elem!(
+            "div",
+            [
+                ("id", "lessonVideoSeparateBox"),
+                ("class", "lesson-separate-media-card fg-video-card")
+            ],
+            [box2_header, fg_video_el]
         );
 
         let canvas_wrap = rsx_elem!(
             "div",
-            [("class", "lesson-canvas-center-stage")],
-            [stage_inner]
+            [("class", "lesson-canvas-center-stage separate-dual-stage")],
+            [animation_box, video_box]
         );
 
         // Dedicated Emerald-Green Hero Solve Button right below the FlightGear video/canvas stage
@@ -883,76 +898,73 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   text-align: center;
   line-height: 1.3;
 }
-.lesson-canvas-center-stage {
+.lesson-canvas-center-stage.separate-dual-stage {
   width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+@media (max-width: 920px) {
+  .lesson-canvas-center-stage.separate-dual-stage {
+    grid-template-columns: 1fr;
+  }
+}
+.lesson-separate-media-card {
   display: flex;
-  justify-content: center;
-}
-.lesson-stage-760x340-box {
-  position: relative;
-  width: 100%;
-  max-width: 760px;
-  aspect-ratio: 760 / 340;
-  border-radius: 16px;
-  overflow: hidden;
-  background: #040814;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(15, 23, 42, 0.96);
   border: 2px solid rgba(56, 189, 248, 0.45);
+  border-radius: 16px;
+  padding: 14px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+  opacity: 1.0;
 }
-.fg-lesson-video-player {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  z-index: 1;
-  background: #020617;
+.lesson-separate-media-card.fg-video-card {
+  border-color: rgba(52, 211, 153, 0.55);
 }
-.fg-lesson-video-player.hidden-video {
-  display: none;
+.lesson-separate-box-header {
+  font-size: 15px;
+  font-weight: 900;
+  color: #38bdf8;
+  text-align: center;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(2, 6, 23, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+.lesson-separate-box-header.fg-video-header {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.35);
 }
 .lesson-interactive-canvas {
-  position: relative;
-  z-index: 2;
+  position: static;
   width: 100%;
-  max-width: 760px;
-  height: 100%;
+  height: auto;
   aspect-ratio: 760 / 340;
   display: block;
-  border-radius: 16px;
-  background: transparent;
+  border-radius: 12px;
+  background: #040814;
+  border: 1.5px solid rgba(56, 189, 248, 0.38);
+  opacity: 1.0 !important;
   cursor: crosshair;
 }
-.lesson-interactive-canvas.hud-overlay-active {
-  background: transparent;
-  pointer-events: auto;
-}
-.lesson-interactive-canvas.hidden-canvas {
-  display: none;
-}
-.fg-video-hud-toggle-pill {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 4;
-  background: rgba(15, 23, 42, 0.88);
-  color: #fde047;
-  border: 1.5px solid rgba(250, 204, 21, 0.65);
-  border-radius: 999px;
-  padding: 6px 14px;
-  font-size: 12.5px;
-  font-weight: 800;
-  cursor: pointer;
-  backdrop-filter: blur(4px);
-}
-.fg-video-hud-toggle-pill:hover {
-  background: rgba(30, 41, 59, 0.96);
-  border-color: #fde047;
+.fg-lesson-video-player {
+  position: static;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 760 / 340;
+  object-fit: cover;
+  display: block;
+  border-radius: 12px;
+  background: #020617;
+  border: 1.5px solid rgba(52, 211, 153, 0.42);
+  opacity: 1.0 !important;
 }
 .solve-fg-green-hero-btn {
   width: 100%;
-  max-width: 760px;
+  max-width: 980px;
   font-size: 18px !important;
   padding: 16px 24px !important;
   letter-spacing: 0.2px;
@@ -1160,37 +1172,9 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
   }
 
   function fillLessonStageBackground(ctx, w, h, solidColor) {
-    ctx.clearRect(0, 0, w, h);
-    if (state.fgDisplayMode === 'hud') {
-      ctx.fillStyle = 'rgba(4, 10, 24, 0.34)';
-      ctx.fillRect(0, 0, w, h);
-    } else {
-      ctx.fillStyle = solidColor || '#071024';
-      ctx.fillRect(0, 0, w, h);
-    }
+    ctx.fillStyle = solidColor || '#071024';
+    ctx.fillRect(0, 0, w, h);
   }
-
-  window.cycleFgVideoDisplayMode = function() {
-    var vid = document.getElementById('fgLessonVideoPlayer');
-    var cvs = document.getElementById('lessonInteractiveCanvas');
-    var btn = document.getElementById('btnToggleFgVideoHud');
-    if (state.fgDisplayMode === 'hud') {
-      state.fgDisplayMode = 'video_only';
-      if (vid) vid.classList.remove('hidden-video');
-      if (cvs) cvs.classList.add('hidden-canvas');
-      if (btn) btn.textContent = '🎥 Doar Zborul Sintetic FlightGear (Apasă pt. HUD)';
-    } else if (state.fgDisplayMode === 'video_only') {
-      state.fgDisplayMode = 'canvas_only';
-      if (vid) vid.classList.add('hidden-video');
-      if (cvs) cvs.classList.remove('hidden-canvas');
-      if (btn) btn.textContent = '🎮 Doar Desenul Simulator (Apasă pt. FlightGear + HUD)';
-    } else {
-      state.fgDisplayMode = 'hud';
-      if (vid) vid.classList.remove('hidden-video');
-      if (cvs) cvs.classList.remove('hidden-canvas');
-      if (btn) btn.textContent = '🎬 Zbor Sintetic FlightGear + HUD Interactiv (Schimbă Vederea)';
-    }
-  };
 
   window.triggerGreenFlightGearSolution = function() {
     var activeGroup = document.querySelector('.lesson-6yo-action-group.active');
@@ -1202,12 +1186,9 @@ const LESSONS_6YO_INTERACTIVE_JS: &str = r#"
       }
     }
     var vid = document.getElementById('fgLessonVideoPlayer');
-    if (vid) {
-      vid.classList.remove('hidden-video');
-      if (typeof vid.play === 'function') {
-        var p = vid.play();
-        if (p && typeof p.catch === 'function') p.catch(function(){});
-      }
+    if (vid && typeof vid.play === 'function') {
+      var p = vid.play();
+      if (p && typeof p.catch === 'function') p.catch(function(){});
     }
   };
 
@@ -2024,6 +2005,10 @@ mod tests {
     #[test]
     fn test_render_lessons_6yo_component_contains_spacious_760x340_canvas_and_all_lessons() {
         let html = render_lessons_6yo_component();
+        assert!(html.contains("id=\"lessonAnimationSeparateBox\""));
+        assert!(html.contains("id=\"lessonVideoSeparateBox\""));
+        assert!(html.contains("🎨 Animația Interactivă a Lecției (Pas cu Pas)"));
+        assert!(html.contains("🎬 Videoclipul Zborului Sintetic FlightGear (Rezolvare 3D)"));
         assert!(html.contains("id=\"fgLessonVideoPlayer\""));
         assert!(html.contains("id=\"btnSolveWithFlightGearGreen\""));
         assert!(html.contains("/real_videos/fg_lesson_1.mp4"));
