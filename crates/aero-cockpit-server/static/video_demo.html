@@ -3,195 +3,265 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AERO-SHIELD LRCV V2.0 — Prezentare Video & Interactivă Hackathon Craiova 2026</title>
+  <title>AERO-SHIELD LRCV V2.0 — Prezentare Tehnică Interactivă (Craiova Hackathon 2026)</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body {
+      --background: #0f172a;
+      --card: #1e293b;
+      --content: #131c2e;
+      --border: #334155;
+      --foreground: #f1f5f9;
+      --muted-foreground: #cbd5e1;
+      background-color: #0f172a !important;
+      color: #f1f5f9 !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.65;
+    }
+    p, li, summary {
+      letter-spacing: 0.01em;
+    }
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+  </style>
 </head>
-<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-4 md:p-6">
+<body class="bg-[#0f172a] text-[#f1f5f9] antialiased p-4 md:p-8">
   <div class="max-w-7xl mx-auto space-y-6">
 
-    <!-- HEADER & KPI BANNER -->
-    <header class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm">
+    <!-- =================================================================== -->
+    <!-- HEADER & KPI BANNER PENTRU JURIU                                    -->
+    <!-- =================================================================== -->
+    <header class="bg-slate-800/95 border border-slate-700 rounded-2xl p-5 shadow-sm">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div class="space-y-1.5">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[var(--border)] bg-[var(--content)] text-xs font-bold tracking-wide">
-            <span>✈️ CRAIOVA HACKATHON 2026 • PISTA 09 (LRCV)</span>
-            <span>•</span>
-            <span class="text-emerald-500">100% RUST DO-178C DAL-A</span>
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-slate-700 bg-slate-900/90 text-xs font-bold tracking-wide">
+              ✈️ CRAIOVA HACKATHON 2026 • PISTA 09 (LRCV)
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 text-xs font-bold">
+              🦀 100% RUST DO-178C DAL-A (90/90 TESTE)
+            </span>
+            <a href="https://youtu.be/D331kEyQObw" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-rose-500/50 bg-rose-500/15 text-rose-400 hover:bg-rose-500/25 text-xs font-bold transition">
+              ▶️ YouTube: youtu.be/D331kEyQObw ↗
+            </a>
           </div>
           <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">
-            AERO-SHIELD LRCV V2.0 — Zbor Autonom în Ceață Oarbă &amp; Bruiaj GPS
+            AERO-SHIELD LRCV V2.0 — Prezentare Tehnică Interactivă
           </h1>
-          <p class="text-sm text-[var(--muted-foreground)] max-w-3xl">
-            Cum aterizăm un avion cu vizibilitate zero și sub atac cibernetic GPS (+250 m spre câmp) folosind fizica infraroșu <strong class="text-[var(--foreground)]">SWIR 1,5 µm</strong>, radarul de <strong class="text-[var(--foreground)]">94 GHz</strong> și <strong class="text-[var(--foreground)]">creierul bionic al musculiței Drosophila (139.255 neuroni — Google Research)</strong>.
+          <p class="text-sm text-slate-300 max-w-3xl">
+            Sistem autonom de navigație optică 6-DoF, autoland pe <strong class="text-slate-100">Pista 09 din Craiova</strong> în condiții de <strong class="text-slate-100">vizibilitate zero (Ceață CAT IIIc)</strong> și protecție la <strong class="text-slate-100">spoofing GPS (+250 m abatere indusă)</strong>, bazat pe cameră <strong class="text-slate-100">SWIR 1,5 µm</strong>, radar <strong class="text-slate-100">94 GHz</strong> și <strong class="text-slate-100">conectomul Drosophila (139.255 neuroni — Google Research)</strong>.
           </p>
         </div>
 
-        <!-- Timer pentru Pitch -->
+        <!-- Link-uri Rapide Proiect -->
         <div class="flex flex-wrap items-center gap-2.5">
-          <div class="bg-[var(--content)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-center">
-            <div class="text-xs text-[var(--muted-foreground)] font-semibold">CRONOMETRU PITCH</div>
-            <div id="pitchTimerDisplay" class="text-xl font-black font-mono">04:00</div>
-          </div>
-          <button onclick="toggleTimer()" id="timerBtn" class="px-4 py-2.5 rounded-xl font-bold text-xs bg-emerald-600 text-white hover:bg-emerald-500 transition cursor-pointer">
-            ▶ Start Pitch (4 min)
-          </button>
-          <button onclick="resetTimer()" class="px-3 py-2.5 rounded-xl font-bold text-xs bg-[var(--content)] border border-[var(--border)] hover:opacity-80 transition cursor-pointer">
-            ↺ Reset
-          </button>
+          <a href="https://youtu.be/D331kEyQObw" target="_blank" rel="noopener" class="px-4 py-2.5 rounded-xl font-bold text-xs bg-rose-600 text-white hover:bg-rose-500 transition cursor-pointer">
+            ▶ Video Demo (YouTube)
+          </a>
+          <a href="https://github.com/petreleon/Craiova-Hackathon-2026" target="_blank" rel="noopener" class="px-4 py-2.5 rounded-xl font-bold text-xs bg-slate-900/90 border border-slate-700 hover:opacity-80 transition cursor-pointer">
+            GitHub Repository ↗
+          </a>
         </div>
       </div>
 
-      <!-- 6 KPI-uri pe înțelesul tuturor -->
+      <!-- 6 Indicatori Cheie pentru Juriu -->
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-5">
-        <div class="bg-[var(--content)] border border-[var(--border)] rounded-xl p-3">
-          <div class="text-xs text-[var(--muted-foreground)] font-semibold">Eroare la Touchdown</div>
-          <div class="text-lg font-black text-emerald-500">0,21 metri</div>
-          <div class="text-xs text-[var(--muted-foreground)]">Pe linia centrală Pista 09</div>
+        <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3">
+          <div class="text-xs text-slate-300 font-semibold">Aterizare Pista 09</div>
+          <div class="text-base md:text-lg font-black text-emerald-400">Aliniat pe Ax</div>
+          <div class="text-xs text-slate-300">Autoland CAT IIIc fără GPS</div>
         </div>
-        <div class="bg-[var(--content)] border border-[var(--border)] rounded-xl p-3">
-          <div class="text-xs text-[var(--muted-foreground)] font-semibold">100.000 km Fără GPS</div>
-          <div class="text-lg font-black text-emerald-500">0,38 m medie</div>
-          <div class="text-xs text-[var(--muted-foreground)]">2,5× înconjurul Pământului</div>
+        <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3">
+          <div class="text-xs text-slate-300 font-semibold">Scut Anti-Hacker GPS</div>
+          <div class="text-base md:text-lg font-black text-amber-400">&lt; 17 ms</div>
+          <div class="text-xs text-slate-300">Izolează +250m în 1 cadru!</div>
         </div>
-        <div class="bg-[var(--content)] border border-[var(--border)] rounded-xl p-3">
-          <div class="text-xs text-[var(--muted-foreground)] font-semibold">Blocare Hacker GPS</div>
-          <div class="text-lg font-black text-amber-500">&lt; 17 ms</div>
-          <div class="text-xs text-[var(--muted-foreground)]">1 singur cadru video!</div>
+        <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3">
+          <div class="text-xs text-slate-300 font-semibold">Vedere SWIR 1,5 µm</div>
+          <div class="text-base md:text-lg font-black text-sky-400">4× Distanță</div>
+          <div class="text-xs text-slate-300">200m prin ceață + vopsea udă</div>
         </div>
-        <div class="bg-[var(--content)] border border-[var(--border)] rounded-xl p-3">
-          <div class="text-xs text-[var(--muted-foreground)] font-semibold">Creier Bionic Google</div>
-          <div class="text-lg font-black">139.255 neuroni</div>
-          <div class="text-xs text-[var(--muted-foreground)]">FlyWire Nature 2024 (&lt;0,8 ms)</div>
+        <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3">
+          <div class="text-xs text-slate-300 font-semibold">Creier Bionic Google</div>
+          <div class="text-base md:text-lg font-black">139.255 neuroni</div>
+          <div class="text-xs text-slate-300">FlyWire Nature 2024 (&lt;0,8 ms)</div>
         </div>
-        <div class="bg-[var(--content)] border border-[var(--border)] rounded-xl p-3">
-          <div class="text-xs text-[var(--muted-foreground)] font-semibold">Viteză pe Video Real</div>
-          <div class="text-lg font-black text-sky-500">438,7 FPS</div>
-          <div class="text-xs text-[var(--muted-foreground)]">2,28 ms/cadru pe GPU</div>
+        <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3">
+          <div class="text-xs text-slate-300 font-semibold">Viteză pe Video Real</div>
+          <div class="text-base md:text-lg font-black text-purple-400">438,7 FPS</div>
+          <div class="text-xs text-slate-300">2,28 ms/cadru pe GPU</div>
         </div>
-        <div class="bg-[var(--content)] border border-[var(--border)] rounded-xl p-3">
-          <div class="text-xs text-[var(--muted-foreground)] font-semibold">Cost Kit la Bord</div>
-          <div class="text-lg font-black text-emerald-500">~5.600 EUR</div>
-          <div class="text-xs text-[var(--muted-foreground)]">vs. 5.000.000 EUR ILS la sol</div>
+        <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3">
+          <div class="text-xs text-slate-300 font-semibold">Cost Kit la Bord</div>
+          <div class="text-base md:text-lg font-black text-emerald-400">~5.600 EUR</div>
+          <div class="text-xs text-slate-300">vs. 5.000.000 EUR ILS la sol</div>
         </div>
       </div>
     </header>
 
-    <!-- NAVIGATION TABS -->
-    <nav class="flex flex-wrap gap-2 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-2 shadow-sm" aria-label="Secțiuni Prezentare">
-      <button onclick="switchMainTab('tab-video')" id="btn-tab-video" class="tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-emerald-600 text-white transition cursor-pointer">
-        🎬 1. Regia Video &amp; Teleprompter (Sincronizat pe Secunde)
+    <!-- =================================================================== -->
+    <!-- NAVIGATION TABS (5 SECȚIUNI INTERACTIVE)                            -->
+    <!-- =================================================================== -->
+    <nav class="flex flex-wrap gap-2 bg-slate-800/95 border border-slate-700 rounded-2xl p-2 shadow-sm" aria-label="Secțiuni Prezentare">
+      <button onclick="switchMainTab('tab-story')" id="btn-tab-story" class="tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-emerald-600 text-white transition cursor-pointer">
+        1. Prezentare Proiect &amp; Demonstrație Video
       </button>
-      <button onclick="switchMainTab('tab-decoder')" id="btn-tab-decoder" class="tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-[var(--content)] text-[var(--foreground)] border border-[var(--border)] transition cursor-pointer">
-         🖥️ 2. Ce Vede Juriul în Video? (Cele 3 Ferestre Explicate)
+      <button onclick="switchMainTab('tab-sim-cyber')" id="btn-tab-sim-cyber" class="tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-slate-900/90 text-slate-100 border border-slate-700 transition cursor-pointer">
+        2. Simulator „Confidently Wrong” &amp; Telemetrie
       </button>
-      <button onclick="switchMainTab('tab-formulas')" id="btn-tab-formulas" class="tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-[var(--content)] text-[var(--foreground)] border border-[var(--border)] transition cursor-pointer">
-        🧮 3. Cele 5 Formule ca la Școală (Simulator Interactiv)
+      <button onclick="switchMainTab('tab-sim-sensors')" id="btn-tab-sim-sensors" class="tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-slate-900/90 text-slate-100 border border-slate-700 transition cursor-pointer">
+        3. Simulator Senzori (SWIR vs. Termic) &amp; Conectom
       </button>
-      <button onclick="switchMainTab('tab-science')" id="btn-tab-science" class="tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-[var(--content)] text-[var(--foreground)] border border-[var(--border)] transition cursor-pointer">
-        🪰 4. Senzorii SWIR, SR-71 &amp; Creierul de Muscă
+      <button onclick="switchMainTab('tab-formulas')" id="btn-tab-formulas" class="tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-slate-900/90 text-slate-100 border border-slate-700 transition cursor-pointer">
+        4. Modelul Matematic (5 Ecuații Interactive)
       </button>
-      <button onclick="switchMainTab('tab-qa')" id="btn-tab-qa" class="tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-[var(--content)] text-[var(--foreground)] border border-[var(--border)] transition cursor-pointer">
-        🏆 5. Costuri &amp; 12 Întrebări Grele de la Juriu (Q&amp;A)
+      <button onclick="switchMainTab('tab-qa')" id="btn-tab-qa" class="tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-slate-900/90 text-slate-100 border border-slate-700 transition cursor-pointer">
+        5. Arhitectură Hardware (5.600€), Rust DO-178C &amp; FAQ
       </button>
     </nav>
 
     <!-- =================================================================== -->
-    <!-- TAB 1: REGIA VIDEO & TELEPROMPTER SINCRONIZAT CU VIDEOCLIPUL        -->
+    <!-- TAB 1: PREZENTAREA PROIECTULUI + VIDEO YOUTUBE SINCRONIZAT          -->
     <!-- =================================================================== -->
-    <section id="tab-video" class="space-y-5">
+    <section id="tab-story" class="space-y-5">
+
+      <!-- Card Narativ: Prezentarea Proiectului -->
+      <div class="bg-slate-800/95 border border-slate-700 rounded-2xl p-5 space-y-4 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="px-3 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-xs font-bold">
+            SINTEZA PROIECTULUI • AEROPORTUL INTERNAȚIONAL CRAIOVA (LRCV — PISTA 09)
+          </span>
+          <span class="text-xs text-slate-300 font-semibold">
+            Navigație Optică 6-DoF, Autoland &amp; Scut Anti-Spoofing GNSS
+          </span>
+        </div>
+
+        <h2 class="text-xl md:text-2xl font-extrabold">
+          De ce am construit AERO-SHIELD LRCV V2.0 pentru Aeroportul Internațional Craiova?
+        </h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 text-xs md:text-sm leading-relaxed">
+          <div class="bg-slate-900/90 border-l-4 border-rose-500 rounded-r-xl p-4 space-y-2">
+            <div class="font-extrabold text-rose-400 uppercase">1. Pericolul Dublu la Craiova (Ceață + Bruiaj GPS)</div>
+            <p class="text-slate-300">
+              Imaginați-vă un avion cu 180 de pasageri care coboară iarna spre <strong class="text-slate-100">Pista 09 din Craiova</strong>. Peste pistă s-a lăsat o ceață atât de deasă încât pilotul nu își vede nici vârful aripilor (vizibilitate sub 50m — Categoria IIIc).
+              Simultan, cu un emițător radio de câteva sute de euro, un atacator falsifică semnalul GPS: computerul clasic al avionului afișează <strong class="text-slate-100">12/12 sateliți verzi și 0 erori („Confidently Wrong”)</strong>, dar în realitate trage avionul la <strong class="text-slate-100">+250 de metri în lateral, direct în câmp!</strong> Iar un sistem de antene ILS CAT IIIB la sol costă peste <strong class="text-slate-100">5.000.000 EUR</strong>.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/90 border-l-4 border-sky-400 rounded-r-xl p-4 space-y-2">
+            <div class="font-extrabold text-sky-400 uppercase">2. Ideea Noastră: Ochi Fizici + Creierul de Muscă Google</div>
+            <p class="text-slate-300">
+              În loc de antene de milioane de euro la sol, am pus toată inteligența într-un kit de <strong class="text-slate-100">~5.600 EUR la bordul avionului</strong>: o cameră în infraroșu scurt (<strong class="text-slate-100">SWIR 1,5 µm</strong>) care vede prin ceață de 4× mai departe și distinge vopseaua pistei pe ploaie, un <strong class="text-slate-100">Radar Milimetric de 94 GHz</strong>, un giroscop la 400 Hz și o cameră zenitală inspirată de <strong class="text-slate-100">SR-71 Blackbird</strong>. Toate sunt conduse în <strong class="text-slate-100">100% Rust</strong> de harta completă a celor <strong class="text-slate-100">139.255 de neuroni din creierul musculiței Drosophila</strong> (publicată de <strong class="text-slate-100">Google Research</strong> în <em>Nature</em>, octombrie 2024).
+            </p>
+          </div>
+
+          <div class="bg-slate-900/90 border-l-4 border-emerald-400 rounded-r-xl p-4 space-y-2">
+            <div class="font-extrabold text-emerald-400 uppercase">3. Ce Demonstrează Videoclipul Nostru</div>
+            <p class="text-slate-300">
+              În filmarea noastră din simulatorul industrial <strong class="text-slate-100">FlightGear pe Pista 09 Craiova</strong>, vedeți cum avionul zboară autonom prin furtună și ceață oarbă în timp ce este atacat cu Spoofing GPS (+250 m spre câmp). Scutul nostru matematic (testul Chi-pătrat și CUSUM) detectează contradicția dintre GPS și camera SWIR/radar, <strong class="text-slate-100">blochează GPS-ul fals în sub 17 milisecunde (un singur cadru video)</strong>, compensează vântul lateral cu <strong class="text-slate-100">0,85 secunde înainte de impact</strong> și aterizează lin, direct pe marcajul alb central al Pistei 09!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLAYER VIDEO + ANALIZA PE 6 CAPITOLE -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
 
-        <!-- COLOANA STÂNGA (7 cols): VIDEO PLAYER + CAPITOLE INTERACTIVE -->
-        <div class="lg:col-span-7 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 md:p-5 space-y-4 shadow-sm">
+        <!-- COLOANA STÂNGA (7 cols): VIDEO PLAYER + YOUTUBE + CAPITOLE -->
+        <div class="lg:col-span-7 bg-slate-800/95 border border-slate-700 rounded-2xl p-4 md:p-5 space-y-4 shadow-sm">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <span class="text-xs font-bold uppercase tracking-wider text-emerald-500">DEMONSTRAȚIE ÎNREGISTRATĂ ÎN FLIGHTGEAR (LRCV RWY 09)</span>
-              <h2 class="text-lg font-bold">Autonomous_FLIGH_AEROSHIELD.mp4 (01:33)</h2>
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">DEMONSTRAȚIE VIDEO OFICIALĂ FLIGHTGEAR (PISTA 09 CRAIOVA)</span>
+              <h3 class="text-lg font-bold">Zbor Autonom cu AERO-SHIELD Pornit &amp; Bruiaj GPS Activ (+250 m)</h3>
             </div>
             <span id="currentChapterBadge" class="px-3 py-1 rounded-lg text-xs font-bold bg-emerald-600/20 text-emerald-400 border border-emerald-500/40">
               Capitolul 1 • 00:00 – 00:25
             </span>
           </div>
 
-          <!-- Video Player cu fallback automat -->
-          <div class="relative rounded-xl overflow-hidden border-2 border-emerald-500/60 bg-black">
-            <video id="demoVideo" class="w-full aspect-video object-contain bg-black" controls playsinline preload="metadata">
+          <!-- Bara de mod redare (Streaming Public din Google Cloud VM 34.12.88.28 + Link YouTube) -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="switchVideoStream('explained')" id="btnModeHtml5" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white cursor-pointer transition">
+              🎬 Video cu Explicații (Google Cloud VM)
+            </button>
+            <button onclick="switchVideoStream('raw')" id="btnModeRaw" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900/90 text-slate-200 border border-slate-700 cursor-pointer transition">
+              ✈️ Filmarea Brută 60 FPS (Google Cloud VM)
+            </button>
+            <a href="https://youtu.be/D331kEyQObw" target="_blank" rel="noopener" class="ml-auto px-3.5 py-1.5 rounded-xl text-xs font-bold bg-rose-600 text-white hover:bg-rose-500 transition">
+              ▶️ Vezi și pe YouTube (youtu.be/D331kEyQObw) ↗
+            </a>
+          </div>
+
+          <!-- Scena Video (HTML5 Video servit public de pe Google Cloud VM — Fără Eroare 153) -->
+          <div class="relative rounded-xl overflow-hidden border border-slate-600 bg-black aspect-video shadow-lg">
+            <video id="demoVideo" class="w-full h-full object-contain bg-black" controls playsinline preload="metadata" crossorigin="anonymous">
+              <source src="https://markers-church-sustained-gifts.trycloudflare.com/real_videos/AERO_SHIELD_Prezentare_Video_Explicata_Hackathon.mp4" type="video/mp4" />
+              <source src="http://34.12.88.28:8080/real_videos/AERO_SHIELD_Prezentare_Video_Explicata_Hackathon.mp4" type="video/mp4" />
               <source src="http://localhost:8080/real_videos/AERO_SHIELD_Prezentare_Video_Explicata_Hackathon.mp4" type="video/mp4" />
-              <source src="/real_videos/AERO_SHIELD_Prezentare_Video_Explicata_Hackathon.mp4" type="video/mp4" />
               <source src="AERO_SHIELD_Prezentare_Video_Explicata_Hackathon.mp4" type="video/mp4" />
-              <source src="http://localhost:8080/real_videos/Autonomous_FLIGH_AEROSHIELD.mp4" type="video/mp4" />
             </video>
+          </div>
+
+          <!-- Link-uri Directe (Cloud VM & YouTube) -->
+          <div class="flex flex-wrap items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-xs">
+            <span><strong>Stream Public Google VM:</strong> <a href="https://markers-church-sustained-gifts.trycloudflare.com/real_videos/AERO_SHIELD_Prezentare_Video_Explicata_Hackathon.mp4" target="_blank" rel="noopener" class="text-emerald-300 hover:text-emerald-200 underline font-mono">Stream Direct .MP4 ↗</a></span>
+            <span><strong>Mirror YouTube:</strong> <a href="https://youtu.be/D331kEyQObw" target="_blank" rel="noopener" class="text-sky-300 hover:text-sky-200 underline font-mono">https://youtu.be/D331kEyQObw</a></span>
           </div>
 
           <!-- Butoane Capitole (Jump to Timestamp) -->
           <div class="space-y-2">
-            <div class="text-xs font-bold text-[var(--muted-foreground)] uppercase">
-              👇 Apasă pe orice moment cheie din videoclip pentru a sări direct la secunda respectivă:
+            <div class="text-xs font-bold text-slate-300 uppercase">
+              Selectează o secvență pentru a sări direct la momentul respectiv în videoclip:
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="chapterButtonsContainer">
-              <!-- Populated by JS -->
-            </div>
-          </div>
-
-          <!-- Canvas Sincronizat: Ce se întâmplă în spatele ceții în acest moment -->
-          <div class="bg-[var(--content)] border border-[var(--border)] rounded-xl p-3 space-y-2">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <span class="text-xs font-bold">🔬 SCHIȚA VIZUALĂ A MOMENTULUI CURENT (EXPLICATĂ SIMPLU):</span>
-              <button onclick="toggleSimComparison()" id="simToggleBtn" class="px-3 py-1 rounded-lg text-xs font-bold bg-emerald-600 text-white cursor-pointer">
-                🟢 Mod AERO-SHIELD Pornit (Apasă pt. comparație fără scut)
-              </button>
-            </div>
-            <canvas id="syncExplainCanvas" width="680" height="155" class="w-full rounded-lg border border-[var(--border)] bg-black"></canvas>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="chapterButtonsContainer"></div>
           </div>
         </div>
 
-        <!-- COLOANA DREAPTA (5 cols): TELEPROMPTER & EXPLICAȚIE PENTRU PUBLIC -->
-        <div class="lg:col-span-5 flex flex-col justify-between bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-4 shadow-sm">
+        <!-- COLOANA DREAPTA (5 cols): ANALIZA TEHNICĂ A CAPITOLULUI DIN VIDEO -->
+        <div class="lg:col-span-5 flex flex-col justify-between bg-slate-800/95 border border-slate-700 rounded-2xl p-5 space-y-4 shadow-sm">
           <div class="space-y-4">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/40 text-xs font-bold">
-              🎤 TELEPROMPTER LIVE — CE SPUI LA JURIU ÎN ACEST MOMENT
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-bold">
+              ANALIZA SECVENȚEI DIN VIDEOCLIP
             </div>
 
             <h3 id="chapTitle" class="text-xl font-extrabold leading-snug">
-              1. Orbire în Ceață + Atac de Bruiaj GPS (+250 m spre câmp)
+              1. Apropiere în Ceață CAT IIIc pe Craiova (Pista 09) + Atac de Spoofing GPS (+250 m)
             </h3>
 
-            <!-- Caseta cu discursul cuvânt-cu-cuvânt -->
-            <div class="bg-[var(--content)] border-l-4 border-amber-400 rounded-r-xl p-4 space-y-2">
-              <div class="text-xs font-bold text-amber-400 uppercase">Citește sau parafrazează natural:</div>
-              <p id="chapSpeech" class="text-sm md:text-base font-medium leading-relaxed">
-                „Priviți fereastra din față a cabinei: coborâm spre Pista 09 din Craiova pe o ceață atât de deasă încât pilotul nu vede nimic. În același timp, am activat un atac de spoofing GPS care minte avionul că pista este cu 250 de metri mai la stânga, direct în câmp!”
-              </p>
+            <!-- Ce se întâmplă în acest moment -->
+            <div class="bg-slate-900/90 border-l-4 border-emerald-400 rounded-r-xl p-4 space-y-2">
+              <div class="text-xs font-bold text-emerald-400 uppercase">Ce se întâmplă în această secvență:</div>
+              <p id="chapSpeech" class="text-sm md:text-base font-medium leading-relaxed"></p>
             </div>
 
-            <!-- Ce să arăți cu mâna pe ecran -->
-            <div class="bg-[var(--content)] border border-[var(--border)] rounded-xl p-3.5 space-y-1.5">
-              <div class="text-xs font-bold text-sky-400 uppercase">👆 Ce arăți cu degetul pe videoclip:</div>
-              <p id="chapPointer" class="text-xs md:text-sm text-[var(--foreground)] leading-relaxed">
-                Arată fereastra din stânga-sus (SVS PFD): pista punctată ROȘIE este minciuna hackerului (+250 m în iarbă), iar pista plină VERDE este Pista 09 reală pe care AERO-SHIELD ține avionul!
-              </p>
+            <!-- Ce se observă pe telemetria din video -->
+            <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 space-y-1.5">
+              <div class="text-xs font-bold text-sky-400 uppercase">Elemente cheie pe HUD și în telemetrie:</div>
+              <p id="chapPointer" class="text-xs md:text-sm text-slate-100 leading-relaxed"></p>
             </div>
 
-            <!-- Analogia pe înțelesul oricui + Formula de școală -->
-            <div class="bg-[var(--content)] border border-emerald-500/40 rounded-xl p-3.5 space-y-2">
-              <div class="text-xs font-bold text-emerald-400 uppercase">💡 Traducere pe înțelesul tuturor (Fără Jargon):</div>
-              <p id="chapAnalogy" class="text-xs md:text-sm leading-relaxed">
-                Un GPS clasic este ca un șofer legat la ochi care ascultă orbește o aplicație piratată. AERO-SHIELD se uită fizic la șosea cu ochelari infraroșu (SWIR) și radar: când GPS-ul spune „ești la 250 m”, dar ochii văd pista sub roți (0 m), minciuna e prinsă în 17 milisecunde!
-              </p>
-              <div id="chapFormula" class="p-2.5 rounded-lg bg-black/40 border border-[var(--border)] font-mono text-xs font-bold text-amber-300">
-                Formula 5 (Paznicul): |250 m (GPS fals) − 0 m (Văzut de cameră/radar)| = 250 m &gt; 2 m ➔ GPS FALS TĂIAT!
-              </div>
+            <!-- Mecanismul fizic & matematic -->
+            <div class="bg-slate-900/90 border border-amber-500/40 rounded-xl p-3.5 space-y-2">
+              <div class="text-xs font-bold text-amber-400 uppercase">Mecanismul fizic și matematic activ:</div>
+              <p id="chapAnalogy" class="text-xs md:text-sm leading-relaxed"></p>
+              <div id="chapFormula" class="p-2.5 rounded-lg bg-black/40 border border-slate-700 font-mono text-xs font-bold text-amber-300"></div>
             </div>
           </div>
 
-          <!-- Navigare rapidă între capitole -->
-          <div class="flex items-center justify-between pt-3 border-t border-[var(--border)]">
-            <button onclick="prevChapter()" class="px-4 py-2 rounded-xl text-xs font-bold bg-[var(--content)] border border-[var(--border)] hover:opacity-80 cursor-pointer">
-              ⬅ Capitolul Anterior
+          <!-- Navigare capitole -->
+          <div class="flex items-center justify-between pt-3 border-t border-slate-700">
+            <button onclick="prevChapter()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900/90 border border-slate-700 hover:opacity-80 cursor-pointer">
+              ⬅ Momentul Anterior
             </button>
-            <span id="chapCounter" class="text-xs font-bold text-[var(--muted-foreground)]">1 / 6</span>
+            <span id="chapCounter" class="text-xs font-bold text-slate-300">1 / 6</span>
             <button onclick="nextChapter()" class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-500 cursor-pointer">
-              Capitolul Următor ➡
+              Momentul Următor ➡
             </button>
           </div>
         </div>
@@ -200,359 +270,418 @@
     </section>
 
     <!-- =================================================================== -->
-    <!-- TAB 2: CELE 3 FERESTRE DIN VIDEOCLIP EXPLICATE VIZUAL               -->
+    <!-- TAB 2: SIMULATOR „CONFIDENTLY WRONG” & CELE 3 FERESTRE DIN VIDEO    -->
     <!-- =================================================================== -->
-    <section id="tab-decoder" class="hidden space-y-5">
-      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-3 shadow-sm">
-        <h2 class="text-xl font-extrabold">🖥️ Ghidul Vizual al Ecranului: Ce înseamnă cele 3 ferestre din stânga videoclipului?</h2>
-        <p class="text-sm text-[var(--muted-foreground)]">
-          În videoclipul <code class="px-1.5 py-0.5 rounded bg-[var(--content)]">Autonomous_FLIGH_AEROSHIELD.mp4</code> (de la secunda <strong class="text-[var(--foreground)]">00:26</strong>), în partea stângă apar 3 ferestre suprapuse peste cabina avionului. Iată cum le explici juriului în 30 de secunde:
+    <section id="tab-sim-cyber" class="hidden space-y-5">
+
+      <!-- Simulator Interactiv 1 (60 FPS Canvas) -->
+      <div class="bg-slate-800/95 border border-slate-700 rounded-2xl p-5 space-y-4 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <span class="text-xs font-bold uppercase text-emerald-400">SIMULATOR INTERACTIV 60 FPS PENTRU JURIU</span>
+            <h2 class="text-xl font-extrabold">🛡️ Testează Live: Fenomenul „Confidently Wrong” vs. Scutul AERO-SHIELD</h2>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">ALINIAT PE AXUL PISTEI 09 CRAIOVA</span>
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-sky-500/15 text-sky-400 border border-sky-500/30">GPS FALS (+250m) BLOCAT ÎN &lt; 17 ms</span>
+          </div>
+        </div>
+
+        <p class="text-xs md:text-sm text-slate-300">
+          Apăsați pe butoanele de mai jos pentru a porni sau opri <strong>Atacul de Spoofing GPS (+250 m spre câmp)</strong>, <strong>Vântul de Forfecare (18 m/s)</strong> și <strong>Ceața Oarbă CAT IIIc</strong>. Urmăriți cum reacționează simultan cele 3 avioane:
         </p>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-          <!-- Fereastra 1 -->
-          <div class="bg-[var(--content)] border-2 border-emerald-500/60 rounded-2xl p-4 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-500/20 text-emerald-400">1. STÂNGA-SUS</span>
-              <span class="text-xs font-mono text-[var(--muted-foreground)]">SVS PFD &amp; Flight Director</span>
-            </div>
-            <h3 class="text-base font-bold">Parbrizul Virtual 3D (Pista Verde vs. Pista Fantomă Roșie)</h3>
-            <p class="text-xs md:text-sm text-[var(--muted-foreground)] leading-relaxed">
-              Arată ce „vede” sistemul prin ceață:
-            </p>
-            <ul class="text-xs space-y-2">
-              <li class="p-2 rounded-lg bg-[var(--card)] border border-[var(--border)]">
-                🟢 <strong>Trapezul Verde Plin + Cercul Verde:</strong> Este <strong>Pista 09 Reală din Craiova</strong>, reconstruită 3D de camera infraroșu SWIR și radar. Avionul urmărește cercul verde.
-              </li>
-              <li class="p-2 rounded-lg bg-[var(--card)] border border-[var(--border)]">
-                🔴 <strong>Trapezul Roșu Punctat (în lateral):</strong> Este <strong>„Pista Fantomă” (+250 m în câmp)</strong> unde hackerul GPS încearcă să tragă avionul.
-              </li>
-              <li class="p-2 rounded-lg bg-[var(--card)] border border-[var(--border)]">
-                🎛️ <strong>Cele 2 butoane de jos:</strong> <code class="text-emerald-400">[AUTOLAND CAT IIIc: ON]</code> și <code class="text-rose-400">[SPOOF GPS: ACTIV (+250m)]</code>.
-              </li>
-            </ul>
-          </div>
+        <div class="flex flex-wrap gap-2.5">
+          <button onclick="toggleSim1('spoof')" id="btnSim1Spoof" class="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 text-white cursor-pointer transition">
+            📡 Atac Spoofing GPS (+250m în câmp): ACTIV
+          </button>
+          <button onclick="toggleSim1('wind')" id="btnSim1Wind" class="px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 text-white cursor-pointer transition">
+            🌪️ Vânt Lateral de Forfecare (18 m/s): ACTIV
+          </button>
+          <button onclick="toggleSim1('fog')" id="btnSim1Fog" class="px-4 py-2 rounded-xl text-xs font-bold bg-sky-600 text-white cursor-pointer transition">
+            🌫️ Ceață Oarbă CAT IIIc: ACTIVĂ
+          </button>
+          <button onclick="resetSim1()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900/90 border border-slate-700 cursor-pointer transition">
+            🔄 Reluare Apropiere Finală
+          </button>
+        </div>
 
-          <!-- Fereastra 2 -->
-          <div class="bg-[var(--content)] border-2 border-amber-500/60 rounded-2xl p-4 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-500/20 text-amber-400">2. STÂNGA-MIJLOC</span>
-              <span class="text-xs font-mono text-[var(--muted-foreground)]">FMS Clasic</span>
-            </div>
-            <h3 class="text-base font-bold">Fenomenul „Confidently Wrong” (De ce pică avioanele clasice)</h3>
-            <p class="text-xs md:text-sm text-[var(--muted-foreground)] leading-relaxed">
-              Demonstrează de ce un avion comercial obișnuit nu își dă seama că este atacat:
-            </p>
-            <ul class="text-xs space-y-2">
-              <li class="p-2 rounded-lg bg-[var(--card)] border border-[var(--border)]">
-                ⚠️ <strong>Bara de sus e VERDE („12/12 SATS | RAIM: OK | 0 FAULTS”):</strong> Receptorul GPS clasic este păcălit complet și raportează <strong>eroare 0,0 metri</strong> cu încredere maximă („Confidently Wrong”)!
-              </li>
-              <li class="p-2 rounded-lg bg-[var(--card)] border border-[var(--border)]">
-                🧭 <strong>Acul Roșu CDI &amp; Harta Fantomă:</strong> Pilotul automat clasic crede că e pe pistă, dar în realitate zboară pe linia roșie punctată, la 250 m în iarbă.
-              </li>
-              <li class="p-2 rounded-lg bg-[var(--card)] border border-[var(--border)]">
-                🛡️ <strong>Mesajul Verde de Jos:</strong> Explică de ce AERO-SHIELD ignoră această fereastră: paznicul matematic $\chi^2$ vede că pista optică nu corespunde cu GPS-ul!
-              </li>
-            </ul>
-          </div>
+        <div class="rounded-xl overflow-hidden border-2 border-sky-500/40 bg-[#050b14]">
+          <canvas id="canvasSim1Approach" width="960" height="360" class="w-full h-[320px] md:h-[360px] block"></canvas>
+        </div>
 
-          <!-- Fereastra 3 -->
-          <div class="bg-[var(--content)] border-2 border-sky-500/60 rounded-2xl p-4 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-sky-500/20 text-sky-400">3. STÂNGA-JOS</span>
-              <span class="text-xs font-mono text-[var(--muted-foreground)]">AERO-SHIELD Cyber Radar</span>
-            </div>
-            <h3 class="text-base font-bold">Cursa Live a celor 3 Avioane văzută de Sus (Radar Top-Down)</h3>
-            <p class="text-xs md:text-sm text-[var(--muted-foreground)] leading-relaxed">
-              O vedere de sus (ca pe hartă) care compară în timp real 3 sisteme pe aceeași furtună:
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div class="p-3.5 rounded-xl bg-slate-900/90 border-l-4 border-rose-500">
+            <div class="font-bold text-rose-400">🔴 AVION 1: GPS/FMS CLASIC („CONFIDENTLY WRONG”)</div>
+            <div id="telSim1Red" class="mt-1 font-mono font-bold">PĂCĂLIT ÎN PISTA FANTOMĂ (+250m ÎN CÂMP) • Raportează 12/12 SATS OK!</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-900/90 border-l-4 border-amber-500">
+            <div class="font-bold text-amber-400">🟡 AVION 2: DOAR GIROSCOP / INS (FĂRĂ OCHI SWIR)</div>
+            <div id="telSim1Amber" class="mt-1 font-mono font-bold">ÎMPINS ÎN LATERAL DE VÂNTUL DE FORFECARE (18 m/s) ȘI DRIFT</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-900/90 border-l-4 border-emerald-500">
+            <div class="font-bold text-emerald-400">🟢 AVION 3: AERO-SHIELD LRCV V2.0 (SWIR + DROSOPHILA)</div>
+            <div id="telSim1Green" class="mt-1 font-mono font-bold">GPS FALS BLOCAT ÎN &lt; 17 ms • ALINIAT PE AXUL PISTEI 09 CRAIOVA</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decodorul celor 3 Ferestre din Stânga Videoclipului -->
+      <div class="bg-slate-800/95 border border-slate-700 rounded-2xl p-5 space-y-3 shadow-sm">
+        <h3 class="text-lg font-extrabold">🖥️ Ghidul celor 3 Ferestre din Stânga Ecranului în Videoclipul YouTube</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-slate-900/90 border border-emerald-500/40 rounded-xl p-4 space-y-2 text-xs">
+            <div class="font-bold text-emerald-400 text-sm">1. STÂNGA-SUS: SVS PFD &amp; Flight Director</div>
+            <p class="text-slate-300">
+              Arată parbrizul sintetic 3D: <strong>Trapezul Verde Plin</strong> este Pista 09 reală din Craiova văzută de camera SWIR și radar, iar <strong>Trapezul Roșu Punctat</strong> din lateral este „Pista Fantomă” (+250 m în câmp) unde hackerul încearcă să tragă avionul.
             </p>
-            <ul class="text-xs space-y-2">
-              <li class="p-2 rounded-lg bg-[var(--card)] border border-[var(--border)]">
-                🟢 <strong>Linia Verde (AERO-SHIELD):</strong> Merge drept ca glonțul pe mijlocul coridorului verde al Pistei 09 (abatere <strong>0,2 – 0,4 m</strong>).
-              </li>
-              <li class="p-2 rounded-lg bg-[var(--card)] border border-[var(--border)]">
-                🔴 <strong>Linia Roșie (Avion cu GPS Spoofed):</strong> Este trasă în sus cu +250 m, direct în pista fantomă din câmp!
-              </li>
-              <li class="p-2 rounded-lg bg-[var(--card)] border border-[var(--border)]">
-                🟡 <strong>Linia Galbenă (Doar Giroscop / INS):</strong> Derapează lent în lateral fiindcă vântul și deriva termică îl împing fără reper vizual.
-              </li>
-            </ul>
+          </div>
+          <div class="bg-slate-900/90 border border-amber-500/40 rounded-xl p-4 space-y-2 text-xs">
+            <div class="font-bold text-amber-400 text-sm">2. STÂNGA-MIJLOC: FMS Clasic (Confidently Wrong)</div>
+            <p class="text-slate-300">
+              Arată de ce avioanele clasice sunt vulnerabile: bara de sus este <strong>VERDE (`12/12 SATS | RAIM: OK | 0 FAULTS`)</strong>! Receptorul GPS clasic este 100% convins că se află pe axul pistei, în timp ce ghidează avionul în arătură.
+            </p>
+          </div>
+          <div class="bg-slate-900/90 border border-sky-500/40 rounded-xl p-4 space-y-2 text-xs">
+            <div class="font-bold text-sky-400 text-sm">3. STÂNGA-JOS: AERO-SHIELD Cyber Radar</div>
+            <p class="text-slate-300">
+              Vedere radar de sus (Top-Down): <strong>Linia Roșie</strong> (GPS Clasic) deviază la +250 m în pista fantomă, <strong>Linia Galbenă</strong> (INS) derapează în vânt, iar <strong>Linia Verde (AERO-SHIELD)</strong> merge drept pe mijlocul Pistei 09!
+            </p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- TAB 3: CELE 5 FORMULE CA LA ȘCOALĂ (SIMULATOR INTERACTIV)           -->
+    <!-- TAB 3: SIMULATOR SENZORI (RGB vs LWIR vs SWIR) & CREIERUL DE MUSCĂ  -->
+    <!-- =================================================================== -->
+    <section id="tab-sim-sensors" class="hidden space-y-5">
+
+      <!-- Simulator Interactiv 2: Comparația Fizică a Senzorilor în Ceață -->
+      <div class="bg-slate-800/95 border border-slate-700 rounded-2xl p-5 space-y-4 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <span class="text-xs font-bold uppercase text-sky-400">FIZICA OPTICĂ LA 1,5 MICRONI VS. TERMOVIZIUNE</span>
+            <h2 class="text-xl font-extrabold">🔬 De ce Camera Noastră SWIR (2.500 €) Vede Pista Udă, iar Termoviziunea Militară LWIR (100.000 €) Orbește?</h2>
+          </div>
+          <span class="px-3 py-1 rounded-full text-xs font-bold bg-purple-500/15 text-purple-400 border border-purple-500/30">
+            0,85s ANTICIPARE VÂNT (PFNd)
+          </span>
+        </div>
+
+        <div class="flex flex-wrap gap-2.5">
+          <button onclick="setSensorSimMode('rgb')" id="btnSensorRgb" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900/90 border border-slate-700 cursor-pointer transition">
+            👁️ (A) Ochiul Uman / Cameră RGB (Zid Alb Mie &lt; 50m)
+          </button>
+          <button onclick="setSensorSimMode('lwir')" id="btnSensorLwir" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900/90 border border-slate-700 cursor-pointer transition">
+            🌡️ (B) Cameră Termică Militară LWIR 100.000 € (Pată Gri Oarbă pe Ploaie)
+          </button>
+          <button onclick="setSensorSimMode('swir')" id="btnSensorSwir" class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white cursor-pointer transition">
+            🦅 (C) Camera Noastră SWIR 1,5 µm + Creierul Bionic Drosophila (200m + Vopsea + Vânt)
+          </button>
+        </div>
+
+        <div class="rounded-xl overflow-hidden border-2 border-emerald-500/50 bg-[#040a14]">
+          <canvas id="canvasSim2Sensors" width="960" height="340" class="w-full h-[300px] md:h-[340px] block"></canvas>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700">
+            <div class="text-slate-300 font-bold">FENOMEN FIZIC ÎN CEAȚĂ ȘI PLOAIE</div>
+            <div id="telSensorPhys" class="mt-1 font-mono font-bold text-sky-400">
+              TRANSMISIE SWIR 1,5 µm (4× VIZIBILITATE = 200m) + REFLEXIE VOPSEA ALBĂ
+            </div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700">
+            <div class="text-slate-300 font-bold">PROCESARE CREIER BIONIC DROSOPHILA</div>
+            <div id="telSensorBio" class="mt-1 font-mono font-bold text-purple-400">
+              FLUX OPTIC T4/T5 + SĂGEȚI MOV PFNd (0,85s ÎNAINTE DE RAFALĂ) • 438,7 FPS
+            </div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700">
+            <div class="text-slate-300 font-bold">VERDICT PENTRU PISTA 09 CRAIOVA</div>
+            <div id="telSensorVerd" class="mt-1 font-mono font-bold text-emerald-400">
+              ALINIAT PE AXUL PISTEI 09 CRAIOVA • ~5.600 EUR KIT COMPLET LA BORD
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cei 4 Senzori + Cele 5 Straturi ale Creierului de Muscă Google Research -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div class="bg-slate-800/95 border border-slate-700 rounded-2xl p-5 space-y-3 shadow-sm text-xs md:text-sm">
+          <h3 class="text-lg font-extrabold">🔭 Cei 4 Senzori Fizici de la Bord (Imposibil de Piratat prin Radio)</h3>
+          <div class="space-y-2.5">
+            <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700">
+              <strong class="text-emerald-400">1. Cameră Frontală InGaAs SWIR (1,5 µm — 2.500 EUR):</strong> Lungime de undă de 3× mai mare decât lumina vizibilă; străpunge ceața de <strong>4× mai departe (200 m)</strong> și vede reflexia vopselei chiar și în echilibru termic pe ploaie.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700">
+              <strong class="text-sky-400">2. Radar Milimetric FMCW 94 GHz (1.200 EUR):</strong> Unda de 3,2 mm ignoră complet picăturile de ceață; măsoară distanța până la asfalt cu precizie de <strong>3 centimetri</strong> (pentru manevra de <em>Flare</em>) și viteza Doppler.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700">
+              <strong class="text-amber-400">3. Giroscop &amp; Accelerometru Tactic IMU 400 Hz (800 EUR):</strong> „Urechea internă” mecanică închisă în avion, citită la fiecare 2,5 ms — 100% imună la bruiaj radio.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700">
+              <strong class="text-purple-400">4. Modul Zenital SWIR (SR-71 Blackbird) + Polarizare DRA R7/R8 (600 EUR):</strong> Cântărește 180g, privește în sus: peste nori vede <strong>stelele în plină zi</strong> (împrăștierea Rayleigh scade de 100× în SWIR, cerul zilei devine negru!), iar sub nori citește <strong>inelele de polarizare ale soarelui</strong> cu precizie de busolă <strong>&lt; 0,005°</strong>!
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-800/95 border border-slate-700 rounded-2xl p-5 space-y-3 shadow-sm text-xs md:text-sm">
+          <h3 class="text-lg font-extrabold">🪰 Creierul Bionic Google Research Drosophila (139.255 Neuroni în Rust)</h3>
+          <p class="text-slate-300">
+            Publicat în <em>Nature</em> (octombrie 2024) de Google Research &amp; FlyWire, conectomul musculiței nu este o „cutie neagră” care halucinează în ceață, ci un circuit fizico-geometric exact în <strong>5 etape</strong> (&lt; 0,8 ms):
+          </p>
+          <div class="space-y-2">
+            <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-700">
+              <strong class="text-emerald-400">1. RETINA (R1–R6 + DRA R7/R8):</strong> Transformă lumina în logaritm (legea Weber-Fechner) pentru a tăia haloul farurilor și citește polarizarea cerului.
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-700">
+              <strong class="text-sky-400">2. LAMINA (L1 / L2 / L3):</strong> Scade media locală a imaginii (<code>15 − 12 = 3</code>) și <strong>șterge instantaneu „zidul alb” de ceață</strong>.
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-700">
+              <strong class="text-amber-400">3. MEDULLA &amp; LOBULA (Detectori T4 ON / T5 OFF):</strong> Corelează trecutul cu prezentul (<code>4 × 50 = 200 m</code>) pentru a urmări luminile ALS și marginile asfaltului.
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-700">
+              <strong class="text-purple-400">4. LOBULA PLATE (Neuroni Giganți HS &amp; VS):</strong> Scad matematic rotirea avionului citită din giroscop, lăsând doar viteza curată față de pistă.
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-700">
+              <strong class="text-rose-400">5. COMPLEXUL CENTRAL (E-PG 16-Wedge + PFNd + DNp01):</strong> Inelul E-PG păstrează direcția Pistei 09; <strong>PFNd</strong> vede vântul în ceață cu <strong>0,85s înainte</strong>; <strong>DNp01</strong> declanșează automat <em>Go-Around</em> în 1,8 ms dacă apare un obstacol pe pistă!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 4: CELE 5 FORMULE CA LA ȘCOALĂ (SIMULATOR INTERACTIV)           -->
     <!-- =================================================================== -->
     <section id="tab-formulas" class="hidden space-y-5">
-      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-4 shadow-sm">
+      <div class="bg-slate-800/95 border border-slate-700 rounded-2xl p-5 space-y-4 shadow-sm">
         <div>
-          <span class="text-xs font-bold uppercase text-emerald-500">CAPITOLUL 5 DIN GHIDUL PDF • ZERO JARGON UNIVERSITAR</span>
-          <h2 class="text-xl font-extrabold">🧮 Cele 5 Formule Matematice Explicate ca la Școală (Adunare, Scădere și Înmulțire)</h2>
-          <p class="text-sm text-[var(--muted-foreground)]">
-            Nu avem nevoie de ecuații complicate pe tablă pentru a convinge juriul. Toată inteligența AERO-SHIELD se reduce la <strong>5 operații simple de clasa a IV-a</strong>. Mișcă glisoarele de mai jos pentru a le demonstra live!
+          <span class="text-xs font-bold uppercase text-emerald-400">MATEMATICA EXPLICATĂ PE ÎNȚELESUL TUTUROR</span>
+          <h2 class="text-xl font-extrabold">🧮 Cele 5 Formule Esențiale Explicate ca la Școală (Adunare, Scădere și Înmulțire)</h2>
+          <p class="text-sm text-slate-300">
+            Toată inteligența sistemului AERO-SHIELD poate fi verificată de juriu prin <strong>5 operații aritmetice simple</strong>. Trageți de glisoare pentru a testa fiecare formulă în timp real:
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Formula 1 -->
-          <div class="bg-[var(--content)] border border-[var(--border)] rounded-xl p-4 space-y-2.5">
+          <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-4 space-y-2.5">
             <div class="flex items-center justify-between">
               <span class="px-2.5 py-0.5 rounded bg-sky-500/20 text-sky-400 text-xs font-bold">FORMULA 1 • SCĂDERE SIMPLĂ</span>
               <span class="text-xs font-mono font-bold text-emerald-400">15 − 12 = 3</span>
             </div>
             <h3 class="text-base font-bold">Eliminarea Balansului Avionului &amp; Ștergerea Ceții</h3>
-            <p class="text-xs text-[var(--muted-foreground)]">
-              Când o rafală clatină aripa, camera vede că pista fuge cu <strong>15 pixeli/s</strong>. Dar giroscopul (urechea internă) știe că <strong>12 pixeli/s</strong> vin doar din înclinarea capului! Neuronii <strong>HS/VS</strong> fac scăderea:
+            <p class="text-xs text-slate-300">
+              Când o rafală înclină aripa, camera vede că pista fuge cu <strong>15 pixeli/s</strong>. Dar giroscopul știe că <strong>12 pixeli/s</strong> provin doar din înclinarea avionului! Neuronii <strong>HS/VS</strong> fac scăderea:
             </p>
             <div class="flex items-center gap-3 pt-1">
-              <label class="text-xs font-bold">Văzut de cameră: <span id="f1CamVal">15</span> px/s</label>
+              <label class="text-xs font-bold">Cameră: <span id="f1CamVal">15</span> px/s</label>
               <input type="range" id="f1Cam" min="5" max="30" value="15" oninput="updateFormulas()" class="flex-1" />
-              <label class="text-xs font-bold">Rotire giroscop: <span id="f1GyroVal">12</span> px/s</label>
+              <label class="text-xs font-bold">Giroscop: <span id="f1GyroVal">12</span> px/s</label>
               <input type="range" id="f1Gyro" min="0" max="25" value="12" oninput="updateFormulas()" class="flex-1" />
             </div>
-            <div id="f1Result" class="p-2.5 rounded-lg bg-[var(--card)] border border-[var(--border)] font-mono text-xs font-bold text-emerald-400">
+            <div id="f1Result" class="p-2.5 rounded-lg bg-slate-800/95 border border-slate-700 font-mono text-xs font-bold text-emerald-400">
               Mișcarea Reală față de Pistă = 15 − 12 = 3 pixeli/s (Fără amețeală!)
             </div>
           </div>
 
           <!-- Formula 2 -->
-          <div class="bg-[var(--content)] border border-[var(--border)] rounded-xl p-4 space-y-2.5">
+          <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-4 space-y-2.5">
             <div class="flex items-center justify-between">
               <span class="px-2.5 py-0.5 rounded bg-amber-500/20 text-amber-400 text-xs font-bold">FORMULA 2 • ÎNMULȚIRE SIMPLĂ</span>
               <span class="text-xs font-mono font-bold text-emerald-400">4 × 50 = 200 m</span>
             </div>
             <h3 class="text-base font-bold">De ce Vedem de 4× Mai Departe în Infraroșu SWIR</h3>
-            <p class="text-xs text-[var(--muted-foreground)]">
-              Unda de lumină infraroșu scurt (SWIR 1,5 µm) este de 3 ori mai lungă decât lumina vizibilă, așa că trece pe lângă picăturile fine de ceață fără să facă „zid alb”, oferind o rază de vedere de <strong>4 ori mai mare</strong>:
+            <p class="text-xs text-slate-300">
+              La lungimea de undă de 1,5 µm (SWIR), împrăștierea Mie pe picăturile fine de ceață scade dramatic, oferind o rază de vedere de <strong>4 ori mai mare</strong> decât ochiul uman:
             </p>
             <div class="flex items-center gap-3 pt-1">
-              <label class="text-xs font-bold">Cât vede ochiul pilotului: <span id="f2EyeVal">50</span> m</label>
+              <label class="text-xs font-bold">Vizibilitate ochi liber: <span id="f2EyeVal">50</span> m</label>
               <input type="range" id="f2Eye" min="15" max="150" step="5" value="50" oninput="updateFormulas()" class="flex-1" />
             </div>
-            <div id="f2Result" class="p-2.5 rounded-lg bg-[var(--card)] border border-[var(--border)] font-mono text-xs font-bold text-amber-300">
+            <div id="f2Result" class="p-2.5 rounded-lg bg-slate-800/95 border border-slate-700 font-mono text-xs font-bold text-amber-300">
               Camera SWIR vede la: 4 × 50 m = 200 metri (+2,5 secunde timp de reacție!)
             </div>
           </div>
 
           <!-- Formula 3 -->
-          <div class="bg-[var(--content)] border border-[var(--border)] rounded-xl p-4 space-y-2.5">
+          <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-4 space-y-2.5">
             <div class="flex items-center justify-between">
               <span class="px-2.5 py-0.5 rounded bg-purple-500/20 text-purple-400 text-xs font-bold">FORMULA 3 • ADUNARE &amp; SCĂDERE</span>
               <span class="text-xs font-mono font-bold text-emerald-400">+10 − 10 = 0 m</span>
             </div>
             <h3 class="text-base font-bold">Anularea Vântului Lateral cu 0,85s Înainte de Impact (PFNd)</h3>
-            <p class="text-xs text-[var(--muted-foreground)]">
-              Cum vedem vântul înainte să lovească avionul? Camera SWIR privește la 60 m în față și vede cum rafala împinge perdeaua de ceață (săgețile mov). Circuitul <strong>PFNd</strong> virează preventiv în sens opus:
+            <p class="text-xs text-slate-300">
+              Camera SWIR privește la 60 m în fața avionului și vede cum rafala împinge norul de ceață (săgețile mov). Circuitul <strong>PFNd</strong> comandă preventiv virajul în sens opus:
             </p>
             <div class="flex items-center gap-3 pt-1">
               <label class="text-xs font-bold">Vânt văzut în ceață la 60m în față: +<span id="f3WindVal">10</span> m/s</label>
               <input type="range" id="f3Wind" min="0" max="25" value="10" oninput="updateFormulas()" class="flex-1" />
             </div>
-            <div id="f3Result" class="p-2.5 rounded-lg bg-[var(--card)] border border-[var(--border)] font-mono text-xs font-bold text-emerald-400">
+            <div id="f3Result" class="p-2.5 rounded-lg bg-slate-800/95 border border-slate-700 font-mono text-xs font-bold text-emerald-400">
               Abatere = +10 m/s (Vânt) − 10 m/s (Corecție PFNd cu 0,85s înainte) = 0 metri!
             </div>
           </div>
 
           <!-- Formula 4 -->
-          <div class="bg-[var(--content)] border border-[var(--border)] rounded-xl p-4 space-y-2.5">
+          <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-4 space-y-2.5">
             <div class="flex items-center justify-between">
               <span class="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">FORMULA 4 • CHEIA ÎN BROASCĂ</span>
               <span class="text-xs font-mono font-bold text-emerald-400">500 − 420 = 80 m</span>
             </div>
-            <h3 class="text-base font-bold">Amprenta Dealurilor sub Nori (100.000 km Fără GPS)</h3>
-            <p class="text-xs text-[var(--muted-foreground)]">
-              Cum știm unde suntem pe 100.000 km fără GPS chiar și sub nori groși? Scădem distanța măsurată de radar în jos din altitudinea barometrului și aflăm înălțimea dealului de sub noi (TERCOM):
+            <h3 class="text-base font-bold">Amprenta Reliefului sub Nori (Barometru − Radar 94 GHz)</h3>
+            <p class="text-xs text-slate-300">
+              Chiar și în nori groși, scădem distanța măsurată de radar în jos din altitudinea barometrică și aflăm înălțimea exactă a reliefului de sub avion (TERCOM):
             </p>
             <div class="flex items-center gap-3 pt-1">
-              <label class="text-xs font-bold">Altitudine avion: <span id="f4AltVal">500</span>m</label>
+              <label class="text-xs font-bold">Barometru: <span id="f4AltVal">500</span>m</label>
               <input type="range" id="f4Alt" min="300" max="800" step="10" value="500" oninput="updateFormulas()" class="flex-1" />
-              <label class="text-xs font-bold">Distanță Radar: <span id="f4RadVal">420</span>m</label>
+              <label class="text-xs font-bold">Radar: <span id="f4RadVal">420</span>m</label>
               <input type="range" id="f4Rad" min="200" max="700" step="10" value="420" oninput="updateFormulas()" class="flex-1" />
             </div>
-            <div id="f4Result" class="p-2.5 rounded-lg bg-[var(--card)] border border-[var(--border)] font-mono text-xs font-bold text-sky-400">
-              Înălțime Deal = 500 m − 420 m = 80 m ➔ Potrivit pe hartă cu eroare 0,38 m!
+            <div id="f4Result" class="p-2.5 rounded-lg bg-slate-800/95 border border-slate-700 font-mono text-xs font-bold text-sky-400">
+              Înălțime Relief = 500 m − 420 m = Deal de 80 m ➔ Recunoscut instantaneu fără GPS!
             </div>
           </div>
         </div>
 
-        <!-- Formula 5 (Full width) -->
-        <div class="bg-[var(--content)] border-2 border-rose-500/50 rounded-xl p-4 space-y-2.5">
+        <!-- Formula 5 -->
+        <div class="bg-slate-900/90 border-2 border-rose-500/50 rounded-xl p-4 space-y-2.5">
           <div class="flex flex-wrap items-center justify-between gap-2">
-            <span class="px-2.5 py-0.5 rounded bg-rose-500/20 text-rose-400 text-xs font-bold">FORMULA 5 • SCUTUL ANTI-HACKER DIN VIDEOCLIPUL VOSTRU</span>
-            <span class="text-xs font-mono font-bold text-rose-400">|250 m − 0 m| = 250 m &gt; 2,0 m ➔ GPS OPRIT ÎN 16,6 ms!</span>
+            <span class="px-2.5 py-0.5 rounded bg-rose-500/20 text-rose-400 text-xs font-bold">FORMULA 5 • SCUTUL ANTI-HACKER DIN VIDEOCLIPUL YOUTUBE</span>
+            <span class="text-xs font-mono font-bold text-rose-400">|250 m − 0 m| = 250 m &gt; 2,0 m ➔ GPS FALS OPRIT ÎN &lt; 17 ms!</span>
           </div>
-          <h3 class="text-base font-bold">Paznicul Cibernetic ($\chi^2$ pentru atac brusc &amp; CUSUM pentru atac lent)</h3>
-          <p class="text-xs text-[var(--muted-foreground)]">
-            Testează ce se întâmplă când hackerul mută poziția GPS: dacă diferența față de poziția fizică (văzută de camera SWIR + radar + dealuri) depășește <strong>2,0 metri</strong>, cablul virtual al GPS-ului este tăiat în <strong>sub 17 milisecunde</strong>!
+          <h3 class="text-base font-bold">Paznicul Cibernetic (Testul Chi-pătrat χ² pentru atac brusc &amp; Vector CUSUM pentru atac lent)</h3>
+          <p class="text-xs text-slate-300">
+            Când hackerul trimite un semnal GPS fals care mută pista în lateral, paznicul matematic compară poziția GPS cu poziția fizică văzută de camera SWIR și radar. Dacă diferența depășește <strong>2,0 metri</strong>, GPS-ul mincinos este izolat în <strong>sub 17 milisecunde</strong>!
           </p>
           <div class="flex items-center gap-3 pt-1">
             <label class="text-xs font-bold">Minciuna trimisă de Hackerul GPS: +<span id="f5SpoofVal">250</span> metri în lateral</label>
             <input type="range" id="f5Spoof" min="0" max="500" step="5" value="250" oninput="updateFormulas()" class="flex-1" />
           </div>
-          <div id="f5Result" class="p-2.5 rounded-lg bg-[var(--card)] border border-rose-500/40 font-mono text-xs font-bold text-rose-400">
-            |250 m (GPS) − 0 m (Real)| = 250 m &gt; Prag 2,0 m ➔ 🚨 ALERTA! GPS FALS IZOLAT AUTOMAT ÎN 16,6 ms!
+          <div id="f5Result" class="p-2.5 rounded-lg bg-slate-800/95 border border-rose-500/40 font-mono text-xs font-bold text-rose-400">
+            |250 m (GPS) − 0 m (Cameră+Radar)| = 250 m &gt; Prag 2,0 m ➔ 🚨 ALERTA! GPS FALS IZOLAT AUTOMAT ÎN 16,6 ms!
           </div>
         </div>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- TAB 4: SENZORII SWIR, SR-71 BLACKBIRD & CREIERUL DE MUSCĂ           -->
-    <!-- =================================================================== -->
-    <section id="tab-science" class="hidden space-y-5">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <!-- Cei 4 Senzori Fizici + Moștenirea SR-71 -->
-        <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-3 shadow-sm">
-          <span class="text-xs font-bold uppercase text-sky-400">FIZICA CELOR 4 SENZORI DE LA BORD</span>
-          <h2 class="text-xl font-extrabold">🔭 Cum vedem prin ceață și cum vedem stelele la ora 12 ziua?</h2>
-          <div class="space-y-3 text-xs md:text-sm">
-            <div class="p-3.5 rounded-xl bg-[var(--content)] border border-[var(--border)] space-y-1">
-              <div class="font-bold text-emerald-400">1. Camera Frontală SWIR 1,5 µm (vs. Camere Termice Militare LWIR)</div>
-              <p class="text-[var(--muted-foreground)]">
-                <strong>De ce nu folosim o cameră cu termoviziune militară (LWIR 8–14 µm)?</strong> Pentru că după câteva ore de ploaie și ceață, asfaltul ud și vopseaua albă a dungilor ajung la <strong>exact aceeași temperatură (echilibru termic)</strong> — camera termică vede doar o pată gri fără linii și costă 100.000 EUR! În schimb, camera noastră <strong>SWIR (1,5 µm, 2.500 EUR)</strong> vede reflexia luminii pe vopsea și becurile pistei de <strong>4× mai departe</strong>!
-              </p>
-            </div>
-            <div class="p-3.5 rounded-xl bg-[var(--content)] border border-[var(--border)] space-y-1">
-              <div class="font-bold text-sky-400">2. Radarul Milimetric FMCW 94 GHz (Pentru Orbire 0m Absolută)</div>
-              <p class="text-[var(--muted-foreground)]">
-                Dacă în ultimele secunde vizibilitatea optică scade la <strong>0 metri absolut</strong>, unda radio de 3,2 mm (94 GHz) trece prin picăturile de ceață ca prin vid, măsurând distanța până la asfalt cu precizie de <strong>3 centimetri</strong> și viteza Doppler.
-              </p>
-            </div>
-            <div class="p-3.5 rounded-xl bg-[var(--content)] border border-[var(--border)] space-y-1">
-              <div class="font-bold text-amber-400">3. Moștenirea SR-71 Blackbird („R2-D2”) + Ochiul Dorsal al Muștei (DRA)</div>
-              <p class="text-[var(--muted-foreground)]">
-                Avionul de spionaj <strong>SR-71 Blackbird</strong> naviga fără GPS privind stelele în plină zi cu un telescop mecanic greu de milioane de dolari (Nortronics NAS-14V1). Noi am miniaturizat această idee la <strong>180 de grame și 600 EUR</strong>:
-                <br />• <strong>Peste nori (Zenith SWIR + Stellarium J2000):</strong> La 1,5–2,2 µm, împrăștierea luminii albastre a cerului ($\lambda^{-4}$) este de <strong>100–256× mai slabă</strong>. Cerul zilei devine negru ca noaptea și vedem stelele la prânz!
-                <br />• <strong>Sub nori și în ceață (Polarizare DRA R7/R8):</strong> Citim inelele invizibile de polarizare ale soarelui prin nori, blocând busola la <strong>&lt; 0,005° eroare</strong> (fără deriva giroscopului!).
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Creierul Bionic Google Research Drosophila -->
-        <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-3 shadow-sm">
-          <span class="text-xs font-bold uppercase text-emerald-400">NATURE OCTOMBRIE 2024 • GOOGLE RESEARCH FLYWIRE</span>
-          <h2 class="text-xl font-extrabold">🪰 De ce Creierul Musculiței Drosophila (139.255 Neuroni) bate AI-ul Clasic?</h2>
-          <p class="text-xs md:text-sm text-[var(--muted-foreground)]">
-            O rețea neuronală clasică (CNN / Vision Transformer) este o „cutie neagră” cu milioane de parametri care poate halucina în ceață și <strong>nu poate fi certificată DO-178C DAL-A</strong>. Harta sinaptică a musculiței <em>Drosophila</em> este o arhitectură fizico-geometrică exactă în <strong>5 etape</strong>, care rulează în <strong>&lt; 0,8 ms</strong> în Rust:
-          </p>
-          <div class="space-y-2 text-xs">
-            <div class="p-3 rounded-xl bg-[var(--content)] border border-[var(--border)] flex items-start gap-3">
-              <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-bold">1. RETINA</span>
-              <div><strong>Fotoreceptori R1–R6 + DRA R7/R8:</strong> Comprimă lumina logaritmic (nu este orbită de haloul farurilor în ceață) și citește polarizarea cerului.</div>
-            </div>
-            <div class="p-3 rounded-xl bg-[var(--content)] border border-[var(--border)] flex items-start gap-3">
-              <span class="px-2 py-1 rounded bg-sky-500/20 text-sky-400 font-bold">2. LAMINA</span>
-              <div><strong>Neuroni L1/L2/L3:</strong> Scad media locală a ceții ($15 - 12 = 3$) și șterg instantaneu „zidul alb”, lăsând doar dungile și becurile pistei.</div>
-            </div>
-            <div class="p-3 rounded-xl bg-[var(--content)] border border-[var(--border)] flex items-start gap-3">
-              <span class="px-2 py-1 rounded bg-amber-500/20 text-amber-400 font-bold">3. MEDULLA</span>
-              <div><strong>Detectori T4 (ON) &amp; T5 (OFF):</strong> Înmulțesc semnalul trecut cu cel prezent ($4 \times 50 = 200$) pentru a detecta direcția exactă de mișcare a luminilor și marginilor asfaltului.</div>
-            </div>
-            <div class="p-3 rounded-xl bg-[var(--content)] border border-[var(--border)] flex items-start gap-3">
-              <span class="px-2 py-1 rounded bg-purple-500/20 text-purple-400 font-bold">4. LOBULA</span>
-              <div><strong>Neuroni Giganți HS &amp; VS:</strong> Adună săgețile optice și scad rotirea avionului din giroscop, obținând viteza curată față de pământ.</div>
-            </div>
-            <div class="p-3 rounded-xl bg-[var(--content)] border border-[var(--border)] flex items-start gap-3">
-              <span class="px-2 py-1 rounded bg-rose-500/20 text-rose-400 font-bold">5. CENTRAL</span>
-              <div><strong>Inelul E-PG (16 grupe) + PFNd + DNp01:</strong> Busolă internă fără derivă; <strong>PFNd</strong> separă ceața suflată de vânt (mov) de sol (verde) cu <strong>0,85s înainte</strong>; <strong>DNp01</strong> comandă automat <em>Go-Around</em> în 1,8 ms dacă intră un camion pe pistă!</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- TAB 5: COSTURI (5.600 EUR) & 12 ÎNTREBĂRI GRELE DE LA JURIU (Q&A)   -->
+    <!-- TAB 5: COSTURI (5.600 EUR), RUST DO-178C & 8 ÎNTREBĂRI Q&A JURIU    -->
     <!-- =================================================================== -->
     <section id="tab-qa" class="hidden space-y-5">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <!-- Tabel Costuri Hardware (5 cols) -->
-        <div class="lg:col-span-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-4 shadow-sm">
-          <span class="text-xs font-bold uppercase text-emerald-400">IMPACT ECONOMIC PENTRU AEROPORTUL CRAIOVA</span>
-          <h2 class="text-xl font-extrabold">💶 Devizul Complet: ~5.600 EUR / Aeronavă (0 EUR pe Aeroport!)</h2>
-          <p class="text-xs md:text-sm text-[var(--muted-foreground)]">
-            Un sistem radio ILS CAT IIIB la sol costă <strong>peste 5.000.000 EUR per pistă</strong>, iar un singur zbor anulat sau deviat de la Craiova la București costă compania aeriană <strong>~25.000 EUR</strong>. Kitul nostru se amortizează de la <strong>primul zbor salvat</strong>:
-          </p>
-          <div class="space-y-2 text-xs">
-            <div class="flex justify-between items-center p-2.5 rounded-lg bg-[var(--content)] border border-[var(--border)]">
-              <span><strong>1. Cameră Frontală InGaAs SWIR (1,5 µm)</strong> — vede 4× prin ceață</span>
-              <span class="font-mono font-bold text-emerald-400">2.500 EUR</span>
+
+        <!-- Devizul de 5.600 EUR + Standardul DO-178C în Rust (5 cols) -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="bg-slate-800/95 border border-slate-700 rounded-2xl p-5 space-y-3 shadow-sm">
+            <span class="text-xs font-bold uppercase text-emerald-400">IMPACT ECONOMIC PENTRU CRAIOVA</span>
+            <h2 class="text-xl font-extrabold">💶 Deviz Hardware: ~5.600 EUR / Avion (vs. 5.000.000 EUR ILS la Sol)</h2>
+            <p class="text-xs text-slate-300">
+              Un singur zbor anulat sau deviat din cauza ceții costă compania aeriană <strong>~25.000 EUR</strong>. Kitul AERO-SHIELD se amortizează de peste 4 ori de la <strong>primul zbor salvat</strong> și necesită <strong>0 EUR investiție pe aeroport</strong>:
+            </p>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-900/90 border border-slate-700">
+                <span><strong>1. Cameră Frontală InGaAs SWIR (1,5 µm)</strong></span>
+                <span class="font-mono font-bold text-emerald-400">2.500 EUR</span>
+              </div>
+              <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-900/90 border border-slate-700">
+                <span><strong>2. Radar Milimetric FMCW 94 GHz (W-Band)</strong></span>
+                <span class="font-mono font-bold text-emerald-400">1.200 EUR</span>
+              </div>
+              <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-900/90 border border-slate-700">
+                <span><strong>3. IMU MEMS Tactic (Giroscop 400 Hz)</strong></span>
+                <span class="font-mono font-bold text-emerald-400">800 EUR</span>
+              </div>
+              <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-900/90 border border-slate-700">
+                <span><strong>4. Modul Zenital SWIR + Polarizare DRA (180g)</strong></span>
+                <span class="font-mono font-bold text-emerald-400">600 EUR</span>
+              </div>
+              <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-900/90 border border-slate-700">
+                <span><strong>5. Procesor NVIDIA Jetson Orin Nano / NX</strong></span>
+                <span class="font-mono font-bold text-emerald-400">500 EUR</span>
+              </div>
+              <div class="flex justify-between items-center p-3 rounded-xl bg-emerald-600/20 border-2 border-emerald-500 font-bold text-sm">
+                <span>TOTAL COMPLET PER AERONAVĂ (&lt; 1,8 kg)</span>
+                <span class="font-mono text-emerald-400">~5.600 EUR</span>
+              </div>
             </div>
-            <div class="flex justify-between items-center p-2.5 rounded-lg bg-[var(--content)] border border-[var(--border)]">
-              <span><strong>2. Radar Milimetric FMCW 94 GHz</strong> — altimetru 3 cm &amp; Doppler</span>
-              <span class="font-mono font-bold text-emerald-400">1.200 EUR</span>
-            </div>
-            <div class="flex justify-between items-center p-2.5 rounded-lg bg-[var(--content)] border border-[var(--border)]">
-              <span><strong>3. IMU MEMS Tactic (400 Hz)</strong> — giroscop imun la hackeri</span>
-              <span class="font-mono font-bold text-emerald-400">800 EUR</span>
-            </div>
-            <div class="flex justify-between items-center p-2.5 rounded-lg bg-[var(--content)] border border-[var(--border)]">
-              <span><strong>4. Modul Zenital SWIR + Polarizare DRA</strong> — stele ziua (180g)</span>
-              <span class="font-mono font-bold text-emerald-400">600 EUR</span>
-            </div>
-            <div class="flex justify-between items-center p-2.5 rounded-lg bg-[var(--content)] border border-[var(--border)]">
-              <span><strong>5. Procesor NVIDIA Jetson Orin Nano/NX</strong> — Rust + CUDA (&lt;0,8 ms)</span>
-              <span class="font-mono font-bold text-emerald-400">500 EUR</span>
-            </div>
-            <div class="flex justify-between items-center p-3 rounded-xl bg-emerald-600/20 border-2 border-emerald-500 font-bold text-sm">
-              <span>TOTAL KIT LA BORD (Sub 1,8 kg)</span>
-              <span class="font-mono text-emerald-400">~5.600 EUR</span>
-            </div>
+          </div>
+
+          <div class="bg-slate-800/95 border border-slate-700 rounded-2xl p-5 space-y-2.5 shadow-sm text-xs">
+            <span class="text-xs font-bold uppercase text-sky-400">CERTIFICARE AERONAUTICĂ DO-178C DAL-A</span>
+            <h3 class="text-base font-extrabold">🦀 De ce 100% Cod Rust Nativ?</h3>
+            <ul class="space-y-1.5 text-slate-300">
+              <li>• <strong>Zero Garbage Collector:</strong> Spre deosebire de Python/Java, nu poate îngheța niciodată în timpul aterizării.</li>
+              <li>• <strong>Audit Static Perfect:</strong> 5 crate-uri, 39 fișiere <code>.rs</code>, <strong>90/90 teste verzi</strong>, <strong>0 <code>.unwrap()</code></strong>, <strong>0 <code>panic!()</code></strong> în producție.</li>
+              <li>• <strong>Phantom Types (<code>frames.rs</code>):</strong> Previne la compilare adunarea greșită a axelor avionului cu axele pistei (eroarea care a prăbușit sonda NASA <em>Mars Climate Orbiter</em>).</li>
+            </ul>
           </div>
         </div>
 
-        <!-- Cheat-Sheet Q&A Juriu (7 cols) -->
-        <div class="lg:col-span-7 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-3 shadow-sm">
-          <span class="text-xs font-bold uppercase text-amber-400">CAPITOLUL 10 DIN GHIDUL PDF • PREGĂTIRE PENTRU JURIU</span>
-          <h2 class="text-xl font-extrabold">🛡️ Cele mai Grele Întrebări de la Juriu &amp; Răspunsurile Scurte Câștigătoare</h2>
+        <!-- Clarificări Tehnice & Arhitecturale (7 cols) -->
+        <div class="lg:col-span-7 bg-slate-800/95 border border-slate-700 rounded-2xl p-5 space-y-3 shadow-sm">
+          <span class="text-xs font-bold uppercase text-amber-400">CLARIFICĂRI TEHNICE &amp; ARHITECTURALE</span>
+          <h2 class="text-xl font-extrabold">Întrebări Frecvente despre Fizica Senzorilor, Conectom și Certificare</h2>
 
           <div class="space-y-2.5 text-xs md:text-sm">
-            <details class="group bg-[var(--content)] border border-[var(--border)] rounded-xl p-3.5 cursor-pointer" open>
-              <summary class="font-bold text-emerald-400">❓ Q1: Cum vedeți rafala de vânt cu 0,85 secunde ÎNAINTE să lovească avionul? Nu încalcă asta fizica?</summary>
-              <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">
-                <strong>Răspuns:</strong> Deloc! Un senzor mecanic de pe avion simte vântul abia când aerul lovește aripile. Dar camera noastră SWIR privește la <strong>60–80 de metri în fața botului avionului</strong>! Când o rafală laterală intră pe pistă, ea împinge mai întâi perdeaua de ceață din fața avionului (săgețile mov). Noi vedem acea mișcare la 60 m în față și virăm preventiv ($+10 - 10 = 0$) cu 0,85s înainte ca avionul să ajungă în acel loc!
+            <details class="bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 cursor-pointer" open>
+              <summary class="font-bold text-emerald-400">❓ Q1: Cum vedeți rafala de vânt cu 0,85 secunde ÎNAINTE să lovească avionul? Nu încalcă asta cauzalitatea?</summary>
+              <p class="mt-2 text-slate-300 leading-relaxed">
+                <strong>Răspuns:</strong> Deloc — este fizică optică pură! Un senzor mecanic de pe avion simte vântul abia când aerul lovește aripile. Dar camera noastră SWIR privește la <strong>60–80 de metri în fața botului avionului</strong>! Când o rafală laterală intră pe pistă, ea împinge mai întâi perdeaua de ceață din fața aeronavei (săgețile mov). Circuitul bionic <strong>PFNd</strong> vede acea mișcare la 60 m în față și virează preventiv (<code>+10 − 10 = 0</code>) cu 0,85s înainte ca avionul să ajungă fizic în rafală!
               </p>
             </details>
 
-            <details class="group bg-[var(--content)] border border-[var(--border)] rounded-xl p-3.5 cursor-pointer">
-              <summary class="font-bold text-sky-400">❓ Q2: Cum deosebiți un atac cibernetic lent pe GPS (ramp spoofing) de o simplă rafală de vânt lateral?</summary>
-              <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">
-                <strong>Răspuns:</strong> O rafală de vânt împinge <em>fizic</em> avionul, deci atât giroscopul/accelerometrul (IMU), cât și camera SWIR și radarul simt aceeași mișcare fizică! În schimb, la un atac GPS spoofing, doar cifra din receptorul GPS se mută în lateral, în timp ce camera și radarul văd că avionul este nemișcat pe axul pistei. Paznicul nostru <strong>Vector CUSUM</strong> adună aceste nepotriviri și taie GPS-ul fals în sub 2,9 secunde (sau în 16,6 ms la atac brusc, ca în videoclip!).
+            <details class="bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 cursor-pointer">
+              <summary class="font-bold text-sky-400">❓ Q2: De ce folosiți o cameră SWIR (1,5 µm) de 2.500 EUR și nu o cameră cu termoviziune militară LWIR (8–14 µm)?</summary>
+              <p class="mt-2 text-slate-300 leading-relaxed">
+                <strong>Răspuns:</strong> Din cauza echilibrului termic pe ploaie! După câteva ore de ceață udă, asfaltul pistei și vopseaua albă a marcajelor ajung la <strong>exact aceeași temperatură (diferență termică ΔT ≈ 0°C)</strong>. O cameră termică LWIR de 100.000 EUR vede pista udă ca o pată gri uniformă, fără linii! În schimb, camera noastră <strong>SWIR 1,5 µm</strong> măsoară reflexia fotonilor, vede contrastul vopselei și becurile pistei de 4× mai departe (200 m) și costă doar 2.500 EUR.
               </p>
             </details>
 
-            <details class="group bg-[var(--content)] border border-[var(--border)] rounded-xl p-3.5 cursor-pointer">
-              <summary class="font-bold text-amber-400">❓ Q3: Ce se întâmplă în „orbire 100% absolută” (0 metri vizibilitate optică, când nici SWIR nu vede o lumină)?</summary>
-              <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">
-                <strong>Răspuns:</strong> Certitudinea fotonică $w_{\text{photon}}$ scade lin la 0 fără să amplifice zgomotul camerei. În acea clipă, avionul este ghidat de <strong>Radarul Milimetric de 94 GHz</strong> (care vede asfaltul prin orice viscol cu precizie de 3 cm) + <strong>Busola de Polarizare DRA R7/R8 (&lt;0,005°)</strong> + <strong>Inelul E-PG</strong>. Iar dacă la 35 m înălțime pista tot nu este liberă, neuronul gigant <strong>DNp01</strong> comandă automat <em>Go-Around</em> în 1,8 ms!
+            <details class="bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 cursor-pointer">
+              <summary class="font-bold text-amber-400">❓ Q3: Cum deosebiți un atac cibernetic lent pe GPS (ramp spoofing) de o simplă rafală de vânt lateral?</summary>
+              <p class="mt-2 text-slate-300 leading-relaxed">
+                <strong>Răspuns:</strong> Prin consensul fizic al senzorilor! O rafală reală de vânt împinge fizic avionul, deci atât giroscopul/accelerometrul (IMU 400 Hz), cât și camera SWIR și radarul Doppler de 94 GHz simt aceeași mișcare fizică. La un atac GPS spoofing, doar cifrele radio din receptorul GPS se mută în lateral, în timp ce IMU, camera și radarul arată că avionul este pe axul pistei. Paznicul nostru dublu (testul Chi-pătrat χ² în &lt; 17 ms și Vector CUSUM în &lt; 2,9 s) taie imediat GPS-ul fals!
               </p>
             </details>
 
-            <details class="group bg-[var(--content)] border border-[var(--border)] rounded-xl p-3.5 cursor-pointer">
-              <summary class="font-bold text-purple-400">❓ Q4: De ce ați scris tot proiectul în 100% Rust și nu în Python / PyTorch?</summary>
-              <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">
-                <strong>Răspuns:</strong> În aviația critică (standardul <strong>DO-178C DAL-A</strong>), Python este interzis în bucla de zbor deoarece are <em>Garbage Collector</em> și poate îngheța imprevizibil zeci de milisecunde. Iar C/C++ suferă de erori de memorie. În <strong>100% Rust</strong> avem latență deterministă (&lt;0,8 ms), <strong>0 apeluri .unwrap() / 0 panic!()</strong> în toate cele 39 de fișiere (90/90 teste verzi) și <em>Phantom Types</em> care interzic la compilare adunarea greșită a sistemelor de coordonate!
+            <details class="bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 cursor-pointer">
+              <summary class="font-bold text-purple-400">❓ Q4: Ce se întâmplă în „orbire 100% absolută” (0 metri vizibilitate optică, când nici SWIR nu vede o lumină)?</summary>
+              <p class="mt-2 text-slate-300 leading-relaxed">
+                <strong>Răspuns:</strong> Ponderea acordată camerei (gradul de încredere în senzorul optic) scade automat la zero pentru a nu amplifica zgomotul de fond al imaginii (SNR-Gated CLAHE). În acea clipă, avionul este ghidat exclusiv de <strong>Radarul Milimetric de 94 GHz</strong> (care vede asfaltul prin orice viscol cu precizie de 3 cm) + <strong>Busola de Polarizare DRA R7/R8 (&lt; 0,005°)</strong> + <strong>Inelul E-PG</strong>. Iar dacă la 35 m înălțime pista tot nu este liberă, neuronul gigant <strong>DNp01</strong> declanșează automat manevra de <em>Go-Around</em> (ratare a aterizării) în 1,8 ms!
               </p>
             </details>
 
-            <details class="group bg-[var(--content)] border border-[var(--border)] rounded-xl p-3.5 cursor-pointer">
-              <summary class="font-bold text-rose-400">❓ Q5: Cum obțineți sub 1 metru eroare (0,38 m medie) după 100.000 km fără GPS, când orice giroscop are derivă?</summary>
-              <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">
-                <strong>Răspuns:</strong> Giroscopul deviază doar dacă este lăsat neancorat! Noi tăiem continuu toate cele 4 surse de eroare: (1) unghiul este blocat la &lt;0,005° de <strong>Busola de Polarizare DRA</strong>; (2) viteza este fixată la 0,02 m/s de <strong>Radarul Doppler 94 GHz</strong>; (3) altitudinea la 3 cm de radio-altimetru; iar (4) poziția orizontală este ancorată de <strong>Star-Tracker-ul de zi Zenith SWIR</strong> (peste nori) și de <strong>Amprenta Dealurilor TERCOM</strong> ($500\text{ m} - 420\text{ m} = 80\text{ m}$, sub nori)!
+            <details class="bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 cursor-pointer">
+              <summary class="font-bold text-rose-400">❓ Q5: De ce ați ales conectomul musculiței Drosophila (139.255 neuroni) în locul unui CNN / Vision Transformer?</summary>
+              <p class="mt-2 text-slate-300 leading-relaxed">
+                <strong>Răspuns:</strong> Un Vision Transformer are zeci de milioane de parametri opaci („cutie neagră”), poate halucina în ceață și este imposibil de certificat DO-178C DAL-A în aviație. Connectomul Google Research Drosophila este o arhitectură fizico-geometrică deterministă (<em>Lamina → T4/T5 HRC → HS/VS → E-PG → PFNd</em>), explicabilă ecuație cu ecuație, care rulează în &lt; 0,8 ms fără halucinații!
+              </p>
+            </details>
+
+            <details class="bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 cursor-pointer">
+              <summary class="font-bold text-emerald-400">❓ Q6: Cum se poate antrena/adapta rețeaua în timp real fără să blocheze bucla critică de pilotaj de 60 Hz?</summary>
+              <p class="mt-2 text-slate-300 leading-relaxed">
+                <strong>Răspuns:</strong> Prin arhitectura <strong>ShadowTrainer + ArcSwap</strong>! Bucla de zbor de 60 Hz citește greutățile înghețate (<code>frozen_inference.rs</code>) în &lt; 0,8 ms, fără niciun lock. Pe un fir separat pe GPU CUDA, <code>shadow_trainer.rs</code> antrenează rețeaua sub constrângerile fizice PINN Loss și schimbă pointerul de memorie atomic în mai puțin de <strong>50 de nanosecunde</strong> folosind <code>ArcSwap</code>!
               </p>
             </details>
           </div>
         </div>
+
       </div>
     </section>
 
   </div>
 
+  <!-- =================================================================== -->
+  <!-- JAVASCRIPT ENGINE: CAPITOLE YOUTUBE, SIMULATOARE 60 FPS & FORMULE   -->
+  <!-- =================================================================== -->
   <script>
-    // Capitolele sincronizate la secundă cu videoclipul Autonomous_FLIGH_AEROSHIELD.mp4 (93 secunde)
+    // Cele 6 Capitole din Videoclipul YouTube (https://youtu.be/D331kEyQObw)
     const VIDEO_CHAPTERS = [
       {
         idx: 0,
@@ -560,11 +689,11 @@
         endSec: 25,
         badge: "Capitolul 1 • 00:00 – 00:25",
         btnLabel: "00:00 • Ceață + Spoof GPS",
-        title: "1. Apropiere Oarbă pe Craiova (Pista 09) + Atac de Bruiaj GPS Activ (+250 m)",
-        speech: "„Bună ziua! Ce vedeți pe ecran este zborul nostru autonom înregistrat în FlightGear la Craiova, pe Pista 09. Afară este o furtună cu ceață atât de deasă încât pe parbriz nu se vede deloc pista. În același timp, am declanșat un atac cibernetic de Spoofing GPS care minte avionul că pista s-a mutat cu 250 de metri în câmp!”",
-        pointer: "Arată parbrizul întunecat/în ceață și fereastra din stânga-sus (SVS PFD), unde apar două piste: cea ROȘIE punctată (minciuna GPS la +250 m) și cea VERDE plină (Pista 09 reală).",
-        analogy: "Un atacator cu un emițător radio ieftin trimite un semnal GPS fals. Un avion obișnuit ar vira imediat spre pista roșie din iarbă. Dar AERO-SHIELD își folosește propriii ochi în infraroșu (SWIR) și radarul de 94 GHz, ignorând minciuna radio!",
-        formula: "Formula 5 (Scutul Anti-Hacker): |250 m (GPS fals) − 0 m (Văzut de cameră/radar)| = 250 m > 2 m ➔ GPS FALS BLOCAT ÎN 16,6 ms!"
+        title: "1. Apropiere în Ceață CAT IIIc pe Craiova (Pista 09) + Atac Activ de Spoofing GPS (+250 m)",
+        speech: "Aeronava execută apropierea finală în FlightGear către Pista 09 din Craiova în condiții de vizibilitate zero (ceață CAT IIIc și ploaie). Simultan, este injectat un atac de spoofing GPS care introduce o abatere falsă de +250 m în lateral, încercând să devieze aeronava în afara pistei.",
+        pointer: "Pe parbrizul principal pista este complet acoperită de ceață. În fereastra din stânga-sus (SVS PFD) apar două contururi: trapezul roșu punctat din lateral (poziția falsă indusă de spoofingul GPS la +250 m) și trapezul verde plin pe centru (Pista 09 reală reconstruită din camera SWIR și radar).",
+        analogy: "Un pilot automat cuplat exclusiv la GNSS ar urma traiectoria falsificată. AERO-SHIELD compară continuu poziția GPS cu fluxul optic în infraroșu scurt (SWIR) și cu altimetrul radar de 94 GHz, izolând semnalul fals în sub 17 milisecunde.",
+        formula: "Testul de inovație Chi²: |250 m (GPS fals) − 0 m (Cameră SWIR + Radar)| = 250 m > 2 m ➔ Semnalul GPS este deconectat în 16,6 ms (1 cadru la 60 Hz)."
       },
       {
         idx: 1,
@@ -572,11 +701,11 @@
         endSec: 37,
         badge: "Capitolul 2 • 00:26 – 00:37",
         btnLabel: "00:26 • Cele 3 Ecrane Live",
-        title: "2. Fenomenul „Confidently Wrong” vs. Radarul Cibernetic AERO-SHIELD",
-        speech: "„La secunda 26 vedem clar toate cele 3 ecrane de diagnostic în timp real: la mijloc este receptorul GPS tradițional al avionului — observați că bara lui este VERDE, afișează 12 din 12 sateliți și 0 erori! În aviație, asta se numește Confidently Wrong: sistemul clasic este 100% sigur pe el în timp ce te duce în câmp! Jos, pe Cyber Radar, vedeți cum linia roșie (GPS clasic) fuge în câmp, în timp ce linia noastră verde rămâne bătută în cuie pe axul pistei!”",
-        pointer: "Arată fereastra din mijloc-stânga (12/12 SATS GREEN) și apoi fereastra de jos-stânga (Cyber Radar, unde linia verde stă pe coridorul pistei, iar cea roșie e sus în câmp).",
-        analogy: "De ce nu ne păcălește și pe noi? Pentru că paznicul nostru matematic (Watchdog Chi-Pătrat și CUSUM) compară în fiecare milisecundă ce spune satelitul cu ce văd fizic camera infraroșu și radarul de sub avion.",
-        formula: "Cursa celor 3 Avioane: 🔴 GPS Clasic = 250 m în câmp | 🟡 Doar Giroscop = derivă în vânt | 🟢 AERO-SHIELD = 0,4 m pe centru!"
+        title: "2. Fenomenul „Confidently Wrong” vs. Fuziunea Multi-Senzor AERO-SHIELD",
+        speech: "La secunda 00:26 sunt vizibile simultan cele trei ferestre de telemetrie din partea stângă. Fereastra din mijloc (FMS Clasic) ilustrează vulnerabilitatea „Confidently Wrong”: receptorul GPS raportează bară verde (12/12 sateliți, RAIM OK, 0.0m eroare), deși ghidează avionul la 250 m în lateral.",
+        pointer: "În fereastra din mijloc apare mesajul «12/12 SATS | RAIM: OK | 0 FAULTS», iar în fereastra de jos (Cyber Radar) se observă separarea traiectoriilor: linia roșie (GPS clasic) deviază spre pista fantomă, linia galbenă (doar INS) derapează sub vânt, iar linia verde (AERO-SHIELD) rămâne pe axul Pistei 09.",
+        analogy: "Algoritmul clasic RAIM verifică doar consistența matematică dintre sateliți — însă un emițător SDR falsifică toți sateliții în mod coerent. AERO-SHIELD validează poziția prin senzori fizici pasivi la bord (cameră SWIR + radar + IMU).",
+        formula: "Compararea traiectoriilor: GPS Clasic = deviat la +250m | INS pur = derivă eoliană | AERO-SHIELD = stabilizat pe axul Pistei 09."
       },
       {
         idx: 2,
@@ -584,11 +713,11 @@
         endSec: 62,
         badge: "Capitolul 3 • 00:38 – 01:02",
         btnLabel: "00:38 • Tunelul 3D & Vântul",
-        title: "3. Străpungerea Ceții prin Tunelul Holografic 3D & Creierul Bionic Drosophila",
-        speech: "„Pe măsură ce coborâm prin porțile holografice 3D către Pista 09, vântul lateral de furtună încearcă să împingă avionul. Cum ne menținem abaterea sub jumătate de metru? Am implementat în 100% cod Rust harta celor 139.255 de neuroni din creierul musculiței Drosophila, publicată de Google Research în Nature! Camera SWIR vede de 4 ori mai departe prin ceață, iar neuronii PFNd văd cum vântul mișcă ceața în fața avionului cu 0,85 secunde ÎNAINTE ca rafala să lovească aripile!”",
-        pointer: "Arată porțile roșii 3D de pe parbriz și textul verde din partea de sus: «LOC: [----+(*)----] (Abatere: +0.4m) ===> OK! ALINIAT PE AXUL PISTEI 09».",
-        analogy: "Când avionul se clatină în turbulențe, neuronii optici HS/VS scad rotația capului (15 minus 12 egal 3), iar neuronii PFNd pun cârma preventiv împotriva vântului (+10 minus 10 egal 0 metri abatere).",
-        formula: "Formula 1 & 3 (Creierul de Muscă): Balans 15 − 12 = 3 px/s | Vânt lateral +10 m/s − 10 m/s = 0 m abatere!"
+        title: "3. Ghidarea prin Tunelul Sintetic 3D & Compensarea Predictivă a Vântului Lateral",
+        speech: "Aeronava coboară pe panta de 3,0° prin porțile holografice 3D afișate pe HUD, fără semnal GPS și în prezența vântului lateral de forfecare. Procesarea vizuală folosește arhitectura conectomului Drosophila (Google Research FlyWire) implementată nativ în Rust.",
+        pointer: "Pe HUD-ul central, porțile 3D ghidează coborârea din 85 în 85 m, iar indicatorul de localizer confirmă alinierea: «LOC: [----+(*)----] ===> OK! ALINIAT PE AXUL PISTEI 09».",
+        analogy: "Neuronii HS/VS din Lobula Plate scad viteza unghiulară a aeronavei (citită din giroscop la 400 Hz) din fluxul optic brut pentru a elimina efectul balansului aripilor, iar vectorii PFNd estimează vântul din mișcarea perdelei de ceață la 60 m în fața aeronavei.",
+        formula: "Compensarea rotației (HS/VS): 15 px/s − 12 px/s = 3 px/s | Anularea anticipativă a vântului (PFNd): +10 m/s − 10 m/s = 0 m abatere."
       },
       {
         idx: 3,
@@ -596,41 +725,67 @@
         endSec: 74,
         badge: "Capitolul 4 • 01:03 – 01:14",
         btnLabel: "01:03 • Apare Pista & Flare",
-        title: "4. Pista 09 Apare din Ceață Exact Sub Botul Avionului & Manevra de Flare",
-        speech: "„Priviți momentul adevărului la minutul 1 și 04 secunde: ieșim din plafonul de ceață la câțiva metri deasupra solului și asfaltul Pistei 09 din Craiova apare exact în fața noastră, milimetric acolo unde îl desena trapezul verde din fereastra SVS! La 1:07, sistemul comandă automat manevra de FLARE CAT III — ridicarea lină a botului și reducerea motorului pentru o atingere ca pe puf!”",
-        pointer: "Arată marcajele albe ale pistei care apar sub parbriz la 01:04 și mesajul «GLIDESLOPE: FLARE CAT III PE ASFALT! RIDICA USOR BOTUL & IDLE!».",
-        analogy: "Deși GPS-ul a fost bruiat și falsificat tot drumul, iar vizibilitatea a fost sub 200 m, fuziunea dintre camera SWIR (4× distanță), radarul de 94 GHz (precizie 3 cm la sol) și busola bionică a adus avionul exact pe dunga albă!",
-        formula: "Formula 2 (Infraroșu SWIR + Radar 94 GHz): 4 × 50 m = 200 m vedere optică + 3 cm precizie altimetru radar la sol!"
+        title: "4. Ieșirea din Plafonul de Ceață deasupra Pragului Pistei 09 & Manevra de Flare",
+        speech: "La minutul 01:04, aeronava iese din plafonul dens de ceață chiar înainte de pragul Pistei 09 din Craiova. Asfaltul și marcajele centrale apar exact în poziția estimată anterior de trapezul verde din fereastra SVS. La 01:07, sistemul inițiază automat manevra de Flare CAT III.",
+        pointer: "Sub botul aeronavei devine vizibil marcajul alb central al Pistei 09, iar pe HUD apare comanda: «GLIDESLOPE: FLARE CAT III PE ASFALT! RIDICA USOR BOTUL & IDLE!».",
+        analogy: "Pe ploaie și ceață, asfaltul și marcajele ajung la echilibru termic (ΔT ≈ 0°C), făcând camerele termice LWIR ineficiente pentru detecția dungilor pistei. Camera SWIR (1,5 µm) operează pe reflexie fotonică și distinge contrastul vopselei și luminile de apropiere de 4 ori mai departe.",
+        formula: "Penetrare SWIR (1,5 µm): 4 × 50 m = 200 m vizibilitate optică + rezoluție verticală de 3 cm prin radarul FMCW de 94 GHz."
       },
       {
         idx: 4,
         startSec: 75,
         endSec: 84,
         badge: "Capitolul 5 • 01:15 – 01:24",
-        btnLabel: "01:15 • Touchdown 0.2m!",
-        title: "5. Touchdown Autonom pe Linia Centrală (Abatere 0,2 metri) & Frânare",
-        speech: "„La 01:15 roțile ating asfaltul Pistei 09 din Craiova! Priviți eroarea laterală raportată în timp real: doar 0,2 metri — adică 20 de centimetri față de centrul dungii albe, în condițiile în care un avion clasic ar fi aterizat la 250 de metri în câmp! Sistemul comută automat pe menținerea direcției pe pistă și frânare.”",
-        pointer: "Arată mesajul «GLIDESLOPE: CONTACT PISTA 09! FRANEAZA / REDU GAZUL!» și dunga albă centrală a pistei exact sub botul avionului.",
-        analogy: "Mai mult: folosind camera de sus în infraroșu (inspirată de avionul militar SR-71 Blackbird, care vede stelele ziua) și amprenta dealurilor sub nori (500 m altitudine minus 420 m radar egal deal de 80 m), putem zbura 100.000 km fără GPS cu eroare medie de 0,38 metri!",
-        formula: "Formula 4 (100.000 km Fără GPS): 500 m (Barometru) − 420 m (Radar) = Deal de 80 m ➔ 0,38 m eroare pe 2,5× înconjurul Pământului!"
+        btnLabel: "01:15 • Touchdown pe Ax",
+        title: "5. Touchdown Autonom pe Axul Pistei 09 & Navigație Fără Sateliți",
+        speech: "La 01:15, trenul de aterizare atinge asfaltul direct pe linia centrală a Pistei 09 din Craiova și urmează rularea stabilizată (rollout), cu receptorul GPS deconectat și fără balize ILS la sol.",
+        pointer: "HUD-ul afișează «GLIDESLOPE: CONTACT PISTA 09! FRANEAZA / REDU GAZUL!», iar aeronava decelerează menținând marcajul central între roți.",
+        analogy: "Pentru navigația pe distanțe lungi în regim GNSS-denied, arhitectura combină camera zenitală SWIR (detecția stelelor în timpul zilei), senzorul de polarizare dorsal DRA și corelația profilului de teren (diferența dintre altitudinea barometrică și altimetrul radar — TERCOM).",
+        formula: "Corelație altimetrică TERCOM: 500 m (Barometru) − 420 m (Radar 94 GHz) = 80 m cota reliefului sub plafonul de nori."
       },
       {
         idx: 5,
         startSec: 85,
         endSec: 94,
         badge: "Capitolul 6 • 01:25 – 01:33",
-        btnLabel: "01:25 • Verificare Roți & Cost",
-        title: "6. Verificarea Vizuală pe Asfalt & Impactul de 5.600 EUR pentru Craiova",
-        speech: "„În ultimele secunde (01:26), privim pe geamul lateral al cabinei: roțile avionului rulează perfect pe marcajul central al Pistei 09 din Craiova, prin ceața densă! Tot acest sistem este scris 100% în Rust certificabil pentru aviație, procesează 438 de cadre pe secundă și costă doar 5.600 de euro per avion — față de 5 milioane de euro cât costă antenele ILS la sol. Cu AERO-SHIELD, niciun zbor la Craiova nu va mai fi anulat din cauza ceții sau a hackerilor GPS!”",
-        pointer: "Arată camera exterioară la 01:26 – 01:30 care filmează roata și aripa avionului direct pe asfaltul pistei din Craiova.",
-        analogy: "Un singur zbor anulat din cauza ceții costă compania aeriană 25.000 EUR. Pachetul nostru de 5.600 EUR se amortizează de 4 ori de la prima aterizare salvată și nu cere nicio antenă de milioane de euro pe aeroport!",
-        formula: "Economie Directă: 5.600 EUR (Kit AERO-SHIELD la bord) vs. 5.000.000 EUR (ILS CAT IIIB la sol) • 90/90 Teste Verzi în Rust!"
+        btnLabel: "01:25 • Verificare Exterior",
+        title: "6. Confirmarea Vizuală din Exterior pe Pista 09 & Arhitectura Hardware (~5.600 EUR)",
+        speech: "La 01:26, camera comută în exteriorul cabinei, confirmând poziția trenului de aterizare pe axul Pistei 09 din Craiova în condiții de ceață densă. Întregul pachet software este scris în Rust conform rigorilor DO-178C DAL-A.",
+        pointer: "Cadrul exterior de la 01:26 – 01:30 arată roata și aripa aeronavei rulând pe marcajul central al pistei.",
+        analogy: "Un sistem ILS CAT IIIB la sol depășește 5.000.000 EUR per pistă, iar un singur zbor anulat sau deviat din cauza ceții generează pierderi de ~25.000 EUR. Kitul AERO-SHIELD la bord (~5.600 EUR) nu necesită infrastructură pe aeroport.",
+        formula: "Cost kit avionic la bord: ~5.600 EUR (masă < 1,8 kg, 438,7 FPS pe GPU) vs. > 5.000.000 EUR infrastructură ILS CAT IIIB la sol."
       }
     ];
 
     let activeChapterIdx = 0;
-    let simShieldEnabled = true;
-    let animFrameTick = 0;
+
+    function switchVideoStream(kind) {
+      const vid = document.getElementById("demoVideo");
+      const bExp = document.getElementById("btnModeHtml5");
+      const bRaw = document.getElementById("btnModeRaw");
+      const curTime = vid ? vid.currentTime : 0;
+
+      if (kind === "explained") {
+        bExp.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white cursor-pointer transition";
+        bRaw.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900/90 text-slate-200 border border-slate-700 cursor-pointer transition";
+        vid.innerHTML = `
+          <source src="https://markers-church-sustained-gifts.trycloudflare.com/real_videos/AERO_SHIELD_Prezentare_Video_Explicata_Hackathon.mp4" type="video/mp4" />
+          <source src="http://34.12.88.28:8080/real_videos/AERO_SHIELD_Prezentare_Video_Explicata_Hackathon.mp4" type="video/mp4" />
+          <source src="http://localhost:8080/real_videos/AERO_SHIELD_Prezentare_Video_Explicata_Hackathon.mp4" type="video/mp4" />
+        `;
+      } else {
+        bRaw.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white cursor-pointer transition";
+        bExp.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900/90 text-slate-200 border border-slate-700 cursor-pointer transition";
+        vid.innerHTML = `
+          <source src="https://markers-church-sustained-gifts.trycloudflare.com/real_videos/Autonomous_FLIGH_AEROSHIELD.mp4" type="video/mp4" />
+          <source src="http://34.12.88.28:8080/real_videos/Autonomous_FLIGH_AEROSHIELD.mp4" type="video/mp4" />
+          <source src="http://localhost:8080/real_videos/Autonomous_FLIGH_AEROSHIELD.mp4" type="video/mp4" />
+        `;
+      }
+      vid.load();
+      vid.currentTime = curTime;
+      vid.play().catch(() => {});
+    }
 
     function buildChapterButtons() {
       const container = document.getElementById("chapterButtonsContainer");
@@ -641,7 +796,7 @@
         btn.id = `chap-btn-${idx}`;
         btn.className = idx === activeChapterIdx
           ? "px-3 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white border border-emerald-400 text-left transition cursor-pointer"
-          : "px-3 py-2 rounded-xl text-xs font-bold bg-[var(--content)] text-[var(--foreground)] border border-[var(--border)] hover:border-emerald-500 text-left transition cursor-pointer";
+          : "px-3 py-2 rounded-xl text-xs font-bold bg-slate-900/90 text-slate-100 border border-slate-700 hover:border-emerald-500 text-left transition cursor-pointer";
         btn.textContent = ch.btnLabel;
         btn.onclick = () => selectChapter(idx, true);
         container.appendChild(btn);
@@ -665,7 +820,7 @@
         if (b) {
           b.className = i === activeChapterIdx
             ? "px-3 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white border border-emerald-400 text-left transition cursor-pointer"
-            : "px-3 py-2 rounded-xl text-xs font-bold bg-[var(--content)] text-[var(--foreground)] border border-[var(--border)] hover:border-emerald-500 text-left transition cursor-pointer";
+            : "px-3 py-2 rounded-xl text-xs font-bold bg-slate-900/90 text-slate-100 border border-slate-700 hover:border-emerald-500 text-left transition cursor-pointer";
         }
       });
 
@@ -678,6 +833,19 @@
       }
     }
 
+    const vidEl = document.getElementById("demoVideo");
+    if (vidEl) {
+      vidEl.addEventListener("timeupdate", () => {
+        const t = vidEl.currentTime;
+        for (let i = 0; i < VIDEO_CHAPTERS.length; i++) {
+          if (t >= VIDEO_CHAPTERS[i].startSec && t < VIDEO_CHAPTERS[i].endSec) {
+            if (activeChapterIdx !== i) selectChapter(i, false);
+            break;
+          }
+        }
+      });
+    }
+
     function prevChapter() {
       const nextIdx = activeChapterIdx > 0 ? activeChapterIdx - 1 : VIDEO_CHAPTERS.length - 1;
       selectChapter(nextIdx, true);
@@ -688,25 +856,9 @@
       selectChapter(nextIdx, true);
     }
 
-    // Auto-sincronizare teleprompter când rulează videoclipul
-    const vidEl = document.getElementById("demoVideo");
-    if (vidEl) {
-      vidEl.addEventListener("timeupdate", () => {
-        const t = vidEl.currentTime;
-        for (let i = 0; i < VIDEO_CHAPTERS.length; i++) {
-          if (t >= VIDEO_CHAPTERS[i].startSec && t < VIDEO_CHAPTERS[i].endSec) {
-            if (activeChapterIdx !== i) {
-              selectChapter(i, false);
-            }
-            break;
-          }
-        }
-      });
-    }
-
     // Comutare Tab-uri Principale
     function switchMainTab(tabId) {
-      const tabs = ["tab-video", "tab-decoder", "tab-formulas", "tab-science", "tab-qa"];
+      const tabs = ["tab-story", "tab-sim-cyber", "tab-sim-sensors", "tab-formulas", "tab-qa"];
       tabs.forEach(id => {
         const sec = document.getElementById(id);
         const btn = document.getElementById(`btn-${id}`);
@@ -714,12 +866,344 @@
         if (btn) {
           btn.className = id === tabId
             ? "tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-emerald-600 text-white transition cursor-pointer"
-            : "tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-[var(--content)] text-[var(--foreground)] border border-[var(--border)] transition cursor-pointer";
+            : "tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-slate-900/90 text-slate-100 border border-slate-700 transition cursor-pointer";
         }
       });
     }
 
-    // Simulator Interactiv pentru Cele 5 Formule
+    // =========================================================================
+    // SIMULATOR 1: CONFIDENTLY WRONG VS. SCUTUL AERO-SHIELD (60 FPS CANVAS)
+    // =========================================================================
+    const sim1State = {
+      spoof: true,
+      wind: true,
+      fog: true,
+      progress: 0.0,
+      time: 0.0
+    };
+
+    function toggleSim1(key) {
+      sim1State[key] = !sim1State[key];
+      const bSpoof = document.getElementById("btnSim1Spoof");
+      const bWind = document.getElementById("btnSim1Wind");
+      const bFog = document.getElementById("btnSim1Fog");
+      const offCls = "px-4 py-2 rounded-xl text-xs font-bold bg-slate-900/90 border border-slate-700 cursor-pointer transition";
+
+      bSpoof.className = sim1State.spoof ? "px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 text-white cursor-pointer transition" : offCls;
+      bSpoof.textContent = `📡 Atac Spoofing GPS (+250m în câmp): ${sim1State.spoof ? "ACTIV" : "OPRIT"}`;
+
+      bWind.className = sim1State.wind ? "px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 text-white cursor-pointer transition" : offCls;
+      bWind.textContent = `🌪️ Vânt Lateral de Forfecare (18 m/s): ${sim1State.wind ? "ACTIV" : "OPRIT"}`;
+
+      bFog.className = sim1State.fog ? "px-4 py-2 rounded-xl text-xs font-bold bg-sky-600 text-white cursor-pointer transition" : offCls;
+      bFog.textContent = `🌫️ Ceață Oarbă CAT IIIc: ${sim1State.fog ? "ACTIVĂ" : "OPRITĂ"}`;
+
+      document.getElementById("telSim1Red").textContent = sim1State.spoof
+        ? "PĂCĂLIT ÎN PISTA FANTOMĂ (+250m ÎN CÂMP) • Raportează 12/12 SATS OK!"
+        : "APROPIERE GPS STANDARD (FĂRĂ ATAC ACTIV)";
+      document.getElementById("telSim1Amber").textContent = sim1State.wind
+        ? "ÎMPINS ÎN LATERAL DE VÂNTUL DE FORFECARE (18 m/s) ȘI DRIFT"
+        : "DERIVĂ INERȚIALĂ LENTĂ (FĂRĂ ANCORĂ OPTICĂ)";
+      document.getElementById("telSim1Green").textContent = sim1State.spoof
+        ? "GPS FALS BLOCAT ÎN < 17 ms • ALINIAT PE AXUL PISTEI 09 CRAIOVA"
+        : "ALINIAT PE AXUL PISTEI 09 CRAIOVA • 438,7 FPS PE GPU";
+    }
+
+    function resetSim1() {
+      sim1State.progress = 0.0;
+    }
+
+    function renderSim1Canvas() {
+      const canvas = document.getElementById("canvasSim1Approach");
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        const w = canvas.width;
+        const h = canvas.height;
+        sim1State.time += 0.016;
+        sim1State.progress += 0.0024;
+        if (sim1State.progress > 1.0) sim1State.progress = 0.0;
+
+        ctx.fillStyle = "#050b14";
+        ctx.fillRect(0, 0, w, h);
+
+        // Grid tactic
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.08)";
+        ctx.lineWidth = 1;
+        for (let gx = 0; gx < w; gx += 48) {
+          ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke();
+        }
+        for (let gy = 0; gy < h; gy += 48) {
+          ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke();
+        }
+
+        const centerY = h * 0.45;
+        const phantomY = h * 0.80;
+        const rwyStartX = w * 0.56;
+        const rwyEndX = w * 0.95;
+        const startX = w * 0.06;
+
+        // Bare luminoase ALS
+        for (let ax = rwyStartX - 110; ax < rwyStartX - 8; ax += 16) {
+          ctx.fillStyle = "#38bdf8";
+          ctx.fillRect(ax, centerY - 2, 7, 4);
+          ctx.fillStyle = "rgba(250, 204, 21, 0.85)";
+          ctx.fillRect(ax + 2, centerY - 12, 3, 24);
+        }
+
+        // Pista 09 Reală Craiova
+        ctx.fillStyle = "#1e293b";
+        ctx.strokeStyle = "#10b981";
+        ctx.lineWidth = 2.5;
+        ctx.fillRect(rwyStartX, centerY - 26, rwyEndX - rwyStartX, 52);
+        ctx.strokeRect(rwyStartX, centerY - 26, rwyEndX - rwyStartX, 52);
+
+        ctx.strokeStyle = "#f8fafc";
+        ctx.lineWidth = 2;
+        ctx.setLineDash([14, 10]);
+        ctx.beginPath();
+        ctx.moveTo(rwyStartX + 20, centerY);
+        ctx.lineTo(rwyEndX - 15, centerY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = "#34d399";
+        ctx.font = "bold 13px monospace";
+        ctx.fillText("🟢 PISTA 09 CRAIOVA (LRCV) — AXUL REAL", rwyStartX + 10, centerY - 34);
+
+        // Pista Fantomă (+250m în câmp)
+        if (sim1State.spoof) {
+          ctx.strokeStyle = "rgba(239, 68, 68, 0.85)";
+          ctx.fillStyle = "rgba(239, 68, 68, 0.12)";
+          ctx.lineWidth = 2;
+          ctx.setLineDash([8, 6]);
+          ctx.fillRect(rwyStartX, phantomY - 22, rwyEndX - rwyStartX, 44);
+          ctx.strokeRect(rwyStartX, phantomY - 22, rwyEndX - rwyStartX, 44);
+          ctx.setLineDash([]);
+
+          ctx.fillStyle = "#f87171";
+          ctx.font = "bold 12px monospace";
+          ctx.fillText("🔴 PISTA FANTOMĂ (GPS FALS +250m ÎN CÂMP)", rwyStartX + 10, phantomY - 28);
+        }
+
+        // Săgeți vânt lateral
+        if (sim1State.wind) {
+          ctx.fillStyle = "#fbbf24";
+          ctx.font = "bold 12px monospace";
+          ctx.fillText("🌪️ VÂNT DE FORFECARE LATERAL: 18 m/s", 24, 26);
+        }
+
+        const evalRedY = (t) => {
+          if (!sim1State.spoof) return centerY;
+          const s = Math.max(0, Math.min(1, (t - 0.16) / 0.55));
+          return centerY + (s * s * (3 - 2 * s)) * (phantomY - centerY);
+        };
+        const evalAmberY = (t) => {
+          const drift = sim1State.wind ? -105 : -35;
+          const s = Math.max(0, (t - 0.10) / 0.85);
+          return centerY + drift * (s * s);
+        };
+        const evalGreenY = (t) => {
+          const ripple = sim1State.wind ? Math.sin(t * 16) * 2.0 * Math.exp(-t * 2.5) : 0;
+          return centerY + ripple;
+        };
+
+        const drawPath = (fnY, col, dashed) => {
+          ctx.save();
+          ctx.strokeStyle = col;
+          ctx.lineWidth = 3;
+          if (dashed) ctx.setLineDash([6, 5]);
+          ctx.beginPath();
+          for (let i = 0; i <= 50; i++) {
+            const t = (i / 50) * sim1State.progress;
+            const px = startX + t * (rwyEndX - 40 - startX);
+            const py = fnY(t);
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+          ctx.restore();
+        };
+
+        drawPath(evalRedY, "#ef4444", false);
+        drawPath(evalAmberY, "#f59e0b", true);
+        drawPath(evalGreenY, "#10b981", false);
+
+        const curX = startX + sim1State.progress * (rwyEndX - 40 - startX);
+        const rY = evalRedY(sim1State.progress);
+        const aY = evalAmberY(sim1State.progress);
+        const gY = evalGreenY(sim1State.progress);
+
+        // Ceață CAT IIIc + Conul SWIR 200m
+        if (sim1State.fog) {
+          ctx.fillStyle = "rgba(203, 213, 225, 0.18)";
+          ctx.fillRect(w * 0.25, 0, w * 0.75, h);
+
+          const cone = ctx.createLinearGradient(curX, gY, curX + 170, gY);
+          cone.addColorStop(0, "rgba(0, 242, 254, 0.35)");
+          cone.addColorStop(1, "rgba(16, 185, 129, 0.0)");
+          ctx.fillStyle = cone;
+          ctx.beginPath();
+          ctx.moveTo(curX, gY);
+          ctx.lineTo(curX + 170, gY - 38);
+          ctx.lineTo(curX + 170, gY + 38);
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        // Desenare cele 3 avioane
+        const drawDot = (x, y, col, txt) => {
+          ctx.fillStyle = col;
+          ctx.beginPath();
+          ctx.arc(x, y, 7.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.font = "bold 11px monospace";
+          ctx.fillText(txt, x + 12, y + 4);
+        };
+
+        drawDot(curX, aY, "#f59e0b", "INS (Împins de vânt)");
+        drawDot(curX, rY, "#ef4444", sim1State.spoof ? "GPS Clasic (12/12 SATS -> În câmp!)" : "GPS Clasic");
+        drawDot(curX, gY, "#10b981", "AERO-SHIELD (Aliniat Pista 09)");
+      }
+      requestAnimationFrame(renderSim1Canvas);
+    }
+
+    // =========================================================================
+    // SIMULATOR 2: COMPARAREA FIZICĂ A SENZORILOR ÎN CEAȚĂ (RGB / LWIR / SWIR)
+    // =========================================================================
+    let sensorSimMode = "swir";
+    let sensorAnimTime = 0.0;
+
+    function setSensorSimMode(mode) {
+      sensorSimMode = mode;
+      const bRgb = document.getElementById("btnSensorRgb");
+      const bLwir = document.getElementById("btnSensorLwir");
+      const bSwir = document.getElementById("btnSensorSwir");
+      const baseCls = "px-4 py-2 rounded-xl text-xs font-bold bg-slate-900/90 border border-slate-700 cursor-pointer transition";
+
+      bRgb.className = mode === "rgb" ? "px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 text-white cursor-pointer transition" : baseCls;
+      bLwir.className = mode === "lwir" ? "px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 text-white cursor-pointer transition" : baseCls;
+      bSwir.className = mode === "swir" ? "px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white cursor-pointer transition" : baseCls;
+
+      const tPhys = document.getElementById("telSensorPhys");
+      const tBio = document.getElementById("telSensorBio");
+      const tVerd = document.getElementById("telSensorVerd");
+
+      if (mode === "rgb") {
+        tPhys.textContent = "ÎMPRĂȘTIERE MIE SEVERĂ: ZID ALB ORBITOR LA < 50m";
+        tBio.textContent = "CAMERA NORMALĂ ESTE ORBITĂ DE HALOUL PROPRIILOR FARURI";
+        tVerd.textContent = "PERICOL CRITIC • PISTA NU ESTE VIZIBILĂ LA TIMP";
+      } else if (mode === "lwir") {
+        tPhys.textContent = "ECHILIBRU TERMIC PE PLOAIE (ΔT ≈ 0°C): PATĂ GRI FĂRĂ MARCAJE";
+        tBio.textContent = "ASFALTUL UD ȘI VOPSEAUA ALBĂ AU ACEEAȘI TEMPERATURĂ";
+        tVerd.textContent = "COST 100.000 EUR • OARBĂ LA LINIA CENTRALĂ A PISTEI UDE";
+      } else {
+        tPhys.textContent = "TRANSMISIE SWIR 1,5 µm (4× VIZIBILITATE = 200m) + REFLEXIE VOPSEA ALBĂ";
+        tBio.textContent = "FLUX OPTIC T4/T5 + SĂGEȚI MOV PFNd (0,85s ÎNAINTE DE RAFALĂ) • 438,7 FPS";
+        tVerd.textContent = "ALINIAT PE AXUL PISTEI 09 CRAIOVA • ~5.600 EUR KIT COMPLET LA BORD";
+      }
+    }
+
+    function renderSim2Canvas() {
+      const canvas = document.getElementById("canvasSim2Sensors");
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        const w = canvas.width;
+        const h = canvas.height;
+        sensorAnimTime += 0.016;
+
+        const horizonY = h * 0.32;
+        const cx = w * 0.5;
+
+        if (sensorSimMode === "rgb") {
+          ctx.fillStyle = "#cbd5e1";
+          ctx.fillRect(0, 0, w, h);
+        } else if (sensorSimMode === "lwir") {
+          ctx.fillStyle = "#333842";
+          ctx.fillRect(0, 0, w, h);
+        } else {
+          ctx.fillStyle = "#040a14";
+          ctx.fillRect(0, 0, w, h);
+        }
+
+        // Trapezul Pistei 09 în perspectivă
+        const topW = w * 0.05;
+        const botW = w * 0.38;
+        ctx.beginPath();
+        ctx.moveTo(cx - topW, horizonY);
+        ctx.lineTo(cx + topW, horizonY);
+        ctx.lineTo(cx + botW, h);
+        ctx.lineTo(cx - botW, h);
+        ctx.closePath();
+
+        if (sensorSimMode === "rgb") {
+          ctx.fillStyle = "rgba(100, 116, 139, 0.25)";
+          ctx.fill();
+        } else if (sensorSimMode === "lwir") {
+          ctx.fillStyle = "#3b404b";
+          ctx.fill();
+        } else {
+          ctx.fillStyle = "#0f2238";
+          ctx.fill();
+          ctx.strokeStyle = "#00f2fe";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+
+        // Marcaje ax central + lumini ALS în mișcare
+        for (let i = 0; i < 8; i++) {
+          const normD = ((i / 8) + (sensorAnimTime * 0.2)) % 1.0;
+          const p = normD * normD;
+          const y = horizonY + p * (h - horizonY);
+          const hw = topW + p * (botW - topW);
+
+          if (sensorSimMode === "swir") {
+            ctx.fillStyle = "#e0f2fe";
+            ctx.fillRect(cx - Math.max(2, hw * 0.06), y, Math.max(4, hw * 0.12), Math.max(4, 22 * p));
+
+            for (let b = -2; b <= 2; b++) {
+              if (b === 0) continue;
+              ctx.fillStyle = "#38bdf8";
+              ctx.beginPath();
+              ctx.arc(cx + b * (hw * 0.24), y, Math.max(2, 5 * p), 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+        }
+
+        if (sensorSimMode === "rgb") {
+          ctx.fillStyle = "rgba(241, 245, 249, 0.90)";
+          ctx.fillRect(0, 0, w, h * 0.82);
+          ctx.fillStyle = "#b91c1c";
+          ctx.font = "bold 16px monospace";
+          ctx.fillText("⚠️ ZID ALB DE CEAȚĂ (ÎMPRĂȘTIERE MIE LA < 50m)", cx - 230, h * 0.45);
+        } else if (sensorSimMode === "lwir") {
+          ctx.fillStyle = "#fbbf24";
+          ctx.font = "bold 16px monospace";
+          ctx.fillText("⚠️ PATĂ GRI OARBĂ — ECHILIBRU TERMIC PE PISTĂ UDĂ (ΔT ≈ 0°C)", cx - 285, h * 0.45);
+        } else {
+          // Vectori PFNd (mov) și T4/T5 (verzi)
+          ctx.strokeStyle = "#c084fc";
+          ctx.fillStyle = "#c084fc";
+          ctx.lineWidth = 2.5;
+          for (let k = -1; k <= 1; k++) {
+            const wy = h * 0.22 + k * 24;
+            ctx.beginPath();
+            ctx.moveTo(cx - 90, wy);
+            ctx.lineTo(cx + 90, wy);
+            ctx.stroke();
+          }
+          ctx.font = "bold 13px monospace";
+          ctx.fillText("🟣 SĂGEȚI MOV PFNd: VÂNT DETECTAT ÎN CEAȚĂ CU 0,85s ÎNAINTE DE IMPACT", cx - 265, h * 0.12);
+          ctx.fillStyle = "#34d399";
+          ctx.fillText("🟢 SWIR 1,5 µm (4 × 50m = 200m) + LAMINA & T4/T5: VOPSEA ȘI LUMINI ALS CLARE!", cx - 285, h - 18);
+        }
+      }
+      requestAnimationFrame(renderSim2Canvas);
+    }
+
+    // =========================================================================
+    // SIMULATORUL CELOR 5 FORMULE CA LA ȘCOALĂ
+    // =========================================================================
     function updateFormulas() {
       const f1Cam = Number(document.getElementById("f1Cam").value);
       const f1Gyro = Number(document.getElementById("f1Gyro").value);
@@ -746,146 +1230,28 @@
       document.getElementById("f4RadVal").textContent = f4Rad;
       const hillH = f4Alt - f4Rad;
       document.getElementById("f4Result").textContent =
-        `Înălțime Deal = ${f4Alt} m (Barometru) − ${f4Rad} m (Radar 94 GHz) = ${hillH} m ➔ Potrivit pe hartă (Eroare 0,38 m)!`;
+        `Înălțime Relief = ${f4Alt} m (Barometru) − ${f4Rad} m (Radar 94 GHz) = Deal de ${hillH} m ➔ Recunoscut instantaneu fără GPS!`;
 
       const f5Spoof = Number(document.getElementById("f5Spoof").value);
       document.getElementById("f5SpoofVal").textContent = f5Spoof;
       const f5El = document.getElementById("f5Result");
       if (f5Spoof > 2) {
-        f5El.className = "p-2.5 rounded-lg bg-[var(--card)] border border-rose-500/40 font-mono text-xs font-bold text-rose-400";
-        f5El.textContent = `|${f5Spoof} m (GPS) − 0 m (Real)| = ${f5Spoof} m > Prag 2,0 m ➔ 🚨 ALERTA! GPS FALS IZOLAT AUTOMAT ÎN 16,6 ms!`;
+        f5El.className = "p-2.5 rounded-lg bg-slate-800/95 border border-rose-500/40 font-mono text-xs font-bold text-rose-400";
+        f5El.textContent = `|${f5Spoof} m (GPS) − 0 m (Cameră+Radar)| = ${f5Spoof} m > Prag 2,0 m ➔ 🚨 ALERTA! GPS FALS IZOLAT AUTOMAT ÎN 16,6 ms!`;
       } else {
-        f5El.className = "p-2.5 rounded-lg bg-[var(--card)] border border-emerald-500/40 font-mono text-xs font-bold text-emerald-400";
-        f5El.textContent = `|${f5Spoof} m (GPS) − 0 m (Real)| = ${f5Spoof} m ≤ Prag 2,0 m ➔ ✅ GPS ÎN LIMITE NORMALE`;
+        f5El.className = "p-2.5 rounded-lg bg-slate-800/95 border border-emerald-500/40 font-mono text-xs font-bold text-emerald-400";
+        f5El.textContent = `|${f5Spoof} m (GPS) − 0 m (Cameră+Radar)| = ${f5Spoof} m ≤ Prag 2,0 m ➔ ✅ GPS ÎN LIMITE NORMALE`;
       }
     }
 
-    // Canvas-ul sincronizat de sub videoclip
-    function toggleSimComparison() {
-      simShieldEnabled = !simShieldEnabled;
-      const btn = document.getElementById("simToggleBtn");
-      if (simShieldEnabled) {
-        btn.className = "px-3 py-1 rounded-lg text-xs font-bold bg-emerald-600 text-white cursor-pointer";
-        btn.textContent = "🟢 Mod AERO-SHIELD Pornit (Apasă pt. a vedea fără scut)";
-      } else {
-        btn.className = "px-3 py-1 rounded-lg text-xs font-bold bg-rose-600 text-white cursor-pointer";
-        btn.textContent = "🔴 Mod FĂRĂ Scut (Avionul clasic urmează GPS-ul fals la +250m!)";
-      }
-    }
 
-    function drawSyncCanvas() {
-      const canvas = document.getElementById("syncExplainCanvas");
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      const w = canvas.width;
-      const h = canvas.height;
-      animFrameTick += 1;
-      const prog = ((animFrameTick % 240) / 240);
 
-      ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = "#070B14";
-      ctx.fillRect(0, 0, w, h);
-
-      // Pista Fantomă (+250m în câmp, sus)
-      ctx.strokeStyle = "#FF2A5F";
-      ctx.lineWidth = 1.8;
-      ctx.setLineDash([5, 4]);
-      ctx.strokeRect(w - 195, 16, 175, 32);
-      ctx.setLineDash([]);
-      ctx.fillStyle = "#FF2A5F";
-      ctx.font = "bold 12px sans-serif";
-      ctx.fillText("🔴 PISTA FANTOMĂ GPS (+250m CÂMP)", w - 415, 36);
-
-      // Pista 09 Reală Craiova (jos-mijloc)
-      const rwyY = 92;
-      ctx.fillStyle = "rgba(0, 255, 157, 0.14)";
-      ctx.fillRect(w - 195, rwyY, 175, 38);
-      ctx.strokeStyle = "#00FF9D";
-      ctx.lineWidth = 2.2;
-      ctx.strokeRect(w - 195, rwyY, 175, 38);
-
-      // Axul central al Pistei 09
-      ctx.strokeStyle = "rgba(255,255,255,0.5)";
-      ctx.setLineDash([6, 5]);
-      ctx.beginPath();
-      ctx.moveTo(24, rwyY + 19);
-      ctx.lineTo(w - 22, rwyY + 19);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      ctx.fillStyle = "#00FF9D";
-      ctx.font = "bold 12px sans-serif";
-      ctx.fillText("🟢 PISTA 09 REALĂ CRAIOVA (0.21m)", w - 415, rwyY + 23);
-
-      // Traiectoria Roșie (GPS Spoofed)
-      const curX = 36 + prog * (w - 80);
-      const spoofY = (rwyY + 19) - Math.min(1, prog * 1.6) * ((rwyY + 19) - 32);
-      ctx.strokeStyle = "#FF2A5F";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(36, rwyY + 19);
-      ctx.lineTo(curX, spoofY);
-      ctx.stroke();
-
-      ctx.fillStyle = "#FF2A5F";
-      ctx.beginPath();
-      ctx.arc(curX, spoofY, 6, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Traiectoria Verde (AERO-SHIELD)
-      if (simShieldEnabled) {
-        ctx.strokeStyle = "#00FF9D";
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(36, rwyY + 19);
-        ctx.lineTo(curX, rwyY + 19);
-        ctx.stroke();
-
-        ctx.fillStyle = "#00FF9D";
-        ctx.beginPath();
-        ctx.arc(curX, rwyY + 19, 7.5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      requestAnimationFrame(drawSyncCanvas);
-    }
-
-    // Cronometru Pitch 4 Minute
-    let timerSec = 240;
-    let timerHandle = null;
-    function renderTimer() {
-      const m = Math.floor(timerSec / 60);
-      const s = timerSec % 60;
-      document.getElementById("pitchTimerDisplay").textContent =
-        `${m < 10 ? "0" + m : m}:${s < 10 ? "0" + s : s}`;
-    }
-    function toggleTimer() {
-      const btn = document.getElementById("timerBtn");
-      if (timerHandle) {
-        clearInterval(timerHandle);
-        timerHandle = null;
-        btn.textContent = "▶ Continuă Pitch";
-        return;
-      }
-      btn.textContent = "⏸ Pauză";
-      timerHandle = setInterval(() => {
-        if (timerSec > 0) timerSec -= 1;
-        renderTimer();
-      }, 1000);
-    }
-    function resetTimer() {
-      if (timerHandle) clearInterval(timerHandle);
-      timerHandle = null;
-      timerSec = 240;
-      renderTimer();
-      document.getElementById("timerBtn").textContent = "▶ Start Pitch (4 min)";
-    }
-
-    // Inițializare
+    // Inițializare la încărcare
     buildChapterButtons();
     selectChapter(0, false);
     updateFormulas();
-    requestAnimationFrame(drawSyncCanvas);
+    requestAnimationFrame(renderSim1Canvas);
+    requestAnimationFrame(renderSim2Canvas);
   </script>
 </body>
 </html>
