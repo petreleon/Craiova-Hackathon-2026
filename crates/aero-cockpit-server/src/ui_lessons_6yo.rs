@@ -465,7 +465,7 @@ pub fn get_all_6yo_lessons() -> Vec<InteractiveLesson6Yo> {
             title: "🏆 Lecția 6: „Acum ești Comandantul Avionului Bio-Inspirat Drosophila + AERO-SHIELD!”",
             kid_story_ro: "👉 Apasă pe 🟢 BUTONUL VERDE «🏅 Harta Drosophila & Diplomă» de mai jos ca să vezi pe zborul FlightGear harta completă a Creierului Google Drosophila (T4/T5 → HS/VS → E-PG 16 Luminițe → PFNd)!",
             visual_rule_ro: "🟢 Apasă pe BUTONUL VERDE «🏅 Harta Drosophila & Diplomă» pentru absolvirea pe FlightGear!",
-            science_secret_ro: "Google Research HHMI Janelia Drosophila Connectome (T4/T5 -> HS/VS -> E-PG -> PFNd) + ESKF",
+            science_secret_ro: "Cele 3 Formule Simple (Cheia Pământului + Creierul Musculiței Google + Detectorul de Minciuni) => Precizie < 1 metru chiar și la 100.000 km (2.5 înconjururi ale Pământului fără GPS!)",
             default_mode: "l6_commander",
             fg_video_url: "/real_videos/fg_lesson_6.mp4",
             action_buttons: vec![
@@ -674,6 +674,15 @@ impl HtmlComponent for Lessons6YoDeck {
             raw: first_summary
         );
 
+        let formulas_card = DomElement::new("div")
+            .attr("id", "simple3Formulas100kCard")
+            .attr("class", "simple-3-formulas-100k-card")
+            .attr(
+                "aria-label",
+                "Cele 3 Formule Simple fără matematică grea pentru precizie sub 1 metru la 100.000 km",
+            )
+            .raw_html(SIMPLE_3_FORMULAS_100K_HTML);
+
         let prev_btn = rsx_elem!(
             "button",
             [
@@ -713,6 +722,7 @@ impl HtmlComponent for Lessons6YoDeck {
                 green_hero_solve_btn,
                 action_buttons_host,
                 megaphone_banner,
+                formulas_card,
                 bottom_nav
             ]
         );
@@ -806,6 +816,30 @@ pub fn lessons_6yo_router<S: Clone + Send + Sync + 'static>() -> Router<S> {
         .route("/api/lessons-6yo/html", get(api_lessons_6yo_html))
         .route("/lessons-6yo", get(page_lessons_6yo_standalone))
 }
+
+/// Simple 3 Formulas Card HTML (Zero heavy math, < 1m precision at 100,000 km, WCAG AAA contrast).
+const SIMPLE_3_FORMULAS_100K_HTML: &str = r#"
+<div class="simple-3-formulas-title">
+  💡 CELE 3 FORMULE SIMPLE (FĂRĂ MATEMATICĂ GREA!) — PRECIZIE &lt; 1 METRU CHIAR ȘI LA 100.000 KM FĂRĂ GPS:
+</div>
+<div class="simple-3-formulas-list">
+  <div class="simple-formula-item">
+    <span class="simple-formula-badge">1. 🔑 Formula 1 (Cheia Pământului):</span>
+    <strong class="simple-formula-eq">Forma Solului de sub Noi = Înălțimea Avionului − Distanța până la Pământ</strong>
+    <span class="simple-formula-desc"> — Potrivim dealurile și luminile de sub noi cu harta din memoria avionului — ca zimții unei chei în broască! De aceea eroarea nu se adună niciodată și rămâne sub 1 metru chiar și după 100.000 km!</span>
+  </div>
+  <div class="simple-formula-item">
+    <span class="simple-formula-badge">2. 🧠 Formula 2 (Creierul Musculiței Google):</span>
+    <strong class="simple-formula-eq">Mișcarea Adevărată = Ce Văd Ochii în Ceață − Înclinarea Avionului − Mișcarea Norilor</strong>
+    <span class="simple-formula-desc"> — Scădem virajele și vântul ca să știm exact pe unde mergem!</span>
+  </div>
+  <div class="simple-formula-item">
+    <span class="simple-formula-badge">3. ⚖️ Formula 3 (Detectorul de Minciuni):</span>
+    <strong class="simple-formula-eq">Vântul pe Aripi = Viteza față de Pământ − Viteza Aerului din Față</strong>
+    <span class="simple-formula-desc"> — Dacă GPS-ul sau internetul spune altceva decât simt aripile, îl blocăm pe loc!</span>
+  </div>
+</div>
+"#;
 
 /// Spotlight overlay HTML for Lesson 6 ("✨ Arată-mi cu Săgeți Luminoase pe Ecranul Mare").
 const SPOTLIGHT_OVERLAY_INNER_HTML: &str = r#"
@@ -1050,6 +1084,55 @@ const LESSONS_6YO_SCOPED_CSS: &str = r#"
   background: #0F172A;
   border: 2px solid #FACC15;
   text-shadow: 0 1px 2px #000000;
+}
+.simple-3-formulas-100k-card {
+  width: 100%;
+  max-width: 980px;
+  background: #070B14;
+  border: 2px solid #FACC15;
+  border-radius: 16px;
+  padding: 20px 24px;
+  color: #FFFFFF;
+  box-shadow: 0 12px 28px #000000;
+}
+.simple-3-formulas-title {
+  font-size: 18px;
+  font-weight: 900;
+  color: #FEF08A;
+  margin-bottom: 14px;
+  text-align: center;
+  line-height: 1.4;
+}
+.simple-3-formulas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.simple-formula-item {
+  background: #0F172A;
+  border: 2px solid #38BDF8;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: #FFFFFF;
+}
+.simple-formula-badge {
+  color: #FEF08A;
+  font-weight: 900;
+  margin-right: 6px;
+}
+.simple-formula-eq {
+  color: #FFFFFF;
+  background: #064E3B;
+  border: 1px solid #34D399;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-weight: 900;
+}
+.simple-formula-desc {
+  color: #FFFFFF;
+  font-weight: 600;
 }
 .lessons-6yo-bottom-nav {
   display: flex;
@@ -2013,6 +2096,11 @@ mod tests {
         assert!(html.contains("PFNd"));
         assert!(html.contains("drawDrosophilaEpgRingWidget"));
         assert!(html.contains("drawStaticBadge"));
+        assert!(html.contains("id=\"simple3Formulas100kCard\""));
+        assert!(html.contains("100.000 KM"));
+        assert!(html.contains("Formula 1 (Cheia Pământului)"));
+        assert!(html.contains("Formula 2 (Creierul Musculiței Google)"));
+        assert!(html.contains("Formula 3 (Detectorul de Minciuni)"));
         assert!(html.contains("⬅️ Lecția Anterioară"));
         assert!(html.contains("➡️ Lecția Următoare"));
     }
