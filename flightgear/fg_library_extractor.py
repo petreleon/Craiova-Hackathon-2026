@@ -537,6 +537,73 @@ def synthesize_fcs_autopilot_parameters() -> Dict:
     nws_xtk_kp = round((1.0 / nws_max_deg) * 0.18, 4)  # 0.0180
     nws_xtk_kd = round((1.0 / nws_max_deg) * 0.15, 4)  # 0.0150
 
+    # Base-Turn & Phase-Capture parameters derived analytically from JSBSim turn kinematics
+    # R_turn = V^2 / (g * tan(phi_max)) and KAP140 'predict-simple' lead predictor
+    v_base_mps = 72.0 * 0.514444  # 37.04 m/s
+    g_mps2 = 9.80665
+    base_turn_max_bank_deg = 24.0
+    r_turn_m = (v_base_mps * v_base_mps) / (g_mps2 * math.tan(math.radians(base_turn_max_bank_deg)))  # ~314 m
+    kap_pred_s = kap_ctl.get(" heading/course predictor", {}).get("seconds", 2.0)
+
+    base_turn_lead_time_s = round(max(2.0, kap_pred_s * 1.45), 3)
+    base_turn_dx_gain = round(gain_roll * 0.80, 3)
+    base_turn_dx_min_m = round(r_turn_m * 0.42, 1)
+    base_turn_max_intercept_deg = 68.0
+    base_turn_blend_inner_m = round(r_turn_m * 0.46, 1)
+    base_turn_blend_outer_m = round(r_turn_m * 0.85, 1)
+    base_turn_roll_kp = round(gain_roll * 1.20, 3)
+    final_capture_xtk_m = 45.0
+    final_capture_hdg_deg = 18.0
+    final_capture_vy_mps = 11.5
+
+    synthesized_gains = {
+        "aileron_trim_norm": aileron_trim_norm,
+        "aileron_kp_roll": aileron_kp_roll,
+        "aileron_kd_p": aileron_kd_p,
+        "roll_gain_approach": roll_gain_approach,
+        "roll_gain_slip": roll_gain_slip,
+        "wing_low_crab_gain": wing_low_crab_gain,
+        "wing_low_xtk_kp": wing_low_xtk_kp,
+        "wing_low_xtk_ki": wing_low_xtk_ki,
+        "wing_low_xtk_kd": wing_low_xtk_kd,
+        "rudder_p_factor_trim": rudder_p_factor_trim,
+        "rudder_coord_roll_gain": rudder_coord_roll_gain,
+        "rudder_decrab_kp": rudder_decrab_kp,
+        "rudder_decrab_ki": rudder_decrab_ki,
+        "elevator_base_trim": elevator_base_trim,
+        "elevator_kp_pitch": elevator_kp_pitch,
+        "elevator_ki_pitch": elevator_ki_pitch,
+        "elevator_kd_q": elevator_kd_q,
+        "gs_kp_pitch": gs_kp_pitch,
+        "gs_ki_pitch": gs_ki_pitch,
+        "nws_hdg_kp": nws_hdg_kp,
+        "nws_xtk_kp": nws_xtk_kp,
+        "nws_xtk_kd": nws_xtk_kd,
+        "base_turn_lead_time_s": base_turn_lead_time_s,
+        "base_turn_dx_gain": base_turn_dx_gain,
+        "base_turn_dx_min_m": base_turn_dx_min_m,
+        "base_turn_max_intercept_deg": base_turn_max_intercept_deg,
+        "base_turn_blend_inner_m": base_turn_blend_inner_m,
+        "base_turn_blend_outer_m": base_turn_blend_outer_m,
+        "base_turn_roll_kp": base_turn_roll_kp,
+        "base_turn_max_bank_deg": base_turn_max_bank_deg,
+        "final_capture_xtk_m": final_capture_xtk_m,
+        "final_capture_hdg_deg": final_capture_hdg_deg,
+        "final_capture_vy_mps": final_capture_vy_mps,
+    }
+
+    # Preserve genetic_evolved_gains if already evolved in OUTPUT_JSON_PATH
+    genetic_meta = None
+    if os.path.exists(OUTPUT_JSON_PATH):
+        try:
+            with open(OUTPUT_JSON_PATH, "r", encoding="utf-8") as f_old:
+                old_data = json.load(f_old)
+            genetic_meta = old_data.get("genetic_evolution")
+            if genetic_meta and isinstance(genetic_meta.get("evolved_gains"), dict):
+                synthesized_gains.update(genetic_meta["evolved_gains"])
+        except Exception:
+            pass
+
     synthesized = {
         "lateral_directional_2x2": {
             "matrix_M_lat": [
@@ -554,30 +621,7 @@ def synthesize_fcs_autopilot_parameters() -> Dict:
             "approach_65kt_20m": long_app,
             "flare_60kt_2m": long_flare,
         },
-        "synthesized_ap_gains": {
-            "aileron_trim_norm": aileron_trim_norm,
-            "aileron_kp_roll": aileron_kp_roll,
-            "aileron_kd_p": aileron_kd_p,
-            "roll_gain_approach": roll_gain_approach,
-            "roll_gain_slip": roll_gain_slip,
-            "wing_low_crab_gain": wing_low_crab_gain,
-            "wing_low_xtk_kp": wing_low_xtk_kp,
-            "wing_low_xtk_ki": wing_low_xtk_ki,
-            "wing_low_xtk_kd": wing_low_xtk_kd,
-            "rudder_p_factor_trim": rudder_p_factor_trim,
-            "rudder_coord_roll_gain": rudder_coord_roll_gain,
-            "rudder_decrab_kp": rudder_decrab_kp,
-            "rudder_decrab_ki": rudder_decrab_ki,
-            "elevator_base_trim": elevator_base_trim,
-            "elevator_kp_pitch": elevator_kp_pitch,
-            "elevator_ki_pitch": elevator_ki_pitch,
-            "elevator_kd_q": elevator_kd_q,
-            "gs_kp_pitch": gs_kp_pitch,
-            "gs_ki_pitch": gs_ki_pitch,
-            "nws_hdg_kp": nws_hdg_kp,
-            "nws_xtk_kp": nws_xtk_kp,
-            "nws_xtk_kd": nws_xtk_kd,
-        },
+        "synthesized_ap_gains": synthesized_gains,
     }
 
     payload = {
@@ -585,6 +629,8 @@ def synthesize_fcs_autopilot_parameters() -> Dict:
         "autopilot_libraries": ap_libs,
         "analytical_synthesis": synthesized,
     }
+    if genetic_meta:
+        payload["genetic_evolution"] = genetic_meta
     with open(OUTPUT_JSON_PATH, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2)
     return payload

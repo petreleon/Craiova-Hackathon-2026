@@ -38,6 +38,9 @@ fi
 if [ ! -x "$FG_APP" ]; then
   FG_APP="/home/monk/flightgear-2024.1.6-linux-amd64.AppImage"
 fi
+if [ ! -x "$FG_APP" ] && [ -x "/usr/games/fgfs" ]; then
+  FG_APP="/usr/games/fgfs"
+fi
 
 chmod +x "$FG_APP" 2>/dev/null || true
 
@@ -52,6 +55,9 @@ fi
 
 # 2. Asigurăm sincronizarea protocolului bidirecțional și a scriptului Nasal în FG_ROOT local (~/.fgfs)
 FG_ROOT_DIR="/home/monk/.fgfs/fgdata_2024_1"
+if [ ! -d "$FG_ROOT_DIR" ] && [ -d "/usr/share/games/flightgear" ]; then
+  FG_ROOT_DIR="/usr/share/games/flightgear"
+fi
 for FG_PROTO_DIR in \
   "$FG_ROOT_DIR/Protocol" \
   "/home/monk/.fgfs/Protocol"; do
@@ -66,6 +72,7 @@ fi
 
 COMMON_BRIDGES=(
   "--fg-root=$FG_ROOT_DIR"
+  "--fg-scenery=/home/monk/.fgfs/TerraSync:/usr/share/games/flightgear/Scenery"
   "--prop:/sim/rendering/vsync-enable=0"
   "--prop:/sim/frame-rate-throttle-hz=60"
   "--prop:/local-weather/autostart=0"

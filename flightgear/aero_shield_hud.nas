@@ -869,14 +869,15 @@ var compute_local_lrcv_guidance = func() {
         if (!gps_clean_anchor.locked) {
             gps_clean_anchor.locked = 1;
         }
-        gps_clean_anchor.x_rwy = gps_clean_anchor.x_rwy + vx_rwy * 0.05;
+        gps_clean_anchor.x_rwy = 0.85 * (gps_clean_anchor.x_rwy + vx_rwy * 0.05) + 0.15 * raw_x_rwy;
         gps_clean_anchor.y_rwy = 0.85 * (gps_clean_anchor.y_rwy + vy_rwy * 0.05) + 0.15 * raw_y_rwy;
         gps_clean_anchor.agl_m = agl_m;
     }
 
     var x_rwy = is_spoofed ? gps_clean_anchor.x_rwy : raw_x_rwy;
     var y_rwy = is_spoofed ? gps_clean_anchor.y_rwy : raw_y_rwy;
-    var dist_m = math.sqrt(x_rwy * x_rwy + y_rwy * y_rwy);
+    var dx_to_rwy = math.max(0.0, -x_rwy);
+    var dist_m = math.sqrt(dx_to_rwy * dx_to_rwy + y_rwy * y_rwy);
     setprop("/aero-shield/x-rwy-m", x_rwy);
 
     # Agent-4 Coastline Cliff Baro-Inertial Step Compensator (pentru apropierea deasupra Marii Ionice in Catania LICC):
@@ -932,8 +933,8 @@ var compute_local_lrcv_guidance = func() {
 
     var act_fpa = math.atan2(vs_fps * 0.3048, spd_mps) * 180.0 / math.pi;
     var gs_err = clamp(tgt_fpa - act_fpa, -12.0, 12.0);
-    var approach_pit = clamp(tgt_fpa + 0.6 + 0.45 * gs_err, -4.8, 2.5);
-    var tgt_pit_calc = approach_pit * (1.0 - flare_blend) + 1.8 * flare_blend;
+    var aoa_ref = 0.6 + 1.15 * flare_blend;
+    var tgt_pit_calc = clamp(tgt_fpa + aoa_ref + 0.55 * gs_err, -4.8, 2.35);
 
     # Ground rollout blend C1
     if (ground_blend > 0.0) {
@@ -1530,7 +1531,7 @@ var update_aero_shield_hud = func() {
             } elsif (cur_phase_prop == "BASE_TURN_INTERCEPT") {
                 thr_out = clamp(0.62 + 0.028 * (72.0 - kt) + 0.038 * gs_err, 0.35, 0.92);
                 setprop("/controls/flight/flaps", (kt < 80.0 and math.abs(wrap180(cur_hdg - LRCV_RWY_HDG)) < 45.0) ? 0.33 : 0.0);
-            } elsif (agl_m <= 1.42 and dist_m <= 25.0) {
+            } elsif ((agl_m <= 1.42 or (local_g.x_rwy >= 60.0 and agl_m <= 3.80)) and dist_m <= 28.0) {
                 thr_out = 0.0;
             } elsif (agl_m <= 4.20 and dist_m <= 28.0) {
                 # C1 Cushion Flare Autothrottle Retard: mentine perna de aer cald (0.24 = ~1500 RPM) pana la atingerea rotilor (1.42m AGL)
