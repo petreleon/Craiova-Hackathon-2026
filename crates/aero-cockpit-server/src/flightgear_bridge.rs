@@ -331,11 +331,24 @@ fn parse_fg_csv_line(
         None
     };
 
-    // Verificăm dacă aeronava din FlightGear este în zona Aeroportului Craiova (LRCV, rază 25 km).
-    // Notă CRITICĂ (extrasă direct din /home/monk/.fgfs/fgdata_2024_1/Airports/apt.dat.gz):
-    // Linia apt.dat: `100 45.11 ... 09 44.31794400 023.87294400 ... 27 44.31836100 023.90413900`
-    // Pragul fizic asfaltat al Pistei 09 este la (44.31794400° N, 23.87294400° E), iar direcția ADEVĂRATĂ
-    // (True Heading) a axului pistei este 88.9314° (nu 87.4° care este direcția magnetică!).
+    // Universal Real-Time Runway Threshold Discovery:
+    // Citim mai întâi pragul pistei detectat în timp real de FlightGear prin `airportinfo()` (cols[17..20]).
+    // Dacă `airportinfo()` din FlightGear a publicat coordonatele pragului (`/aero-shield/target-rwy/*`),
+    // sistemul se ancorează universal pe ORICE pistă de pe glob!
+    let dyn_rwy_lat = if cols.len() > 17 { cols[17] } else { 0.0 };
+    let dyn_rwy_lon = if cols.len() > 18 { cols[18] } else { 0.0 };
+    let dyn_rwy_hdg = if cols.len() > 19 { cols[19] } else { 0.0 };
+    let dyn_rwy_elev_m = if cols.len() > 20 {
+        sanitize_f64(cols[20], -100.0, 6000.0, 191.0)
+    } else {
+        191.0
+    };
+    let alt_msl_m = if cols.len() > 21 {
+        sanitize_f64(cols[21], -100.0, 15_000.0, alt_agl_m + dyn_rwy_elev_m)
+    } else {
+        alt_agl_m + dyn_rwy_elev_m
+    };
+
     const FG_LRCV_RWY09_THR_LAT_DEG: f64 = 44.317_944;
     const FG_LRCV_RWY09_THR_LON_DEG: f64 = 23.872_944;
     const FG_LRCV_RWY09_TRUE_HDG_DEG: f64 = 88.931_4;
@@ -345,11 +358,32 @@ fn parse_fg_csv_line(
     let dist_lrcv = (d_north_lrcv * d_north_lrcv + d_east_lrcv * d_east_lrcv).sqrt();
     let is_near_craiova = dist_lrcv < 25_000.0;
 
-    let (ref_lat, ref_lon, rwy_hdg_deg) = if is_near_craiova {
-        (FG_LRCV_RWY09_THR_LAT_DEG, FG_LRCV_RWY09_THR_LON_DEG, FG_LRCV_RWY09_TRUE_HDG_DEG)
+    // Catalog universal rapid pentru aeroporturile de referință (inclusiv coastă/mare: Catania LICC, Keflavik BIKF, Honolulu PHNL)
+    // folosit instantaneu chiar și înainte ca primul cadru `airportinfo()` din Nasal să populeze cols[17..20]:
+    const UNIVERSAL_AIRPORTS: &[(f64, f64, f64, f64)] = &[
+        (44.317_944, 23.872_944, 88.931_4, 191.0),   // LRCV RWY 09 (Craiova)
+        (37.467_933, 15.080_108, 263.970_5, 11.89),  // LICC RWY 26 (Catania-Fontanarossa — Ionian Sea Approach)
+        (63.985_000, -22.605_556, 108.000_0, 50.0),  // BIKF (Keflavik — North Atlantic)
+        (21.318_681, -157.922_428, 70.000_0, 4.0),   // PHNL (Honolulu — Pacific Ocean)
+    ];
+
+    let (ref_lat, ref_lon, rwy_hdg_deg, rwy_elev_m) = if dyn_rwy_lat.abs() > 0.01 && dyn_rwy_lon.abs() > 0.01 {
+        (
+            sanitize_f64(dyn_rwy_lat, -89.9, 89.9, FG_LRCV_RWY09_THR_LAT_DEG),
+            sanitize_f64(dyn_rwy_lon, -180.0, 180.0, FG_LRCV_RWY09_THR_LON_DEG),
+            sanitize_f64(dyn_rwy_hdg, 0.0, 360.0, FG_LRCV_RWY09_TRUE_HDG_DEG),
+            dyn_rwy_elev_m,
+        )
+    } else if is_near_craiova {
+        (FG_LRCV_RWY09_THR_LAT_DEG, FG_LRCV_RWY09_THR_LON_DEG, FG_LRCV_RWY09_TRUE_HDG_DEG, 191.0)
+    } else if let Some(&(ulat, ulon, uhdg, uelev)) = UNIVERSAL_AIRPORTS.iter().find(|&&(alat, alon, _, _)| {
+        let dn = (lat_deg - alat) * 111_132.95;
+        let de = (lon_deg - alon) * 111_319.49 * alat.to_radians().cos();
+        dn.hypot(de) < 30_000.0
+    }) {
+        (ulat, ulon, uhdg, uelev)
     } else {
         let anchor = virtual_anchor.get_or_insert_with(|| {
-            // Plasăm pragul pistei virtuale la 1600m în fața poziției inițiale din FlightGear
             let hdg_rad = heading_deg.to_radians();
             let ahead_north_m = 1600.0 * hdg_rad.cos();
             let ahead_east_m = 1600.0 * hdg_rad.sin();
@@ -364,12 +398,13 @@ fn parse_fg_csv_line(
             anchor.threshold_lat_deg,
             anchor.threshold_lon_deg,
             anchor.runway_heading_deg,
+            0.0,
         )
     };
 
     let cos_ref = ref_lat.to_radians().cos().abs().max(0.1);
-    let dn = (lat_deg - ref_lat) * 111_132.0;
-    let de = (lon_deg - ref_lon) * 111_320.0 * cos_ref;
+    let dn = (lat_deg - ref_lat) * 111_132.95;
+    let de = (lon_deg - ref_lon) * 111_319.49 * cos_ref;
 
     let psi_rwy = rwy_hdg_deg.to_radians();
     let cos_psi = psi_rwy.cos();
@@ -378,7 +413,19 @@ fn parse_fg_csv_line(
     // Proiecție pe axa pistei (+X = de-a lungul pistei, +Y = abatere dreapta față de axul pistei)
     let x_track = sanitize_f64(dn * cos_psi + de * sin_psi, -15_000.0, 5_000.0, -900.0);
     let y_cross = sanitize_f64(-dn * sin_psi + de * cos_psi, -5_000.0, 5_000.0, 0.0);
-    let z_down = -alt_agl_m;
+
+    // Coastline Cliff Baro-Inertial Step Compensator:
+    // Când avionul vine deasupra mării (0m MSL) către o pistă de coastă (rwy_elev_m < 35m),
+    // raportăm altitudinea la planul pragului pistei înainte de țărm și o îmbinăm C1 cu AGL-ul radar deasupra pragului.
+    let effective_agl_m = if rwy_elev_m < 35.0 && x_track < -20.0 && cols.len() > 21 {
+        let rwy_plane_agl = (alt_msl_m - rwy_elev_m).max(0.5);
+        let t = ((x_track - (-140.0)) / 120.0).clamp(0.0, 1.0);
+        let radar_blend = t * t * (3.0 - 2.0 * t);
+        rwy_plane_agl * (1.0 - radar_blend) + alt_agl_m * radar_blend
+    } else {
+        alt_agl_m
+    };
+    let z_down = -effective_agl_m;
 
     let vx_track = sanitize_f64(vn_mps * cos_psi + ve_mps * sin_psi, -250.0, 250.0, airspeed_mps);
     let vy_cross = sanitize_f64(-vn_mps * sin_psi + ve_mps * cos_psi, -150.0, 150.0, 0.0);

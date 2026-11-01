@@ -1918,11 +1918,15 @@ pub fn compute_unified_fd_guidance(
         0.0
     };
 
-    // 1. Legea Laterală Unificată (Interceptare arctangențială + amortizare viteză transversală vy)
+    // 1. Legea Laterală Unificată (Two-Regime Nonlinear L1 S-Turn Intercept + Wing-Low Slip)
     let look_blend = smoothstep_c1(-160.0, -80.0, along_track_m);
     let lead_w = smoothstep_c1(1.5, 10.0, cross_track_m.abs());
+    let s_turn_w = smoothstep_c1(18.0, 42.0, cross_track_m.abs());
     let (loc_lookahead_m, vy_lead_sec) = if flightgear_live {
-        (95.0 + 25.0 * look_blend, 1.35 * lead_w)
+        (
+            95.0 + 25.0 * look_blend + 125.0 * s_turn_w,
+            1.35 * lead_w + 2.15 * s_turn_w,
+        )
     } else {
         (260.0 + 60.0 * look_blend, 1.45 * lead_w)
     };

@@ -24,6 +24,8 @@ export HOME="/home/monk"
 export DISPLAY="${DISPLAY:-:0}"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/1000}"
 export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-unix:path=/run/user/1000/bus}"
+export vblank_mode=0
+export __GL_SYNC_TO_VBLANK=0
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_FILE="$SCRIPT_DIR/flightgear_catania_session.log"
@@ -51,6 +53,9 @@ for FG_PROTO_DIR in "$FG_ROOT_DIR/Protocol" "/home/monk/.fgfs/Protocol"; do
     cp -f "$SCRIPT_DIR/flightgear/aero_shield.xml" "$FG_PROTO_DIR/aero_shield.xml" 2>/dev/null || true
   fi
 done
+if [ -d "$FG_ROOT_DIR/Nasal" ]; then
+  cp -f "$SCRIPT_DIR/flightgear/aero_shield_hud.nas" "$FG_ROOT_DIR/Nasal/aero_shield_hud.nas" 2>/dev/null || true
+fi
 
 echo "🌊✈️  Pornire Scenariu Extrem Multi-Agent: CATANIA–FONTANAROSSA (LICC RWY 26 — Marea Ionică)"
 echo "   - Start deasupra mării: X_rwy = -2450m, Abatere laterală = +165m, Cap = 242° (-22° dezaliniat față de RWY 26 = 263.97°)"
@@ -58,6 +63,8 @@ echo "   - Ceață marină CAT III (240m) + Atac GPS Spoofing Activ (+250m) + Pr
 
 exec "$FG_APP" \
   "--fg-root=$FG_ROOT_DIR" \
+  "--prop:/sim/rendering/vsync-enable=0" \
+  "--prop:/sim/frame-rate-throttle-hz=60" \
   "--enable-terrasync" \
   "--aircraft=c172p" \
   "--lat=37.471725" \
@@ -83,12 +90,25 @@ exec "$FG_APP" \
   "--prop:/aero-shield/spoof-jam-active=1" \
   "--prop:/aero-shield/shield-protection=1" \
   "--prop:/fdm/jsbsim/running=1" \
+  "--prop:/fdm/jsbsim/propulsion/set-running=-1" \
+  "--prop:/fdm/jsbsim/propulsion/engine[0]/set-running=1" \
+  "--prop:/engines/active-engine/running=1" \
+  "--prop:/engines/engine[0]/running=1" \
+  "--prop:/controls/switches/magnetos=3" \
+  "--prop:/controls/switches/master-bat=1" \
+  "--prop:/controls/switches/master-alt=1" \
+  "--prop:/controls/engines/current-engine/mixture=1.0" \
+  "--prop:/controls/engines/engine[0]/mixture=1.0" \
   "--prop:/controls/engines/engine/use-primer=0" \
   "--prop:/controls/engines/engine[0]/use-primer=0" \
   "--prop:/engines/active-engine/oil-temperature-degf=180" \
   "--prop:/engines/engine[0]/oil-temperature-degf=180" \
-  "--prop:/controls/engines/current-engine/throttle=0.65" \
-  "--prop:/controls/engines/engine[0]/throttle=0.65" \
+  "--prop:/controls/engines/current-engine/throttle=0.60" \
+  "--prop:/controls/engines/engine[0]/throttle=0.60" \
+  "--prop:/controls/flight/flaps=0.33" \
+  "--prop:/controls/flight/aileron-trim=0.016" \
+  "--prop:/controls/flight/elevator-trim=-0.020" \
+  "--prop:/controls/flight/rudder-trim=0.032" \
   "--prop:/controls/gear/brake-parking=0" \
   "--generic=socket,out,60,127.0.0.1,5505,udp,aero_shield" \
   "--generic=socket,in,20,127.0.0.1,5506,udp,aero_shield" \

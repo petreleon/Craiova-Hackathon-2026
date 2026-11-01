@@ -25,6 +25,8 @@ export HOME="/home/monk"
 export DISPLAY="${DISPLAY:-:0}"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/1000}"
 export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-unix:path=/run/user/1000/bus}"
+export vblank_mode=0
+export __GL_SYNC_TO_VBLANK=0
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_FILE="$SCRIPT_DIR/flightgear_session.log"
@@ -48,7 +50,7 @@ if ! curl -fsS http://127.0.0.1:8080/api/health >/dev/null 2>&1; then
   fi
 fi
 
-# 2. Asigurăm sincronizarea protocolului bidirecțional în FG_ROOT local (~/.fgfs)
+# 2. Asigurăm sincronizarea protocolului bidirecțional și a scriptului Nasal în FG_ROOT local (~/.fgfs)
 FG_ROOT_DIR="/home/monk/.fgfs/fgdata_2024_1"
 for FG_PROTO_DIR in \
   "$FG_ROOT_DIR/Protocol" \
@@ -58,9 +60,14 @@ for FG_PROTO_DIR in \
     cp -f "$SCRIPT_DIR/flightgear/aero_shield.xml" "$FG_PROTO_DIR/aero_shield.xml" 2>/dev/null || true
   fi
 done
+if [ -d "$FG_ROOT_DIR/Nasal" ]; then
+  cp -f "$SCRIPT_DIR/flightgear/aero_shield_hud.nas" "$FG_ROOT_DIR/Nasal/aero_shield_hud.nas" 2>/dev/null || true
+fi
 
 COMMON_BRIDGES=(
   "--fg-root=$FG_ROOT_DIR"
+  "--prop:/sim/rendering/vsync-enable=0"
+  "--prop:/sim/frame-rate-throttle-hz=60"
   "--prop:/local-weather/autostart=0"
   "--prop:/sim/gui/dialogs/metar/mode/local-weather=0"
   "--prop:/environment/weather-scenario=Manual input"
@@ -74,14 +81,25 @@ COMMON_BRIDGES=(
   "--prop:/aero-shield/autoland-local=1"
   "--prop:/aero-shield/autoland-cmd=1"
   "--prop:/fdm/jsbsim/running=1"
+  "--prop:/fdm/jsbsim/propulsion/set-running=-1"
+  "--prop:/fdm/jsbsim/propulsion/engine[0]/set-running=1"
+  "--prop:/engines/active-engine/running=1"
+  "--prop:/engines/engine[0]/running=1"
+  "--prop:/controls/switches/magnetos=3"
+  "--prop:/controls/switches/master-bat=1"
+  "--prop:/controls/switches/master-alt=1"
+  "--prop:/controls/engines/current-engine/mixture=1.0"
+  "--prop:/controls/engines/engine[0]/mixture=1.0"
   "--prop:/controls/engines/engine/use-primer=0"
   "--prop:/controls/engines/engine[0]/use-primer=0"
   "--prop:/engines/active-engine/oil-temperature-degf=180"
   "--prop:/engines/engine[0]/oil-temperature-degf=180"
-  "--prop:/controls/engines/current-engine/throttle=0.70"
-  "--prop:/controls/engines/engine[0]/throttle=0.60"
   "--prop:/controls/engines/current-engine/throttle=0.60"
+  "--prop:/controls/engines/engine[0]/throttle=0.60"
+  "--prop:/controls/flight/flaps=0.33"
+  "--prop:/controls/flight/aileron-trim=0.016"
   "--prop:/controls/flight/elevator-trim=-0.020"
+  "--prop:/controls/flight/rudder-trim=0.032"
   "--prop:/controls/gear/brake-parking=0"
   "--generic=socket,out,60,127.0.0.1,5505,udp,aero_shield"
   "--generic=socket,in,20,127.0.0.1,5506,udp,aero_shield"
@@ -90,7 +108,7 @@ COMMON_BRIDGES=(
   "--disable-hud"
 )
 
-echo "✈️  Pornire FlightGear <-> AERO-SHIELD (Altitudine 950 ft MSL = ~525 ft / 160m AGL pe panta de 3.0° la 1.4 NM de LRCV)"
+echo "✈️  Pornire FlightGear <-> AERO-SHIELD (Altitudine 1085 ft MSL = ~460 ft / 140m AGL pe panta de 3.0° la 1.4 NM de LRCV)"
 echo "📊 Blackbox & FG-MCP Control active în:"
 echo "   - $LOG_FILE (liniile [FG-BLACKBOX t=...])"
 echo "   - $SCRIPT_DIR/flightgear_blackbox.csv (telemetrie 2 Hz salvată de serverul Rust)"
@@ -99,16 +117,39 @@ echo "   - FG-MCP Telnet Property Server: 127.0.0.1:5501 (flightgear/fg_mcp_ctl.
 if [ "${1:-}" = "--launcher" ]; then
   shift
   "$FG_APP" --launcher "${COMMON_BRIDGES[@]}" "$@" 2>&1 | tee "$LOG_FILE"
+elif [ "${1:-}" = "--perpendicular" ]; then
+  shift
+  # Scenariul Perpendicular (Base Leg ~85° față de Pista 09): 1.2 NM distanță, ~650m Sud de ax (azimuth 71.3°), Cap 004° (Nord, perpendicular pe pistă!)
+  "$FG_APP" \
+    --airport=LRCV \
+    --runway=09 \
+    --offset-distance=1.2 \
+    --offset-azimuth=71.3 \
+    --altitude=1060 \
+    --vc=72 \
+    --glideslope=0.0 \
+    --pitch=0.5 \
+    --roll=0.0 \
+    --heading=3.9 \
+    --visibility=240 \
+    --wind=89@2 \
+    --disable-real-weather-fetch \
+    --timeofday=noon \
+    "${COMMON_BRIDGES[@]}" \
+    "$@" 2>&1 | tee "$LOG_FILE"
 elif [ "${1:-}" = "--unaligned" ]; then
   shift
-  # Scenariul 2 în FlightGear: 1.5 NM înainte de RWY 09, azimut 86° (~140m dezaliniat față de 88.93°), 980 ft MSL (~555 ft / 170m AGL!)
+  # Scenariul 2 în FlightGear: 1.5 NM înainte de RWY 09, azimut 86° (~140m dezaliniat față de 88.93°), 1115 ft MSL (~490 ft / 149m AGL pe panta de 3.0°!)
   "$FG_APP" \
     --airport=LRCV \
     --runway=09 \
     --offset-distance=1.5 \
     --offset-azimuth=86 \
-    --altitude=980 \
+    --altitude=1115 \
     --vc=75 \
+    --glideslope=-3.0 \
+    --pitch=-1.0 \
+    --roll=0.0 \
     --heading=85 \
     --visibility=240 \
     --wind=89@2 \
@@ -122,8 +163,11 @@ elif [ "${1:-}" = "--autoland" ]; then
     --airport=LRCV \
     --runway=09 \
     --offset-distance=1.4 \
-    --altitude=950 \
+    --altitude=1085 \
     --vc=75 \
+    --glideslope=-3.0 \
+    --pitch=-1.0 \
+    --roll=0.0 \
     --heading=88.93 \
     --visibility=240 \
     --wind=89@2 \
@@ -133,13 +177,16 @@ elif [ "${1:-}" = "--autoland" ]; then
     "${COMMON_BRIDGES[@]}" \
     "$@" 2>&1 | tee "$LOG_FILE"
 else
-  # Apropiere stabilă la 1.4 NM, 950 ft MSL (~525 ft / 160m AGL pe panta de 3.0° deasupra Craiovei!)
+  # Apropiere stabilă la 1.4 NM, 1085 ft MSL (~460 ft / 140m AGL pe panta de 3.0° deasupra Craiovei!)
   "$FG_APP" \
     --airport=LRCV \
     --runway=09 \
     --offset-distance=1.4 \
-    --altitude=950 \
+    --altitude=1085 \
     --vc=75 \
+    --glideslope=-3.0 \
+    --pitch=-1.0 \
+    --roll=0.0 \
     --heading=88.93 \
     --visibility=240 \
     --wind=89@2 \

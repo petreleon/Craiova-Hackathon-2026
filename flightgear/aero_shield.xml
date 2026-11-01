@@ -118,6 +118,37 @@
         <format>%.2f</format>
         <node>/gear/gear[0]/position-norm</node>
       </chunk>
+      <chunk>
+        <name>rwy_thr_lat_deg</name>
+        <type>float</type>
+        <format>%.7f</format>
+        <node>/aero-shield/target-rwy/lat-deg</node>
+      </chunk>
+      <chunk>
+        <name>rwy_thr_lon_deg</name>
+        <type>float</type>
+        <format>%.7f</format>
+        <node>/aero-shield/target-rwy/lon-deg</node>
+      </chunk>
+      <chunk>
+        <name>rwy_true_hdg_deg</name>
+        <type>float</type>
+        <format>%.4f</format>
+        <node>/aero-shield/target-rwy/heading-deg</node>
+      </chunk>
+      <chunk>
+        <name>rwy_thr_elev_m</name>
+        <type>float</type>
+        <format>%.2f</format>
+        <node>/aero-shield/target-rwy/elev-m</node>
+      </chunk>
+      <chunk>
+        <name>alt_msl_m</name>
+        <type>float</type>
+        <format>%.2f</format>
+        <node>/position/altitude-ft</node>
+        <factor>0.3048</factor>
+      </chunk>
     </output>
 
     <input>

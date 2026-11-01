@@ -105,16 +105,71 @@ var LRCV_LON = 23.87294400;
 var LRCV_ELEV_M = 191.0;
 var LRCV_RWY_HDG = 88.9314;
 var ACTIVE_APT_TAG = "LRCV RWY09";
+var last_detected_apt_id = "";
+var auto_flight_phase = "FINAL_APPROACH";
+var teardrop_side = -1.0;
+var fd_x_smooth = nil;
+var fd_y_smooth = nil;
 
+setprop("/aero-shield/target-rwy/icao", "LRCV");
+setprop("/aero-shield/target-rwy/rwy-id", "09");
+setprop("/aero-shield/target-rwy/lat-deg", LRCV_LAT);
+setprop("/aero-shield/target-rwy/lon-deg", LRCV_LON);
+setprop("/aero-shield/target-rwy/elev-m", LRCV_ELEV_M);
+setprop("/aero-shield/target-rwy/heading-deg", LRCV_RWY_HDG);
+setprop("/aero-shield/x-rwy-m", -2500.0);
+setprop("/aero-shield/flight-phase", "FINAL_APPROACH");
+
+# Descoperire UNIVERSALA si REAL-TIME a aeroportului si pistei de aterizare din pozitia curenta a avionului:
+# Interogheaza baza de date globala FlightGear (airportinfo()) fara coordonate hardcodate!
 var detect_active_airport_rwy = func() {
-    var cur_lat = getprop("/position/latitude-deg") or 44.3179;
-    if (cur_lat < 40.0) {
-        # Catania-Fontanarossa (LICC) Pista 26 — Apropiere deasupra Marii Ionice (Golfo di Catania)
-        LRCV_LAT = 37.46793300;
-        LRCV_LON = 15.08010800;
-        LRCV_ELEV_M = 11.89;
-        LRCV_RWY_HDG = 263.9705;
-        ACTIVE_APT_TAG = "LICC RWY26 (CATANIA SEA)";
+    var apt = airportinfo();
+    if (apt == nil or apt.runways == nil) return;
+    if (apt.id == last_detected_apt_id) return;
+
+    var ac_lat = getprop("/position/latitude-deg") or LRCV_LAT;
+    var ac_lon = getprop("/position/longitude-deg") or LRCV_LON;
+    var ac_hdg = getprop("/orientation/heading-deg") or 0.0;
+
+    var best_rwy_id = nil;
+    var best_rwy = nil;
+    var best_score = 999999.0;
+
+    foreach (var r_id; keys(apt.runways)) {
+        var r = apt.runways[r_id];
+        if (r != nil and r.lat != nil and r.lon != nil and r.heading != nil) {
+            # Vectorul de la avion catre pragul pistei r:
+            var dn = (r.lat - ac_lat) * 111132.95;
+            var de = (r.lon - ac_lon) * 111319.49 * math.cos(r.lat * math.pi / 180.0);
+            var bearing_to_thr = math.atan2(de, dn) * 180.0 / math.pi;
+            var hdg_diff_bearing = math.abs(wrap180(r.heading - bearing_to_thr));
+            var hdg_diff_ac = math.abs(wrap180(r.heading - ac_hdg));
+            var score = hdg_diff_bearing * 1.5 + hdg_diff_ac * 0.5;
+            if (score < best_score) {
+                best_score = score;
+                best_rwy_id = r_id;
+                best_rwy = r;
+            }
+        }
+    }
+
+    if (best_rwy != nil) {
+        LRCV_LAT = best_rwy.lat;
+        LRCV_LON = best_rwy.lon;
+        LRCV_RWY_HDG = best_rwy.heading;
+        if (apt.elevation != nil) {
+            LRCV_ELEV_M = apt.elevation;
+        }
+        ACTIVE_APT_TAG = apt.id ~ " RWY" ~ best_rwy_id;
+        last_detected_apt_id = apt.id;
+        setprop("/aero-shield/target-rwy/icao", apt.id);
+        setprop("/aero-shield/target-rwy/rwy-id", best_rwy_id);
+        setprop("/aero-shield/target-rwy/lat-deg", LRCV_LAT);
+        setprop("/aero-shield/target-rwy/lon-deg", LRCV_LON);
+        setprop("/aero-shield/target-rwy/elev-m", LRCV_ELEV_M);
+        setprop("/aero-shield/target-rwy/heading-deg", LRCV_RWY_HDG);
+        print(sprintf("[FG-BLACKBOX] [UNIVERSAL-REALTIME] Aeroport detectat automat: %s (%s) Pista %s | lat=%.6f lon=%.6f elev=%.1fm true_hdg=%.4f deg",
+            apt.id, apt.name or apt.id, best_rwy_id, LRCV_LAT, LRCV_LON, LRCV_ELEV_M, LRCV_RWY_HDG));
     }
 };
 
@@ -162,31 +217,6 @@ var spawn_3d_fog_tunnel = func() {
     setprop("/sim/hud/visibility[1]", 0);
 
     detect_active_airport_rwy();
-    if (LRCV_LAT < 40.0) {
-        var apt_licc = airportinfo("LICC");
-        if (apt_licc != nil and contains(apt_licc, "runways") and contains(apt_licc.runways, "26")) {
-            var r26 = apt_licc.runways["26"];
-            if (r26 != nil and contains(r26, "lat") and contains(r26, "lon") and contains(r26, "heading")) {
-                LRCV_LAT = r26.lat;
-                LRCV_LON = r26.lon;
-                LRCV_RWY_HDG = r26.heading;
-            }
-        }
-        print(sprintf("[FG-BLACKBOX] Ancorat pe Pista 26 LICC (Catania-Fontanarossa Sea Approach): lat=%.6f lon=%.6f true_hdg=%.4f deg",
-            LRCV_LAT, LRCV_LON, LRCV_RWY_HDG));
-    } else {
-        var apt = airportinfo("LRCV");
-        if (apt != nil and contains(apt, "runways") and contains(apt.runways, "09")) {
-            var r09 = apt.runways["09"];
-            if (r09 != nil and contains(r09, "lat") and contains(r09, "lon") and contains(r09, "heading")) {
-                LRCV_LAT = r09.lat;
-                LRCV_LON = r09.lon;
-                LRCV_RWY_HDG = r09.heading;
-                print(sprintf("[FG-BLACKBOX] Ancorat pe Pista 09 LRCV din apt.dat: lat=%.6f lon=%.6f true_hdg=%.4f deg",
-                    LRCV_LAT, LRCV_LON, LRCV_RWY_HDG));
-            }
-        }
-    }
 
     var thr = geo.Coord.new().set_latlon(LRCV_LAT, LRCV_LON);
     var g_info = geodinfo(LRCV_LAT, LRCV_LON);
@@ -746,17 +776,19 @@ var ensure_in_air_engine_and_trim = func(agl_m) {
     setprop("/fdm/jsbsim/wing-damage/right-wing", 0);
     setprop("/fdm/jsbsim/crash", 0);
     setprop("/fdm/jsbsim/engine/damage-level", 0);
-    setprop("/controls/engines/engine[0]/cutoff", 0);
     setprop("/engines/active-engine/oil-temperature-degf", 180.0);
     setprop("/engines/engine[0]/oil-temperature-degf", 180.0);
     setprop("/engines/active-engine/already-started-in-session", 1);
     setprop("/controls/engines/current-engine/carb-heat", 0);
-    setprop("/controls/engines/current-engine/mixture", 1.0);
-    setprop("/controls/engines/engine[0]/mixture", 1.0);
-    setprop("/controls/switches/magnetos", 3);
-    setprop("/controls/switches/master-bat", 1);
-    setprop("/controls/switches/master-alt", 1);
-    setprop("/controls/gear/brake-parking", 0);
+    if (agl_m > 1.8) {
+        setprop("/controls/engines/engine[0]/cutoff", 0);
+        setprop("/controls/engines/current-engine/mixture", 1.0);
+        setprop("/controls/engines/engine[0]/mixture", 1.0);
+        setprop("/controls/switches/magnetos", 3);
+        setprop("/controls/switches/master-bat", 1);
+        setprop("/controls/switches/master-alt", 1);
+        setprop("/controls/gear/brake-parking", 0);
+    }
 
     if (tick_count <= 5) {
         # Flaps 10 deg (0.33) in loc de 20 deg (0.66) pentru portanta stabila fara frana aerodinamica excesiva
@@ -784,7 +816,16 @@ var ensure_in_air_engine_and_trim = func(agl_m) {
     setprop("/controls/flight/rudder-trim", agl_m > 1.8 ? 0.032 : 0.0);
 };
 
-# 4. Calculeaza autonom reperele fata de Pista 09 Craiova (folosind aceeasi lege unificata C1 ca serverul Rust / FD == AP!)
+# 4. Calculeaza autonom reperele fata de Pista (folosind aceeasi lege unificata C1 ca serverul Rust / FD == AP!)
+var gps_clean_anchor = {
+    locked: 0,
+    lat: LRCV_LAT,
+    lon: LRCV_LON,
+    x_rwy: -2500.0,
+    y_rwy: 0.0,
+    agl_m: 145.0,
+};
+
 var compute_local_lrcv_guidance = func() {
     detect_active_airport_rwy();
     var lat = getprop("/position/latitude-deg") or LRCV_LAT;
@@ -804,9 +845,39 @@ var compute_local_lrcv_guidance = func() {
     var cos_h     = math.cos(hdg_rad);
     var sin_h     = math.sin(hdg_rad);
 
-    var x_rwy = d_north_m * cos_h + d_east_m * sin_h;
-    var y_rwy = -d_north_m * sin_h + d_east_m * cos_h;
+    var raw_x_rwy = d_north_m * cos_h + d_east_m * sin_h;
+    var raw_y_rwy = -d_north_m * sin_h + d_east_m * cos_h;
+
+    var vn_mps = vn_fps * 0.3048;
+    var ve_mps = ve_fps * 0.3048;
+    var vx_rwy = vn_mps * cos_h + ve_mps * sin_h;
+    var vy_rwy = -vn_mps * sin_h + ve_mps * cos_h;
+    var spd_mps = math.max(15.0, math.sqrt(vx_rwy * vx_rwy + vy_rwy * vy_rwy));
+
+    var spoof_jam_on = (getprop("/aero-shield/spoof-jam-active") or 0) > 0;
+    var gnss_quar_on = (getprop("/aero-shield/gnss-quarantined") or 0) > 0;
+    var is_spoofed = (spoof_jam_on or gnss_quar_on) ? 1 : 0;
+
+    if (!is_spoofed) {
+        gps_clean_anchor.locked = 0;
+        gps_clean_anchor.lat = lat;
+        gps_clean_anchor.lon = lon;
+        gps_clean_anchor.x_rwy = raw_x_rwy;
+        gps_clean_anchor.y_rwy = raw_y_rwy;
+        gps_clean_anchor.agl_m = agl_m;
+    } else {
+        if (!gps_clean_anchor.locked) {
+            gps_clean_anchor.locked = 1;
+        }
+        gps_clean_anchor.x_rwy = gps_clean_anchor.x_rwy + vx_rwy * 0.05;
+        gps_clean_anchor.y_rwy = 0.85 * (gps_clean_anchor.y_rwy + vy_rwy * 0.05) + 0.15 * raw_y_rwy;
+        gps_clean_anchor.agl_m = agl_m;
+    }
+
+    var x_rwy = is_spoofed ? gps_clean_anchor.x_rwy : raw_x_rwy;
+    var y_rwy = is_spoofed ? gps_clean_anchor.y_rwy : raw_y_rwy;
     var dist_m = math.sqrt(x_rwy * x_rwy + y_rwy * y_rwy);
+    setprop("/aero-shield/x-rwy-m", x_rwy);
 
     # Agent-4 Coastline Cliff Baro-Inertial Step Compensator (pentru apropierea deasupra Marii Ionice in Catania LICC):
     # Deasupra marii (0m MSL), altimetrul radar masoara inaltimea fata de apa (+11.89m peste planul pragului RWY 26).
@@ -816,12 +887,6 @@ var compute_local_lrcv_guidance = func() {
         var radar_blend = smoothstep_c1(-140.0, -20.0, x_rwy);
         agl_m = rwy_plane_agl * (1.0 - radar_blend) + agl_m * radar_blend;
     }
-
-    var vn_mps = vn_fps * 0.3048;
-    var ve_mps = ve_fps * 0.3048;
-    var vx_rwy = vn_mps * cos_h + ve_mps * sin_h;
-    var vy_rwy = -vn_mps * sin_h + ve_mps * cos_h;
-    var spd_mps = math.max(15.0, math.sqrt(vx_rwy * vx_rwy + vy_rwy * vy_rwy));
 
     # Agent-3 Two-Regime Nonlinear L1 S-Turn Sea Intercept -> Wing-Low Forward-Slip
     var s_turn_w = smoothstep_c1(18.0, 42.0, math.abs(y_rwy));
@@ -880,6 +945,97 @@ var compute_local_lrcv_guidance = func() {
         tgt_hdg = LRCV_RWY_HDG;
     }
 
+    # --- Mașina de Stări Autonomă Nativă (UPSET_RECOVERY / GO_AROUND_TOGA / TEARDROP_OUTBOUND / BASE_TURN_INTERCEPT / FINAL_APPROACH) ---
+    var mcp_ovr = getprop("/aero-shield/fg-mcp-override") or 0;
+    var cur_roll_now = getprop("/orientation/roll-deg") or 0.0;
+    var vs_fpm_now = vs_fps * 60.0;
+    var hdg_err_rwy = math.abs(wrap180(hdg - LRCV_RWY_HDG));
+
+    if (mcp_ovr == 0) {
+        if (agl_m > 2.2 and (math.abs(cur_roll_now) > 38.0 or cur_pit < -12.0 or cur_pit > 13.5 or (agl_m > 4.5 and kt < 50.5) or (agl_m < 250.0 and vs_fpm_now < -1150.0))) {
+            auto_flight_phase = "UPSET_RECOVERY";
+        } elsif (auto_flight_phase == "UPSET_RECOVERY") {
+            if (math.abs(cur_roll_now) < 14.0 and cur_pit >= -5.5 and cur_pit <= 8.5 and kt >= 57.0 and vs_fpm_now >= -720.0) {
+                if (x_rwy > -250.0 or (x_rwy > -650.0 and math.abs(y_rwy) > 45.0)) {
+                    teardrop_side = y_rwy <= 0.0 ? -1.0 : 1.0;
+                    auto_flight_phase = "GO_AROUND_TOGA";
+                } else {
+                    auto_flight_phase = "FINAL_APPROACH";
+                }
+            }
+        } elsif (auto_flight_phase == "GO_AROUND_TOGA") {
+            if (agl_m >= 85.0 and kt >= 58.0) {
+                auto_flight_phase = "TEARDROP_OUTBOUND";
+            }
+        } elsif (auto_flight_phase == "TEARDROP_OUTBOUND") {
+            if (x_rwy <= -1380.0 and math.abs(y_rwy) >= 240.0) {
+                auto_flight_phase = "BASE_TURN_INTERCEPT";
+            }
+        } elsif (auto_flight_phase == "BASE_TURN_INTERCEPT") {
+            if (x_rwy < -650.0 and math.abs(y_rwy) < 55.0 and hdg_err_rwy < 25.0) {
+                auto_flight_phase = "FINAL_APPROACH";
+            }
+        } else {
+            if (agl_m > 25.0 and x_rwy < -700.0 and (math.abs(y_rwy) > 150.0 or hdg_err_rwy > 38.0)) {
+                teardrop_side = y_rwy <= 0.0 ? -1.0 : 1.0;
+                auto_flight_phase = "BASE_TURN_INTERCEPT";
+            } elsif (agl_m > 1.45 and ((x_rwy > 60.0 and agl_m > 18.0) or (x_rwy > 480.0 and agl_m > 9.5) or (x_rwy > -30.0 and agl_m > 2.5 and kt > 85.0) or (x_rwy > -120.0 and agl_m <= 35.0 and (math.abs(y_rwy) > 22.0 or hdg_err_rwy > 18.0)) or (x_rwy >= -700.0 and agl_m > 18.0 and (math.abs(y_rwy) > 150.0 or hdg_err_rwy > 45.0)))) {
+                teardrop_side = y_rwy <= 0.0 ? -1.0 : 1.0;
+                auto_flight_phase = "GO_AROUND_TOGA";
+            } else {
+                auto_flight_phase = "FINAL_APPROACH";
+            }
+        }
+        setprop("/aero-shield/flight-phase", auto_flight_phase);
+    } else {
+        auto_flight_phase = getprop("/aero-shield/flight-phase") or auto_flight_phase;
+        if (math.abs(y_rwy) > 35.0 and (auto_flight_phase == "BASE_TURN_INTERCEPT" or auto_flight_phase == "GO_AROUND_TOGA")) {
+            teardrop_side = y_rwy <= 0.0 ? -1.0 : 1.0;
+        }
+    }
+
+    if (auto_flight_phase == "UPSET_RECOVERY") {
+        var is_stall = (kt < 53.0 or cur_pit > 13.0) ? 1 : 0;
+        var roll_gate = clamp(1.0 - math.abs(cur_roll_now) / 28.0, 0.0, 1.0);
+        tgt_hdg = hdg;
+        hdg_corr = 0.0;
+        tgt_pit_calc = is_stall ? (agl_m > 22.0 ? -2.2 : 0.5) : (cur_pit * (1.0 - roll_gate) + clamp(3.8 + (110.0 - agl_m) * 0.025, 2.2, 6.2) * roll_gate);
+        gs_err = tgt_pit_calc - cur_pit;
+    } elsif (auto_flight_phase == "GO_AROUND_TOGA") {
+        tgt_hdg = LRCV_RWY_HDG + clamp(-y_rwy * 0.10, -14.0, 14.0);
+        hdg_corr = wrap180(tgt_hdg - hdg);
+        gs_err = clamp(5.5 - act_fpa, -10.0, 10.0);
+        tgt_pit_calc = clamp(7.2 + (kt - 73.0) * 0.14, 4.5, 9.0);
+    } elsif (auto_flight_phase == "TEARDROP_OUTBOUND") {
+        var dx_wp = -2150.0 - x_rwy;
+        var dy_wp = teardrop_side * 660.0 - y_rwy;
+        tgt_hdg = LRCV_RWY_HDG + math.atan2(dy_wp, dx_wp) * 180.0 / math.pi;
+        hdg_corr = wrap180(tgt_hdg - hdg);
+        var tfpa_td = clamp(0.18 * (135.0 - agl_m), -2.8, 5.0);
+        gs_err = clamp(tfpa_td - act_fpa, -10.0, 10.0);
+        tgt_pit_calc = clamp(tfpa_td + 2.0 + 0.35 * gs_err, -2.0, 7.5);
+    } elsif (auto_flight_phase == "BASE_TURN_INTERCEPT") {
+        var rel_trk_a = -teardrop_side * 85.0;
+        if (math.abs(rel_yaw) > 95.0) {
+            tgt_hdg = LRCV_RWY_HDG + rel_trk_a;
+            hdg_corr = wrap180(tgt_hdg - hdg);
+            if (teardrop_side > 0.0 and hdg_corr < 0.0) hdg_corr = 65.0;
+            elsif (teardrop_side < 0.0 and hdg_corr > 0.0) hdg_corr = -65.0;
+        } else {
+            var dx_lk = clamp(math.abs(y_rwy) * 1.10 + 135.0, 135.0, 320.0);
+            var dy_pr = -y_rwy - vy_rwy * 2.0;
+            var rel_trk_b = clamp(math.atan2(dy_pr, dx_lk) * 180.0 / math.pi, -68.0, 68.0);
+            var w_stage_a = smoothstep_c1(145.0, 265.0, math.abs(y_rwy));
+            var rel_trk_cmd = rel_trk_a * w_stage_a + rel_trk_b * (1.0 - w_stage_a);
+            tgt_hdg = LRCV_RWY_HDG + rel_trk_cmd;
+            hdg_corr = wrap180(tgt_hdg - hdg);
+        }
+        var h_ref_b = clamp(math.max(35.0, 210.0 - x_rwy) * 0.05240778, 75.0, 135.0);
+        var tfpa_b = clamp(0.18 * (h_ref_b - agl_m), -3.3, 3.0);
+        gs_err = clamp(tfpa_b - act_fpa, -10.0, 10.0);
+        tgt_pit_calc = clamp(tfpa_b + 2.0 + 0.40 * gs_err, -3.0, 5.2);
+    }
+
     return {
         dist_m: dist_m,
         x_rwy: x_rwy,
@@ -893,7 +1049,7 @@ var compute_local_lrcv_guidance = func() {
         tgt_hdg: tgt_hdg,
         tgt_pit: tgt_pit_calc,
         flare: flare,
-        quar: 0
+        quar: is_spoofed
     };
 };
 
@@ -914,16 +1070,17 @@ var update_aero_shield_hud = func() {
 
     var udp_active = getprop("/aero-shield/active") or 0;
     var local_g = compute_local_lrcv_guidance();
+    var use_udp_fd = (udp_active > 0 and auto_flight_phase == "FINAL_APPROACH") ? 1 : 0;
 
     var dist_m   = udp_active > 0 ? (getprop("/aero-shield/distance-m") or local_g.dist_m) : local_g.dist_m;
     var xtk_m    = udp_active > 0 ? (getprop("/aero-shield/cross-track-m") or local_g.xtk_m) : local_g.xtk_m;
     var agl_m    = local_g.agl_m;
-    var hdg_corr = udp_active > 0 ? (getprop("/aero-shield/heading-corr-deg") or local_g.hdg_corr) : local_g.hdg_corr;
-    var gs_err   = udp_active > 0 ? (getprop("/aero-shield/gs-error-deg") or local_g.gs_err) : local_g.gs_err;
+    var hdg_corr = use_udp_fd > 0 ? (getprop("/aero-shield/heading-corr-deg") or local_g.hdg_corr) : local_g.hdg_corr;
+    var gs_err   = use_udp_fd > 0 ? (getprop("/aero-shield/gs-error-deg") or local_g.gs_err) : local_g.gs_err;
     var crab_deg = udp_active > 0 ? (getprop("/aero-shield/crab-deg") or 0.0) : 0.0;
-    var tgt_hdg  = udp_active > 0 ? (getprop("/aero-shield/target-heading-deg") or local_g.tgt_hdg) : local_g.tgt_hdg;
-    var tgt_pit  = udp_active > 0 ? (getprop("/aero-shield/target-pitch-deg") or local_g.tgt_pit) : local_g.tgt_pit;
-    var flare    = udp_active > 0 ? (getprop("/aero-shield/flare-active") or local_g.flare) : local_g.flare;
+    var tgt_hdg  = use_udp_fd > 0 ? (getprop("/aero-shield/target-heading-deg") or local_g.tgt_hdg) : local_g.tgt_hdg;
+    var tgt_pit  = use_udp_fd > 0 ? (getprop("/aero-shield/target-pitch-deg") or local_g.tgt_pit) : local_g.tgt_pit;
+    var flare    = use_udp_fd > 0 ? (getprop("/aero-shield/flare-active") or local_g.flare) : local_g.flare;
     var quar     = udp_active > 0 ? (getprop("/aero-shield/gnss-quarantined") or 0) : 0;
 
     ensure_in_air_engine_and_trim(agl_m);
@@ -1090,8 +1247,12 @@ var update_aero_shield_hud = func() {
         fpv_group.setTranslation(fpv_x, fpv_y);
     }
 
-    var fd_x = clamp(cx + hdg_corr * 3.8, 32.0, 356.0);
-    var fd_y = clamp(cy - gs_err * 6.5, 42.0, 210.0);
+    var raw_fd_x = clamp(cx + hdg_corr * 3.8, 32.0, 356.0);
+    var raw_fd_y = clamp(cy - gs_err * 6.5, 42.0, 210.0);
+    fd_x_smooth = fd_x_smooth == nil ? raw_fd_x : (0.72 * fd_x_smooth + 0.28 * raw_fd_x);
+    fd_y_smooth = fd_y_smooth == nil ? raw_fd_y : (0.72 * fd_y_smooth + 0.28 * raw_fd_y);
+    var fd_x = fd_x_smooth;
+    var fd_y = fd_y_smooth;
 
     fd_vec_path.reset();
     fd_vec_path.moveTo(fpv_x, fpv_y).lineTo(fd_x, fd_y);
@@ -1255,7 +1416,21 @@ var update_aero_shield_hud = func() {
     }
 
     # --- B. Bannerul de sus de pe parbriz (screen.window) ---
+    var cur_phase_prop = getprop("/aero-shield/flight-phase") or auto_flight_phase;
     var mode_tag = "[AUTOLAND CAT IIIc — FCS LIB AUTO-TUNED]";
+    if (cur_phase_prop == "UPSET_RECOVERY") {
+        mode_tag = "[UPSET RECOVERY UPRT — REDRESARE ATITUDINE]";
+        steer_txt = "!!! UPRT ACTIV: NIVELARE ARIPI (ROLL->0) & REDRESARE PICAJ/STALL !!!";
+    } elsif (cur_phase_prop == "GO_AROUND_TOGA") {
+        mode_tag = "[GO-AROUND TOGA — ATERIZARE ANULATA -> URCARE 125m]";
+        steer_txt = ">>> TOGA FULL POWER: URCA LA 125m AGL PENTRU CIRCUIT TEARDROP <<<";
+    } elsif (cur_phase_prop == "TEARDROP_OUTBOUND") {
+        mode_tag = "[TEARDROP CIRCUIT — REPOZITIONARE FIZICA SPRE -2.2km]";
+        steer_txt = ">>> ZBOR OUTBOUND TEARDROP CATRE PUNCTUL DE INTERCEPTARE FINAL <<<";
+    } elsif (cur_phase_prop == "BASE_TURN_INTERCEPT") {
+        mode_tag = "[BASE TURN 180 — REALINIERE PE AXUL PISTEI]";
+        steer_txt = ">>> VIRAJ DE BAZA 180° -> CAPTURA LOCALIZER & GLIDESLOPE 3.0° <<<";
+    }
     var cyber_tag = (quar > 0 or spoof_jam_active > 0) ? " | GPS CARANTINAT (CONFIDENTLY WRONG BLOCAT)" : "";
     hud_win.clear();
     hud_win.write(
@@ -1281,7 +1456,8 @@ var update_aero_shield_hud = func() {
     );
 
     # --- C. Servocomanda Autoland CAT IIIc + Stabilizator SAS prin Trim & Auto-Throttle ---
-    var tgt_pit_safe = clamp(tgt_pit, -4.8, 3.0);
+    var max_pit_phase = (cur_phase_prop == "FINAL_APPROACH") ? 3.0 : 9.0;
+    var tgt_pit_safe = clamp(tgt_pit, -4.8, max_pit_phase);
     var mcp_override = getprop("/aero-shield/fg-mcp-override") or 0;
 
     if (mcp_override > 0) {
@@ -1289,45 +1465,82 @@ var update_aero_shield_hud = func() {
         was_autoland = 0;
     } elsif (autoland > 0) {
         was_autoland = 1;
-        if (agl_m <= 1.65 and dist_m <= 25.0) {
-            # Rulare automata DOAR pe asfaltul Pistei 09 (dist_m <= 25.0m inseamna X_rwy >= -20m, dupa pragul pistei!):
+        if (cur_phase_prop == "FINAL_APPROACH" and agl_m <= 1.38 and local_g.x_rwy >= -25.0 and local_g.x_rwy <= 1250.0 and math.abs(xtk_m) <= 22.0) {
+            # Rulare automata DOAR dupa contactul rotilor principale pe asfalt — franare ferma + taiere amestec imediat la touchdown!
             setprop("/controls/engines/engine[0]/throttle", 0.0);
             setprop("/controls/engines/current-engine/throttle", 0.0);
+            setprop("/controls/engines/current-engine/mixture", 0.0);
+            setprop("/controls/engines/engine[0]/mixture", 0.0);
+            setprop("/controls/engines/engine[0]/cutoff", 1);
+            setprop("/controls/flight/flaps", 0.0);
             setprop("/controls/flight/rudder-trim", 0.0);
             setprop("/controls/flight/aileron", 0.0);
-            setprop("/controls/flight/elevator", 0.06);
+            setprop("/controls/flight/elevator", 0.14);
             var rwy_hdg_err = wrap180(LRCV_RWY_HDG - cur_hdg);
             var nws_rudder = clamp(rwy_hdg_err * 0.055 - xtk_m * 0.022, -0.65, 0.65);
             setprop("/controls/flight/rudder", nws_rudder);
-            var brk = kt > 3.0 ? 0.65 : 0.30;
-            setprop("/controls/gear/brake-left", brk);
-            setprop("/controls/gear/brake-right", brk);
+            var gs_now = getprop("/velocities/groundspeed-kt") or kt;
+            if (kt < 5.0 or gs_now < 1.5) {
+                # Oprire completa pe pista: frana de parcare + oprire motor (cutoff / mixture=0 / magnetos=0)
+                setprop("/controls/gear/brake-parking", 1);
+                setprop("/controls/gear/brake-left", 1.0);
+                setprop("/controls/gear/brake-right", 1.0);
+                setprop("/controls/switches/magnetos", 0);
+                setprop("/fdm/jsbsim/propulsion/engine[0]/set-running", 0);
+                setprop("/engines/active-engine/running", 0);
+                setprop("/engines/engine[0]/running", 0);
+            } else {
+                var brk = clamp(0.75 + (60.0 - kt) * 0.008, 0.72, 1.00);
+                setprop("/controls/gear/brake-parking", kt < 42.0 ? 1 : 0);
+                setprop("/controls/gear/brake-left", brk);
+                setprop("/controls/gear/brake-right", brk);
+            }
         } else {
-            var h_err = wrap180(tgt_hdg - cur_hdg);
-            var cmd_roll = clamp(h_err * 1.65, -20.0, 20.0);
-            if (agl_m < 8.0) {
+            var h_err = (cur_phase_prop == "BASE_TURN_INTERCEPT" or cur_phase_prop == "TEARDROP_OUTBOUND" or cur_phase_prop == "GO_AROUND_TOGA") ? local_g.hdg_corr : wrap180(tgt_hdg - cur_hdg);
+            var max_bank = (cur_phase_prop == "TEARDROP_OUTBOUND" or cur_phase_prop == "BASE_TURN_INTERCEPT") ? 24.0 : 20.0;
+            var cmd_roll = (cur_phase_prop == "UPSET_RECOVERY") ? 0.0 : clamp(h_err * 1.55, -max_bank, max_bank);
+            if (cur_phase_prop == "FINAL_APPROACH" and agl_m < 8.0) {
                 cmd_roll = clamp(h_err * 0.95, -7.0, 7.0);
                 setprop("/controls/flight/rudder", clamp(wrap180(LRCV_RWY_HDG - cur_hdg) * 0.032, -0.30, 0.30));
             } else {
-                setprop("/controls/flight/rudder", clamp(0.015 + cmd_roll * 0.006, -0.20, 0.20));
+                setprop("/controls/flight/rudder", clamp(0.015 + cmd_roll * 0.006, -0.25, 0.25));
             }
-            var ail = clamp(0.020 + 0.042 * (cmd_roll - cur_roll) - 0.012 * p_rate, -0.45, 0.45);
+            var ail_kp = (cur_phase_prop == "UPSET_RECOVERY") ? 0.058 : 0.042;
+            var ail = clamp(0.020 + ail_kp * (cmd_roll - cur_roll) - 0.012 * p_rate, -0.50, 0.50);
             setprop("/controls/flight/aileron", ail);
             setprop("/controls/flight/aileron-trim", 0.016);
 
             var p_err = tgt_pit_safe - cur_pitch;
-            var elev = clamp(-0.015 - 0.045 * p_err + 0.014 * q_rate, -0.25, 0.25);
+            var elev = clamp(-0.015 - 0.045 * p_err + 0.014 * q_rate, -0.26, 0.25);
             setprop("/controls/flight/elevator", elev);
             setprop("/controls/flight/elevator-trim", 0.0);
 
-            var thr_out = 0.0;
-            if (agl_m <= 5.5 and dist_m <= 25.0) {
+            var target_kt = 70.0;
+            var base_thr = clamp(0.56 + 0.025 * (target_kt - kt) + 0.028 * gs_err, 0.22, 0.85);
+            var thr_out = base_thr;
+            if (cur_phase_prop == "UPSET_RECOVERY") {
+                thr_out = (cur_pitch < -8.0 or kt > 84.0) ? 0.20 : 0.90;
+                setprop("/controls/flight/flaps", 0.33);
+            } elsif (cur_phase_prop == "GO_AROUND_TOGA") {
+                thr_out = 1.0;
+                setprop("/controls/flight/flaps", agl_m < 32.0 ? 0.33 : 0.0);
+            } elsif (cur_phase_prop == "TEARDROP_OUTBOUND") {
+                thr_out = agl_m < 115.0 ? 0.98 : clamp(0.68 + 0.025 * (76.0 - kt) + 0.032 * gs_err, 0.45, 0.95);
+                setprop("/controls/flight/flaps", 0.0);
+            } elsif (cur_phase_prop == "BASE_TURN_INTERCEPT") {
+                thr_out = clamp(0.62 + 0.028 * (72.0 - kt) + 0.038 * gs_err, 0.35, 0.92);
+                setprop("/controls/flight/flaps", (kt < 80.0 and math.abs(wrap180(cur_hdg - LRCV_RWY_HDG)) < 45.0) ? 0.33 : 0.0);
+            } elsif (agl_m <= 1.42 and dist_m <= 25.0) {
                 thr_out = 0.0;
-            } elsif (flare > 0 and dist_m <= 30.0) {
-                thr_out = 0.15;
+            } elsif (agl_m <= 4.20 and dist_m <= 28.0) {
+                # C1 Cushion Flare Autothrottle Retard: mentine perna de aer cald (0.24 = ~1500 RPM) pana la atingerea rotilor (1.42m AGL)
+                var ret_w = smoothstep_c1(1.42, 4.20, agl_m);
+                var vs_fpm_now = vs_fps * 60.0;
+                var sink_boost = clamp((-210.0 - vs_fpm_now) * 0.0012, 0.0, 0.16);
+                var thr_cushion = clamp(0.24 + sink_boost, 0.22, 0.42);
+                thr_out = thr_cushion * (1.0 - ret_w) + base_thr * ret_w;
             } else {
-                var target_kt = 72.0;
-                thr_out = clamp(0.58 + 0.025 * (target_kt - kt) + 0.028 * gs_err, 0.20, 0.85);
+                setprop("/controls/flight/flaps", 0.33);
             }
             setprop("/controls/engines/engine[0]/throttle", thr_out);
             setprop("/controls/engines/current-engine/throttle", thr_out);

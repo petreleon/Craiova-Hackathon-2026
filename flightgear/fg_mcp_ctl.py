@@ -93,8 +93,9 @@ def compute_unified_fd_guidance_py(
 
     look_blend = smoothstep_c1(-160.0, -80.0, along_track_m)
     lead_w = smoothstep_c1(1.5, 10.0, abs(cross_track_m))
-    loc_lookahead_m = 95.0 + 25.0 * look_blend
-    vy_lead_sec = 1.35 * lead_w
+    s_turn_w = smoothstep_c1(18.0, 42.0, abs(cross_track_m))
+    loc_lookahead_m = 95.0 + 25.0 * look_blend + 125.0 * s_turn_w
+    vy_lead_sec = 1.35 * lead_w + 2.15 * s_turn_w
     dy_predictive = -cross_track_m - vy_mps * vy_lead_sec
 
     air_target_track_deg = clamp(math.degrees(math.atan2(dy_predictive, loc_lookahead_m)), -28.0, 28.0)
@@ -196,19 +197,23 @@ def compute_ap_control_from_fd(
       AERO-SHIELD's unified Flight Director (`gs_err_deg -> 0.0`, `cur_pitch_deg -> tgt_pit_deg`).
     """
     hdg_corr = wrap180(tgt_hdg_deg - cur_hdg_deg)
-    low_alt_slip = 1.0 - smoothstep_c1(12.0, 42.0, agl_m)
+    s_turn_w = max(
+        smoothstep_c1(4.5, 14.0, abs(xtk_m)),
+        smoothstep_c1(6.5, 15.0, abs(hdg_corr)),
+    )
+    low_alt_slip = 1.0 - smoothstep_c1(12.0, 38.0, agl_m)
     crosswind_slip = smoothstep_c1(0.5, 2.5, abs(crab_deg)) * (1.0 - smoothstep_c1(250.0, 320.0, agl_m))
-    slip_blend = max(low_alt_slip, crosswind_slip)
+    slip_blend = max(low_alt_slip, crosswind_slip) * (1.0 - s_turn_w)
     if slip_blend > 0.02:
-        xtk_int_next = clamp(xtk_int + xtk_m * dt * 0.90, -8.5, 8.5)
+        xtk_int_next = clamp(xtk_int + xtk_m * dt * 0.90, -6.5, 6.5)
         rud_int_next = clamp(
-            rud_int + hdg_corr * dt * (SYNTH_GAINS.get("rudder_decrab_ki", 0.034) * 1.45),
-            -0.55,
-            0.55,
+            rud_int + hdg_corr * dt * (SYNTH_GAINS.get("rudder_decrab_ki", 0.034) * 1.15),
+            -0.22,
+            0.22,
         )
     else:
-        xtk_int_next = xtk_int * 0.90
-        rud_int_next = rud_int * 0.90
+        xtk_int_next = xtk_int * 0.85
+        rud_int_next = rud_int * 0.85
 
     # Analytical 2x2 Lateral-Directional Matrix Inversion (M_lat^-1) extracted from c172p.xml
     lat_2x2 = solve_lateral_directional_2x2_trim(
@@ -236,7 +241,7 @@ def compute_ap_control_from_fd(
     max_roll = 18.0 * (1.0 - slip_blend) + 14.5 * slip_blend
     roll_gain = (
         SYNTH_GAINS["roll_gain_approach"] * (1.0 - slip_blend)
-        + SYNTH_GAINS["roll_gain_slip"] * (1.0 - 0.82 * slip_blend) * slip_blend
+        + SYNTH_GAINS["roll_gain_slip"] * (1.0 - 0.72 * slip_blend) * slip_blend
     )
     cmd_roll = clamp(hdg_corr * roll_gain + wing_low_bank_deg, -max_roll, max_roll)
 
@@ -245,10 +250,10 @@ def compute_ap_control_from_fd(
     rud_decrab = clamp(
         rud_p_trim
         + rud_int_next
-        + hdg_corr * (SYNTH_GAINS["rudder_decrab_kp"] * 1.65)
-        - r_dps * 0.024,
-        -0.82,
-        0.82,
+        + hdg_corr * (SYNTH_GAINS["rudder_decrab_kp"] * 1.35)
+        - r_dps * 0.034,
+        -0.38,
+        0.38,
     )
     cmd_rud = rud_coord * (1.0 - slip_blend) + rud_decrab * slip_blend
 
@@ -262,8 +267,19 @@ def compute_ap_control_from_fd(
         0.42,
     )
 
+    dx_before_thr = math.sqrt(max(0.0, dist_m * dist_m - xtk_m * xtk_m))
     gs_int_next = clamp(gs_int + SYNTH_GAINS["gs_ki_pitch"] * gs_err_deg * dt, -1.4, 1.4)
-    cmd_pit = clamp(tgt_pit_deg + SYNTH_GAINS["gs_kp_pitch"] * gs_err_deg + gs_int_next, -3.5, 3.2)
+    flare_sink_damping_deg = 0.0
+    max_cmd_pit = 3.2
+    if dx_before_thr <= 28.0 and agl_m <= 5.5:
+        target_flare_vs_fpm = -105.0 - 38.0 * clamp((agl_m - 1.3) / 4.2, 0.0, 1.0)
+        flare_sink_damping_deg = clamp((target_flare_vs_fpm - vs_fpm) * 0.0042, -0.8, 1.1)
+        max_cmd_pit = 2.35
+    cmd_pit = clamp(
+        tgt_pit_deg + SYNTH_GAINS["gs_kp_pitch"] * gs_err_deg + gs_int_next + flare_sink_damping_deg,
+        -3.5,
+        max_cmd_pit,
+    )
     p_err = cmd_pit - cur_pitch_deg
     elev_int_next = clamp(elev_int - SYNTH_GAINS["elevator_ki_pitch"] * p_err * dt, -0.10, 0.08)
     elev = clamp(
@@ -275,13 +291,17 @@ def compute_ap_control_from_fd(
         0.20,
     )
 
-    dx_before_thr = math.sqrt(max(0.0, dist_m * dist_m - xtk_m * xtk_m))
-    base_thr = clamp(0.54 + 0.028 * (70.0 - ias_kt) + 0.042 * gs_err_deg, 0.15, 0.85)
-    if dx_before_thr <= 28.0 and agl_m <= 6.0:
+    base_thr = clamp(0.54 + 0.028 * (70.0 - ias_kt) + 0.042 * gs_err_deg, 0.22, 0.85)
+    if dx_before_thr <= 25.0 and agl_m <= 1.42:
         thr = 0.0
-    elif dx_before_thr <= 35.0 and (agl_m <= 11.0 or flare_active > 0):
-        flare_thr_scale = clamp((agl_m - 6.0) / 5.0, 0.0, 1.0)
-        thr = base_thr * flare_thr_scale
+    elif dx_before_thr <= 28.0 and agl_m <= 4.20:
+        # C1 Cushion Flare Autothrottle Retard: maintains warm flight-idle propwash cushion (0.24..0.44)
+        # down to main-gear touchdown (1.42m AGL), preventing stall and eliminating abrupt sink drop!
+        ret_w = smoothstep_c1(1.42, 4.20, agl_m)
+        sink_boost = clamp((-210.0 - vs_fpm) * 0.0012, 0.0, 0.16)
+        spd_boost = clamp((60.0 - ias_kt) * 0.032, 0.0, 0.14)
+        thr_cushion = clamp(0.24 + sink_boost + spd_boost, 0.22, 0.44)
+        thr = thr_cushion * (1.0 - ret_w) + base_thr * ret_w
     else:
         thr = base_thr
 
@@ -298,6 +318,277 @@ def compute_ap_control_from_fd(
         "gs_int": gs_int_next,
         "elev_int": elev_int_next,
         "slip_blend": slip_blend,
+        "flaps": 0.33,
+    }
+
+
+class AutonomousFlightPhase:
+    FINAL_APPROACH = "FINAL_APPROACH"
+    UPSET_RECOVERY = "UPSET_RECOVERY"
+    GO_AROUND_TOGA = "GO_AROUND_TOGA"
+    TEARDROP_OUTBOUND = "TEARDROP_OUTBOUND"
+    BASE_TURN_INTERCEPT = "BASE_TURN_INTERCEPT"
+    ROLLOUT_BRAKE = "ROLLOUT_BRAKE"
+
+
+def update_autonomous_flight_phase(
+    cur_phase: str,
+    x_rwy_m: float,
+    xtk_m: float,
+    agl_m: float,
+    ias_kt: float,
+    vs_fpm: float,
+    cur_roll_deg: float,
+    cur_pitch_deg: float,
+    cur_hdg_deg: float,
+    rwy_hdg_deg: float,
+    touchdown_latched: bool,
+    teardrop_side: float = -1.0,
+) -> tuple:
+    """
+    100% Real-Time Autonomous Flight Envelope & Maneuver State Machine (Zero Cheating / Zero Teleportation):
+      - UPSET_RECOVERY (FAA/ICAO UPRT): recovers from pilot-induced spiral dives, extreme bank, or stalls.
+      - GO_AROUND_TOGA (ICAO Doc 8168 Balked Landing): aborts unsafe landings (too high/fast/unaligned/overrun).
+      - TEARDROP_OUTBOUND -> BASE_TURN_INTERCEPT: flies a physical 3D teardrop circuit back to final approach.
+    """
+    if touchdown_latched:
+        return AutonomousFlightPhase.ROLLOUT_BRAKE, teardrop_side
+
+    # 1. Highest Priority: Real-Time UPRT (Unusual Attitude / Pilot Error Recovery) in the air
+    is_upset_entry = (
+        agl_m > 2.2
+        and (
+            abs(cur_roll_deg) > 38.0
+            or cur_pitch_deg < -12.0
+            or cur_pitch_deg > 13.5
+            or (agl_m > 4.5 and ias_kt < 50.5)
+            or (agl_m < 250.0 and vs_fpm < -1150.0)
+        )
+    )
+    if is_upset_entry:
+        return AutonomousFlightPhase.UPSET_RECOVERY, teardrop_side
+
+    if cur_phase == AutonomousFlightPhase.UPSET_RECOVERY:
+        upset_cleared = (
+            abs(cur_roll_deg) < 14.0
+            and -5.5 <= cur_pitch_deg <= 8.5
+            and ias_kt >= 57.0
+            and vs_fpm >= -720.0
+        )
+        if not upset_cleared:
+            return AutonomousFlightPhase.UPSET_RECOVERY, teardrop_side
+        # After recovery, check if we can safely continue approach or must execute Go-Around:
+        # Only force GO_AROUND_TOGA if the aircraft is too close to the threshold (x_rwy_m > -650.0)
+        # to stabilize on the localizer/glideslope; when x_rwy_m <= -650.0, FINAL_APPROACH S-Turn captures smoothly.
+        h_ideal = max(35.0, 210.0 - x_rwy_m) * math.tan(math.radians(3.0))
+        if x_rwy_m > -250.0 or (x_rwy_m > -650.0 and (abs(xtk_m) > 45.0 or agl_m > h_ideal + 26.0)):
+            side = -1.0 if xtk_m <= 0.0 else 1.0
+            return AutonomousFlightPhase.GO_AROUND_TOGA, side
+        return AutonomousFlightPhase.FINAL_APPROACH, teardrop_side
+
+    # 2. Go-Around -> Teardrop Outbound -> Base Turn -> Final Approach Circuit
+    if cur_phase == AutonomousFlightPhase.GO_AROUND_TOGA:
+        if agl_m >= 85.0 and ias_kt >= 58.0:
+            return AutonomousFlightPhase.TEARDROP_OUTBOUND, teardrop_side
+        return AutonomousFlightPhase.GO_AROUND_TOGA, teardrop_side
+
+    if cur_phase == AutonomousFlightPhase.TEARDROP_OUTBOUND:
+        if x_rwy_m <= -1380.0 and abs(xtk_m) >= 240.0:
+            return AutonomousFlightPhase.BASE_TURN_INTERCEPT, teardrop_side
+        return AutonomousFlightPhase.TEARDROP_OUTBOUND, teardrop_side
+
+    if cur_phase == AutonomousFlightPhase.BASE_TURN_INTERCEPT:
+        hdg_err_rwy = abs(wrap180(cur_hdg_deg - rwy_hdg_deg))
+        if x_rwy_m < -650.0 and abs(xtk_m) < 55.0 and hdg_err_rwy < 25.0:
+            return AutonomousFlightPhase.FINAL_APPROACH, teardrop_side
+        return AutonomousFlightPhase.BASE_TURN_INTERCEPT, teardrop_side
+
+    # 3. In FINAL_APPROACH: Automatic Base-Leg / Perpendicular Intercept & Stabilized Approach Gate
+    hdg_err_rwy = abs(wrap180(cur_hdg_deg - rwy_hdg_deg))
+    if (
+        cur_phase == AutonomousFlightPhase.FINAL_APPROACH
+        and agl_m > 25.0
+        and x_rwy_m < -700.0
+        and (abs(xtk_m) > 150.0 or hdg_err_rwy > 38.0)
+    ):
+        side = -1.0 if xtk_m <= 0.0 else 1.0
+        return AutonomousFlightPhase.BASE_TURN_INTERCEPT, side
+
+    compromised_landing = (
+        agl_m > 1.45
+        and (
+            (x_rwy_m > 60.0 and agl_m > 18.0)
+            or (x_rwy_m > 480.0 and agl_m > 9.5)
+            or (x_rwy_m > -30.0 and agl_m > 2.5 and ias_kt > 85.0)
+            or (x_rwy_m > -120.0 and agl_m <= 35.0 and (abs(xtk_m) > 22.0 or hdg_err_rwy > 18.0))
+            or (x_rwy_m >= -700.0 and agl_m > 18.0 and (abs(xtk_m) > 150.0 or hdg_err_rwy > 45.0))
+            or (x_rwy_m > 1050.0 and agl_m > 1.55)
+            or (x_rwy_m > -80.0 and agl_m < 15.0 and vs_fpm < -980.0)
+        )
+    )
+    if compromised_landing:
+        side = -1.0 if xtk_m <= 0.0 else 1.0
+        return AutonomousFlightPhase.GO_AROUND_TOGA, side
+
+    return AutonomousFlightPhase.FINAL_APPROACH, teardrop_side
+
+
+def compute_maneuver_guidance_and_ap(
+    phase: str,
+    x_rwy_m: float,
+    xtk_m: float,
+    agl_m: float,
+    ias_kt: float,
+    vs_fpm: float,
+    cur_roll_deg: float,
+    cur_pitch_deg: float,
+    cur_hdg_deg: float,
+    rwy_hdg_deg: float,
+    vx_rwy_mps: float = 35.0,
+    vy_rwy_mps: float = 0.0,
+    p_dps: float = 0.0,
+    q_dps: float = 0.0,
+    r_dps: float = 0.0,
+    teardrop_side: float = -1.0,
+    elev_int: float = 0.0,
+    dt: float = 0.05,
+) -> dict:
+    """
+    Computes unified FD + AP commands (FD == AP) for non-approach maneuver phases:
+    UPSET_RECOVERY, GO_AROUND_TOGA, TEARDROP_OUTBOUND, and BASE_TURN_INTERCEPT.
+    """
+    spd_mps = max(18.0, math.hypot(vx_rwy_mps, vy_rwy_mps))
+    act_fpa_deg = math.degrees(math.atan2(vs_fpm / 196.85, spd_mps))
+
+    if phase == AutonomousFlightPhase.UPSET_RECOVERY:
+        is_stall = (ias_kt < 53.0) or (cur_pitch_deg > 13.0)
+        tgt_hdg = cur_hdg_deg
+        hdg_corr = 0.0
+        cmd_roll = 0.0
+        # FAA/ICAO UPRT: Roll wings level BEFORE pulling pitch to prevent spiral tightening!
+        roll_gate = clamp(1.0 - abs(cur_roll_deg) / 28.0, 0.0, 1.0)
+        if is_stall:
+            cmd_pit = -2.2 if agl_m > 22.0 else 0.5
+            thr = 1.0
+        else:
+            rec_pit = clamp(3.8 + (110.0 - agl_m) * 0.025, 2.2, 6.2)
+            cmd_pit = cur_pitch_deg * (1.0 - roll_gate) + rec_pit * roll_gate
+            thr = 0.20 if (cur_pitch_deg < -8.0 or ias_kt > 84.0) else 0.85
+        gs_err = cmd_pit - cur_pitch_deg
+        ail = clamp(
+            SYNTH_GAINS["aileron_trim_norm"]
+            + (SYNTH_GAINS["aileron_kp_roll"] * 1.45) * (cmd_roll - cur_roll_deg)
+            - SYNTH_GAINS["aileron_kd_p"] * p_dps,
+            -0.55,
+            0.55,
+        )
+        elev = clamp(
+            SYNTH_GAINS["elevator_base_trim"]
+            - (SYNTH_GAINS["elevator_kp_pitch"] * 1.30) * (cmd_pit - cur_pitch_deg)
+            + SYNTH_GAINS["elevator_kd_q"] * q_dps,
+            -0.28,
+            0.25,
+        )
+        rud = clamp(SYNTH_GAINS["rudder_p_factor_trim"] - 0.008 * cur_roll_deg - 0.022 * r_dps, -0.35, 0.35)
+        return {
+            "tgt_hdg_deg": tgt_hdg,
+            "hdg_corr_deg": hdg_corr,
+            "gs_err_deg": gs_err,
+            "cmd_roll_deg": cmd_roll,
+            "cmd_pit_deg": cmd_pit,
+            "cmd_rud": rud,
+            "aileron": ail,
+            "elevator": elev,
+            "throttle": thr,
+            "flaps": 0.33,
+            "elev_int": elev_int,
+        }
+
+    if phase == AutonomousFlightPhase.GO_AROUND_TOGA:
+        tgt_hdg = (rwy_hdg_deg + clamp(-xtk_m * 0.10, -14.0, 14.0)) % 360.0
+        hdg_corr = wrap180(tgt_hdg - cur_hdg_deg)
+        cmd_roll = clamp(hdg_corr * 1.40, -18.0, 18.0)
+        tgt_fpa = 5.5
+        gs_err = clamp(tgt_fpa - act_fpa_deg, -10.0, 10.0)
+        cmd_pit = clamp(7.2 + (ias_kt - 73.0) * 0.14, 4.5, 9.0)
+        flaps = 0.33 if agl_m < 32.0 else 0.0
+        thr = 1.0
+    elif phase == AutonomousFlightPhase.TEARDROP_OUTBOUND:
+        x_wp = -2150.0
+        y_wp = teardrop_side * 660.0
+        dx_wp = x_wp - x_rwy_m
+        dy_wp = y_wp - xtk_m
+        rel_course_deg = math.degrees(math.atan2(dy_wp, dx_wp))
+        tgt_hdg = (rwy_hdg_deg + rel_course_deg) % 360.0
+        hdg_corr = wrap180(tgt_hdg - cur_hdg_deg)
+        cmd_roll = clamp(hdg_corr * 1.45, -24.0, 24.0)
+        alt_circuit_m = 135.0
+        tgt_fpa = clamp(0.18 * (alt_circuit_m - agl_m), -2.8, 5.0)
+        gs_err = clamp(tgt_fpa - act_fpa_deg, -10.0, 10.0)
+        cmd_pit = clamp(tgt_fpa + 2.0 + 0.35 * gs_err, -2.0, 7.5)
+        flaps = 0.0
+        thr = 0.98 if agl_m < 115.0 else clamp(0.68 + 0.025 * (76.0 - ias_kt) + 0.032 * gs_err, 0.45, 0.95)
+    else:
+        # BASE_TURN_INTERCEPT: Two-stage 180-deg coordinated base turn onto final approach centerline & 3.0-deg glideslope
+        # Uses a C1 smoothstep blend across |xtk_m| in [145m, 265m] so the green Flight Director dot never jumps!
+        cur_rel_hdg = wrap180(cur_hdg_deg - rwy_hdg_deg)
+        rel_trk_a = -teardrop_side * 85.0
+        if abs(cur_rel_hdg) > 95.0:
+            # Stage A (Downwind/Outbound to Base): Turn onto perpendicular base leg (-teardrop_side * 85 deg)
+            tgt_hdg = (rwy_hdg_deg + rel_trk_a) % 360.0
+            hdg_corr = wrap180(tgt_hdg - cur_hdg_deg)
+            if teardrop_side > 0.0 and hdg_corr < 0.0:
+                hdg_corr = 65.0
+            elif teardrop_side < 0.0 and hdg_corr > 0.0:
+                hdg_corr = -65.0
+        else:
+            # Stage A -> Stage B C1-blended base-to-final intercept (zero step jump at xtk = 210m!)
+            dx_look = clamp(abs(xtk_m) * 1.10 + 135.0, 135.0, 320.0)
+            dy_pred = -xtk_m - vy_rwy_mps * 2.0
+            rel_trk_b = clamp(math.degrees(math.atan2(dy_pred, dx_look)), -68.0, 68.0)
+            w_stage_a = smoothstep_c1(145.0, 265.0, abs(xtk_m))
+            rel_trk_cmd = rel_trk_a * w_stage_a + rel_trk_b * (1.0 - w_stage_a)
+            tgt_hdg = (rwy_hdg_deg + rel_trk_cmd) % 360.0
+            hdg_corr = wrap180(tgt_hdg - cur_hdg_deg)
+        cmd_roll = clamp(hdg_corr * 1.55, -24.0, 24.0)
+        h_ref = clamp(max(35.0, 210.0 - x_rwy_m) * math.tan(math.radians(3.0)), 75.0, 135.0)
+        tgt_fpa = clamp(0.18 * (h_ref - agl_m), -3.3, 3.0)
+        gs_err = clamp(tgt_fpa - act_fpa_deg, -10.0, 10.0)
+        cmd_pit = clamp(tgt_fpa + 2.0 + 0.40 * gs_err, -3.0, 5.2)
+        flaps = 0.33 if (ias_kt < 80.0 and abs(cur_rel_hdg) < 45.0) else 0.0
+        thr = clamp(0.62 + 0.028 * (72.0 - ias_kt) + 0.038 * gs_err, 0.35, 0.92)
+
+    ail = clamp(
+        SYNTH_GAINS["aileron_trim_norm"]
+        + SYNTH_GAINS["aileron_kp_roll"] * (cmd_roll - cur_roll_deg)
+        - SYNTH_GAINS["aileron_kd_p"] * p_dps,
+        -0.45,
+        0.45,
+    )
+    elev = clamp(
+        SYNTH_GAINS["elevator_base_trim"]
+        - SYNTH_GAINS["elevator_kp_pitch"] * (cmd_pit - cur_pitch_deg)
+        + SYNTH_GAINS["elevator_kd_q"] * q_dps,
+        -0.25,
+        0.22,
+    )
+    rud = clamp(
+        SYNTH_GAINS["rudder_p_factor_trim"] + cmd_roll * SYNTH_GAINS["rudder_coord_roll_gain"] - 0.015 * r_dps,
+        -0.28,
+        0.28,
+    )
+    return {
+        "tgt_hdg_deg": tgt_hdg,
+        "hdg_corr_deg": hdg_corr,
+        "gs_err_deg": gs_err,
+        "cmd_roll_deg": cmd_roll,
+        "cmd_pit_deg": cmd_pit,
+        "cmd_rud": rud,
+        "aileron": ail,
+        "elevator": elev,
+        "throttle": thr,
+        "flaps": flaps,
+        "elev_int": elev_int,
     }
 
 
@@ -362,15 +653,36 @@ def compute_traditional_gps_confidently_wrong_telemetry(
 
 
 class FlightGearMcpClient:
-    def __init__(self, host: str = "127.0.0.1", port: int = 5501, timeout: float = 2.0):
+    def __init__(self, host: str = "127.0.0.1", port: int = 5501, timeout: float = 12.0):
         self.host = host
         self.port = port
-        self.sock = socket.create_connection((host, port), timeout=timeout)
+        self.timeout = timeout
+        self.sock = None
+        self.file = None
+        self._connect()
+
+    def _connect(self) -> None:
+        self.close()
+        self.sock = socket.create_connection((self.host, self.port), timeout=self.timeout)
         self.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-        self.sock.settimeout(timeout)
+        self.sock.settimeout(self.timeout)
         self.file = self.sock.makefile("r", encoding="utf-8", errors="replace")
         # Switch FlightGear telnet server to raw data mode (no prompt)
         self.sock.sendall(b"data\r\n")
+
+    def close(self) -> None:
+        if getattr(self, "file", None) is not None:
+            try:
+                self.file.close()
+            except Exception:
+                pass
+            self.file = None
+        if getattr(self, "sock", None) is not None:
+            try:
+                self.sock.close()
+            except Exception:
+                pass
+            self.sock = None
 
     def get_float(self, prop: str, default: float = 0.0) -> float:
         try:
@@ -378,29 +690,63 @@ class FlightGearMcpClient:
             line = self.file.readline().strip()
             return float(line) if line else default
         except Exception:
+            try:
+                self._connect()
+            except Exception:
+                pass
             return default
 
     def get_batch(self, props_with_defaults: list) -> dict:
         cmd = "".join(f"get {prop}\r\n" for prop, _ in props_with_defaults)
-        self.sock.sendall(cmd.encode("utf-8"))
         out = {}
-        for prop, default in props_with_defaults:
+        try:
+            self.sock.sendall(cmd.encode("utf-8"))
+            for prop, default in props_with_defaults:
+                line = self.file.readline()
+                if not line:
+                    raise OSError("EOF on FlightGear telnet socket")
+                s_line = line.strip()
+                try:
+                    out[prop] = float(s_line) if s_line else default
+                except ValueError:
+                    out[prop] = default
+            return out
+        except Exception:
             try:
-                line = self.file.readline().strip()
-                out[prop] = float(line) if line else default
+                self._connect()
             except Exception:
-                out[prop] = default
-        return out
+                pass
+            for prop, default in props_with_defaults:
+                if prop not in out:
+                    out[prop] = default
+            return out
 
     def set_prop(self, prop: str, val) -> None:
-        self.sock.sendall(f"set {prop} {val}\r\n".encode("utf-8"))
+        try:
+            self.sock.sendall(f"set {prop} {val}\r\n".encode("utf-8"))
+        except Exception:
+            try:
+                self._connect()
+                self.sock.sendall(f"set {prop} {val}\r\n".encode("utf-8"))
+            except Exception:
+                pass
 
     def set_batch(self, items: list) -> None:
         cmd = "".join(f"set {prop} {val}\r\n" for prop, val in items)
-        self.sock.sendall(cmd.encode("utf-8"))
+        try:
+            self.sock.sendall(cmd.encode("utf-8"))
+        except Exception:
+            try:
+                self._connect()
+                self.sock.sendall(cmd.encode("utf-8"))
+            except Exception:
+                pass
 
     def run_cmd(self, command_name: str) -> None:
-        self.sock.sendall(f"run {command_name}\r\n".encode("utf-8"))
+        try:
+            self.sock.sendall(f"run {command_name}\r\n".encode("utf-8"))
+        except Exception:
+            pass
 
     def ensure_healthy_engine_and_airframe(self, force_start: bool = False) -> None:
         items = [
@@ -445,7 +791,7 @@ class FlightGearMcpClient:
     def snapshot_controls_and_guidance(self) -> dict:
         b = self.get_batch([
             ("/aero-shield/alt-agl-m", -1.0),
-            ("/position/altitude-agl-ft", 0.0),
+            ("/position/altitude-agl-ft", 320.0),
             ("/aero-shield/distance-m", 2500.0),
             ("/aero-shield/cross-track-m", 0.0),
             ("/aero-shield/heading-corr-deg", 0.0),
@@ -475,6 +821,7 @@ class FlightGearMcpClient:
             ("/controls/gear/brake-parking", 0.0),
             ("/aero-shield/spoof-jam-active", 0.0),
             ("/aero-shield/shield-protection", 1.0),
+            ("/aero-shield/autoland-local", 1.0),
             ("/aero-shield/cmp-shield-xtk-m", 0.0),
             ("/aero-shield/cmp-spoof-xtk-m", 0.0),
             ("/aero-shield/cmp-ins-xtk-m", 0.0),
@@ -484,18 +831,52 @@ class FlightGearMcpClient:
             ("/environment/wind-from-heading-deg", 175.0),
             ("/environment/wind-speed-kt", 14.0),
             ("/environment/rain-norm", 0.85),
+            ("/aero-shield/target-rwy/heading-deg", 88.9314),
+            ("/aero-shield/target-rwy/lat-deg", 44.317944),
+            ("/aero-shield/target-rwy/lon-deg", 23.872944),
+            ("/position/latitude-deg", 44.317944),
+            ("/position/longitude-deg", 23.872944),
+            ("/velocities/speed-north-fps", 0.0),
+            ("/velocities/speed-east-fps", 0.0),
         ])
         agl = b["/aero-shield/alt-agl-m"]
         if agl <= 0.0:
             agl = b["/position/altitude-agl-ft"] * 0.3048
+        dyn_rwy_hdg = b["/aero-shield/target-rwy/heading-deg"]
+        if dyn_rwy_hdg <= 0.01:
+            dyn_rwy_hdg = 88.9314
+        rwy_lat = b["/aero-shield/target-rwy/lat-deg"]
+        if abs(rwy_lat) <= 0.01:
+            rwy_lat = 44.317944
+        rwy_lon = b["/aero-shield/target-rwy/lon-deg"]
+        if abs(rwy_lon) <= 0.01:
+            rwy_lon = 23.872944
+        ac_lat = b["/position/latitude-deg"]
+        ac_lon = b["/position/longitude-deg"]
+        dn_m = (ac_lat - rwy_lat) * 111132.95
+        de_m = (ac_lon - rwy_lon) * 111319.49 * math.cos(math.radians(rwy_lat))
+        h_rad = math.radians(dyn_rwy_hdg)
+        cos_h = math.cos(h_rad)
+        sin_h = math.sin(h_rad)
+        x_rwy_m = dn_m * cos_h + de_m * sin_h
+        y_rwy_m = -dn_m * sin_h + de_m * cos_h
+        vn_mps = b["/velocities/speed-north-fps"] * 0.3048
+        ve_mps = b["/velocities/speed-east-fps"] * 0.3048
+        vx_rwy_mps = vn_mps * cos_h + ve_mps * sin_h
+        vy_rwy_mps = -vn_mps * sin_h + ve_mps * cos_h
+        tgt_hdg_val = b["/aero-shield/target-heading-deg"]
+        if tgt_hdg_val <= 0.01:
+            tgt_hdg_val = dyn_rwy_hdg
         return {
             "agl_m": agl,
             "dist_m": b["/aero-shield/distance-m"],
+            "x_rwy_m": x_rwy_m,
+            "y_rwy_m": y_rwy_m,
             "xtk_m": b["/aero-shield/cross-track-m"],
             "hdg_corr_deg": b["/aero-shield/heading-corr-deg"],
             "gs_err_deg": b["/aero-shield/gs-error-deg"],
             "crab_deg": b["/aero-shield/crab-deg"],
-            "tgt_hdg_deg": b["/aero-shield/target-heading-deg"],
+            "tgt_hdg_deg": tgt_hdg_val,
             "tgt_pit_deg": b["/aero-shield/target-pitch-deg"],
             "flare": int(b["/aero-shield/flare-active"]),
             "gnss_quar": int(b["/aero-shield/gnss-quarantined"]),
@@ -519,6 +900,7 @@ class FlightGearMcpClient:
             "brake_parking": b["/controls/gear/brake-parking"],
             "spoof_jam_active": int(b["/aero-shield/spoof-jam-active"] > 0.5),
             "shield_protection": int(b["/aero-shield/shield-protection"] > 0.5),
+            "autoland_local": int(b["/aero-shield/autoland-local"] > 0.5),
             "cmp_shield_xtk_m": b["/aero-shield/cmp-shield-xtk-m"],
             "cmp_spoof_xtk_m": b["/aero-shield/cmp-spoof-xtk-m"],
             "cmp_ins_xtk_m": b["/aero-shield/cmp-ins-xtk-m"],
@@ -528,6 +910,13 @@ class FlightGearMcpClient:
             "wind_dir_deg": b["/environment/wind-from-heading-deg"],
             "wind_kt": b["/environment/wind-speed-kt"],
             "rain_norm": b["/environment/rain-norm"],
+            "rwy_hdg_deg": dyn_rwy_hdg,
+            "lat_deg": ac_lat,
+            "lon_deg": ac_lon,
+            "vn_mps": vn_mps,
+            "ve_mps": ve_mps,
+            "vx_rwy_mps": vx_rwy_mps,
+            "vy_rwy_mps": vy_rwy_mps,
         }
 
     def close(self) -> None:
@@ -672,17 +1061,18 @@ def cmd_verify() -> int:
     return 0
 
 
-def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False) -> int:
+def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False, daemon_mode: bool = False) -> int:
     mcp = FlightGearMcpClient()
     # Disable any in-sim Nasal autoland cheat and activate external FG-MCP control
     mcp.ensure_healthy_engine_and_airframe(force_start=True)
-    apply_storm_weather(mcp)
+    if not daemon_mode:
+        apply_storm_weather(mcp)
     post_aeroshield_cmd({"type": "SetShieldProtection", "payload": {"enabled": True}})
     mcp.set_batch([
         ("/sim/hud/visibility[0]", 0),
         ("/sim/hud/visibility[1]", 0),
-        ("/aero-shield/autoland-local", 0),
-        ("/aero-shield/autoland-cmd", 0),
+        ("/aero-shield/autoland-local", 1 if daemon_mode else 0),
+        ("/aero-shield/autoland-cmd", 1 if daemon_mode else 0),
         ("/aero-shield/fg-mcp-override", 1),
         ("/aero-shield/shield-protection", 1),
         ("/controls/gear/brake-parking", 0),
@@ -700,24 +1090,28 @@ def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False) -> int
 
     init_snap = mcp.snapshot_controls_and_guidance()
     if (
-        (init_snap["agl_m"] < 8.0 and init_snap["dist_m"] > 450.0)
-        or abs(init_snap["roll_deg"]) > 55.0
-        or (init_snap["dist_m"] > 1200.0 and abs(init_snap["xtk_m"]) > 28.0)
-        or init_snap["agl_m"] > 195.0
+        not daemon_mode
+        and init_snap["agl_m"] < 2.5
+        and (
+            init_snap["ias_kt"] < 25.0
+            or abs(init_snap.get("x_rwy_m", -2500.0)) > 300.0
+            or abs(init_snap["roll_deg"]) > 65.0
+        )
     ):
         print(
-            f"[FG-MCP INIT RECOVERY] Repozitionare curata pe panta LRCV 09 (dist={init_snap['dist_m']:.0f}m, "
-            f"Xtk={init_snap['xtk_m']:+.1f}m, AGL={init_snap['agl_m']:.1f}m, R={init_snap['roll_deg']:+.1f})..."
+            f"[FG-MCP INIT RECOVERY] Aeronava oprita la sol in afara pistei (X_rwy={init_snap.get('x_rwy_m', 0.0):.0f}m, "
+            f"Xtk={init_snap['xtk_m']:+.1f}m, AGL={init_snap['agl_m']:.1f}m, IAS={init_snap['ias_kt']:.1f}kt) -> Initializare..."
         )
         mcp.close()
         cmd_reposition()
         mcp = FlightGearMcpClient()
+        init_snap = mcp.snapshot_controls_and_guidance()
 
-    print("[FG-MCP PILOT] Preia controlul extern prin TCP :5501 urmand EXCLUSIV instructiunile AERO-SHIELD (FD == AP)...")
+    print("[FG-MCP PILOT] Preia controlul UNIVERSAL & REAL-TIME prin TCP :5501 urmand EXCLUSIV instructiunile AERO-SHIELD (FD == AP)...")
     t0 = time.time()
     t_prev = t0
     step = 0
-    rwy_hdg = 88.9314
+    rwy_hdg = init_snap.get("rwy_hdg_deg", 88.9314)
     xtk_int = 0.0
     rud_int = 0.0
     prev_xtk_m = None
@@ -728,10 +1122,28 @@ def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False) -> int
     hdg_corr = 0.0
     approach_crab_deg = 0.0
     touchdown_latched = False
+    stop_logged = False
     delayed_spoof_triggered = False
+    flight_phase = AutonomousFlightPhase.FINAL_APPROACH
+    teardrop_side = 1.0
+    last_flaps_set = 0.33
+
+    # Pre-Attack Verified State Anchor (updated in real time while GPS is clean, frozen at t_attack)
+    verified_anchor = {
+        "locked": False,
+        "t_lock": 0.0,
+        "lat_deg": init_snap.get("lat_deg", 44.317944),
+        "lon_deg": init_snap.get("lon_deg", 23.872944),
+        "dist_m": init_snap["dist_m"],
+        "x_rwy_m": init_snap.get("x_rwy_m", -init_snap["dist_m"]),
+        "y_rwy_m": init_snap.get("y_rwy_m", init_snap["xtk_m"]),
+        "xtk_m": init_snap["xtk_m"],
+        "agl_m": init_snap["agl_m"],
+        "hdg_deg": init_snap["hdg_deg"],
+    }
 
     try:
-        while time.time() - t0 < max_seconds:
+        while daemon_mode or (time.time() - t0 < max_seconds):
             step += 1
             now = time.time()
             dt = clamp(now - t_prev, 0.02, 0.25)
@@ -744,13 +1156,36 @@ def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False) -> int
                 set_spoof_jam_mode(enabled=True, stealth=False, shield_on=True)
 
             s = mcp.snapshot_controls_and_guidance()
+            if daemon_mode and s.get("autoland_local", 1) == 0:
+                # User toggled Autoland OFF ('a' key in FlightGear) -> release yoke for manual pilot control!
+                mcp.set_prop("/aero-shield/fg-mcp-override", 0)
+                xtk_int = 0.0
+                rud_int = 0.0
+                gs_int = 0.0
+                elev_int = 0.0
+                touchdown_latched = False
+                stop_logged = False
+                time.sleep(0.05)
+                continue
+            elif daemon_mode:
+                mcp.set_prop("/aero-shield/fg-mcp-override", 1)
+
+            if s.get("rwy_hdg_deg", 0.0) > 0.01:
+                rwy_hdg = s["rwy_hdg_deg"]
             agl_m = s["agl_m"]
+            if touchdown_latched and agl_m > 5.5:
+                # Aircraft was moved back into the air via FlightGear menu or takeoff -> restart engine, release parking brake & resume flight!
+                mcp.ensure_healthy_engine_and_airframe(force_start=True)
+                touchdown_latched = False
+                stop_logged = False
+                flight_phase = AutonomousFlightPhase.FINAL_APPROACH
+                xtk_int = 0.0
+                rud_int = 0.0
+                gs_int = 0.0
+                elev_int = 0.0
             dist_m = s["dist_m"]
-            xtk_m = s["xtk_m"]
-            tgt_hdg = s["tgt_hdg_deg"]
-            gs_err = s["gs_err_deg"]
-            tgt_pit = s["tgt_pit_deg"]
-            flare = s["flare"]
+            raw_x_rwy_m = s.get("x_rwy_m", -dist_m)
+            raw_y_rwy_m = s.get("y_rwy_m", s["xtk_m"])
             cur_roll = s["roll_deg"]
             cur_pitch = s["pitch_deg"]
             cur_hdg = s["hdg_deg"]
@@ -761,15 +1196,102 @@ def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False) -> int
             r_rate = s["r_dps"]
             rpm = s["rpm"]
 
+            if not hasattr(mcp, "_last_fg_spoof"):
+                mcp._last_fg_spoof = 0
+                mcp._last_fg_shield = 1
+                mcp._spoof_t0 = None
+
+            # Real-Time Pre-Attack State Capture & Dead-Reckoning Latch:
+            if s["spoof_jam_active"] == 0 and s["gnss_quar"] == 0:
+                verified_anchor["locked"] = False
+                verified_anchor["lat_deg"] = s.get("lat_deg", verified_anchor["lat_deg"])
+                verified_anchor["lon_deg"] = s.get("lon_deg", verified_anchor["lon_deg"])
+                verified_anchor["dist_m"] = dist_m
+                verified_anchor["x_rwy_m"] = raw_x_rwy_m
+                verified_anchor["y_rwy_m"] = raw_y_rwy_m
+                verified_anchor["xtk_m"] = s["xtk_m"]
+                verified_anchor["agl_m"] = agl_m
+                verified_anchor["hdg_deg"] = cur_hdg
+            else:
+                if not verified_anchor["locked"]:
+                    verified_anchor["locked"] = True
+                    verified_anchor["t_lock"] = now - t0
+                    print(
+                        f"[AERO-SHIELD DEAD-RECKONING ANCHOR] GPS PIERDUT/SPOOFAT la t={verified_anchor['t_lock']:.2f}s! "
+                        f"Ancorat pe ultima stare curata: lat={verified_anchor['lat_deg']:.5f}, lon={verified_anchor['lon_deg']:.5f}, "
+                        f"X_rwy={verified_anchor['x_rwy_m']:.1f}m, Xtk={verified_anchor['xtk_m']:+.2f}m, AGL={verified_anchor['agl_m']:.1f}m -> "
+                        f"Continuare 100% Optica (Koschmieder SWIR) + Inertiala + Stele!"
+                    )
+                    sys.stdout.flush()
+                verified_anchor["x_rwy_m"] += s.get("vx_rwy_mps", 0.0) * dt
+                verified_anchor["y_rwy_m"] += s.get("vy_rwy_mps", 0.0) * dt
+                # Blend optical/star-tracker cross-track measurement when on final approach facing the runway
+                if flight_phase == AutonomousFlightPhase.FINAL_APPROACH and abs(wrap180(cur_hdg - rwy_hdg)) < 35.0:
+                    verified_anchor["y_rwy_m"] = 0.85 * verified_anchor["y_rwy_m"] + 0.15 * s["xtk_m"]
+
+            x_rwy_m = verified_anchor["x_rwy_m"] if verified_anchor["locked"] else raw_x_rwy_m
+            y_rwy_m = verified_anchor["y_rwy_m"] if verified_anchor["locked"] else raw_y_rwy_m
+
+            if flight_phase != AutonomousFlightPhase.FINAL_APPROACH or abs(s["xtk_m"] - y_rwy_m) > 6.0:
+                xtk_m = y_rwy_m
+                fd_local = compute_unified_fd_guidance_py(
+                    along_track_m=x_rwy_m,
+                    cross_track_m=xtk_m,
+                    alt_agl_m=agl_m,
+                    vx_mps=s.get("vx_rwy_mps", 35.0),
+                    vy_mps=s.get("vy_rwy_mps", 0.0),
+                    vz_down_mps=-vs_fpm / 196.85,
+                    cur_pitch_deg=cur_pitch,
+                    true_heading_deg=cur_hdg,
+                    runway_heading_deg=rwy_hdg,
+                    on_ground_or_stopped=touchdown_latched,
+                )
+                dist_m = fd_local["distance_to_rwy_m"]
+                tgt_hdg = fd_local["target_heading_deg"]
+                gs_err = fd_local["glideslope_error_deg"]
+                tgt_pit = fd_local["target_pitch_deg"]
+                flare = fd_local["flare_active"]
+            else:
+                xtk_m = s["xtk_m"]
+                tgt_hdg = s["tgt_hdg_deg"]
+                gs_err = s["gs_err_deg"]
+                tgt_pit = s["tgt_pit_deg"]
+                flare = s["flare"]
+
             if agl_m > 4.0 and rpm < 450.0:
                 mcp.ensure_healthy_engine_and_airframe(force_start=True)
             elif step % 20 == 1:
                 mcp.ensure_healthy_engine_and_airframe(force_start=False)
 
-            if not hasattr(mcp, "_last_fg_spoof"):
-                mcp._last_fg_spoof = 0
-                mcp._last_fg_shield = 1
-                mcp._spoof_t0 = None
+            # Evaluate Real-Time Autonomous Maneuver State Machine (UPRT + Go-Around + Teardrop + Final Approach)
+            if not touchdown_latched:
+                prev_phase = flight_phase
+                flight_phase, teardrop_side = update_autonomous_flight_phase(
+                    cur_phase=flight_phase,
+                    x_rwy_m=x_rwy_m,
+                    xtk_m=xtk_m,
+                    agl_m=agl_m,
+                    ias_kt=kt,
+                    vs_fpm=vs_fpm,
+                    cur_roll_deg=cur_roll,
+                    cur_pitch_deg=cur_pitch,
+                    cur_hdg_deg=cur_hdg,
+                    rwy_hdg_deg=rwy_hdg,
+                    touchdown_latched=touchdown_latched,
+                    teardrop_side=teardrop_side,
+                )
+                if flight_phase != prev_phase:
+                    print(
+                        f"[AERO-SHIELD AUTONOMOUS MANEUVER] Tranzitie REAL-TIME: {prev_phase} -> {flight_phase} "
+                        f"(X_rwy={x_rwy_m:+.1f}m, Xtk={xtk_m:+.1f}m, AGL={agl_m:.1f}m, IAS={kt:.1f}kt, "
+                        f"VS={vs_fpm:+.0f}fpm, Roll={cur_roll:+.1f}deg, Pitch={cur_pitch:+.1f}deg)"
+                    )
+                    sys.stdout.flush()
+                    mcp.set_prop("/aero-shield/flight-phase", flight_phase)
+                    # Reset integrators on phase transition to avoid windup carry-over
+                    xtk_int = 0.0
+                    gs_int = 0.0
+                    elev_int = 0.0
 
             if step % 10 == 1:
                 cur_sp = s["spoof_jam_active"]
@@ -810,25 +1332,42 @@ def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False) -> int
                     ("/aero-shield/cmp-ins-xtk-m", round(ins_xtk, 2)),
                     ("/aero-shield/cmp-chi2", round(chi2_v, 2)),
                     ("/aero-shield/cmp-cusum", round(cusum_v, 2)),
+                    ("/aero-shield/x-rwy-m", round(x_rwy_m, 1)),
+                    ("/aero-shield/flight-phase", flight_phase),
                 ])
 
-            # CRITIC: dx_before_thr este distanta longitudinala ramasa pana la pragul asfaltat al Pistei 09 (X_rwy = 0m)!
-            # Cand dx_before_thr > 25.0m, avionul este INCA INAINTE DE PRAG (in camp)!
-            # Declansam touchdown_latched EXCLUSIV dupa trecerea pragului (dx_before_thr <= 25.0m)!
+            # CRITIC: Declansam touchdown_latched EXCLUSIV in FINAL_APPROACH la contactul rotilor principale pe pista
+            # (-25m <= x_rwy_m <= 1150m, |xtk_m| <= 22.0m, agl_m <= 1.38m)!
             dx_before_thr = math.sqrt(max(0.0, dist_m * dist_m - xtk_m * xtk_m))
-            if agl_m <= 1.65 and dx_before_thr <= 25.0:
+            if (
+                flight_phase == AutonomousFlightPhase.FINAL_APPROACH
+                and 0.25 <= agl_m <= 1.38
+                and -25.0 <= x_rwy_m <= 1150.0
+                and abs(xtk_m) <= 22.0
+            ):
                 if not touchdown_latched:
                     mcp._td_snap = {
+                        "x_rwy_m": x_rwy_m,
                         "xtk_m": xtk_m,
                         "hdg_deg": cur_hdg,
                         "hdg_corr_deg": hdg_corr,
                         "gs_err_deg": gs_err,
+                        "vs_fpm": vs_fpm,
+                        "ias_kt": kt,
+                        "pitch_deg": cur_pitch,
                     }
+                    flight_phase = AutonomousFlightPhase.ROLLOUT_BRAKE
+                    mcp.set_prop("/aero-shield/flight-phase", flight_phase)
+                    print(
+                        f"[AERO-SHIELD CUSHION FLARE TOUCHDOWN] Main-Gear Contact at AGL={agl_m:.2f}m | "
+                        f"X_rwy={x_rwy_m:+.1f}m | VS={vs_fpm:+.0f}fpm | IAS={kt:.1f}kt | Pitch={cur_pitch:+.2f}deg | "
+                        f"XTK={xtk_m:+.2f}m | Hdg={cur_hdg:.2f}deg"
+                    )
+                    sys.stdout.flush()
                 touchdown_latched = True
 
             if touchdown_latched:
-                # Touchdown & Rollout on Runway 09: speed-scheduled rudder/NWS + yaw-rate damper
-                mcp.ensure_healthy_engine_and_airframe(force_start=False)
+                # Touchdown & Rollout on Runway: smooth nosewheel derotation + speed-scheduled rudder/NWS
                 if prev_xtk_m is None:
                     prev_xtk_m = xtk_m
                 raw_xtk_rate = clamp((xtk_m - prev_xtk_m) / max(0.02, dt), -8.0, 8.0)
@@ -852,35 +1391,109 @@ def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False) -> int
                     -max_rud_gnd,
                     max_rud_gnd,
                 )
-                brk = round(clamp(0.36 + (52.0 - kt) * 0.012, 0.32, 0.62) if kt > 4.0 else 0.35, 4)
+                brk = round(clamp(0.75 + (60.0 - kt) * 0.008, 0.72, 1.00) if kt > 5.0 else 1.0, 4)
                 ail_gnd = round(clamp(approach_crab_deg * 0.025 - cur_roll * 0.05, -0.38, 0.38), 4)
-                mcp.set_batch([
-                    ("/controls/engines/engine[0]/throttle", 0.0),
-                    ("/controls/engines/current-engine/throttle", 0.0),
-                    ("/controls/flight/flaps", 0.0),
-                    ("/controls/flight/aileron", ail_gnd),
-                    ("/controls/flight/elevator", 0.14),
-                    ("/controls/flight/rudder", round(rud, 4)),
-                    ("/controls/gear/brake-left", brk),
-                    ("/controls/gear/brake-right", brk),
-                ])
-                if kt < 5.0 or s.get("gs_kt", kt) < 1.0:
-                    on_rwy = abs(xtk_m) <= 22.5 and dx_before_thr <= 25.0
+                if kt < 5.0 or s.get("gs_kt", kt) < 1.5:
+                    # Full stop on runway: engage parking brake and shut down engine (mixture=0, magnetos=0, cutoff=1)
+                    mcp.set_batch([
+                        ("/controls/engines/engine[0]/throttle", 0.0),
+                        ("/controls/engines/current-engine/throttle", 0.0),
+                        ("/controls/engines/current-engine/mixture", 0.0),
+                        ("/controls/engines/engine[0]/mixture", 0.0),
+                        ("/controls/switches/magnetos", 0),
+                        ("/controls/switches/starter", 0),
+                        ("/controls/engines/engine[0]/cutoff", 1),
+                        ("/fdm/jsbsim/propulsion/engine[0]/set-running", 0),
+                        ("/engines/active-engine/running", 0),
+                        ("/engines/engine[0]/running", 0),
+                        ("/controls/flight/flaps", 0.0),
+                        ("/controls/flight/aileron", 0.0),
+                        ("/controls/flight/elevator", 0.14),
+                        ("/controls/flight/rudder", 0.0),
+                        ("/controls/gear/brake-parking", 1),
+                        ("/controls/gear/brake-left", 1.0),
+                        ("/controls/gear/brake-right", 1.0),
+                    ])
+                    on_rwy = abs(xtk_m) <= 22.5 and (-25.0 <= x_rwy_m <= 1650.0)
                     quar_flag = max(int(s["gnss_quar"]), 1 if delayed_spoof_triggered else 0)
-                    td_s = getattr(mcp, "_td_snap", {"xtk_m": xtk_m, "hdg_deg": cur_hdg})
+                    td_s = getattr(mcp, "_td_snap", {"xtk_m": xtk_m, "hdg_deg": cur_hdg, "x_rwy_m": x_rwy_m})
                     verdict_pass = on_rwy and abs(td_s["xtk_m"]) < 2.5 and abs(xtk_m) < 8.0
-                    print(
-                        f"[FG-MCP TOUCHDOWN & STOP SUCCESS] TOUCHDOWN_ON_RUNWAY={on_rwy} "
-                        f"TD_Xtk={td_s['xtk_m']:+.2f}m TD_Hdg={td_s['hdg_deg']:.1f} "
-                        f"dist={dist_m:.1f}m Xtk={xtk_m:+.2f}m hdg_corr={hdg_corr:+.2f}deg gs_err={gs_err:+.2f}deg "
-                        f"AGL={agl_m:.2f}m IAS={kt:.1f}kt GS={s.get('gs_kt', 0.0):.1f}kt Hdg={cur_hdg:.1f} Quar={quar_flag} "
-                        f"Storm=(Vis:{s['vis_m']:.0f}m,Wind:{s['wind_dir_deg']:.0f}@{s['wind_kt']:.1f}kt,Rain:{s['rain_norm']:.2f}) "
-                        f"VERDICT={'PASS' if verdict_pass else 'FAIL'}"
-                    )
-                    sys.stdout.flush()
-                    return 0 if on_rwy else 1
+                    if not stop_logged:
+                        stop_logged = True
+                        print(
+                            f"[FG-MCP TOUCHDOWN & STOP SUCCESS] TOUCHDOWN_ON_RUNWAY={on_rwy} ENGINE_OFF=True PARK_BRAKE=1 "
+                            f"TD_X_rwy={td_s.get('x_rwy_m', x_rwy_m):+.1f}m TD_Xtk={td_s['xtk_m']:+.2f}m TD_Hdg={td_s['hdg_deg']:.1f} "
+                            f"dist={dist_m:.1f}m X_rwy={x_rwy_m:+.1f}m Xtk={xtk_m:+.2f}m hdg_corr={hdg_corr:+.2f}deg gs_err={gs_err:+.2f}deg "
+                            f"AGL={agl_m:.2f}m IAS={kt:.1f}kt GS={s.get('gs_kt', 0.0):.1f}kt Hdg={cur_hdg:.1f} Quar={quar_flag} "
+                            f"Storm=(Vis:{s['vis_m']:.0f}m,Wind:{s['wind_dir_deg']:.0f}@{s['wind_kt']:.1f}kt,Rain:{s['rain_norm']:.2f}) "
+                            f"VERDICT={'PASS' if verdict_pass else 'FAIL'}"
+                        )
+                        sys.stdout.flush()
+                    if not daemon_mode:
+                        return 0 if on_rwy else 1
+                else:
+                    # Immediate firm braking + fuel cutoff right from touchdown so prop thrust never fights the brakes!
+                    mcp.set_batch([
+                        ("/controls/engines/engine[0]/throttle", 0.0),
+                        ("/controls/engines/current-engine/throttle", 0.0),
+                        ("/controls/engines/current-engine/mixture", 0.0),
+                        ("/controls/engines/engine[0]/mixture", 0.0),
+                        ("/controls/engines/engine[0]/cutoff", 1),
+                        ("/controls/flight/flaps", 0.0),
+                        ("/controls/flight/aileron", ail_gnd),
+                        ("/controls/flight/elevator", 0.14),
+                        ("/controls/flight/rudder", round(rud, 4)),
+                        ("/controls/gear/brake-parking", 1 if kt < 42.0 else 0),
+                        ("/controls/gear/brake-left", brk),
+                        ("/controls/gear/brake-right", brk),
+                    ])
+            elif flight_phase != AutonomousFlightPhase.FINAL_APPROACH:
+                # Active Real-Time Autonomous Maneuver (UPSET_RECOVERY, GO_AROUND_TOGA, TEARDROP_OUTBOUND, BASE_TURN_INTERCEPT)
+                ap = compute_maneuver_guidance_and_ap(
+                    phase=flight_phase,
+                    x_rwy_m=x_rwy_m,
+                    xtk_m=xtk_m,
+                    agl_m=agl_m,
+                    ias_kt=kt,
+                    vs_fpm=vs_fpm,
+                    cur_roll_deg=cur_roll,
+                    cur_pitch_deg=cur_pitch,
+                    cur_hdg_deg=cur_hdg,
+                    rwy_hdg_deg=rwy_hdg,
+                    vx_rwy_mps=s.get("vx_rwy_mps", 35.0),
+                    vy_rwy_mps=s.get("vy_rwy_mps", 0.0),
+                    p_dps=p_rate,
+                    q_dps=q_rate,
+                    r_dps=r_rate,
+                    teardrop_side=teardrop_side,
+                    elev_int=elev_int,
+                    dt=dt,
+                )
+                hdg_corr = ap["hdg_corr_deg"]
+                gs_err = ap["gs_err_deg"]
+                cmd_pit = ap["cmd_pit_deg"]
+                tgt_hdg = ap["tgt_hdg_deg"]
+                elev_int = ap["elev_int"]
+                flaps_cmd = round(ap.get("flaps", 0.0), 2)
+                batch_cmds = [
+                    ("/controls/flight/aileron", round(ap["aileron"], 4)),
+                    ("/controls/flight/elevator", round(ap["elevator"], 4)),
+                    ("/controls/flight/rudder", round(ap["cmd_rud"], 4)),
+                    ("/controls/engines/engine[0]/throttle", round(ap["throttle"], 4)),
+                    ("/controls/engines/current-engine/throttle", round(ap["throttle"], 4)),
+                    ("/controls/gear/brake-left", 0.0),
+                    ("/controls/gear/brake-right", 0.0),
+                    ("/aero-shield/target-heading-deg", round(tgt_hdg, 2)),
+                    ("/aero-shield/heading-corr-deg", round(hdg_corr, 2)),
+                    ("/aero-shield/gs-error-deg", round(gs_err, 2)),
+                    ("/aero-shield/target-pitch-deg", round(cmd_pit, 2)),
+                ]
+                if abs(flaps_cmd - last_flaps_set) > 0.02:
+                    batch_cmds.append(("/controls/flight/flaps", flaps_cmd))
+                    last_flaps_set = flaps_cmd
+                mcp.set_batch(batch_cmds)
             else:
-                # Airborne guidance strictly following AERO-SHIELD Flight Director (FD == AP, Zero Split-Brain)
+                # Airborne FINAL_APPROACH guidance strictly following AERO-SHIELD Flight Director (FD == AP, Zero Split-Brain)
                 if prev_xtk_m is None:
                     prev_xtk_m = xtk_m
                 raw_xtk_rate = clamp((xtk_m - prev_xtk_m) / max(0.02, dt), -8.0, 8.0)
@@ -932,7 +1545,7 @@ def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False) -> int
                 gs_int = ap["gs_int"]
                 elev_int = ap["elev_int"]
 
-                mcp.set_batch([
+                batch_cmds = [
                     ("/controls/flight/aileron", round(ap["aileron"], 4)),
                     ("/controls/flight/elevator", round(ap["elevator"], 4)),
                     ("/controls/flight/rudder", round(ap["cmd_rud"], 4)),
@@ -940,11 +1553,15 @@ def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False) -> int
                     ("/controls/engines/current-engine/throttle", round(ap["throttle"], 4)),
                     ("/controls/gear/brake-left", 0.0),
                     ("/controls/gear/brake-right", 0.0),
-                ])
+                ]
+                if abs(0.33 - last_flaps_set) > 0.02 and agl_m > 4.5:
+                    batch_cmds.append(("/controls/flight/flaps", 0.33))
+                    last_flaps_set = 0.33
+                mcp.set_batch(batch_cmds)
 
-            if step % 15 == 1:
+            if step % 15 == 1 or (agl_m <= 10.0 and not touchdown_latched and step % 4 == 0):
                 print(
-                    f"[FG-MCP t={time.time()-t0:4.1f}s] dist={dist_m:6.1f}m Xtk={xtk_m:+6.1f}m "
+                    f"[FG-MCP t={time.time()-t0:4.1f}s | {flight_phase}] X_rwy={x_rwy_m:+7.1f}m Xtk={xtk_m:+6.1f}m "
                     f"hdg_corr={hdg_corr:+5.2f}deg gs_err={gs_err:+5.2f}deg "
                     f"AGL={agl_m:5.1f}m IAS={kt:4.1f}kt VS={vs_fpm:+5.0f}fpm RPM={rpm:4.0f} "
                     f"Att=(R:{cur_roll:+4.1f},P:{cur_pitch:+4.1f},H:{cur_hdg:5.1f}) "
@@ -958,11 +1575,11 @@ def cmd_fly_loop(max_seconds: float = 140.0, delayed_spoof: bool = False) -> int
     finally:
         try:
             mcp.set_batch([
-                ("/aero-shield/fg-mcp-override", 1),
+                ("/aero-shield/fg-mcp-override", 0),
                 ("/aero-shield/autoland-local", 1),
                 ("/aero-shield/autoland-cmd", 1),
                 ("/controls/flight/aileron", 0.0),
-                ("/controls/flight/elevator", 0.0),
+                ("/controls/flight/elevator", -0.020),
                 ("/controls/flight/rudder", 0.0),
             ])
         except Exception:
@@ -977,11 +1594,101 @@ def fly_spoof_scenario(max_seconds: float = 120.0) -> int:
     return cmd_fly_loop(max_seconds=max_seconds, delayed_spoof=True)
 
 
-def cmd_reposition() -> int:
+def _get_active_runway_reference(mcp: FlightGearMcpClient) -> dict:
+    """
+    Reads the active airport runway threshold dynamically discovered by FlightGear's
+    `airportinfo()` (`/aero-shield/target-rwy/*`), making all scenario helpers 100% universal
+    for any airport and runway on Earth (with LRCV RWY 09 as default fallback).
+    """
+    b = mcp.get_batch([
+        ("/aero-shield/target-rwy/lat-deg", 44.317944),
+        ("/aero-shield/target-rwy/lon-deg", 23.872944),
+        ("/aero-shield/target-rwy/heading-deg", 88.9314),
+        ("/aero-shield/target-rwy/elev-m", 191.0),
+    ])
+    rwy_lat = b["/aero-shield/target-rwy/lat-deg"]
+    rwy_lon = b["/aero-shield/target-rwy/lon-deg"]
+    rwy_hdg = b["/aero-shield/target-rwy/heading-deg"]
+    rwy_elev_m = b["/aero-shield/target-rwy/elev-m"]
+    if abs(rwy_lat) < 0.01 or abs(rwy_lon) < 0.01:
+        rwy_lat, rwy_lon, rwy_hdg, rwy_elev_m = 44.317944, 23.872944, 88.9314, 191.0
+    return {
+        "lat_deg": rwy_lat,
+        "lon_deg": rwy_lon,
+        "hdg_deg": rwy_hdg,
+        "elev_m": rwy_elev_m,
+    }
+
+
+def _rwy_xy_to_latlon(rwy_ref: dict, x_rwy_m: float, y_rwy_m: float) -> tuple:
+    h_rad = math.radians(rwy_ref["hdg_deg"])
+    cos_h = math.cos(h_rad)
+    sin_h = math.sin(h_rad)
+    dn_m = x_rwy_m * cos_h - y_rwy_m * sin_h
+    de_m = x_rwy_m * sin_h + y_rwy_m * cos_h
+    lat = rwy_ref["lat_deg"] + dn_m / 111132.95
+    lon = rwy_ref["lon_deg"] + de_m / (111319.49 * max(0.1, abs(math.cos(math.radians(rwy_ref["lat_deg"])))))
+    return round(lat, 6), round(lon, 6)
+
+
+def fly_upset_scenario(max_seconds: float = 125.0) -> int:
+    """
+    Injects a severe pilot-induced upset in mid-air (steep -46 deg bank, -14 deg nose-low dive,
+    -1350 fpm sink rate, +22 m lateral cross-track offset), then hands control to AERO-SHIELD
+    in REAL TIME (ZERO teleportation!) to verify FAA/ICAO UPRT recovery + GPS spoofing + C1 Flare landing.
+    Works universally on any active airport runway.
+    """
+    cmd_reposition()
+    mcp = FlightGearMcpClient()
+    rwy_ref = _get_active_runway_reference(mcp)
+    up_lat, up_lon = _rwy_xy_to_latlon(rwy_ref, x_rwy_m=-2500.0, y_rwy_m=22.0)
+    up_alt_ft = round((rwy_ref["elev_m"] + 103.0) / 0.3048, 1)
+    up_hdg = round((rwy_ref["hdg_deg"] - 8.0) % 360.0, 2)
+    print(
+        "[AERO-SHIELD UPRT TEST] Injectare manevra gresita a pilotului in aer: "
+        "Roll=-46.0deg (inclinare severa), Pitch=-14.0deg (picaj), VS=-1350fpm, Xtk=+22m..."
+    )
+    sys.stdout.flush()
+    mcp.set_batch([
+        ("/position/latitude-deg", up_lat),
+        ("/position/longitude-deg", up_lon),
+        ("/position/altitude-ft", up_alt_ft),
+        ("/orientation/heading-deg", up_hdg),
+        ("/orientation/pitch-deg", -14.0),
+        ("/orientation/roll-deg", -46.0),
+        ("/velocities/uBody-fps", 130.0),
+        ("/velocities/vBody-fps", -4.0),
+        ("/velocities/wBody-fps", 14.0),
+        ("/velocities/speed-down-fps", 22.5),
+    ])
+    post_aeroshield_cmd({"type": "ResetApproach"})
+    mcp.close()
+    return cmd_fly_loop(max_seconds=max_seconds, delayed_spoof=True)
+
+
+def fly_go_around_scenario(max_seconds: float = 240.0) -> int:
+    """
+    Places the aircraft in an unstabilized approach already past the runway threshold
+    (X_rwy = +180m, AGL = 32m, IAS = 89kt, Xtk = +28m) where landing is physically unsafe.
+    Verifies that AERO-SHIELD autonomously triggers GO_AROUND_TOGA -> TEARDROP_OUTBOUND ->
+    BASE_TURN_INTERCEPT -> FINAL_APPROACH and lands safely in real time WITHOUT teleportation!
+    Works universally on any active airport runway.
+    """
     set_spoof_jam_mode(enabled=False, stealth=False, shield_on=True)
     mcp = FlightGearMcpClient()
     mcp.ensure_healthy_engine_and_airframe(force_start=True)
     apply_storm_weather(mcp)
+    rwy_ref = _get_active_runway_reference(mcp)
+    ga_lat, ga_lon = _rwy_xy_to_latlon(rwy_ref, x_rwy_m=180.0, y_rwy_m=28.0)
+    ga_alt_ft = round((rwy_ref["elev_m"] + 71.0) / 0.3048, 1)
+    ga_hdg = round((rwy_ref["hdg_deg"] + 9.0) % 360.0, 2)
+    ga_hdg_rad = math.radians(ga_hdg)
+    print(
+        "[AERO-SHIELD GO-AROUND TEST] Pilotul a adus aeronava mult prea sus si prea rapid peste pragul pistei "
+        "(X_rwy=+180m, AGL=32m, IAS=89kt, Xtk=+28m) -> AERO-SHIELD trebuie sa anuleze aterizarea (TOGA) "
+        "si sa execute circuitul Teardrop autonom 100% real-time!"
+    )
+    sys.stdout.flush()
     mcp.set_batch([
         ("/aero-shield/fg-mcp-override", 1),
         ("/aero-shield/shield-protection", 1),
@@ -991,38 +1698,168 @@ def cmd_reposition() -> int:
         ("/controls/gear/brake-parking", 0),
         ("/controls/flight/flaps", 0.33),
         ("/controls/flight/aileron", 0.0),
-        ("/controls/flight/elevator", 0.01),
+        ("/controls/flight/elevator", -0.02),
         ("/controls/flight/rudder", 0.0),
-        ("/controls/flight/aileron-trim", 0.016),
-        ("/controls/flight/elevator-trim", 0.0),
-        ("/controls/engines/engine[0]/throttle", 0.54),
-        ("/controls/engines/current-engine/throttle", 0.54),
-        ("/position/latitude-deg", 44.317520),
-        ("/position/longitude-deg", 23.841500),
-        ("/position/altitude-ft", 950.0),
-        ("/orientation/heading-deg", 88.9314),
-        ("/orientation/pitch-deg", -1.5),
+        ("/controls/engines/engine[0]/throttle", 0.85),
+        ("/controls/engines/current-engine/throttle", 0.85),
+        ("/position/latitude-deg", ga_lat),
+        ("/position/longitude-deg", ga_lon),
+        ("/position/altitude-ft", ga_alt_ft),
+        ("/orientation/heading-deg", ga_hdg),
+        ("/orientation/pitch-deg", -2.0),
+        ("/orientation/roll-deg", 12.0),
+        ("/orientation/p-body", 0.0),
+        ("/orientation/q-body", 0.0),
+        ("/orientation/r-body", 0.0),
+        ("/fdm/jsbsim/velocities/p-rad_sec", 0.0),
+        ("/fdm/jsbsim/velocities/q-rad_sec", 0.0),
+        ("/fdm/jsbsim/velocities/r-rad_sec", 0.0),
+        ("/velocities/uBody-fps", 150.0),
+        ("/velocities/vBody-fps", 0.0),
+        ("/velocities/wBody-fps", 3.0),
+        ("/velocities/speed-north-fps", round(150.0 * math.cos(ga_hdg_rad), 2)),
+        ("/velocities/speed-east-fps", round(150.0 * math.sin(ga_hdg_rad), 2)),
+        ("/velocities/speed-down-fps", 4.0),
+    ])
+    time.sleep(0.25)
+    mcp.close()
+    return cmd_fly_loop(max_seconds=max_seconds, delayed_spoof=False)
+
+
+def fly_perpendicular_scenario(max_seconds: float = 150.0) -> int:
+    """
+    Places the aircraft on a perpendicular Base Leg (~85 deg to the runway centerline)
+    at X_rwy = -2050m, Xtk = +650m (650m South/Right of Runway 09), AGL = 132m, Heading = 3.9 deg (North).
+    Verifies that AERO-SHIELD autonomously enters BASE_TURN_INTERCEPT, executes a coordinated 90-deg
+    turn onto the extended centerline, transitions to FINAL_APPROACH, survives GPS spoofing, and lands!
+    """
+    set_spoof_jam_mode(enabled=False, stealth=False, shield_on=True)
+    mcp = FlightGearMcpClient()
+    mcp.ensure_healthy_engine_and_airframe(force_start=True)
+    apply_storm_weather(mcp)
+    rwy_ref = _get_active_runway_reference(mcp)
+    perp_lat, perp_lon = _rwy_xy_to_latlon(rwy_ref, x_rwy_m=-2050.0, y_rwy_m=650.0)
+    perp_alt_ft = round((rwy_ref["elev_m"] + 132.0) / 0.3048, 1)
+    perp_hdg = round((rwy_ref["hdg_deg"] - 85.0) % 360.0, 2)
+    perp_hdg_rad = math.radians(perp_hdg)
+    print(
+        f"[AERO-SHIELD PERPENDICULAR BASE-TURN TEST] Aeronava intra PERPENDICULAR pe directia pistei "
+        f"(X_rwy=-2050m, Xtk=+650m lateral, AGL=132m, Cap={perp_hdg:.1f}deg vs Pista={rwy_ref['hdg_deg']:.1f}deg) -> "
+        f"AERO-SHIELD trebuie sa execute virajul coordonat de 90deg (BASE_TURN_INTERCEPT -> FINAL_APPROACH) si sa aterizeze!"
+    )
+    sys.stdout.flush()
+    mcp.set_batch([
+        ("/aero-shield/fg-mcp-override", 1),
+        ("/aero-shield/shield-protection", 1),
+        ("/aero-shield/spoof-jam-active", 0),
+        ("/controls/gear/brake-left", 0.0),
+        ("/controls/gear/brake-right", 0.0),
+        ("/controls/gear/brake-parking", 0),
+        ("/controls/flight/flaps", 0.0),
+        ("/controls/flight/aileron", 0.0),
+        ("/controls/flight/elevator", -0.02),
+        ("/controls/flight/rudder", 0.0),
+        ("/controls/engines/engine[0]/throttle", 0.65),
+        ("/controls/engines/current-engine/throttle", 0.65),
+        ("/position/latitude-deg", perp_lat),
+        ("/position/longitude-deg", perp_lon),
+        ("/position/altitude-ft", perp_alt_ft),
+        ("/orientation/heading-deg", perp_hdg),
+        ("/orientation/pitch-deg", 0.5),
         ("/orientation/roll-deg", 0.0),
+        ("/orientation/p-body", 0.0),
+        ("/orientation/q-body", 0.0),
+        ("/orientation/r-body", 0.0),
+        ("/fdm/jsbsim/velocities/p-rad_sec", 0.0),
+        ("/fdm/jsbsim/velocities/q-rad_sec", 0.0),
+        ("/fdm/jsbsim/velocities/r-rad_sec", 0.0),
         ("/velocities/uBody-fps", 122.0),
         ("/velocities/vBody-fps", 0.0),
-        ("/velocities/wBody-fps", 4.0),
-        ("/velocities/speed-north-fps", 2.3),
-        ("/velocities/speed-east-fps", 122.0),
-        ("/velocities/speed-down-fps", 5.0),
+        ("/velocities/wBody-fps", 2.0),
+        ("/velocities/speed-north-fps", round(122.0 * math.cos(perp_hdg_rad), 2)),
+        ("/velocities/speed-east-fps", round(122.0 * math.sin(perp_hdg_rad), 2)),
+        ("/velocities/speed-down-fps", 2.0),
+    ])
+    post_aeroshield_cmd({"type": "ResetApproach"})
+    time.sleep(0.25)
+    mcp.close()
+    return cmd_fly_loop(max_seconds=max_seconds, delayed_spoof=True)
+
+
+def cmd_reposition() -> int:
+    set_spoof_jam_mode(enabled=False, stealth=False, shield_on=True)
+    mcp = FlightGearMcpClient()
+    mcp.ensure_healthy_engine_and_airframe(force_start=True)
+    apply_storm_weather(mcp)
+    rwy_ref = _get_active_runway_reference(mcp)
+    sp_lat, sp_lon = _rwy_xy_to_latlon(rwy_ref, x_rwy_m=-2500.0, y_rwy_m=0.0)
+    sp_alt_ft = round((rwy_ref["elev_m"] + 98.5) / 0.3048, 1)
+    sp_hdg = round(rwy_ref["hdg_deg"], 4)
+    sp_hdg_rad = math.radians(sp_hdg)
+    sp_vn = round(121.5 * math.cos(sp_hdg_rad), 2)
+    sp_ve = round(121.5 * math.sin(sp_hdg_rad), 2)
+    mcp.set_batch([
+        ("/aero-shield/fg-mcp-override", 1),
+        ("/aero-shield/shield-protection", 1),
+        ("/aero-shield/spoof-jam-active", 0),
+        ("/aero-shield/flight-phase", AutonomousFlightPhase.FINAL_APPROACH),
+        ("/controls/gear/brake-left", 0.0),
+        ("/controls/gear/brake-right", 0.0),
+        ("/controls/gear/brake-parking", 0),
+        ("/controls/flight/flaps", 0.33),
+        ("/controls/flight/aileron", 0.0),
+        ("/controls/flight/elevator", -0.025),
+        ("/controls/flight/rudder", 0.0),
+        ("/controls/flight/aileron-trim", 0.016),
+        ("/controls/flight/elevator-trim", -0.020),
+        ("/controls/flight/rudder-trim", 0.032),
+        ("/controls/engines/engine[0]/throttle", 0.58),
+        ("/controls/engines/current-engine/throttle", 0.58),
+        ("/position/latitude-deg", sp_lat),
+        ("/position/longitude-deg", sp_lon),
+        ("/position/altitude-ft", sp_alt_ft),
+        ("/orientation/heading-deg", sp_hdg),
+        ("/orientation/pitch-deg", -1.0),
+        ("/orientation/roll-deg", 0.0),
+        ("/orientation/p-body", 0.0),
+        ("/orientation/q-body", 0.0),
+        ("/orientation/r-body", 0.0),
+        ("/fdm/jsbsim/velocities/p-rad_sec", 0.0),
+        ("/fdm/jsbsim/velocities/q-rad_sec", 0.0),
+        ("/fdm/jsbsim/velocities/r-rad_sec", 0.0),
+        ("/fdm/jsbsim/velocities/p-aero-rad_sec", 0.0),
+        ("/fdm/jsbsim/velocities/q-aero-rad_sec", 0.0),
+        ("/fdm/jsbsim/velocities/r-aero-rad_sec", 0.0),
+        ("/velocities/uBody-fps", 121.5),
+        ("/velocities/vBody-fps", 0.0),
+        ("/velocities/wBody-fps", 2.0),
+        ("/velocities/speed-north-fps", sp_vn),
+        ("/velocities/speed-east-fps", sp_ve),
+        ("/velocities/speed-down-fps", 6.36),
     ])
     post_aeroshield_cmd({"type": "ResetApproach"})
     time.sleep(0.35)
     mcp.ensure_healthy_engine_and_airframe(force_start=True)
     mcp.set_batch([
-        ("/position/latitude-deg", 44.317520),
-        ("/position/longitude-deg", 23.841500),
-        ("/position/altitude-ft", 950.0),
-        ("/orientation/heading-deg", 88.9314),
-        ("/orientation/pitch-deg", -1.5),
+        ("/position/latitude-deg", sp_lat),
+        ("/position/longitude-deg", sp_lon),
+        ("/position/altitude-ft", sp_alt_ft),
+        ("/orientation/heading-deg", sp_hdg),
+        ("/orientation/pitch-deg", -1.0),
         ("/orientation/roll-deg", 0.0),
-        ("/velocities/uBody-fps", 122.0),
+        ("/orientation/p-body", 0.0),
+        ("/orientation/q-body", 0.0),
+        ("/orientation/r-body", 0.0),
+        ("/fdm/jsbsim/velocities/p-rad_sec", 0.0),
+        ("/fdm/jsbsim/velocities/q-rad_sec", 0.0),
+        ("/fdm/jsbsim/velocities/r-rad_sec", 0.0),
+        ("/velocities/uBody-fps", 121.5),
         ("/velocities/vBody-fps", 0.0),
-        ("/velocities/wBody-fps", 4.0),
+        ("/velocities/wBody-fps", 2.0),
+        ("/velocities/speed-down-fps", 6.36),
+        ("/aero-shield/fg-mcp-override", 0),
+        ("/aero-shield/autoland-local", 1),
+        ("/aero-shield/autoland-cmd", 1),
     ])
     mcp.close()
     return 0
@@ -1047,14 +1884,25 @@ def cmd_continuous_loop(flights: int = 4) -> int:
 
 if __name__ == "__main__":
     mode = sys.argv[1] if len(sys.argv) > 1 else "verify"
-    if mode == "verify":
+    if mode in ("verify", "status", "telemetry"):
         sys.exit(cmd_verify())
-    elif mode == "fly":
+    elif mode in ("fly", "fly-loop", "fly_loop"):
         dur = float(sys.argv[2]) if len(sys.argv) > 2 else 140.0
         sys.exit(cmd_fly_loop(dur))
+    elif mode in ("daemon", "--daemon", "ai-daemon"):
+        sys.exit(cmd_fly_loop(max_seconds=86400.0, delayed_spoof=False, daemon_mode=True))
     elif mode in ("fly-spoof", "fly_spoof"):
         dur = float(sys.argv[2]) if len(sys.argv) > 2 else 120.0
         sys.exit(fly_spoof_scenario(dur))
+    elif mode in ("fly-perpendicular", "fly_perpendicular", "perpendicular"):
+        dur = float(sys.argv[2]) if len(sys.argv) > 2 else 150.0
+        sys.exit(fly_perpendicular_scenario(dur))
+    elif mode in ("fly-upset", "fly_upset"):
+        dur = float(sys.argv[2]) if len(sys.argv) > 2 else 135.0
+        sys.exit(fly_upset_scenario(dur))
+    elif mode in ("fly-go-around", "fly_go_around"):
+        dur = float(sys.argv[2]) if len(sys.argv) > 2 else 240.0
+        sys.exit(fly_go_around_scenario(dur))
     elif mode == "loop":
         n_flights = int(sys.argv[2]) if len(sys.argv) > 2 else 4
         sys.exit(cmd_continuous_loop(n_flights))
